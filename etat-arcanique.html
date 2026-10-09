@@ -499,25 +499,25 @@ const ECON={booster:75,pack:5,bulk:3,prism:900,win:25,loss:10,first:25,cap:150,s
 const FAC={
   toxic:{n:'TOXIC',ic:'☣️',c:'#8bd346',d:'Le poison du serveur.',
     sum:'Chaque Toxic gagne Venin 1 pour chaque autre Toxic sur ton plateau.',
-    tiers:[[2,'Tes Toxic ont Venin +1.'],[3,'Venin +2.'],[4,'Venin +3.'],[5,'Venin +4.']]},
+    tiers:[[2,'Tes Toxic ont Venin +1.'],[3,'Venin +2.'],[4,'Venin +3.'],[5,'Venin +4.'],[6,'Venin +5.']]},
   weebos:{n:'WEEBOS',ic:'🌸',c:'#ff6fae',d:'Les fans d’animés.',
-    sum:'À 2, tes Weebos gagnent +1 PV. À 3, tes Weebos subissent 1 dégât de combat de moins.',
+    sum:'À 2, tes Weebos gagnent +1 PV. À 3, tes Weebos (et seulement eux) subissent 1 dégât de combat de moins.',
     tiers:[[2,'Tes Weebos gagnent +1 PV.'],[3,'Tes Weebos subissent aussi 1 dégât de combat de moins.']]},
   farmer:{n:'FARMERS',ic:'🌾',c:'#d9a441',d:'Les acharnés du farm.',
     sum:'Début de ton tour : gagne 1 Or par Farmer sur ton plateau (à partir de 2).',
-    tiers:[[2,'Début de ton tour : +2 Or.'],[3,'+3 Or.'],[4,'+4 Or.'],[5,'+5 Or.']]},
+    tiers:[[2,'Début de ton tour : +2 Or.'],[3,'+3 Or.'],[4,'+4 Or.'],[5,'+5 Or.'],[6,'+6 Or.']]},
   expats:{n:'EXPATS',ic:'✈️',c:'#3ec5ff',d:'Ceux qui vivent à l’étranger.',
     sum:'Paie de l’Or pour qu’un Expat « disparaisse à l’étranger » : il est inciblable jusqu’à ton prochain tour.',
     tiers:[[2,'Disparaître à l’étranger : 5 Or.'],[3,'4 Or.'],[4,'3 Or.'],[5,'2 Or.']]},
   ravages:{n:'RAVAGÉS',ic:'🌀',c:'#ff8a1f',d:'Le chaos incarné.',
-    sum:'Fin de ton tour : lance 1 missile par Ravagé au-delà du premier (1 dégât à un ennemi au hasard).',
-    tiers:[[2,'Fin de ton tour : 1 missile.'],[3,'2 missiles.'],[4,'3 missiles.'],[5,'4 missiles.']]},
-  touristes:{n:'TOURISTES',ic:'📸',c:'#ffd23f',d:'De passage, et toujours les poches pleines.',
-    sum:'À son arrivée, un Touriste vole 1 Or à l’adversaire pour chaque autre Touriste sur ton plateau.',
-    tiers:[[2,'Arrivée : vole 1 Or.'],[3,'Vole 2 Or.'],[4,'Vole 3 Or.'],[5,'Vole 4 Or.']]},
-  xeno:{n:'XÉNOPHOBES',ic:'🚧',c:'#e2483d',d:'Ils n’aiment pas trop les visiteurs.',
-    sum:'Quand un Xénophobe attaque un Touriste, il gagne +1 ATK pour chaque autre Xénophobe sur ton plateau.',
-    tiers:[[2,'+1 ATK contre les Touristes.'],[3,'+2 ATK.'],[4,'+3 ATK.'],[5,'+4 ATK.']]}};
+    sum:'Fin de ton tour : 1 missile par palier débloqué (2 Ravagés = 1 missile, 3 = 2 missiles, etc.). Un missile inflige 1 dégât à un ennemi au hasard.',
+    tiers:[[2,'Fin de ton tour : 1 missile.'],[3,'2 missiles.'],[4,'3 missiles.'],[5,'4 missiles.'],[6,'5 missiles.']]},
+  neigar:{n:'NEIGAR',ic:'👽',c:'#ffd23f',d:'Venus d’ailleurs, de bien plus loin que l’Andorre.',
+    sum:'À son arrivée, un Neigar vole 1 Or à l’adversaire pour chaque autre Neigar sur ton plateau.',
+    tiers:[[2,'Arrivée : vole 1 Or.'],[3,'Vole 2 Or.'],[4,'Vole 3 Or.'],[5,'Vole 4 Or.'],[6,'Vole 5 Or.']]},
+  xeno:{n:'XÉNOPHOBES',ic:'🚧',c:'#e2483d',d:'Ils n’aiment pas trop les visiteurs venus d’ailleurs.',
+    sum:'Quand un Xénophobe attaque un Neigar, il gagne +1 ATK pour chaque autre Xénophobe sur ton plateau.',
+    tiers:[[2,'+1 ATK contre les Neigar.'],[3,'+2 ATK.'],[4,'+3 ATK.'],[5,'+4 ATK.'],[6,'+5 ATK.']]}};
 const FACK=Object.keys(FAC);
 function facTier(f,n){let t=null;for(const x of FAC[f].tiers)if(n>=x[0])t=x;return t}
 function exCost(n){return n>=5?2:n===4?3:n===3?4:5}
@@ -559,7 +559,7 @@ const GLOS=[
 // ----- personnages : 3 versions chacun (commune, rare, épique), même illustration -----
 // sc = affinité (0-2) sur chaque jeu ; cry = Cri d'arrivée, last = Agonie, sot/eot = début/fin de ton tour
 const BASES={
-mikalev:{n:'Mikalev',fac:['touristes'],sc:{wow:0,dofus:0,lol:1,cs:2},lore:'Vrai shinobi de CS : il entre et sort des smokes comme personne. Sait tout réparer, de la machine à laver au moteur de voiture, et prend la voix de Taz dès qu’on ne le regarde pas.',v:[
+mikalev:{n:'Mikalev',fac:['neigar'],sc:{wow:0,dofus:0,lol:1,cs:2},lore:'Vrai shinobi de CS : il entre et sort des smokes comme personne. Sait tout réparer, de la machine à laver au moteur de voiture, et prend la voix de Taz dès qu’on ne le regarde pas.',v:[
   {st:'Shinobi des smokes',c:1,a:1,h:3,kw:['afk'],eot:[{t:'heal',n:1}],tx:'AFK. Fin de ton tour : soigne ton héros de 1 PV.'},
   {st:'Le Réparateur',c:3,a:2,h:3,kw:['afk'],eot:[{t:'heal',n:2},{t:'healA',n:2,rnd:1}],tx:'AFK. Fin de ton tour : soigne ton héros de 2 PV et une autre créature alliée blessée de 2 PV.'},
   {st:'Voix de Taz',c:5,a:3,h:5,kw:['afk'],eot:[{t:'heal',n:2},{t:'healA',n:2,all:1}],tx:'AFK. Fin de ton tour : soigne ton héros et toutes tes créatures de 2 PV.'}]},
@@ -575,7 +575,7 @@ losk:{n:'Losk',fac:['expats'],sc:{wow:1,dofus:1,lol:1,cs:1},lore:'Déménagé en
   {st:'Le Requin',c:2,a:2,h:4,sot:[{t:'or',n:1}],tx:'Début de ton tour : gagne 1 Or.'},
   {st:'Bitcoin Maxi',c:3,a:3,h:4,cry:[{t:'dblOr',max:5}],tx:'Cri d’arrivée : double ton Or (+5 max).'},
   {st:'Exilé fiscal',c:5,a:4,h:6,sot:[{t:'or',n:2}],tdisc:1,tx:'Début de ton tour : gagne 2 Or. Tes terrains coûtent 1 Or de moins.'}]},
-sadamie:{n:'Sadamie',fac:['ravages','touristes'],sc:{wow:1,dofus:1,lol:1,cs:1},lore:'Pour lui, le jeu n’est pas une compétition, c’est un amusement ;). Son activité préférée : invoquer Chanssus pour atteindre le combo le plus broken de l’histoire. Triche aux jeux de cartes… et perd quand même.',v:[
+sadamie:{n:'Sadamie',fac:['ravages','neigar'],sc:{wow:1,dofus:1,lol:1,cs:1},lore:'Pour lui, le jeu n’est pas une compétition, c’est un amusement ;). Son activité préférée : invoquer Chanssus pour atteindre le combo le plus broken de l’histoire. Triche aux jeux de cartes… et perd quand même.',v:[
   {st:'Le Tricheur',c:2,a:2,h:2,cry:[{t:'add',k:'chanssus',n:1}],last:[{t:'drawOpp',n:1}],tx:'Cri d’arrivée : ajoute un Chanssus à ta main. Agonie : l’adversaire pioche 1 carte.'},
   {st:'Invocateur de Chanssus',c:3,a:3,h:3,cry:[{t:'add',k:'chanssus',n:2}],last:[{t:'drawOpp',n:1}],tx:'Cri d’arrivée : ajoute 2 Chanssus à ta main. Agonie : l’adversaire pioche 1 carte.'},
   {st:'Combo Broken',c:5,a:4,h:5,cry:[{t:'add',k:'chanssus0',n:2}],last:[{t:'drawOpp',n:1}],tx:'Cri d’arrivée : ajoute 2 Chanssus truqués (coût 0) à ta main. Agonie : l’adversaire pioche 1 carte.'}]},
@@ -587,11 +587,11 @@ osiris:{n:'Osiris',fac:['toxic'],sc:{wow:0,dofus:2,lol:1,cs:0},lore:'Capuche, lu
   {st:'La Capuche',c:2,a:2,h:2,kw:['venin'],tx:'Venin.'},
   {st:'Le Venimeux',c:3,a:3,h:3,kw:['venin'],cry:[{t:'buff',a:2,h:2,self:1,if:{has:'maki'}}],tx:'Venin. Cri d’arrivée : si Maki est sur ton plateau, gagne +2/+2.'},
   {st:'Lunettes noires',c:5,a:4,h:5,kw:['venin'],cry:[{t:'pzDbl'},{t:'buff',a:2,h:2,self:1,if:{has:'maki'}}],tx:'Venin. Cri d’arrivée : double le Venin de tous les ennemis. Si Maki est sur ton plateau, gagne +2/+2.'}]},
-maki:{n:'Maki',fac:['touristes'],sc:{wow:0,dofus:2,lol:2,cs:0},lore:'Représentante de la noblesse, nom à 14 particules. Son lait est réputé dans tout l’État Arcanique. Inséparable d’Osiris.',v:[
+maki:{n:'Maki',fac:['neigar'],sc:{wow:0,dofus:2,lol:2,cs:0},lore:'Représentante de la noblesse, nom à 14 particules. Son lait est réputé dans tout l’État Arcanique. Inséparable d’Osiris.',v:[
   {st:'La Laitière',c:2,a:2,h:3,cry:[{t:'heal',n:3}],tx:'Cri d’arrivée : soigne ton héros de 3 PV.'},
   {st:'Noblesse oblige',c:3,a:2,h:4,cry:[{t:'heal',n:4},{t:'buff',a:2,h:2,self:1,if:{has:'osiris'}}],tx:'Cri d’arrivée : soigne ton héros de 4 PV. Si Osiris est sur ton plateau, gagne +2/+2.'},
   {st:'Quatorze particules',c:5,a:3,h:5,kw:['rempart'],cry:[{t:'heal',n:5},{t:'pairBuff',k:'osiris',a:2,h:2,if:{has:'osiris'}}],tx:'Rempart. Cri d’arrivée : soigne ton héros de 5 PV. Si Osiris est sur ton plateau, vous gagnez tous les deux +2/+2.'}]},
-randal:{n:'George Rendal',fac:['expats','touristes'],sc:{wow:2,dofus:2,lol:2,cs:2},lore:'Anglais. A déjà tout fait, partout, avec tout le monde, selon lui. Chaque récit est invérifiable, et personne n’ose vérifier.',v:[
+randal:{n:'George Rendal',fac:['expats','neigar'],sc:{wow:2,dofus:2,lol:2,cs:2},lore:'Anglais. A déjà tout fait, partout, avec tout le monde, selon lui. Chaque récit est invérifiable, et personne n’ose vérifier.',v:[
   {st:'Le Conteur',c:2,a:2,h:2,cry:[{t:'rand',list:[[{t:'buff',a:1,h:1,self:1}],[{t:'dmgFace',n:2}],[{t:'draw',n:1}],[{t:'summon',k:'pleb',n:1}],[{t:'heal',n:3}]]}],tx:'Cri d’arrivée : petite histoire au hasard : +1/+1, 2 dégâts à l’adversaire, pioche 1, invoque 1 Pleb ou soigne 3.'},
   {st:'L’Anglais',c:3,a:2,h:3,cry:[{t:'rand',list:[[{t:'buff',a:2,h:2,self:1}],[{t:'dmgFace',n:4}],[{t:'draw',n:2}],[{t:'summon',k:'pleb',n:2}],[{t:'heal',n:5}]]}],tx:'Cri d’arrivée : raconte une histoire au hasard : +2/+2, 4 dégâts à l’adversaire, pioche 2, invoque 2 Plebs ou soigne 5.'},
   {st:'Il a tout fait',c:5,a:4,h:5,cry:[{t:'rand',times:2,list:[[{t:'buff',a:2,h:2,self:1}],[{t:'dmgFace',n:4}],[{t:'draw',n:2}],[{t:'summon',k:'pleb',n:2}],[{t:'heal',n:5}]]}],tx:'Cri d’arrivée : raconte 2 histoires au hasard (+2/+2, 4 dégâts à l’adversaire, pioche 2, 2 Plebs ou soin 5).'}]},
@@ -643,7 +643,7 @@ potatoll:{n:'Potatoll',fac:['ravages'],sc:{wow:2,dofus:1,lol:2,cs:1},lore:'Plus 
   {st:'Petit troll',c:3,a:3,h:3,cry:[{t:'chaos'}],tx:'Cri d’arrivée : déclenche un effet du Bazar au hasard.'},
   {st:'Le Ravagé',c:6,a:5,h:6,sot:[{t:'chaos'}],tx:'Début de ton tour : déclenche un effet du Bazar au hasard (deux fois sur un terrain Bazar).'},
   {st:'Maître du Bazar',c:9,a:6,h:8,sot:[{t:'chaos'}],eot:[{t:'chaos'}],tx:'Début et fin de ton tour : déclenche un effet du Bazar au hasard (deux fois sur un terrain Bazar).'}]},
-bambou:{n:'Golwyd Bambou',fac:['touristes'],sc:{wow:1,dofus:0,lol:1,cs:1},lore:'Créateur du serveur. N’y a pas mis les pieds depuis 20 ans (??). Il revient, regarde l’état du salon, et décide de tout reformater.',v:[
+bambou:{n:'Golwyd Bambou',fac:['neigar'],sc:{wow:1,dofus:0,lol:1,cs:1},lore:'Créateur du serveur. N’y a pas mis les pieds depuis 20 ans (??). Il revient, regarde l’état du salon, et décide de tout reformater.',v:[
   {st:'Le Fantôme',c:3,a:3,h:4,kw:['afk'],tx:'AFK.'},
   {st:'Le Créateur',c:6,a:5,h:5,kw:['afk'],cry:[{t:'banTopE'}],tx:'AFK. Cri d’arrivée : Bannit la créature ennemie la plus coûteuse.'},
   {st:'Grand Reformatage',c:10,a:6,h:6,kw:['afk'],cry:[{t:'wipe'}],tx:'AFK. Cri d’arrivée : Bannit toutes les autres créatures.'}]}};
@@ -1049,9 +1049,9 @@ function act(G,s,a){
       const pc=G.played;G.played++;
       lg(G,{t:'play',k:h.k,p:h.p,i:a.sl,c:cost,ts:s});
       arrive(G,s,a.sl);
-      if(cd.fac.indexOf('touristes')>=0&&P.board[a.sl]===c){const L=fl(G,s),nt=(L.touristes||0)-1,E=G.p[1-s];
-        if(nt>0){lg(G,{t:'fac',f:'touristes',ts:s,n:L.touristes});const n=Math.min(nt,E.or);
-          if(n>0){E.or-=n;P.or+=n;lg(G,{t:'gold',ts:s,n,from:1-s,src:'touristes',ss:1-s,si:-1})}}}
+      if(cd.fac.indexOf('neigar')>=0&&P.board[a.sl]===c){const L=fl(G,s),nt=(L.neigar||0)-1,E=G.p[1-s];
+        if(nt>0){lg(G,{t:'fac',f:'neigar',ts:s,n:L.neigar});const n=Math.min(nt,E.or);
+          if(n>0){E.or-=n;P.or+=n;lg(G,{t:'gold',ts:s,n,from:1-s,src:'neigar',ss:1-s,si:-1})}}}
       if(cd.cry&&!G.over){
         const twice=P.board.some(b=>b&&b.id!==c.id&&!b.mut&&CARDS[b.k].dbl);
         const x={s,src:h.k,self:c,tg,pc,sl:a.sl,ss:s,si:a.sl};
@@ -1105,7 +1105,7 @@ function attack(G,s,i,t){
   else{
     const D=G.p[e].board[t.i],LD=fl(G,e),ED=eff(G,e,t.i,LD),did=D.id;
     let pa=EA.a,xb=0;
-    if(hasF(A.k,'xeno')&&hasF(D.k,'touristes')&&(L.xeno||0)>=2){xb=L.xeno-1;pa+=xb}
+    if(hasF(A.k,'xeno')&&hasF(D.k,'neigar')&&(L.xeno||0)>=2){xb=L.xeno-1;pa+=xb}
     if(EA.TE&&EA.TE.vsC)pa+=EA.TE.vsC;
     const rd=(LD.weebos||0)>=3&&hasF(D.k,'weebos')&&pa>0?1:0,ra=(L.weebos||0)>=3&&hasF(A.k,'weebos')&&ED.a>0?1:0;
     const d1=dmgC(G,e,t.i,pa-rd,A.k,true),d2=dmgC(G,s,i,ED.a-ra,D.k,true);
@@ -1208,7 +1208,7 @@ const ARCH={
   farmer:{n:'Farmers',ic:'🌾',c:'#d9a441',w:'ctrl',fam:['farmer'],pri:['giveaway','pizza','botspell','raid','clutch']},
   expats:{n:'Expats',ic:'✈️',c:'#3ec5ff',w:'bal',fam:['expats'],pri:['nitro','webhook','giveaway','boost','ping']},
   ravages:{n:'Ravagés',ic:'🌀',c:'#ff8a1f',w:'agro',fam:['ravages'],pri:['raid','ping','webhook','premade']},
-  touristes:{n:'Touristes',ic:'📸',c:'#ffd23f',w:'bal',fam:['touristes'],pri:['screenshot','kick','spam','pizza']},
+  neigar:{n:'Neigar',ic:'👽',c:'#ffd23f',w:'bal',fam:['neigar'],pri:['screenshot','kick','spam','pizza']},
   xeno:{n:'Xénophobes',ic:'🚧',c:'#e2483d',w:'agro',fam:['xeno'],pri:['nerf','sanction','boost','ping']},
   rush:{n:'Rush',ic:'⚡',c:'#ff7a3d',w:'agro',fam:[],pri:['ping','webhook','boost','nitro','ragequit','premade'],agro:1},
   ctrl:{n:'Contrôle',ic:'🛡️',c:'#3d8bff',w:'ctrl',fam:[],pri:['raid','clutch','sanction','pizza','everyone','ban','slowmode','giveaway'],ctrl:1}};
@@ -1475,7 +1475,7 @@ function baseEl(b){const B=BASES[b];return h('span',{class:'mem',onclick:()=>sho
 function facTiers(f,n){const F=FAC[f];
   return h('div',{class:'tiers',style:'--gc:'+F.c},F.tiers.map(t=>h('div',{class:'tier'+(n>=t[0]?' on':'')},h('span',{class:'tn'},'×'+t[0]),h('span',null,t[1]))))}
 function facTag(f,n){if(n<2)return null;
-  return({toxic:'☠+'+(n-1),weebos:n>=3?'+1 PV 🛡':'+1 PV',farmer:'+'+n+'🪙',expats:'✈ '+exCost(n)+'🪙',ravages:'🚀×'+(n-1),touristes:'vol '+(n-1)+'🪙',xeno:'+'+(n-1)+' ATK'})[f]}
+  return({toxic:'☠+'+(n-1),weebos:n>=3?'+1 PV 🛡':'+1 PV',farmer:'+'+n+'🪙',expats:'✈ '+exCost(n)+'🪙',ravages:'🚀×'+(n-1),neigar:'vol '+(n-1)+'🪙',xeno:'+'+(n-1)+' ATK'})[f]}
 
 // ----- texte des cartes avec mots-clés survolables -----
 const KWRE=new RegExp('(?<![\\p{L}])(?:'+GLOS.map(g=>g[0].source).join('|')+')(?![\\p{L}])','gu');
@@ -2094,7 +2094,7 @@ function animate(es){
     case 'gold':{if(e.from!=null){proj(elAt(e.from,-1),elAt(e.ts,-1),'#ffc145','🪙',t,FL*1.2);popAt(e.ts,-1,'+'+e.n+' 🪙','gold',t+FL*1.2);popAt(e.from,-1,'−'+e.n+' 🪙','gold',t);t+=300}
       else{const se=srcEl(e);if(se&&e.si!==-1){proj(se,elAt(e.ts,-1),'#ffc145','🪙',t,FL);popAt(e.ts,-1,'+'+e.n+' 🪙','gold',t+FL);t+=220}else{popAt(e.ts,-1,'+'+e.n+' 🪙','gold',t);t+=150}}
       break}
-    case 'fac':{const F=FAC[e.f],n=e.n;famBurst(e.ts,e.f,e.f==='ravages'?(n-1)+' missile'+(n>2?'s':'')+' !':e.f==='farmer'?'+'+n+' Or':e.f==='touristes'?'Vol de '+(n-1)+' Or':'×'+n,t);t+=550;break}
+    case 'fac':{const F=FAC[e.f],n=e.n;famBurst(e.ts,e.f,e.f==='ravages'?(n-1)+' missile'+(n>2?'s':'')+' !':e.f==='farmer'?'+'+n+' Or':e.f==='neigar'?'Vol de '+(n-1)+' Or':'×'+n,t);t+=550;break}
     case 'tfx':{const td=TD[e.d];if(!td)break;flashSlot(e.ts,e.i,GAMES[td.g].c,t);popAt(e.ts,e.i,GAMES[td.g].ic+' '+td.n,'txt',t);t+=260;break}
     case 'buff':popAt(e.ts,e.i,(e.a>=0?'+':'')+(e.a||0)+'/+'+(e.h||0),'buf',t);t+=110;break;
     case 'tilt':popAt(e.ts,e.i,'😡 +2 ATK','buf',t+200);break;
@@ -2498,8 +2498,8 @@ function curve(d){
   return h('div',{style:'display:flex;gap:4px;align-items:flex-end;height:66px;margin-top:6px'},c.map((n,i)=>
     h('div',{style:'flex:1;text-align:center;font-size:11px;font-weight:700;color:#cfdde3'},h('div',{style:'height:'+(n/m*38)+'px;background:linear-gradient(180deg,#bff1ff,#14a8e6);border-radius:3px;min-height:'+(n?3:0)+'px'}),n||'',h('div',{style:'color:#7f97a2'},i===10?'10':i))))}
 const ARCHD={toxic:'Empile le Venin : chaque Toxic renforce les autres.',weebos:'Des créatures rapides et solides, protégées en groupe.',farmer:'Accumule l’Or et achète les meilleurs terrains.',
-  expats:'Or, contrôle et voyages à l’étranger pour protéger tes pièces clés.',ravages:'Chaos, missiles aléatoires et effets du Bazar.',touristes:'Soins, vol d’Or et gros bannissements.',
-  xeno:'Créatures Tilt robustes qui punissent les Touristes.',rush:'Cartes bon marché, Hâte et dégâts directs : finir vite.',ctrl:'Retire les menaces, soigne, puis gagne avec les gros monstres.'};
+  expats:'Or, contrôle et voyages à l’étranger pour protéger tes pièces clés.',ravages:'Chaos, missiles aléatoires et effets du Bazar.',neigar:'Soins, vol d’Or et gros bannissements.',
+  xeno:'Créatures Tilt robustes qui punissent les Neigar.',rush:'Cartes bon marché, Hâte et dégâts directs : finir vite.',ctrl:'Retire les menaces, soigne, puis gagne avec les gros monstres.'};
 function autoModal(di){
   const d=S.decks[di];
   modal(h('div',null,h('h2',null,'Construire automatiquement'),h('p',{class:'mut sm'},'Choisis un style : le deck est composé avec ce que tu possèdes.'),
