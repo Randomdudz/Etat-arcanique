@@ -451,18 +451,27 @@ input::placeholder{color:#6f8a96}
 .hc.can .card .ci{box-shadow:0 0 0 1.2cqw #5ee08a,0 0 4cqw #5ee08aaa}
 .ghost{position:fixed;z-index:80;pointer-events:none;width:110px;transform:translate(-50%,-60%) rotate(-4deg) scale(1.05);filter:drop-shadow(0 12px 18px #000a);opacity:.96}
 .ghost.terr{width:auto}
-#hist{width:300px;flex:none;border-left:2px solid #2b404b;background:#0a1216;overflow:auto;padding:8px 10px 14px}
-.hh{display:flex;gap:6px;align-items:center;margin-bottom:6px;position:sticky;top:-8px;background:#0a1216;padding:6px 0;z-index:2}
+#hist{width:316px;flex:none;border-left:3px solid #26414d;background:#091116;overflow:auto;padding:8px 10px 14px}
+.hh{display:flex;gap:6px;align-items:center;margin-bottom:6px;position:sticky;top:-8px;background:#091116;padding:6px 0;z-index:2}
 .hh b{flex:1;font-family:var(--disp);font-weight:400;font-size:17px}
-.hturn{margin:10px 0 4px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#cfdde3;display:flex;align-items:center;gap:8px;font-weight:700}
-.hturn::before,.hturn::after{content:'';flex:1;height:1px;background:#ffffff26}
-.hact{border-radius:10px;padding:5px 7px;margin-bottom:4px;font-size:12.5px;display:flex;flex-wrap:wrap;gap:4px 5px;align-items:center;background:#2ec4b61a;border-left:4px solid #2ec4b6}
-.hact.opp{border-left-color:#ff5d6c;background:#ff5d6c1c}
-.hact .mi{display:inline-flex;align-items:center;gap:3px;background:#000a;border-radius:99px;padding:1px 7px 1px 2px;font-size:12px;white-space:nowrap}
-.hact .mi img,.hact .mi u{width:21px;height:21px;border-radius:50%;object-fit:cover;display:grid;place-items:center;text-decoration:none;font-size:12px;background:#2b404b}
-.hact .dm{color:#ff8a98;font-weight:900}.hact .rc{color:#ffbf5a;font-weight:900}.hact .hl{color:#7dffa5;font-weight:900}.hact .pzc{color:#a6ff6a;font-weight:900}.hact .gd{color:#ffd36b;font-weight:900}
-.hact .ar{opacity:.7}
-.hact.sys{background:#ffc1451a;border-left-color:#ffc145}
+.hturn{margin:12px 0 5px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#7fe9dd;display:flex;align-items:center;gap:8px;font-weight:800}
+.hturn.opp{color:#ff9aa6}
+.hturn::before,.hturn::after{content:'';flex:1;height:1px;background:currentColor;opacity:.35}
+.hact{border-radius:10px;padding:4px 6px 4px 4px;margin-bottom:6px;font-size:12.5px;display:flex;flex-direction:column;gap:2px;background:#2ec4b614;border-left:4px solid #2ec4b6}
+.hact.opp{border-left-color:#ff5d6c;background:#ff5d6c14}
+.hr{display:flex;flex-wrap:wrap;gap:3px 5px;align-items:center;padding:2px 4px 2px 6px;border-left:3px solid transparent;border-radius:4px;line-height:1.35}
+.hr.main{font-weight:700;font-size:13px}
+.hr:not(.main){margin-left:8px;border-left-color:#ffffff22;color:#dbe7ec}
+.hr.k-dmg{border-left-color:#ff6b7a}.hr.k-heal{border-left-color:#6dffa0}.hr.k-gold,.hr.k-buy{border-left-color:#ffd36b}.hr.k-pz{border-left-color:#a6ff6a}
+.hr.k-buff{border-left-color:#5fb0ff}.hr.k-ctl{border-left-color:#3ec5ff}.hr.k-tfx,.hr.k-fac{border-left-color:#ffb13d}.hr.k-sum{border-left-color:#66e0c8}.hr.k-die{border-left-color:#8a98a1}
+.hr.k-sys{border-left-color:#ffc145;background:#ffc14512}
+.mi{display:inline-flex;align-items:center;gap:4px;background:#000b;border:1.5px solid var(--mc,#34505e);border-radius:99px;padding:1px 8px 1px 2px;font-size:12px;white-space:nowrap;font-weight:700}
+.mi[data-k]{cursor:help}.mi[data-k]:hover{background:#000;box-shadow:0 0 0 2px var(--mc)}
+.mi img,.mi u{width:22px;height:22px;border-radius:50%;object-fit:cover;display:grid;place-items:center;text-decoration:none;font-size:12px;background:#2b404b;flex:none}
+.mi.hch.me{--mc:#2ec4b6}.mi.hch.me u{background:#1f8a80}.mi.hch.op{--mc:#ff5d6c}.mi.hch.op u{background:#b8304d}
+.hr .vb{font-size:14px;line-height:1}.hr .by{opacity:.7;font-size:11px;font-style:italic}.hr .pst{color:#ffd36b;font-weight:900}
+.hr .dm{color:#ff8a98;font-weight:900}.hr .rc{color:#ffbf5a;font-weight:900}.hr .hl{color:#7dffa5;font-weight:900}.hr .pzc{color:#a6ff6a;font-weight:900}.hr .gd{color:#ffd36b;font-weight:900}.hr .bf{color:#8fc8ff;font-weight:900}
+.hr .ar{opacity:.7}
 .pop{position:fixed;z-index:70;pointer-events:none;font-weight:900;font-size:32px;-webkit-text-stroke:1.5px #000;text-shadow:0 3px 8px #000,0 0 18px currentColor;animation:popu 1.25s ease-out forwards;white-space:nowrap}
 @keyframes popu{0%{transform:translate(-50%,0) scale(.5);opacity:0}15%{transform:translate(-50%,-10px) scale(1.35);opacity:1}100%{transform:translate(-50%,-64px) scale(1);opacity:0}}
 .pop.dmg{color:#ff5b6b}.pop.heal{color:#6dffa0}.pop.pz{color:#b6ff5b}.pop.buf{color:#ffd24a;font-size:24px}.pop.txt{color:#fff;font-size:20px;-webkit-text-stroke:1px #000}.pop.gold{color:#ffd36b;font-size:26px}.pop.big{font-size:46px}
@@ -563,6 +572,109 @@ input::placeholder{color:#6f8a96}
 .card.prism .ct{background:linear-gradient(180deg,#0b1215cc,#121c22d6);box-shadow:inset 0 0 0 .4cqw #ffffff40}
 .card.prism.bd .ci{background:#0a1013}
 @media(prefers-reduced-motion:reduce){.card.prism .ci,.card .holo,.card .hgl,.card .spk,.card .pfr,.card .shn,.pk::after{animation:none}}
+/* compteur de déplacements et coût affiché dans l'historique */
+.rtx .mvc{background:#ffffff14;border:1px solid #ffffff30;border-radius:8px;padding:1px 7px;color:#bfe9ff;cursor:help}
+.rtx .mvc.out{opacity:.6;color:#ffb3c0;border-color:#ff6b7a66}
+.cst{margin-left:6px;font-size:11px;font-weight:800;color:#ffd36b;background:#ffffff14;border-radius:6px;padding:0 5px;white-space:nowrap}
+
+/* ================= REFONTE LISIBILITÉ DU DUEL : zones colorées, hiérarchie, indicateur de tour ================= */
+#duel{--sw:clamp(64px,min(calc((100vh - 535px)/3.74),calc((100vw - 700px)/6.25)),150px);--hw:max(84px,calc(var(--sw)*.84));
+  background:radial-gradient(1100px 520px at 50% -8%,#ff5d6c24,transparent 70%),radial-gradient(1000px 520px at 50% 108%,#2ec4b62b,transparent 70%),linear-gradient(180deg,#0a0f13,#0b1217)}
+@media(max-height:820px){#duel{--sw:clamp(64px,min(calc((100vh - 500px)/3.74),calc((100vw - 700px)/6.25)),150px)}}
+.field>*{width:calc(var(--sw)*6 + 66px)}
+.field{gap:6px;padding:8px 10px 6px}
+/* zones : un fond et un liseré de couleur par camp */
+.zone{border-radius:18px;padding:7px 9px;display:flex;flex-direction:column;gap:4px;position:relative;border:2px solid var(--zb);box-shadow:0 5px 16px #000a,inset 0 0 36px var(--zg);transition:box-shadow .3s,border-color .3s}
+.zopp{--zb:#ff5d6c55;--zg:#ff5d6c14;background:linear-gradient(180deg,#46151d,#28090f)}
+.zme{--zb:#2ec4b655;--zg:#2ec4b614;background:linear-gradient(180deg,#0b3138,#0a1f24)}
+.zmid{--zb:#ffc14566;--zg:#ffc1451a;background:linear-gradient(180deg,#34270a,#1f1706);flex-direction:row;align-items:stretch;gap:8px;min-height:0;padding:6px 9px}
+/* c'est ton tour : ta zone s'allume ; tour adverse : celle de l'adversaire */
+#duel.myturn .zme{--zb:#2ec4b6;box-shadow:0 0 0 2px #2ec4b6aa,0 0 30px #2ec4b66b,0 5px 16px #000a,inset 0 0 36px #2ec4b62a}
+#duel.oppturn .zopp{--zb:#ff5d6c;box-shadow:0 0 0 2px #ff5d6caa,0 0 30px #ff5d6c66,0 5px 16px #000a,inset 0 0 36px #ff5d6c26}
+#duel.myturn .dtop{border-bottom-color:#2ec4b6}#duel.oppturn .dtop{border-bottom-color:#ff5d6c}
+.dtop{border-bottom-width:3px}
+/* héros : plus gros, ressources en pastilles colorées */
+.hero{border-radius:14px;padding:6px 12px 6px 8px;gap:12px}
+.hero.me{--hg1:#136670;--hg2:#0d3f47}.hero.opp{--hg1:#7a2230;--hg2:#4a1019}
+.hav{width:46px;height:46px;font-size:22px;border-width:3px}
+.hn{font-size:15px}
+.hbar{height:22px;border-width:2px}.hbar span{font-size:14px}
+.rtx{gap:6px;font-size:14px}
+.rtx>span{padding:0 9px;border-radius:99px;background:#0008;border:1.5px solid #ffffff30;line-height:1.55}
+.rtx .d{color:#8fe0ff;border-color:#3ec5ffaa;background:#06222e}.rtx .o{color:#ffd36b;border-color:#ffc145aa;background:#2d2308}
+.rtx .mvc{color:#9fd0ff;border-color:#5fa8ffaa;background:#0a1d33}
+.crys i{width:13px;height:16px}
+.piles button{background:#000a;border-color:#ffffff3a;font-size:12.5px;color:#fff}
+/* plateaux : cases bien visibles, teintées par camp */
+.board{padding:2px}
+.board.o,.board.m{background:none}
+.slot{background:#0004;border:2px dashed #ffffff40}
+.board.o .slot{border-color:#ff8d98aa;background:#ff5d6c14}
+.board.m .slot{border-color:#5fe0d2aa;background:#2ec4b614}
+.board.o .slot:not(.empty),.board.m .slot:not(.empty){border-style:solid;border-color:transparent;background:none}
+/* bandes de terrains et synergies */
+.tstrip{height:24px}
+.tcell{font-size:11.5px;border-width:2px}
+.tcell.none{border-color:#ffffff33;color:#ffffff55}
+.fxrow{height:28px}
+.fx{height:26px;font-size:12px}
+/* zone du milieu : boutique de terrains + fin de tour */
+.zmid .shopz{background:none;border:none;padding:0}
+.zmid .evb{background:#0006;border-color:#ffc14566}
+.shopz .lb{color:#ffd36b;font-size:10.5px}
+.endb{min-width:128px;font-size:16px}
+/* barre d'aide : seulement l'instruction du moment et ses boutons */
+.info{min-height:0;flex-direction:row;align-items:center;gap:12px;padding:6px 12px;background:linear-gradient(180deg,#3a2c0b,#251b06);border:2px solid #ffc145aa;box-shadow:0 0 18px #ffc14544}
+.info.empty{display:none}
+.info .hintline{flex:1;font-size:14.5px;color:#fff1c4}
+.info .acts{display:flex;gap:8px;flex:none}
+@media(max-height:820px){.info{padding:3px 10px}.info:not(:has(.hintline)){display:none}}
+/* main : un plateau sombre derrière les cartes */
+.hand{background:linear-gradient(180deg,#0000,#07181c 55%);border-radius:14px}
+/* panneau de gauche : fiche (bleu acier) */
+#prev{width:276px;background:linear-gradient(180deg,#10243d,#0a1727);border-right:3px solid #2f5a96;box-shadow:inset -14px 0 28px #3d8bff12}
+#prev::before{content:'FICHE';display:block;font-size:11px;letter-spacing:.2em;font-weight:900;color:#7fb8ff;margin:0 0 8px;padding-bottom:5px;border-bottom:2px solid #2f5a9688}
+#prev .pd{color:#dbe8f5}
+/* panneau de droite : historique (graphite) */
+#hist{background:linear-gradient(180deg,#14191e,#0b0f12);border-left:3px solid #4a5a66}
+.hh{background:#14191e}
+.hh b{color:#fff;text-transform:uppercase;font-family:'Inter',sans-serif;font-weight:900;font-size:12.5px;letter-spacing:.2em}
+.hrow{display:flex;align-items:center;gap:8px;min-width:0}
+.hrow .hn{flex:1;min-width:0}
+.hrow .piles{flex:none;gap:4px}
+.hrow .piles button{padding:0 7px;font-size:12px;line-height:1.5}
+.hinfo{min-width:150px}
+.hrow .piles{background:#0008;border:1.5px solid #ffffff2e;border-radius:99px;padding:0 9px;gap:7px}
+.hrow .piles button{background:none;border:0;padding:0;font-size:12px;border-radius:6px}
+.hrow .piles button:not(.dk):hover{background:#ffffff22}
+
+/* écrans de menu : chaque onglet a sa teinte (fond, liseré des panneaux) pour les distinguer d'un coup d'œil */
+#view[data-t]{background:radial-gradient(1300px 360px at 50% -70px,color-mix(in srgb,var(--h) 22%,transparent),transparent 75%)}
+.panel{border-top:3px solid color-mix(in srgb,var(--h) 75%,#2b404b)}
+.panel h3{padding-bottom:10px;border-bottom:1px solid color-mix(in srgb,var(--h) 30%,transparent)}
+
+/* ================= ÉCHANGES DE CARTES ================= */
+.mbox.tradebox{max-width:1000px;width:min(1000px,96vw)}
+.tstat{text-align:center;font-weight:800;font-size:15px;color:#ffe9a8;background:#3a2c0b;border:2px solid #ffc14577;border-radius:12px;padding:7px 12px;margin-bottom:10px}
+.tw{display:grid;grid-template-columns:1fr 64px 1fr;gap:10px;align-items:stretch}
+.tside{border-radius:18px;padding:12px 14px;border:2px solid var(--zb);background:linear-gradient(180deg,var(--z1),var(--z2));display:flex;flex-direction:column;align-items:center;gap:8px;min-height:430px;box-shadow:inset 0 0 36px var(--zg)}
+.tside.me{--zb:#2ec4b6;--z1:#0b3138;--z2:#0a1f24;--zg:#2ec4b61f}
+.tside.them{--zb:#ff5d6c;--z1:#46151d;--z2:#28090f;--zg:#ff5d6c1f}
+.tside .tl{font-size:12px;letter-spacing:.2em;font-weight:900;text-transform:uppercase;color:var(--zb)}
+.tside .tcw{width:210px;flex:none}
+.tside .tempty{flex:1;display:grid;place-items:center;text-align:center;color:#ffffff88;border:2px dashed #ffffff3a;border-radius:14px;width:210px;font-weight:700;padding:12px}
+.tinfo{width:100%;text-align:center}
+.tinfo b{font-size:17px}
+.tinfo .ttx{margin-top:4px;color:#e6f0f4;line-height:1.35}
+.tinfo .tfs{display:flex;gap:6px;justify-content:center;margin-top:6px;flex-wrap:wrap}
+.tfoot{display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;margin-top:auto}
+.tok{font-size:12.5px;font-weight:800;border-radius:99px;padding:3px 12px;background:#0007;border:1.5px solid #ffffff33;color:#ffffffaa}
+.tok.on{color:#0b2a14;background:#6dffa0;border-color:#c9ffe0}
+.tmid{display:grid;place-items:center;font-size:42px;color:#ffc145;text-shadow:0 0 18px #ffc14588}
+.tgrid .cc2.sel .card .ci{box-shadow:0 0 0 2cqw #ffc145,0 0 6cqw #ffc145aa}
+/* petits écrans : la zone reste assez large pour la barre du héros (nom, PV, ressources) même si les cases sont petites */
+.field>*{width:max(calc(var(--sw)*6 + 66px),min(600px,100%))}
+.board,.tstrip{width:calc(var(--sw)*6 + 30px);max-width:100%;margin-left:auto;margin-right:auto}
 </style>
 <script defer src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
 </head>
@@ -827,7 +939,7 @@ const EVENTS=[
   {n:'Giveaway général',tx:'Chaque joueur pioche 1 carte.',fx:[{t:'draw',n:1,both:1}]}];
 
 // ----- réglages d'un défi -----
-const OPTDEF={hp:40,tim:75,cap:10,ter:1,evt:0,hand:8,inc:1,rw:1,comp:1};
+const OPTDEF={hp:40,tim:75,cap:10,ter:1,evt:0,hand:8,inc:1,rw:1,comp:1,mv:2};
 const OPTSET=[
   {k:'tim',n:'Chrono par tour',v:[[0,'Aucun'],[45,'45 s'],[75,'75 s'],[120,'120 s']]},
   {k:'hp',n:'PV des héros',v:[[30,'30'],[40,'40'],[50,'50'],[60,'60']]},
@@ -835,6 +947,7 @@ const OPTSET=[
   {k:'hand',n:'Taille de la main',v:[[8,'8'],[10,'10']]},
   {k:'inc',n:'Or par tour',v:[[1,'1'],[2,'2']]},
   {k:'ter',n:'Terrains',v:[[1,'Oui'],[0,'Non']]},
+  {k:'mv',n:'Déplacements par tour (1er : 1, 2e : 2…)',v:[[0,'Interdits'],[1,'1'],[2,'2'],[3,'3']]},
   {k:'evt',n:'Événements du Bazar (toutes les 3 manches)',v:[[0,'Non'],[1,'Oui']]},
   {k:'comp',n:'Bonus du second joueur (+5 PV, +1 Or)',v:[[1,'Oui'],[0,'Non']]},
   {k:'rw',n:'Récompenses en 💎',v:[[1,'Oui'],[0,'Duel amical']]}];
@@ -849,7 +962,8 @@ function ri(G,n){return Math.floor(rnd(G)*n)}
 function shuf(G,a){for(let i=a.length-1;i>0;i--){const j=ri(G,i+1);const t=a[i];a[i]=a[j];a[j]=t}return a}
 function pick(G,a){return a.length?a[ri(G,a.length)]:null}
 function er(m){return{ok:false,err:m}}
-function lg(G,e){if(!G.lg)return;e.a=G.aid;e.s=G.cur;e.tn=G.turn;G.hist.push(e)}
+// cs = « cause » : la carte, le terrain ou la famille dont l'effet est en cours de résolution (pour l'historique)
+function lg(G,e){if(!G.lg)return;e.a=G.aid;e.s=G.cur;e.tn=G.turn;if(G.cs&&e.src===undefined)e.cs=G.cs;G.hist.push(e)}
 function hasF(k,f){const cd=CARDS[k];return!!cd&&cd.fac.indexOf(f)>=0}
 
 // ---------- création ----------
@@ -857,7 +971,7 @@ function mkCard(G,k,p){return{k,id:++G.uid,p:p?1:0}}
 function newGame(cfg){
   const o=Object.assign({},OPTDEF,cfg.o||{});
   const G={o,rs:(cfg.seed>>>0)||1,uid:0,aid:0,turn:0,round:0,cur:0,first:0,over:null,lg:cfg.lg===false?0:1,hist:[],played:0,
-    rp:0,p:[],shop:[],tdeck:[],tdis:[],nev:0};
+    rp:0,cs:null,p:[],shop:[],tdeck:[],tdis:[],nev:0};
   G.first=cfg.first!=null?cfg.first:(rnd(G)<.5?0:1);
   for(let s=0;s<2;s++){
     const P={nm:(cfg.names&&cfg.names[s])||('Joueur '+(s+1)),hp:o.hp,mhp:o.hp,pz:0,deck:[],hand:[],board:Array(CELLS).fill(null),
@@ -938,6 +1052,18 @@ function playable(G,s,i){
   if(cd.t==='c')return P.board.some(c=>!c);
   const sp=cryTg(cd);if(sp)return targets(G,s,sp.tg,sp.tgf).length>0;return true}
 function terrCost(G,s,t){let c=TD[t.d].cost;if(G&&s!=null)for(const b of G.p[s].board)if(b&&!b.mut&&CARDS[b.k].tdisc)c-=1;return Math.max(1,c)}
+// ---------- déplacements : coût et plafond ----------
+// Une créature déplacée (ou échangée) coûte du Démoflux, un terrain déplacé coûte de l'Or. Le n-ième déplacement du tour coûte n.
+// Le plafond par tour se règle dans les options du défi (mv : 0 = interdits).
+function mvMax(G){return G.o.mv==null?2:G.o.mv}
+function mvCost(G,s){return 1+(G.p[s].mvn||0)}
+function mvLeft(G,s){return Math.max(0,mvMax(G)-(G.p[s].mvn||0))}
+function canMoveC(G,s){return!G.over&&G.cur===s&&mvLeft(G,s)>0&&G.p[s].eth>=mvCost(G,s)}
+function canMoveT(G,s){return!G.over&&G.cur===s&&!!G.o.ter&&mvLeft(G,s)>0&&G.p[s].or>=mvCost(G,s)}
+function mvWhy(G,s,terr){
+  if(mvMax(G)<=0)return 'Les déplacements sont désactivés dans ce défi.';
+  if(mvLeft(G,s)<=0)return 'Déplacements épuisés pour ce tour (maximum '+mvMax(G)+').';
+  const c=mvCost(G,s);return terr?'Pas assez d’Or pour déplacer un terrain (coût : '+c+' 🪙).':'Pas assez de Démoflux pour déplacer une créature (coût : '+c+' ◆).'}
 function canBuy(G,s,n){if(G.over||G.cur!==s||!G.o.ter||G.p[s].tb)return false;const t=G.shop[n];return!!t&&G.p[s].or>=terrCost(G,s,t)}   // 1 achat par tour
 function canExil(G,s,i){if(G.over||G.cur!==s)return false;const P=G.p[s],c=P.board[i];if(!c||c.ex||!hasF(c.k,'expats'))return false;
   const n=fl(G,s).expats||0;return n>=2&&P.or>=exCost(n)}
@@ -953,7 +1079,7 @@ function hit(G,s,i,n,src,x){return i<0?heroHit(G,s,n,src,false,x):dmgC(G,s,i,n,s
 function heal(G,s,n,src){const P=G.p[s],v=Math.min(n,P.mhp-P.hp);if(v>0){P.hp+=v;lg(G,{t:'heal',ts:s,n:v,src})}return v}
 function healC(G,s,i,n){const c=G.p[s].board[i];if(!c||c.dm<=0)return 0;const v=Math.min(n,c.dm);c.dm-=v;lg(G,{t:'hc',ts:s,i,k:c.k,n:v});return v}
 function addPz(G,s,i,n,x){if(n<=0)return;if(i<0)G.p[s].pz+=n;else{const c=G.p[s].board[i];if(!c)return;c.pz+=n}
-  lg(G,{t:'pz',ts:s,i,k:i<0?null:G.p[s].board[i].k,n,ss:x?x.ss:null,si:x?x.si:null})}
+  lg(G,{t:'pz',ts:s,i,k:i<0?null:G.p[s].board[i].k,n,src:x?x.src:undefined,ss:x?x.ss:null,si:x?x.si:null})}
 function gold(G,s,n,src,x){if(n<=0)return;G.p[s].or+=n;lg(G,{t:'gold',ts:s,n,src,ss:x?x.ss:null,si:x?x.si:null})}
 function toDisc(P,c){if(c&&!CARDS[c.k].tok)P.disc.push({k:c.k,id:c.id,p:c.p})}
 // deck vide : cimetière + défausse sont remélangés
@@ -968,7 +1094,7 @@ function give(G,s,k,n){const P=G.p[s];for(let j=0;j<n;j++){
   if(P.hand.length>=G.o.hand){lg(G,{t:'burn',ts:s,k});continue}P.hand.push(mkCard(G,k));lg(G,{t:'add',ts:s,k,pv:s})}}
 // une créature arrive sur une case : effet « Arrivée » du terrain
 function arrive(G,s,i){const c=G.p[s].board[i];if(!c)return;const T=terrOf(G,s,i),TE=tfx(T,c.k);
-  if(TE&&TE.arr){lg(G,{t:'tfx',ts:s,i,d:T.d});runFx(G,TE.arr,{s,src:'T:'+T.d,self:c,sl:i,ss:s,si:i,tg:null,pc:0})}}
+  if(TE&&TE.arr){lg(G,{t:'tfx',ts:s,i,d:T.d,k:c.k});runFx(G,TE.arr,{s,src:'T:'+T.d,self:c,sl:i,ss:s,si:i,tg:null,pc:0})}}
 function summon(G,s,k,o){
   o=o||{};const P=G.p[s];let sl=o.sl;if(sl==null||sl<0||P.board[sl])sl=bestSlot(G,s,k);if(sl<0)return null;
   const c=mkC(G,k,o.p);c.sm=o.real?0:1;if(o.a!=null){c.a=o.a;c.h=o.h}P.board[sl]=c;lg(G,{t:'sum',ts:s,i:sl,k});arrive(G,s,sl);return c}
@@ -989,7 +1115,7 @@ function reap(G){
     removeC(G,s,i,false);if(!cd.tok&&!c.sm)P.grave.push({k:c.k,id:c.id,p:c.p});
     const x={s,src:c.k,self:c,tg:null,pc:G.played,sl:i,ss:s,si:i};
     if(!c.mut&&cd.last)runFx(G,cd.last,x);
-    if(E.TE&&E.TE.last&&!G.over){lg(G,{t:'tfx',ts:s,i,d:E.T.d});runFx(G,E.TE.last,Object.assign({},x,{src:'T:'+E.T.d}))}
+    if(E.TE&&E.TE.last&&!G.over){lg(G,{t:'tfx',ts:s,i,d:E.T.d,k:c.k});runFx(G,E.TE.last,Object.assign({},x,{src:'T:'+E.T.d}))}
     if(E.kw.respawn&&!c.rs&&!G.over&&!P.board[i]){
       const gi=P.grave.findIndex(q=>q.id===c.id);if(gi>=0)P.grave.splice(gi,1);
       const n=mkC(G,c.k,c.p);n.a=c.a;n.h=c.h;n.rs=1;n.sick=1;n.sm=c.sm;n.mut=c.mut;P.board[i]=n;
@@ -1007,7 +1133,8 @@ function allEnemy(G,s){const r=[{s:1-s,i:-1}];G.p[1-s].board.forEach((c,i)=>{if(
 function vt(G,t){return!!t&&(t.i<0||(G.p[t.s].board[t.i]&&G.p[t.s].board[t.i].id===t.id))}
 function tgC(G,x){const t=x.tg;if(!t||t.i<0)return null;const c=G.p[t.s].board[t.i];return c&&c.id===t.id?c:null}
 function selfI(G,x){return x.self?slotOf(G,x.s,x.self):-1}
-function runFx(G,list,x){
+function runFx(G,list,x){const pc=G.cs;if(typeof x.src==='string')G.cs=x.src;fx0(G,list,x);G.cs=pc}
+function fx0(G,list,x){
   for(const op of list){if(G.over)return;if(op.if&&!cond(G,op.if,x))continue;OPS[op.t](G,op,x);reap(G)}}
 const OPS={
   dmg(G,op,x){
@@ -1024,7 +1151,7 @@ const OPS={
     if(op.all){B.forEach((c,i)=>{if(c)healC(G,x.s,i,op.n)});return}
     const cs=[];B.forEach((c,i)=>{if(c&&c.dm>0&&i!==me)cs.push(i)});if(cs.length)healC(G,x.s,pick(G,cs),op.n)},
   healSelf(G,op,x){const i=selfI(G,x);if(i>=0)healC(G,x.s,i,op.n)},
-  grow(G,op,x){const i=selfI(G,x);if(i<0)return;const c=G.p[x.s].board[i];c.a+=op.a;c.h+=op.h;lg(G,{t:'buff',ts:x.s,i,k:c.k,a:op.a,h:op.h})},
+  grow(G,op,x){const i=selfI(G,x);if(i<0)return;const c=G.p[x.s].board[i];c.a+=op.a;c.h+=op.h;lg(G,{t:'buff',ts:x.s,i,k:c.k,ba:op.a,bh:op.h})},
   egide(G,op,x){const i=selfI(G,x);if(i<0)return;const c=G.p[x.s].board[i];if(c.eg)return;c.eg=1;lg(G,{t:'kwg',ts:x.s,i,k:c.k,kw:'egide'})},
   draw(G,op,x){for(const s of sides(op,x))draw(G,s,op.n)},
   drawOpp(G,op,x){draw(G,1-x.s,op.n)},
@@ -1032,15 +1159,15 @@ const OPS={
   add(G,op,x){give(G,x.s,op.k,op.n)},
   summon(G,op,x){for(let j=0;j<op.n;j++)summon(G,x.s,op.k,{sl:j===0?x.sl:null})},
   buff(G,op,x){
-    const ap=(s,i)=>{const c=G.p[s].board[i];if(!c)return;c.a=Math.max(0,c.a+op.a);c.h+=op.h;lg(G,{t:'buff',ts:s,i,k:c.k,a:op.a,h:op.h})};
+    const ap=(s,i)=>{const c=G.p[s].board[i];if(!c)return;c.a=Math.max(0,c.a+op.a);c.h+=op.h;lg(G,{t:'buff',ts:s,i,k:c.k,ba:op.a,bh:op.h})};
     if(op.self){const i=selfI(G,x);if(i>=0)ap(x.s,i);return}
     if(op.all||op.others){const me=selfI(G,x);G.p[x.s].board.forEach((c,i)=>{if(c&&!(op.others&&i===me))ap(x.s,i)});return}
     if(op.rnd){const cs=[];G.p[x.s].board.forEach((c,i)=>{if(c)cs.push(i)});if(cs.length)ap(x.s,pick(G,cs));return}
     if(tgC(G,x))ap(x.tg.s,x.tg.i)},
   pairBuff(G,op,x){OPS.buff(G,{a:op.a,h:op.h,self:1},x);const B=G.p[x.s].board;
-    const i=B.findIndex(b=>b&&CARDS[b.k].base===op.k&&(!x.self||b.id!==x.self.id));if(i>=0){const c=B[i];c.a+=op.a;c.h+=op.h;lg(G,{t:'buff',ts:x.s,i,k:c.k,a:op.a,h:op.h})}},
-  dbl(G,op,x){const c=tgC(G,x);if(!c)return;const E=eff(G,x.tg.s,x.tg.i),n=Math.min(E.a,op.max||99);c.a+=n;lg(G,{t:'buff',ts:x.tg.s,i:x.tg.i,k:c.k,a:n,h:0})},
-  dblAH(G,op,x){const c=tgC(G,x);if(!c)return;const E=eff(G,x.tg.s,x.tg.i),m=op.max||99,a=Math.min(E.a,m),hh=Math.min(E.h,m);c.a+=a;c.h+=hh;lg(G,{t:'buff',ts:x.tg.s,i:x.tg.i,k:c.k,a,h:hh})},
+    const i=B.findIndex(b=>b&&CARDS[b.k].base===op.k&&(!x.self||b.id!==x.self.id));if(i>=0){const c=B[i];c.a+=op.a;c.h+=op.h;lg(G,{t:'buff',ts:x.s,i,k:c.k,ba:op.a,bh:op.h})}},
+  dbl(G,op,x){const c=tgC(G,x);if(!c)return;const E=eff(G,x.tg.s,x.tg.i),n=Math.min(E.a,op.max||99);c.a+=n;lg(G,{t:'buff',ts:x.tg.s,i:x.tg.i,k:c.k,ba:n,bh:0})},
+  dblAH(G,op,x){const c=tgC(G,x);if(!c)return;const E=eff(G,x.tg.s,x.tg.i),m=op.max||99,a=Math.min(E.a,m),hh=Math.min(E.h,m);c.a+=a;c.h+=hh;lg(G,{t:'buff',ts:x.tg.s,i:x.tg.i,k:c.k,ba:a,bh:hh})},
   pz(G,op,x){if(!vt(G,x.tg))return;addPz(G,x.tg.s,x.tg.i,op.n,x)},
   pzAll(G,op,x){for(const t of allEnemy(G,x.s))addPz(G,t.s,t.i,op.n,x)},
   pzDbl(G,op,x){const e=1-x.s,P=G.p[e];if(P.pz>0)addPz(G,e,-1,P.pz,x);P.board.forEach((c,i)=>{if(c&&c.pz>0)addPz(G,e,i,c.pz,x)})},
@@ -1076,7 +1203,7 @@ const OPS={
   clashT(G,op,x){const c=tgC(G,x);if(!c)return;if(CARDS[c.k].base===op.k){lg(G,{t:'dmg',ts:x.tg.s,i:x.tg.i,k:c.k,src:x.src,n:99,ss:x.ss,si:x.si});c.dm+=99999}
     else dmgC(G,x.tg.s,x.tg.i,op.n,x.src,false,x)},
   combo(G,op,x){const i=selfI(G,x);if(i<0)return;const n=Math.min(x.pc||0,op.max||99);if(n<=0)return;
-    const c=G.p[x.s].board[i];c.a+=op.a*n;c.h+=op.h*n;lg(G,{t:'buff',ts:x.s,i,k:c.k,a:op.a*n,h:op.h*n})},
+    const c=G.p[x.s].board[i];c.a+=op.a*n;c.h+=op.h*n;lg(G,{t:'buff',ts:x.s,i,k:c.k,ba:op.a*n,bh:op.h*n})},
   wipe(G,op,x){for(const s of[0,1])G.p[s].board.forEach((c,i)=>{if(c&&!(x.self&&c.id===x.self.id))removeC(G,s,i,true)})}
 };
 
@@ -1090,7 +1217,7 @@ function boardHooks(G,s,key){
   const P=G.p[s];
   for(let i=0;i<CELLS;i++){const c=P.board[i];if(c&&!c.mut&&CARDS[c.k][key]){runFx(G,CARDS[c.k][key],{s,src:c.k,self:c,tg:null,pc:0,sl:i,ss:s,si:i});if(G.over)return}}
   for(let i=0;i<CELLS;i++){const c=P.board[i];if(!c)continue;const T=terrOf(G,s,i),TE=tfx(T,c.k);
-    if(TE&&TE[key]){lg(G,{t:'tfx',ts:s,i,d:T.d});runFx(G,TE[key],{s,src:'T:'+T.d,self:c,tg:null,pc:0,sl:i,ss:s,si:i});if(G.over)return}}}
+    if(TE&&TE[key]){lg(G,{t:'tfx',ts:s,i,d:T.d,k:c.k});runFx(G,TE[key],{s,src:'T:'+T.d,self:c,tg:null,pc:0,sl:i,ss:s,si:i});if(G.over)return}}}
 function startTurn(G,s){
   const P=G.p[s],o=G.o;G.cur=s;G.turn++;G.aid++;G.played=0;if(s===G.first)G.round++;
   lg(G,{t:'turn',n:G.round});
@@ -1109,7 +1236,7 @@ function startTurn(G,s){
 function endTurn(G,s){
   const P=G.p[s];
   boardHooks(G,s,'eot');if(G.over)return;
-  for(let i=0;i<CELLS;i++){const c=P.board[i];if(c&&eff(G,s,i).kw.croissance){c.a++;c.h++;lg(G,{t:'buff',ts:s,i,k:c.k,a:1,h:1})}}
+  for(let i=0;i<CELLS;i++){const c=P.board[i];if(c&&eff(G,s,i).kw.croissance){c.a++;c.h++;lg(G,{t:'buff',ts:s,i,k:c.k,ba:1,bh:1})}}
   const L=fl(G,s);
   if((L.ravages||0)>=2){lg(G,{t:'fac',f:'ravages',ts:s,n:L.ravages});const x={ss:s,si:-2};
     for(let j=0;j<L.ravages-1;j++){const tl=targets(G,s,'e');if(!tl.length)break;const t=pick(G,tl);hit(G,t.s,t.i,1,'ravages',x);reap(G);if(G.over)return}}
@@ -1160,18 +1287,20 @@ function act(G,s,a){
   case 'exil':{
     if(!canExil(G,s,a.i))return er('Voyage impossible.');const n=fl(G,s).expats,cost=exCost(n),c=P.board[a.i];
     P.or-=cost;c.ex=1;lg(G,{t:'exil',ts:s,i:a.i,k:c.k,n:cost});break}
-  case 'move':{                                                       // déplacer une créature (ou échanger deux créatures) : gratuit
+  case 'move':{                                                       // déplacer une créature (ou échanger deux créatures) : coûte du Démoflux
     const c=isCell(a.f)&&P.board[a.f];if(!c)return er('Aucune créature ici.');
     if(!isCell(a.to)||a.to===a.f)return er('Case invalide.');
-    const o=P.board[a.to];P.board[a.to]=c;P.board[a.f]=o||null;
-    lg(G,{t:'move',ts:s,i:a.f,to:a.to,k:c.k,k2:o?o.k:null});
+    if(!canMoveC(G,s))return er(mvWhy(G,s,0));
+    const cost=mvCost(G,s),o=P.board[a.to];P.eth-=cost;P.board[a.to]=c;P.board[a.f]=o||null;
+    lg(G,{t:'move',ts:s,i:a.f,to:a.to,k:c.k,k2:o?o.k:null,c:cost,r:'eth'});
     keepAlive(G,s);P.mvn=(P.mvn||0)+1;break}
-  case 'tmove':{                                                      // déplacer un de ses terrains : gratuit
+  case 'tmove':{                                                      // déplacer un de ses terrains : coûte de l'Or
     const T=P.terrs.find(q=>q.id===a.id);if(!T)return er('Terrain introuvable.');
     const cells=terrLayout(P,a.id,a.at);if(!cells)return er('Pas assez de place pour déplacer ce terrain ici.');
     if(cells.every((x,j)=>x===P.cells[j]))return er('Le terrain est déjà là.');
-    const from=P.cells.indexOf(a.id);P.cells=cells;
-    lg(G,{t:'tmove',ts:s,d:T.d,id:a.id,from,at:a.at});
+    if(!canMoveT(G,s))return er(mvWhy(G,s,1));
+    const cost=mvCost(G,s),from=P.cells.indexOf(a.id);P.or-=cost;P.cells=cells;
+    lg(G,{t:'tmove',ts:s,d:T.d,id:a.id,from,at:a.at,c:cost,r:'or'});
     keepAlive(G,s);P.mvn=(P.mvn||0)+1;break}
   case 'buy':{
     if(!G.o.ter)return er('Terrains désactivés.');if(P.tb)return er('Un seul achat de terrain par tour.');const t=G.shop[a.n];if(!t)return er('Terrain indisponible.');
@@ -1213,7 +1342,7 @@ function terrLayout(P,id,at){
     if(best<0)return null;for(let j=best;j<best+o.m;j++)cells[j]=o.x}
   return cells}
 function attack(G,s,i,t){
-  const e=1-s,A=G.p[s].board[i],L=fl(G,s),EA=eff(G,s,i,L),xa={ss:s,si:i};A.af++;A.aw=1;
+  const e=1-s,A=G.p[s].board[i],L=fl(G,s),EA=eff(G,s,i,L),xa={ss:s,si:i,src:A.k};A.af++;A.aw=1;
   const toxA=hasF(A.k,'toxic');
   if(t.i<0){
     const n=EA.a;heroHit(G,e,n,A.k,true);lg(G,{t:'atk',k:A.k,i,ts:e,ti:-1,to:'hero',n,r:0});
@@ -1228,7 +1357,7 @@ function attack(G,s,i,t){
     const d1=dmgC(G,e,t.i,pa-rd,A.k,true),d2=dmgC(G,s,i,ED.a-ra,D.k,true);
     lg(G,{t:'atk',k:A.k,i,ts:e,ti:t.i,to:D.k,n:d1,r:d2,xb,rd,ra});
     if(EA.kw.venin&&d1>0){addPz(G,e,t.i,EA.kw.venin,xa);if(toxA&&EA.TE&&EA.TE.aram)heal(G,s,Math.min(EA.kw.venin,EA.TE.aram),'T:aram')}
-    if(ED.kw.venin&&d2>0){addPz(G,s,i,ED.kw.venin,{ss:e,si:t.i});if(hasF(D.k,'toxic')&&ED.TE&&ED.TE.aram)heal(G,e,Math.min(ED.kw.venin,ED.TE.aram),'T:aram')}
+    if(ED.kw.venin&&d2>0){addPz(G,s,i,ED.kw.venin,{ss:e,si:t.i,src:D.k});if(hasF(D.k,'toxic')&&ED.TE&&ED.TE.aram)heal(G,e,Math.min(ED.kw.venin,ED.TE.aram),'T:aram')}
     if(EA.kw.siphon&&d1>0)heal(G,s,d1,A.k);if(ED.kw.siphon&&d2>0)heal(G,e,d2,D.k);
     reap(G);
     const nd=G.p[e].board[t.i];
@@ -1290,11 +1419,11 @@ function moves(G,s){
     else{if(sp)for(const t of targets(G,s,sp.tg,sp.tgf))M.push({t:'play',i,tg:t});else M.push({t:'play',i})}});
   for(let i=0;i<CELLS;i++)if(canAtk(G,s,i))for(const t of atkTargets(G,s))M.push({t:'atk',f:i,tg:t});
   for(let i=0;i<CELLS;i++)if(canExil(G,s,i))M.push({t:'exil',i});
-  // déplacements utiles : seulement ceux qui changent le terrain sous une créature (4 max par tour)
-  if(G.o.ter&&(P.mvn||0)<4&&P.terrs.length){
-    for(let i=0;i<CELLS;i++){if(!P.board[i])continue;
+  // déplacements utiles : seulement ceux qui changent le terrain sous une créature (ils coûtent du Démoflux ou de l'Or, et sont plafonnés)
+  if(G.o.ter&&P.terrs.length){
+    if(canMoveC(G,s))for(let i=0;i<CELLS;i++){if(!P.board[i])continue;
       for(let j=0;j<CELLS;j++){if(j===i||P.cells[j]===P.cells[i]||(P.board[j]&&j<i))continue;M.push({t:'move',f:i,to:j})}}
-    for(const T of P.terrs){const n=P.cells.filter(x=>x===T.id).length;for(let at=0;at+n<=CELLS;at++){const c=terrLayout(P,T.id,at);if(c&&!c.every((x,j)=>x===P.cells[j]))M.push({t:'tmove',id:T.id,at})}}}
+    if(canMoveT(G,s))for(const T of P.terrs){const n=P.cells.filter(x=>x===T.id).length;for(let at=0;at+n<=CELLS;at++){const c=terrLayout(P,T.id,at);if(c&&!c.every((x,j)=>x===P.cells[j]))M.push({t:'tmove',id:T.id,at})}}}
   if(G.o.ter)G.shop.forEach((t,n)=>{if(t&&canBuy(G,s,n))for(let at=0;at+TD[t.d].size<=CELLS;at++)M.push({t:'buy',n,at})});
   return M}
 function hasEth(k){const cd=CARDS[k];return cd.t==='s'&&cd.fx.some(o=>o.t==='eth')}
@@ -1314,6 +1443,8 @@ function aiPick(G,s,W){
   for(const m of M){
     const C=sim(G,s,m);if(!C)continue;
     let v=evalG(C,s,W)-W.lam*C.p[s].eth;
+    if(m.t==='move')v-=mvCost(G,s)*(W.lam+.5);           // le Démoflux d'un déplacement n'est pas « gratuit » : il aurait pu servir à jouer une carte
+    else if(m.t==='tmove')v-=mvCost(G,s)*.3;             // (l'Or dépensé est déjà compté par evalG)
     if(m.t==='play'&&hasEth(G.p[s].hand[m.i].k)){        // sorts de Démoflux : on regarde un coup plus loin
       let b2=-1e9;for(const m2 of moves(C,s)){const C2=sim(C,s,m2);if(!C2)continue;const v2=evalG(C2,s,W)-W.lam*C2.p[s].eth;if(v2>b2)b2=v2}
       if(b2>v)v=b2}
@@ -1527,8 +1658,11 @@ function onIncoming(c){
     if(!m||!m.t)return;
     if(m.t==='ping'){try{c.send({t:'pong',name:S.name,busy:!!window.DUEL})}catch(e){}return}
     if(m.t==='chal'){
-      if(window.DUEL||window.CHALLENGE_UI){try{c.send({t:'busy'})}catch(e){}return}
-      if(typeof onChallenge==='function')onChallenge(c,m)}})}
+      if(window.DUEL||window.CHALLENGE_UI||window.TRADE_UI){try{c.send({t:'busy'})}catch(e){}return}
+      if(typeof onChallenge==='function')onChallenge(c,m);return}
+    if(m.t==='trade'){                                   // proposition d'échange de cartes
+      if(window.DUEL||window.CHALLENGE_UI||window.TRADE_UI){try{c.send({t:'busy'})}catch(e){}return}
+      if(typeof onTrade==='function')onTrade(c,m)}})}
 
 // côté challenger : envoie le défi et attend la réponse
 function sendChallenge(friend,deckInfo,opt,cbs){
@@ -1547,6 +1681,91 @@ function sendChallenge(friend,deckInfo,opt,cbs){
   c.on('error',()=>fail('Erreur de connexion.'));
   c.on('close',()=>{if(!done)fail('La connexion a été coupée.')});
   return{cancel:()=>{done=true;clearTimeout(t);delete NET.tries[id];try{c.close()}catch(e){}}}}
+
+// côté initiateur d'un échange : envoie la proposition et attend la réponse (accepté / refusé / occupé)
+function sendTrade(friend,cbs){
+  if(!netReady()){cbs.fail('Connexion au serveur de rencontre en cours… réessaie dans un instant.');return null}
+  const id=peerId(friend.code);let c=null,done=false;
+  const off=friend.name+' est hors ligne (ou n’a pas ouvert le jeu).';
+  const fail=m=>{if(done)return;done=true;clearTimeout(t);delete NET.tries[id];try{c&&c.close()}catch(e){}cbs.fail(m)};
+  const t=setTimeout(()=>fail(off),9000);NET.tries[id]=()=>fail(off);
+  try{c=NET.peer.connect(id,{reliable:true})}catch(e){fail('Connexion impossible.');return null}
+  c.on('open',()=>{clearTimeout(t);delete NET.tries[id];try{c.send({t:'trade',name:S.name,code:S.code,ver:APPV})}catch(e){fail('Erreur de connexion.')}});
+  c.on('data',m=>{
+    if(!m||done)return;
+    if(m.t==='busy'){done=true;cbs.fail(friend.name+' est occupé(e) (duel ou autre échange).');try{c.close()}catch(e){}}
+    else if(m.t==='dec'){done=true;cbs.fail(friend.name+' a refusé l’échange.');try{c.close()}catch(e){}}
+    else if(m.t==='tacc'){done=true;cbs.accepted(c,m)}});
+  c.on('error',()=>fail('Erreur de connexion.'));
+  c.on('close',()=>{if(!done)fail('La connexion a été coupée.')});
+  return{cancel:()=>{done=true;clearTimeout(t);delete NET.tries[id];try{c.send({t:'tcancel'})}catch(e){}try{c.close()}catch(e){}}}}
+
+// ============ ÉCHANGES DE CARTES ENTRE AMIS ============
+// Une offre est {k,p} : la carte (clé) et p=1 pour un exemplaire prismatique, p=0 pour un exemplaire normal.
+// Chaque joueur choisit UNE carte à donner ; les deux joueurs voient les deux cartes ; l'échange n'a lieu que quand
+// les deux ont validé exactement la même paire. Toute modification d'une offre annule les validations.
+function offerOk(o){return!!o&&typeof o.k==='string'&&!!CARDS[o.k]&&POOL.indexOf(o.k)>=0&&(o.p===0||o.p===1)}
+function cleanOffer(o){return offerOk(o)?{k:o.k,p:o.p}:null}
+function sameOffer(a,b){return!!a&&!!b&&a.k===b.k&&a.p===b.p}
+function hasCopy(o,st){const e=(st||S).coll[o.k];return!!e&&(o.p?e.p>0:e.n>0)}
+// decks : on retire l'exemplaire donné des decks qui en contenaient plus que ce que le joueur possède encore (carte `only`)
+function fixDecks(st,only){st=st||S;const out=[];
+  for(const d of st.decks){const cnt={};d.cards.forEach(e=>{const k=String(e).replace('*','');cnt[k]=(cnt[k]||0)+1});let lost=0;
+    for(const k in cnt){if(only&&k!==only)continue;const e=st.coll[k]||{n:0,p:0};let ex=cnt[k]-(e.n+e.p);
+      for(let i=d.cards.length-1;i>=0&&ex>0;i--)if(String(d.cards[i]).replace('*','')===k){d.cards.splice(i,1);ex--;lost++}}
+    if(lost)out.push({name:d.name,n:lost})}
+  return out}
+// applique l'échange dans MA collection : je perds `give`, je gagne `get` (null si l'échange est impossible)
+function tradeApply(give,get,st){
+  st=st||S;if(!offerOk(give)||!offerOk(get)||!hasCopy(give,st))return null;
+  const e=st.coll[give.k];if(give.p)e.p--;else e.n--;
+  const g=st.coll[get.k]||(st.coll[get.k]={n:0,p:0});if(get.p)g.p++;else g.n++;
+  const fixed=fixDecks(st,give.k);saveS();return{fixed}}
+
+// Session d'échange entre deux joueurs, au-dessus d'une connexion {send,on,close}.
+// hooks : change(T) à chaque changement d'état, done(res) quand l'échange est fait, closed(raison) quand il est annulé ou coupé ;
+// hooks.S (facultatif) renvoie la sauvegarde du joueur (par défaut la sauvegarde globale S).
+// État : T.mine / T.theirs (offres), T.myLock / T.theirLock (validations), T.state = 'open' | 'done' | 'closed'.
+function TradeSession(conn,peer,hooks){
+  const T={conn,peer,mine:null,theirs:null,myLock:false,theirLock:false,state:'open',res:null},st=()=>hooks.S?hooks.S():S;
+  const send=m=>{try{conn.send(m)}catch(e){}};
+  const change=()=>{try{hooks.change&&hooks.change(T)}catch(e){console.error(e)}};
+  const closed=why=>{if(T.state==='closed')return;T.state='closed';try{hooks.closed&&hooks.closed(why)}catch(e){console.error(e)}};
+  const unlockBoth=()=>{T.myLock=false;T.theirLock=false};
+  // quand les deux ont validé la même paire, chacun applique l'échange chez lui (une seule fois)
+  const tryFinish=()=>{
+    if(T.state!=='open'||!T.myLock||!T.theirLock||!T.mine||!T.theirs)return;
+    const r=tradeApply(T.mine,T.theirs,st());
+    if(!r){send({t:'tcancel'});closed('fail');return}
+    T.state='done';T.res={give:T.mine,get:T.theirs,fixed:r.fixed};send({t:'tdone'});change();try{hooks.done&&hooks.done(T.res)}catch(e){console.error(e)}};
+  T.setOffer=o=>{
+    if(T.state!=='open')return false;
+    if(o&&!(offerOk(o)&&hasCopy(o,st())))return false;
+    T.mine=o?{k:o.k,p:o.p}:null;unlockBoth();send({t:'toff',o:T.mine});change();return true};
+  T.canLock=()=>T.state==='open'&&!!T.mine&&!!T.theirs&&!T.myLock&&hasCopy(T.mine,st());
+  T.lock=()=>{
+    if(!T.canLock())return false;
+    T.myLock=true;send({t:'tlock',give:T.mine,get:T.theirs});tryFinish();if(T.state==='open')change();return true};
+  T.unlock=()=>{if(T.state!=='open'||!T.myLock)return;T.myLock=false;send({t:'tunlock'});change()};
+  T.cancel=()=>{
+    if(T.state==='closed')return;const was=T.state;if(was==='open')send({t:'tcancel'});T.state='closed';
+    // après un échange réussi, on laisse partir les derniers messages (validation, « fait ») avant de couper
+    if(was==='done')setTimeout(()=>{try{conn.close()}catch(e){}},1500);else try{conn.close()}catch(e){}
+    if(was==='open'){try{hooks.closed&&hooks.closed('cancel')}catch(e){console.error(e)}}};
+  conn.on('data',m=>{
+    if(!m||typeof m!=='object'||T.state==='closed')return;
+    if(m.t==='toff'){
+      const o=m.o==null?null:cleanOffer(m.o);if(m.o!=null&&!o)return;     // offre invalide : ignorée
+      if(T.state!=='open')return;T.theirs=o;unlockBoth();change();return}
+    if(m.t==='tlock'){
+      if(T.state!=='open')return;
+      // l'autre a validé : on ne le croit que s'il s'agit exactement de la paire que je vois (sinon c'est une validation périmée)
+      if(sameOffer(cleanOffer(m.give),T.theirs)&&sameOffer(cleanOffer(m.get),T.mine)){T.theirLock=true;tryFinish();if(T.state==='open')change()}
+      return}
+    if(m.t==='tunlock'){if(T.state==='open'){T.theirLock=false;change()}return}
+    if(m.t==='tcancel'){if(T.state==='open')closed('peer');return}});
+  conn.on('close',()=>{if(T.state==='open')closed('lost')});
+  return T}
 
 // ============ UI : outils, cartes, infobulles, fenêtres ============
 const $=(s,r)=>(r||document).querySelector(s);
@@ -1717,7 +1936,7 @@ function pileModal(s,key){
     L.length?h('div',{class:'pilegrid'},L.slice().reverse().map(c=>h('div',{class:'cc2',onclick:()=>showCard(c.k,{p:c.p})},cardEl(c.k,{p:c.p,tilt:1})))):h('p',{class:'mut'},'Vide.')))}
 
 // ============ UI : écran de duel ============
-var DUEL=null, CHALLENGE_UI=null;
+var DUEL=null, CHALLENGE_UI=null, TRADE_UI=null;
 const AINAMES=['Bot Modérateur','Troll anonyme','Xx_DarkSasuke_xX','Newbie du salon','Le Vieux Membre','Spammeur fou','Invité #4242','Admin fantôme','Lurker du vocal'];
 const CHAOSN=['3 dégâts','+2/+2','Pioche 1','Soin 4','Bannissement','2 Plebs'];
 
@@ -1767,11 +1986,11 @@ function mountDuel(){
     h('div',{id:'tbar'},h('i')),
     h('div',{class:'dmain'},h('aside',{id:'prev'}),
       h('div',{class:'field',id:'field',onclick:()=>{const D=DUEL;if(D&&(D.sel||D.info)){D.sel=null;D.info=null;renderDuel()}}},
-        h('div',{id:'hOpp'}),h('div',{class:'fxrow',id:'fOpp'}),h('div',{class:'tstrip',id:'tOpp'}),h('div',{class:'board o',id:'bOpp'}),
-        h('div',{class:'mid'},h('div',{class:'shopz',id:'shop'}),h('div',{class:'evb',id:'evb'}),
+        h('section',{class:'zone zopp'},h('div',{id:'hOpp'}),h('div',{class:'fxrow',id:'fOpp'}),h('div',{class:'tstrip',id:'tOpp'}),h('div',{class:'board o',id:'bOpp'})),
+        h('section',{class:'zone zmid mid'},h('div',{class:'shopz',id:'shop'}),h('div',{class:'evb',id:'evb'}),
           h('button',{class:'endb',id:'endb',onclick:e=>{e.stopPropagation();endTurnClick()}},h('span',{id:'ebt'},'Fin du tour'),h('small',{id:'ebs'}),h('i',{class:'eb',id:'ebb'}))),
-        h('div',{class:'board m',id:'bMe'}),h('div',{class:'tstrip',id:'tMe'}),h('div',{class:'fxrow',id:'fMe'}),h('div',{id:'hMe'}),
-        h('div',{class:'info',id:'info'}),h('div',{class:'hand',id:'hand'})),
+        h('section',{class:'zone zme'},h('div',{class:'board m',id:'bMe'}),h('div',{class:'tstrip',id:'tMe'}),h('div',{class:'fxrow',id:'fMe'}),h('div',{id:'hMe'})),
+        h('div',{class:'info empty',id:'info'}),h('div',{class:'hand',id:'hand'})),
       h('aside',{id:'hist'})));
   const aim=h('div',{id:'aim'});aim.innerHTML='<svg width="100%" height="100%"><path class="ab"/><path class="al"/><polygon class="ah"/></svg>';el.append(aim);
   DUEL.onMove=e=>{const D=DUEL;if(!D)return;D.mx=e.clientX;D.my=e.clientY;if(!D.aimRaf)D.aimRaf=requestAnimationFrame(()=>{if(DUEL){DUEL.aimRaf=0;aimDraw()}})};
@@ -1823,9 +2042,10 @@ function hintText(){
     if(cd.t==='c')return 'Clique sur un emplacement libre (ou glisse la carte)';
     return cryTg(cd)?'Choisis une cible':'Clique à nouveau sur la carte pour la jouer'}
   if(s.t==='cry')return 'Choisis la cible du Cri d’arrivée';
-  if(s.t==='atk')return 'Choisis qui attaquer, ou une case de ton plateau pour la déplacer (gratuit)';
-  if(s.t==='mv')return 'Choisis une case de ton plateau pour déplacer cette créature (gratuit)';
-  if(s.t==='tm')return 'Choisis où déplacer ce terrain sur ton plateau (gratuit)';
+  const me=V.me,mc=canMoveC(V,me),mt=canMoveT(V,me);
+  if(s.t==='atk')return 'Choisis qui attaquer'+(mc?', ou une case de ton plateau pour déplacer cette créature (◆ '+mvCost(V,me)+')':'');
+  if(s.t==='mv')return mc?'Choisis une case de ton plateau pour déplacer cette créature (◆ '+mvCost(V,me)+')':mvWhy(V,me,0);
+  if(s.t==='tm')return mt?'Choisis où déplacer ce terrain sur ton plateau (🪙 '+mvCost(V,me)+')':mvWhy(V,me,1);
   if(s.t==='terr')return s.at==null?'Clique où poser le terrain sur ton plateau':'Clique à nouveau pour confirmer';
   return ''}
 
@@ -1836,6 +2056,7 @@ function renderDuel(){
   D.rects=rects;
   fixSel();D.hl=computeHL();
   const m=mine();
+  $('#duel').classList.toggle('myturn',m);$('#duel').classList.toggle('oppturn',!m&&!V.over);
   $('#dtt').textContent=V.over?'Duel terminé':'Manche '+V.round+' · '+(m?'À toi de jouer':'Tour de '+V.p[op].nm);updTimer();
   $('#hOpp').replaceChildren(heroNode(op));$('#hMe').replaceChildren(heroNode(me));
   const ids=new Set();
@@ -1865,11 +2086,14 @@ function heroNode(s){
   const pb=(ic,n,key,tt)=>h('button',{class:key?'':'dk',title:tt,onclick:key?e=>{e.stopPropagation();pileModal(s,key)}:null},ic+' '+n);
   const el=h('div',{class:cls,'data-s':s,'data-i':-1},
     h('div',{class:'hav'},(P.nm||'?').trim().charAt(0).toUpperCase()),
-    h('div',{class:'hinfo'},h('div',{class:'hn'},(isMe?'Toi · ':'')+P.nm),h('div',{class:'hbar'},h('i',{style:'width:'+pct+'%'}),h('span',null,'♥ '+P.hp+' / '+P.mhp))),
+    h('div',{class:'hinfo'},h('div',{class:'hrow'},h('div',{class:'hn'},(isMe?'Toi · ':'')+P.nm),
+      h('span',{class:'piles'},pb('🂠',P.dn,null,'Cartes dans le deck'),pb('✝',P.grave.length,'grave','Cimetière'),pb('🗑',P.disc.length,'disc','Défausse'))),
+      h('div',{class:'hbar'},h('i',{style:'width:'+pct+'%'}),h('span',null,'♥ '+P.hp+' / '+P.mhp))),
     P.pz>0?h('div',{class:'hpz'},'☠ '+P.pz):null,
     h('div',{class:'res'},h('div',{class:'crys'},cr),
       h('div',{class:'rtx'},h('span',{class:'d'},'◆ '+P.eth+'/'+P.cap),V.o.ter?h('span',{class:'o'},'🪙 '+P.or):null,h('span',{class:'mut'},'✋'+P.hand.length),
-        h('span',{class:'piles'},pb('🂠',P.dn,null,'Cartes dans le deck'),pb('✝',P.grave.length,'grave','Cimetière'),pb('🗑',P.disc.length,'disc','Défausse')))));
+        isMe&&V.o.ter&&mvMax(V)>0?h('span',{class:'mvc'+(mvLeft(V,s)?'':' out'),title:'Déplacements ce tour : '+mvLeft(V,s)+' restant'+(mvLeft(V,s)>1?'s':'')+' sur '+mvMax(V)+'.\nProchain : '+mvCost(V,s)+' ◆ (créature) ou '+mvCost(V,s)+' 🪙 (terrain). Le n-ième déplacement du tour coûte n.'},'↔ '+mvLeft(V,s)+'/'+mvMax(V)):null,
+        )));
   el._dz={t:'hero',s};
   el.addEventListener('click',e=>{e.stopPropagation();clickSlot(s,-1)});
   return el}
@@ -1894,7 +2118,7 @@ function boardNodes(s,ids){
     const c=B[i];const sl=h('div',{class:'slot'+(c?'':' empty'),'data-s':s,'data-i':i});sl._dz={t:'slot',s,i};
     const sel=D.sel;
     if(!c&&s===me&&sel&&((sel.t==='hand'&&CARDS[sel.k].t==='c')||(sel.t==='cry'&&sel.sl===i)))sl.classList.add('hi');
-    if(s===me&&sel&&(sel.t==='atk'||sel.t==='mv')&&sel.f!==i&&mine())sl.classList.add(c?'swp':'mvd');
+    if(s===me&&sel&&(sel.t==='atk'||sel.t==='mv')&&sel.f!==i&&mine()&&canMoveC(V,me))sl.classList.add(c?'swp':'mvd');
     if(c){
       ids.add(c.id);const E=eff(V,s,i,L);
       const ready=s===me&&mine()&&canAtk(V,me,i);
@@ -2020,16 +2244,17 @@ function showPrev(I){
   const el=$('#prev');if(!el)return;el.innerHTML='';
   const D=DUEL,tc=terrCtx();
   if(tc){el.append(tcardEl(tc.t,{cost:tc.cost}),...terrDetail(tc));
-    if(tc.placed&&tc.s===D.V.me&&mine()){const P=D.V.p[tc.s],st=P.cells.indexOf(tc.t.id),ok=at=>{const c=terrLayout(P,tc.t.id,at);return!!c&&!c.every((x,j)=>x===P.cells[j])};
+    if(tc.placed&&tc.s===D.V.me&&mine()){const V=D.V,P=V.p[tc.s],st=P.cells.indexOf(tc.t.id),pay=canMoveT(V,V.me),ok=at=>pay&&(c=>!!c&&!c.every((x,j)=>x===P.cells[j]))(terrLayout(P,tc.t.id,at));
       el.append(h('div',{class:'tp-b'},h('button',{class:'btn sm',disabled:!ok(st-1),onclick:e=>{e.stopPropagation();doAct({t:'tmove',id:tc.t.id,at:st-1})}},'◀ Décaler'),
         h('button',{class:'btn sm',disabled:!ok(st+1),onclick:e=>{e.stopPropagation();doAct({t:'tmove',id:tc.t.id,at:st+1})}},'Décaler ▶')),
-        h('div',{class:'sm mut',style:'margin-top:6px'},'Tu peux aussi le glisser le long de ta bande de terrains. Déplacer un terrain est gratuit ; les terrains qu’il chevauche sont poussés.'))}
+        h('div',{class:'sm',style:'margin-top:6px;color:'+(pay?'#ffd36b':'#ffb3c0')},pay?'Déplacer ce terrain coûte 🪙 '+mvCost(V,V.me)+' (déplacements restants : '+mvLeft(V,V.me)+'/'+mvMax(V)+').':mvWhy(V,V.me,1)),
+        h('div',{class:'sm mut',style:'margin-top:4px'},'Tu peux aussi le glisser le long de ta bande de terrains ; les terrains qu’il chevauche sont poussés.'))}
     if(tc.buy&&D.sel&&D.sel.t==='terr')el.append(h('div',{class:'tp-b'},
       tc.at!=null?h('button',{class:'btn gold sm',onclick:e=>{e.stopPropagation();buyTerr_(D.sel.n,Math.max(0,Math.min(D.sel.at,CELLS-TD[tc.t.d].size)))}},'Placer ici (🪙 '+tc.cost+')'):null,
       h('button',{class:'btn sm',onclick:e=>{e.stopPropagation();D.sel=null;renderDuel()}},'Annuler')));
     return}
   if(!I){el.append(h('div',{class:'mut sm',style:'margin-top:8px;line-height:1.5'},'Survole une carte, une créature, un terrain ou une famille pour voir ses détails ici.',h('br'),h('br'),
-    'Glisse une carte de ta main sur ton plateau pour la jouer, une de tes créatures sur un ennemi pour attaquer, ou sur une autre case de ton plateau pour la déplacer. Glisse tes terrains le long de leur bande pour les déplacer.',h('br'),h('br'),
+    'Glisse une carte de ta main sur ton plateau pour la jouer, une de tes créatures sur un ennemi pour attaquer, ou sur une autre case de ton plateau pour la déplacer (◆). Glisse tes terrains le long de leur bande pour les déplacer (🪙). Les déplacements sont limités et coûtent de plus en plus cher : voir « ↔ » à côté de tes ressources.',h('br'),h('br'),
     'Clic droit sur n’importe quelle carte : fiche détaillée épinglée.'));return}
   if(I.fac){const F=FAC[I.fac];el.append(h('div',{class:'fbadge',style:'--gc:'+F.c+';margin:0 auto 8px'},F.ic),...facDetail(I));return}
   if(!I.k||!CARDS[I.k])return;
@@ -2044,33 +2269,19 @@ function showPrev(I){
     ...defs.map(d=>h('div',{class:'pd'},h('b',null,d[0]+' : '),d[1])),
     cd.lore?h('div',{class:'lore'},'« '+cd.lore+' »'):null))}
 function showInfo(){
-  const D=DUEL,V=D.V,me=V.me,box=$('#info'),I=D.info;box.innerHTML='';showPrev(I);
-  const sel=D.sel,ht=hintText(),el=h('div',{class:'irow'});
-  box.append(...(ht?[h('div',{class:'hintline'},'👉 '+ht)]:[]),el);
-  if(!I){el.append(h('div',{class:'ib mut'},'Glisse une carte sur ton plateau pour la jouer, une créature sur un ennemi pour attaquer ou sur une autre case pour la déplacer. Clic droit sur une carte : fiche détaillée.'));return}
-  if(I.terr||I.shop!=null){const t=I.terr||V.shop[I.shop];if(!t)return;const td=TD[t.d],g=GAMES[td.g];
-    el.append(h('div',{class:'ib'},h('b',{class:'t'},g.ic+' '+td.n+' — terrain '+g.n+' ('+td.size+' case'+(td.size>1?'s':'')+')'),
-      h('div',{class:'txt'},tTxt(td))));
-    if(sel&&sel.t==='terr')el.append(h('div',{class:'play',style:'display:flex;flex-direction:column;gap:6px'},
-      sel.at!=null?h('button',{class:'btn gold sm',onclick:e=>{e.stopPropagation();buyTerr_(sel.n,sel.at)}},'Placer'):null,
-      h('button',{class:'btn sm',onclick:e=>{e.stopPropagation();D.sel=null;renderDuel()}},'✕')));
-    return}
-  if(I.fac){const F=FAC[I.fac];el.append(h('div',{class:'ib'},h('b',{class:'t'},F.ic+' '+F.n),h('div',{class:'txt'},F.sum)));return}
-  if(I.cr){const c0=V.p[I.s].board[I.i];if(!c0||c0.id!==I.cr.id){D.info=null;showInfo();return}I.cr=c0}
-  const cd=CARDS[I.k];if(!cd)return;
-  let stats='';
-  if(I.cr){const E=eff(V,I.s,I.i);stats=' · ATK '+E.a+' / PV '+E.hp+(E.kw.venin?' · Venin '+E.kw.venin:'')+(E.T?' · sur '+TD[E.T.d].n:'')+(I.cr.pz?' · ☠'+I.cr.pz:'')+(I.cr.blk?' · bloquée':'')+(I.cr.mut?' · mute':'')+(I.cr.ex?' · à l’étranger':'')}
-  const L=I.cr?fl(V,I.s):null;
-  const facs=(cd.fac||[]).map(f=>FAC[f].ic+FAC[f].n+(I.cr?' ('+(L[f]||0)+' en jeu)':'')).join(' · ');
-  const body=h('div',{class:'ib'},
-    h('b',{class:'t'},cd.n+' ',h('span',{class:'mut sm',style:'font-family:Inter,sans-serif'},(cd.st?cd.st+' · ':'')+(cd.t==='c'?'Créature':'Sort')+' · '+RAR[cd.r]+' · '+(I.hand!=null?costOf(V,me,V.p[me].hand[I.hand]||{k:I.k}):cd.c)+' ◆'+stats)),
-    h('div',{class:'txt'},txNodes(cd.tx)),
-    facs?h('div',{class:'dfs'},facs):null);
-  el.append(body);
-  const act=[];
-  if(sel&&sel.t==='hand'&&CARDS[sel.k].t==='s'&&!cryTg(CARDS[sel.k]))act.push(h('button',{class:'btn pri sm',style:'--h:#2ec4b6;--ht:#032521',onclick:e=>{e.stopPropagation();playSpellOn(sel.i,null)}},'Jouer'));
-  if(sel)act.push(h('button',{class:'btn sm',onclick:e=>{e.stopPropagation();D.sel=null;renderDuel()}},'✕'));
-  if(act.length)el.append(h('div',{class:'play',style:'display:flex;flex-direction:column;gap:6px'},act))}
+  const D=DUEL,V=D.V,box=$('#info'),I=D.info;box.innerHTML='';
+  if(I&&I.cr){const c0=V.p[I.s].board[I.i];if(!c0||c0.id!==I.cr.id){D.info=null;showInfo();return}I.cr=c0}   // la créature a changé ou disparu
+  showPrev(I);
+  const sel=D.sel,ht=hintText(),act=[];
+  if(I&&(I.terr||I.shop!=null)){if(sel&&sel.t==='terr'){
+    if(sel.at!=null)act.push(h('button',{class:'btn gold sm',onclick:e=>{e.stopPropagation();buyTerr_(sel.n,sel.at)}},'Placer ici'));
+    act.push(h('button',{class:'btn sm',onclick:e=>{e.stopPropagation();D.sel=null;renderDuel()}},'Annuler'))}}
+  else if(I&&!I.fac&&I.k&&CARDS[I.k]){
+    if(sel&&sel.t==='hand'&&CARDS[sel.k].t==='s'&&!cryTg(CARDS[sel.k]))act.push(h('button',{class:'btn pri sm',style:'--h:#2ec4b6;--ht:#032521',onclick:e=>{e.stopPropagation();playSpellOn(sel.i,null)}},'Jouer le sort'));
+    if(sel)act.push(h('button',{class:'btn sm',onclick:e=>{e.stopPropagation();D.sel=null;renderDuel()}},'Annuler'))}
+  box.classList.toggle('empty',!ht&&!act.length);
+  if(ht)box.append(h('div',{class:'hintline'},'👉 '+ht));
+  if(act.length)box.append(h('div',{class:'acts'},act))}
 
 // ---------- interactions ----------
 function clickHand(i){
@@ -2338,7 +2549,7 @@ function animate(es){
       break}
     case 'fac':{const F=FAC[e.f],n=e.n;famBurst(e.ts,e.f,e.f==='ravages'?(n-1)+' missile'+(n>2?'s':'')+' !':e.f==='farmer'?'+'+n+' Or':e.f==='neigar'?'Vol de '+(n-1)+' Or':'×'+n,t);t+=550;break}
     case 'tfx':{const td=TD[e.d];if(!td)break;flashSlot(e.ts,e.i,GAMES[td.g].c,t);popAt(e.ts,e.i,GAMES[td.g].ic+' '+td.n,'txt',t);t+=260;break}
-    case 'buff':popAt(e.ts,e.i,(e.a>=0?'+':'')+(e.a||0)+'/+'+(e.h||0),'buf',t);t+=110;break;
+    case 'buff':popAt(e.ts,e.i,sg(e.ba)+'/'+sg(e.bh),'buf',t);t+=110;break;
     case 'tilt':popAt(e.ts,e.i,'😡 +2 ATK','buf',t+200);break;
     case 'egide':popAt(e.ts,e.i,'✧ Égide !','txt',t);t+=100;break;
     case 'kwg':popAt(e.ts,e.i,'✧ Égide','buf',t);t+=100;break;
@@ -2362,52 +2573,72 @@ function animate(es){
     case 'fat':popAt(e.ts,-1,'🥵 Fatigue −'+e.n,'dmg',t);t+=200;break}}}
 
 // ---------- historique latéral ----------
+// Chaque ligne montre qui a fait quoi : pastille de la carte (illustration + nom), du terrain, de la famille ou du héros concerné.
+function chip(ic,name,col,title){return h('span',{class:'mi sx',title:title||name,style:'--mc:'+col},h('u',{style:'background:'+col},ic),name)}
+// nombre signé pour les bonus de stats (+2, -1, +0)
+function sg(n){n=n||0;return(n>0?'+':'')+n}
+// coût payé pour une action (déplacement) : pastille « −1 ◆ » ou « −1 🪙 »
+function costTag(e){return e.c?h('span',{class:'cst'},'−'+e.c+(e.r==='or'?' 🪙':' ◆')):null}
 function mini(k){const cd=CARDS[k];if(!cd)return h('span',{class:'mi'},'?');
-  return h('span',{class:'mi',title:cd.n+(cd.st?' — '+cd.st:''),style:'border:1.5px solid '+RCOL[cd.r]},miniAv(k),cd.n)}
-function heroChip(s){const V=DUEL.V,P=V.p[s];return h('span',{class:'mi'},h('u',{style:'background:'+(s===V.me?'#1f8a80':'#b8304d')},(P.nm||'?').charAt(0).toUpperCase()),s===V.me?'Toi':P.nm)}
+  return h('span',{class:'mi','data-k':k,title:cd.n+(cd.st?' — '+cd.st:'')+' · clic droit : fiche',style:'--mc:'+RCOL[cd.r]},miniAv(k),cd.n)}
+function heroChip(s){const V=DUEL.V,P=V.p[s];return h('span',{class:'mi hch'+(s===V.me?' me':' op')},h('u',null,(P.nm||'?').charAt(0).toUpperCase()),s===V.me?'Toi':P.nm)}
 function tgChip(s,i,k){return i<0?heroChip(s):mini(k)}
-function srcChip(src){if(CARDS[src])return mini(src);if(FAC[src])return h('span',{class:'mut'},FAC[src].ic+' '+FAC[src].n);
-  if(typeof src==='string'&&src.slice(0,2)==='T:'&&TD[src.slice(2)]){const t=TD[src.slice(2)];return h('span',{class:'mut'},GAMES[t.g].ic+' '+t.n)}
-  return h('span',{class:'mut'},src==='venin'?'☠ Venin':src==='fat'?'Fatigue':'💥')}
+function terrChip(d){const t=TD[d];if(!t)return h('span',{class:'mut'},'terrain');const g=GAMES[t.g];return chip(g.ic,t.n,g.c,'Terrain '+g.n+' — '+t.n)}
+function facChip(f){const F=FAC[f];return F?chip(F.ic,F.n,F.c,'Famille '+F.n):null}
+// d'où vient un effet : une carte, un terrain (« T:xxx »), une famille, le Venin, la Fatigue ou un événement
+function srcChip(src){
+  if(!src)return null;
+  if(CARDS[src])return mini(src);
+  if(FAC[src])return facChip(src);
+  if(typeof src==='string'&&src.slice(0,2)==='T:'&&TD[src.slice(2)])return terrChip(src.slice(2));
+  if(src==='venin')return chip('☠','Venin','#8bd346');
+  if(src==='fat')return chip('🥵','Fatigue','#ff7a3d');
+  if(src==='ev')return chip('🌀','Événement','#ffc145');
+  return chip('💥','Effet','#8aa3ae')}
+// « par … » : la cause de l'événement quand elle est connue (et différente de la créature concernée)
+// héros concerné quand ce n'est pas celui qui joue (pioche ou défausse de l'adversaire...)
+function who(e){return e.ts!=null&&e.ts!==e.s?heroChip(e.ts):null}
+function by(e){return e.cs&&e.cs!==e.k?[h('span',{class:'by'},'par'),srcChip(e.cs)]:null}
+// [catégorie de couleur, éléments de la ligne] pour un événement de l'historique
 function histNodes(e){
-  const A=h('span',{class:'ar'},'→');
+  const A=h('span',{class:'ar'},'→'),sc=e.src?srcChip(e.src):null;
   switch(e.t){
-  case 'play':return[h('span',null,'▶'),mini(e.k),e.p?'✦':null,e.c>0?h('span',{class:'mut'},e.c+'◆'):null,e.tg?[A,tgChip(e.tg.s,e.tg.i,e.tg.k)]:null];
-  case 'atk':return[h('span',null,'⚔'),mini(e.k),A,e.to==='hero'?heroChip(e.ts):mini(e.to),h('span',{class:'dm'},'−'+e.n),e.xb?h('span',{class:'mut'},'(🚧+'+e.xb+')'):null,e.r>0?h('span',{class:'rc'},'↩'+e.r):null];
-  case 'dmg':return[srcChip(e.src),A,tgChip(e.ts,e.i,e.k),h('span',{class:'dm'},e.n>=99?'détruit':'−'+e.n)];
-  case 'heal':return['♥',heroChip(e.ts),h('span',{class:'hl'},'+'+e.n)];
-  case 'hc':return['♥',mini(e.k),h('span',{class:'hl'},'+'+e.n)];
-  case 'pz':return['☠',tgChip(e.ts,e.i,e.k),h('span',{class:'pzc'},'+'+e.n)];
-  case 'gold':return['🪙',heroChip(e.ts),h('span',{class:'gd'},'+'+e.n),e.from!=null?h('span',{class:'mut'},'(volé)'):srcChip(e.src)];
-  case 'fac':return[FAC[e.f].ic,h('b',{style:'color:'+FAC[e.f].c},FAC[e.f].n+' ×'+e.n)];
-  case 'tfx':return TD[e.d]?[GAMES[TD[e.d].g].ic,TD[e.d].n]:null;
-  case 'die':return[e.ban?'⛔':'✝',mini(e.k)];
-  case 'sum':return['＋',mini(e.k),e.rs?'(respawn)':null];
-  case 'draw':return['🂠 pioche'];
-  case 'burn':return['🔥',e.k?mini(e.k):'une carte','brûlée'];
-  case 'add':return['🂱 +',e.k?mini(e.k):'une carte'];
-  case 'disc':return['🗑',mini(e.k),'défaussée'];
-  case 'buff':return['⬆',mini(e.k),(e.a||0)+'/'+(e.h||0)];
-  case 'tilt':return['😡',mini(e.k),'+2 ATK'];
-  case 'kwg':return['✧',mini(e.k),'Égide'];
-  case 'mute':return['🔇',mini(e.k)];
-  case 'blk':return['🔒',mini(e.k)];
-  case 'kick':return['⤴',mini(e.k),'renvoyée'];
-  case 'egide':return['✧ Égide',mini(e.k)];
-  case 'steal':return['📸',e.k?mini(e.k):'copie une carte'];
-  case 'exil':return['✈️',mini(e.k),'part à l’étranger',h('span',{class:'gd'},'−'+e.n+'🪙')];
-  case 'move':return['↔',mini(e.k),e.k2?['⇄',mini(e.k2)]:'déplacé(e)'];
-  case 'tmove':return['↔',h('span',null,'Terrain '+(TD[e.d]?GAMES[TD[e.d].g].ic+' '+TD[e.d].n:'')+' déplacé')];
-  case 'back':return['🏠',mini(e.k),'est de retour'];
-  case 'reshuf':return['♻ Deck reformé ('+e.n+' cartes)'];
-  case 'echo':return['×2',mini(e.k)];
-  case 'story':return['📖',STORY[e.n]];
-  case 'chaos':return['🌀',CHAOSN[e.n]];
-  case 'tcyc':return['🔄 Terrain '+(TD[e.d]?TD[e.d].n:'')+' remplacé par '+(TD[e.nd]?GAMES[TD[e.nd].g].ic+' '+TD[e.nd].n:'')];
-  case 'buy':return['🏟',TD[e.d]?GAMES[TD[e.d].g].ic+' '+TD[e.d].n:'',h('span',{class:'gd'},'−'+e.c+'🪙')];
-  case 'ev':return['🌀 Événement :',e.n];
-  case 'fat':return['🥵 Fatigue',h('span',{class:'dm'},'−'+e.n)];
-  case 'res':return['🏳 Abandon'];
+  case 'play':return['play',[h('span',{class:'vb'},'▶'),mini(e.k),e.p?h('span',{class:'pst'},'✦'):null,e.c>0?h('span',{class:'cst'},e.c+' ◆'):null,e.tg?[A,tgChip(e.tg.s,e.tg.i,e.tg.k)]:null]];
+  case 'atk':return['atk',[h('span',{class:'vb'},'⚔'),mini(e.k),A,e.to==='hero'?heroChip(e.ts):mini(e.to),h('span',{class:'dm'},'−'+e.n),e.xb?h('span',{class:'mut'},'(🚧+'+e.xb+')'):null,e.r>0?h('span',{class:'rc'},'↩'+e.r):null]];
+  case 'dmg':return['dmg',[sc,sc?A:null,tgChip(e.ts,e.i,e.k),h('span',{class:'dm'},e.n>=99?'détruit':'−'+e.n),sc?null:by(e)]];
+  case 'heal':return['heal',[sc||(e.cs?srcChip(e.cs):null),h('span',{class:'vb'},'♥'),heroChip(e.ts),h('span',{class:'hl'},'+'+e.n)]];
+  case 'hc':return['heal',[e.cs&&e.cs!==e.k?srcChip(e.cs):null,h('span',{class:'vb'},'♥'),mini(e.k),h('span',{class:'hl'},'+'+e.n)]];
+  case 'pz':return['pz',[sc||(e.cs?srcChip(e.cs):null),h('span',{class:'vb'},'☠'),tgChip(e.ts,e.i,e.k),h('span',{class:'pzc'},'+'+e.n)]];
+  case 'gold':return['gold',[e.from!=null?h('span',{class:'mut'},'vol :'):(sc||(e.cs?srcChip(e.cs):null)),h('span',{class:'vb'},'🪙'),heroChip(e.ts),h('span',{class:'gd'},'+'+e.n),e.from!=null&&sc?sc:null]];
+  case 'fac':return['fac',[facChip(e.f),h('b',{style:'color:'+FAC[e.f].c},'×'+e.n)]];
+  case 'tfx':return TD[e.d]?['tfx',[terrChip(e.d),e.k?[A,mini(e.k)]:null]]:null;
+  case 'die':return['die',[h('span',{class:'vb'},e.ban?'⛔':'✝'),mini(e.k),by(e)]];
+  case 'sum':return['sum',[by(e),h('span',{class:'vb'},'＋'),mini(e.k),e.rs?h('span',{class:'mut'},'(respawn)'):null]];
+  case 'draw':return['card',[by(e),h('span',{class:'vb'},'🂠'),who(e),'pioche']];
+  case 'burn':return['card',[h('span',{class:'vb'},'🔥'),who(e),e.k?mini(e.k):'une carte','brûlée (main pleine)',by(e)]];
+  case 'add':return['card',[by(e),h('span',{class:'vb'},'🂱 +'),who(e),e.k?mini(e.k):'une carte']];
+  case 'disc':return['card',[h('span',{class:'vb'},'🗑'),who(e),mini(e.k),'défaussée',by(e)]];
+  case 'buff':return['buff',[by(e),h('span',{class:'vb'},'⬆'),mini(e.k),h('span',{class:'bf'},sg(e.ba)+'/'+sg(e.bh))]];
+  case 'tilt':return['buff',[h('span',{class:'vb'},'😡'),mini(e.k),h('span',{class:'bf'},'+2 ATK')]];
+  case 'kwg':return['buff',[by(e),h('span',{class:'vb'},'✧'),mini(e.k),'gagne Égide']];
+  case 'mute':return['ctl',[by(e),h('span',{class:'vb'},'🔇'),mini(e.k),'réduit au silence']];
+  case 'blk':return['ctl',[by(e),h('span',{class:'vb'},'🔒'),mini(e.k),'bloquée']];
+  case 'kick':return['ctl',[by(e),h('span',{class:'vb'},'⤴'),mini(e.k),'renvoyée en main']];
+  case 'egide':return['buff',[h('span',{class:'vb'},'✧'),mini(e.k),'Égide : dégâts annulés']];
+  case 'steal':return['card',[by(e),h('span',{class:'vb'},'📸'),e.k?mini(e.k):'copie une carte']];
+  case 'exil':return['move',[h('span',{class:'vb'},'✈️'),mini(e.k),'part à l’étranger',h('span',{class:'cst'},'−'+e.n+' 🪙')]];
+  case 'move':return['move',[h('span',{class:'vb'},'↔'),mini(e.k),e.k2?['⇄',mini(e.k2)]:'déplacé(e)',costTag(e)]];
+  case 'tmove':return['move',[h('span',{class:'vb'},'↔'),terrChip(e.d),'déplacé',costTag(e)]];
+  case 'back':return['move',[h('span',{class:'vb'},'🏠'),mini(e.k),'est de retour']];
+  case 'reshuf':return['card',[h('span',{class:'vb'},'♻'),'Deck reformé ('+e.n+' cartes)']];
+  case 'echo':return['play',[h('span',{class:'vb'},'×2'),mini(e.k)]];
+  case 'story':return['sys',[by(e),h('span',{class:'vb'},'📖'),STORY[e.n]]];
+  case 'chaos':return['sys',[by(e),h('span',{class:'vb'},'🌀'),CHAOSN[e.n]]];
+  case 'tcyc':return TD[e.d]&&TD[e.nd]?['tfx',[h('span',{class:'vb'},'🔄'),terrChip(e.d),A,terrChip(e.nd)]]:null;
+  case 'buy':return['buy',[h('span',{class:'vb'},'🏟'),terrChip(e.d),h('span',{class:'cst'},'−'+e.c+' 🪙')]];
+  case 'ev':return['sys',[chip('🌀','Événement','#ffc145'),e.n]];
+  case 'fat':return['dmg',[srcChip('fat'),h('span',{class:'dm'},'−'+e.n)]];
+  case 'res':return['sys',[h('span',{class:'vb'},'🏳'),'Abandon']];
   default:return null}}
 function renderHist(){
   const D=DUEL,V=D.V,me=V.me,el=$('#hist');if(!el)return;
@@ -2419,11 +2650,14 @@ function renderHist(){
   const list=h('div');let grp=null;
   const flush=()=>{if(grp&&grp.n.length){list.append(h('div',{class:'hact'+(grp.s===me?'':' opp')},grp.n))}grp=null};
   for(const e of D.hist){
-    if(e.t==='turn'){flush();list.append(h('div',{class:'hturn'},'Manche '+e.n+' · '+V.p[e.s].nm));continue}
+    if(e.t==='turn'){flush();list.append(h('div',{class:'hturn'+(e.s===me?'':' opp')},'Manche '+e.n+' · '+V.p[e.s].nm));continue}
     if(D.filt==='opp'&&e.s===me)continue;
     if(!grp||grp.a!==e.a){flush();grp={a:e.a,s:e.s,n:[]}}
-    const n=histNodes(e);if(n){if(grp.n.length)grp.n.push(h('span',{class:'ar'},'·'));grp.n.push(...n.flat())}}
+    const r=histNodes(e);if(r)grp.n.push(h('div',{class:'hr k-'+r[0]+(grp.n.length?'':' main')},r[1]))}
   flush();el.append(list);if(atBottom||!D._hs)el.scrollTop=el.scrollHeight;D._hs=1}
+// survoler une pastille de carte de l'historique affiche sa fiche à gauche
+document.addEventListener('pointerover',e=>{const D=DUEL;if(!D||!D.V||!e.target.closest)return;const c=e.target.closest('#hist .mi[data-k]');
+  if(c&&CARDS[c.dataset.k]&&!(D.sel&&D.sel.t==='terr')&&D.hk!==c){D.hk=c;setInfo({k:c.dataset.k,p:0})}else if(!c)D.hk=null});
 
 // ---------- fin de duel ----------
 function showResult(){
@@ -2501,12 +2735,14 @@ function rulesNodes(){
     li('Decks :',ECON.deck+' cartes, 2 exemplaires maximum par carte (1 seul pour les épiques). Chaque personnage existe en 3 versions : commune, rare et épique.'),
     li('Démoflux ◆ :','ta ressource. +1 maximum à chaque tour (jusqu’à '+OPTDEF.cap+'). Ce que tu ne dépenses pas est perdu à la fin du tour.'),
     li('Jouer :','glisse une carte de ta main sur un emplacement libre de ton plateau (6 emplacements). Glisse une de tes créatures sur un ennemi pour attaquer (ou clique, puis clique sur la cible). Espace / Entrée : fin du tour.'),
-    li('Déplacements :','pendant ton tour, glisse une de tes créatures sur une autre case de ton plateau (ou sur une autre de tes créatures pour les échanger), et glisse tes terrains le long de leur bande. C’est gratuit et illimité : une créature déplacée garde son état (elle n’attaque pas plus et ne déclenche aucun effet d’arrivée). Un seul achat de terrain par tour.'),
+    li('Déplacements :','pendant ton tour, glisse une de tes créatures sur une autre case de ton plateau (ou sur une autre de tes créatures pour les échanger), et glisse tes terrains le long de leur bande. Ça coûte : 1 ◆ (Démoflux) pour une créature, 1 🪙 (Or) pour un terrain, et le 2e déplacement du tour coûte 2, le 3e coûte 3. Par défaut, 2 déplacements maximum par tour (réglable dans les options du défi). Une créature déplacée garde son état : elle n’attaque pas plus et ne déclenche aucun effet d’arrivée. Un seul achat de terrain par tour.'),
     li('Cimetière et défausse :','les créatures détruites vont au cimetière ✝, les sorts joués et les cartes défaussées ou brûlées vont à la défausse 🗑. Quand ton deck est vide, les deux sont mélangés pour former un nouveau deck. Les cartes Bannies et les jetons disparaissent.'),
     li('Familles :','chaque créature appartient à une ou deux familles. Leurs bonus s’activent dès 2 créatures de la même famille sur ton plateau, et la plupart grandissent avec chaque membre en plus. La barre au-dessus de ton héros montre les familles en jeu.'),
     li('Terrains 🏟 :','la zone du milieu propose 2 terrains, renouvelés à chaque tour. Achète-en un avec ton Or 🪙 (+'+OPTDEF.inc+' par tour) et pose-le sur 1 à 3 de tes cases. Chaque créature posée dessus profite de son effet selon son affinité avec le jeu (les points ⚔️ 🥚 🏆 🎯 sur la carte : 0, 1 ou 2). Les terrains Bazar 🌀 profitent à tout le monde.'),
     li('Second joueur :','commence avec une carte de plus, la Pièce (+1 Démoflux), 1 Or et 5 PV de plus (45 au lieu de 40 par défaut).'),
     li('Fiche détaillée :','clic droit sur n’importe quelle carte, créature, terrain ou famille pour afficher sa fiche complète, épinglée tant que tu ne la fermes pas.'),
+    li('Historique :','chaque ligne montre qui a fait quoi : la carte, le terrain ou la famille qui a causé l’effet, puis la cible. Survole une pastille pour voir la fiche, clic droit pour l’épingler.'),
+    li('Échanges :','dans l’onglet Amis, « ⇄ Échanger » propose un échange à un ami connecté. Chacun choisit UNE carte à donner (normale ou prismatique) ; vous voyez tous les deux les deux cartes avant de valider, et l’échange n’a lieu que si les deux valident la même paire. Changer de carte annule les validations.'),
     li('Chrono :','tu as '+OPTDEF.tim+' secondes par tour (réglable). À la fin du temps, ton tour passe tout seul.'),
     li('Boosters :','gagne des 💎 en duel, ouvre des boosters de '+ECON.pack+' cartes en boutique, recycle tes doublons en cartes prismatiques.')]}
 function howto(){
@@ -2625,7 +2861,7 @@ function mkFilters(F,opt,onChange){
       row('Rareté',[1,2,3].map(r=>h('span',{class:'chip'+(F.r===r?' on':''),style:F.r===r?'':'color:'+RCOL[r],onclick:()=>set('r',r)},RAR[r]))),
       row('Famille',FACK.map(f=>h('span',{class:'chip fchip'+(F.fac===f?' on':''),style:'--fc:'+FAC[f].c,title:FAC[f].n,onclick:()=>set('fac',f)},FAC[f].ic,h('em',null,FAC[f].n)))),
       row('Coût',[1,2,3,4,5,6,7].map(c=>h('span',{class:'chip cchip'+(F.cost===c?' on':''),onclick:()=>set('cost',c)},c===7?'7+':String(c)))),
-      extra.length?row('',extra):null)};
+      ...(extra.length?[row('',extra)]:[]))};
   draw();return box}
 
 // ---------- COLLECTION ----------
@@ -2783,6 +3019,7 @@ function drawFriends(list){
       h('span',{class:'dot'+(st&&st.on?' on':'')}),
       h('div',{style:'flex:1;min-width:0'},h('b',null,f.name),h('div',{class:'sm mut'},f.code+(st?(st.on?(st.busy?' · en duel':' · en ligne'):' · hors ligne'):''))),
       h('button',{class:'btn sm pri',onclick:()=>challengeFriend(f)},'Défier'),
+      h('button',{class:'btn sm',style:'--h:#2ec4b6',title:'Échanger une carte avec '+f.name,onclick:()=>startTrade(f)},'⇄ Échanger'),
       h('button',{class:'btn sm',onclick:()=>ask('Retirer '+f.name+' ?',null,[{t:'Annuler'},{t:'Retirer',c:'danger',f:()=>{S.friends=S.friends.filter(x=>x!==f);saveS();drawFriends(list)}}])},'✕')))})}
 function pingAll(list){S.friends.forEach(f=>pingFriend(f.code,r=>{PRES[f.code]=r?{on:true,busy:r.busy}:{on:false};if(r&&r.name&&r.name!==f.name&&!f.custom){f.name=r.name;saveS()}if(CUR==='friends'&&document.body.contains(list))drawFriends(list)}))}
 function addFriend(raw,list){
@@ -2822,6 +3059,82 @@ function onChallenge(c,m){
       known?null:h('button',{class:'btn sm',onclick:()=>{S.friends.push({code:m.code,name:nm});saveS();toast(nm+' ajouté(e) aux amis.')}},'+ Ami'),
       h('button',{class:'btn danger',onclick:()=>{try{c.send({t:'dec'})}catch(e){}close();closeModal();setTimeout(()=>{try{c.close()}catch(e){}},300)}},'Refuser'),
       h('button',{class:'btn pri',style:'--h:#2ec4b6;--ht:#032521',onclick:accept},'Accepter'))),{sticky:true})}
+
+// ---------- ÉCHANGES DE CARTES ----------
+// 1) je clique sur « Échanger » : l'ami reçoit la proposition ; 2) il accepte ; 3) chacun choisit UNE carte à donner ;
+// 4) les deux voient les deux cartes ; 5) l'échange n'a lieu que quand les deux ont validé (voir TradeSession dans trade.js).
+function startTrade(f){
+  if(window.DUEL||CHALLENGE_UI||TRADE_UI)return;
+  let h1=null;TRADE_UI=true;
+  const end=()=>{TRADE_UI=null;closeModal()};
+  modal(h('div',{style:'text-align:center','data-sticky':1},h('h2',null,'Échange proposé à '+f.name),h('p',{class:'mut'},'En attente de sa réponse…'),
+    h('div',{class:'row',style:'justify-content:center;margin-top:14px'},h('button',{class:'btn',onclick:()=>{h1&&h1.cancel();end()}},'Annuler'))),{sticky:true});
+  h1=sendTrade(f,{fail:m=>{end();toast(m)},accepted:(c,m)=>{closeModal();tradeWindow(c,{name:f.name,code:f.code})}})}
+// réception d'une proposition d'échange
+function onTrade(c,m){
+  if(!validCode(m.code)){try{c.close()}catch(e){}return}
+  TRADE_UI=true;const nm=String(m.name||'Un joueur').slice(0,18),known=S.friends.some(f=>f.code===m.code);
+  let answered=false;const end=()=>{TRADE_UI=null;closeModal()};
+  c.on('data',x=>{if(x&&x.t==='tcancel'&&!answered){answered=true;end();toast(nm+' a annulé sa proposition d’échange.')}});
+  c.on('close',()=>{if(!answered){answered=true;end();toast('La proposition d’échange a été annulée.')}});
+  modal(h('div',{'data-sticky':1},h('h2',null,'⇄ '+nm+' te propose un échange'),
+    h('p',{class:'mut'},'Chacun choisit une carte à donner. Vous verrez tous les deux les deux cartes avant de valider : rien n’est échangé sans ton accord.'),
+    h('div',{class:'row',style:'justify-content:flex-end;margin-top:14px'},
+      known?null:h('button',{class:'btn sm',onclick:()=>{S.friends.push({code:m.code,name:nm});saveS();toast(nm+' ajouté(e) aux amis.')}},'+ Ami'),
+      h('button',{class:'btn danger',onclick:()=>{answered=true;try{c.send({t:'dec'})}catch(e){}end();setTimeout(()=>{try{c.close()}catch(e){}},300)}},'Refuser'),
+      h('button',{class:'btn pri',style:'--h:#2ec4b6;--ht:#032521',onclick:()=>{answered=true;try{c.send({t:'tacc',name:S.name})}catch(e){end();return}closeModal();tradeWindow(c,{name:nm,code:m.code})}},'Accepter'))),{sticky:true})}
+// fenêtre d'échange : « Tu donnes » à gauche, « Tu reçois » à droite, validation des deux côtés
+function tradeWindow(conn,peer){
+  TRADE_UI=true;let mode='trade';const TF={q:'',t:0,r:0,fac:'',cost:0,own:true,dup:false};
+  const box=modal(h('div',{'data-sticky':1}),{sticky:true});box.classList.add('tradebox');const root=box.firstChild;
+  const leave=()=>{TRADE_UI=null;closeModal();refreshTop();if(['friends','coll','decks'].indexOf(CUR)>=0)go(CUR)};
+  const T=TradeSession(conn,peer,{
+    change:()=>{if(mode==='pick'&&T.state==='open')return;mode='trade';render()},
+    done:()=>{mode='trade';render()},
+    closed:why=>{leave();toast(why==='cancel'?'Échange annulé.':why==='peer'?peer.name+' a annulé l’échange. Rien n’a été échangé.':why==='fail'?'Échange impossible : une des cartes n’est plus disponible. Rien n’a été échangé.':'Connexion coupée : rien n’a été échangé.')}});
+  const info=o=>{const cd=CARDS[o.k];
+    return h('div',{class:'tinfo'},h('b',null,cd.n+(o.p?' ✦':'')),
+      h('div',{class:'sm mut'},(cd.t==='c'?'Créature':'Sort')+' · '+RAR[cd.r]+' · coût '+cd.c+(o.p?' · prismatique':'')),
+      h('div',{class:'sm ttx'},txNodes(cd.tx)),
+      (cd.fac&&cd.fac.length)?h('div',{class:'tfs'},cd.fac.map(f=>h('span',{class:'chip',style:'cursor:default;padding:2px 9px;font-size:12px;border-color:'+FAC[f].c+';background:'+FAC[f].c+'33'},FAC[f].ic+' '+FAC[f].n))):null)};
+  const side=(cls,title,o,foot)=>h('div',{class:'tside '+cls},h('div',{class:'tl'},title),
+    o?h('div',{class:'tcw'},cardEl(o.k,{big:true,p:!!o.p,tilt:1})):h('div',{class:'tempty'},cls==='me'?'Aucune carte choisie':peer.name+' n’a pas encore choisi de carte'),
+    o?info(o):null,foot);
+  const tradeView=()=>{
+    const me=T.mine,th=T.theirs,done=T.state==='done';
+    if(done){const r=T.res;
+      return[h('h2',{style:'color:#7dffa5'},'✔ Échange réussi !'),h('p',{class:'mut'},'Les cartes ont été ajoutées à ta collection.'),
+        h('div',{class:'tw'},side('them','Tu as reçu',r.get),h('div',{class:'tmid'},'⇄'),side('me','Tu as donné',r.give)),
+        r.fixed.length?h('div',{class:'sm',style:'color:#ffd36b;margin-top:8px'},'⚠ '+r.fixed.map(x=>'« '+x.name+' » a perdu '+x.n+' exemplaire'+(x.n>1?'s':'')).join(' · ')+' de la carte donnée : pense à compléter tes decks.'):null,
+        h('div',{class:'row',style:'justify-content:center;margin-top:14px'},h('button',{class:'btn pri',style:'--h:#2ec4b6;--ht:#032521',onclick:()=>{T.cancel();leave()}},'Fermer'))]}
+    const status=!me&&!th?'Chacun choisit la carte qu’il donne.':!me?'Choisis la carte que tu donnes.':!th?'En attente de la carte de '+peer.name+'…':
+      T.myLock?'Tu as validé. En attente de '+peer.name+'…':T.theirLock?peer.name+' a validé : vérifie les deux cartes, puis valide à ton tour.':'Vérifie bien les deux cartes, puis valide.';
+    const lockPill=(on,txt)=>h('div',{class:'tok'+(on?' on':'')},on?'✔ '+txt+' validé':'… pas encore validé');
+    return[h('h2',null,'⇄ Échange avec '+peer.name),h('div',{class:'tstat'},status),
+      h('div',{class:'tw'},
+        side('me','Tu donnes',me,h('div',{class:'tfoot'},
+          h('button',{class:'btn sm',onclick:()=>{mode='pick';render()}},me?'Changer de carte':'Choisir une carte'),
+          me?h('button',{class:'btn sm',onclick:()=>T.setOffer(null)},'Retirer'):null,lockPill(T.myLock,'Tu as'))),
+        h('div',{class:'tmid'},'⇄'),
+        side('them','Tu reçois',th,h('div',{class:'tfoot'},lockPill(T.theirLock,peer.name+' a')))),
+      h('div',{class:'sm mut',style:'text-align:center;margin-top:8px'},'Les deux joueurs doivent valider la même paire de cartes. Si l’un change sa carte, les validations sont annulées.'),
+      h('div',{class:'row',style:'justify-content:space-between;margin-top:14px'},
+        h('button',{class:'btn danger',onclick:()=>T.cancel()},'Annuler l’échange'),
+        T.myLock?h('button',{class:'btn',onclick:()=>T.unlock()},'Retirer ma validation'):
+          h('button',{class:'btn green',disabled:!T.canLock(),onclick:()=>T.lock()},'Valider l’échange'))]};
+  const pickView=()=>{
+    const list=h('div',{class:'cgrid tgrid'});
+    const draw=()=>{list.innerHTML='';let n=0;
+      POOL.filter(cardFilter(TF)).sort(sortK).forEach(k=>{const e=S.coll[k]||{n:0,p:0};
+        [[0,e.n],[1,e.p]].forEach(([p,cnt])=>{if(cnt<=0)return;n++;
+          list.append(h('div',{class:'cc2'+(T.mine&&T.mine.k===k&&T.mine.p===p?' sel':''),onclick:()=>{if(T.setOffer({k,p})){mode='trade';render()}else toast('Cette carte n’est plus disponible.')}},
+            cardEl(k,{p:!!p,tilt:1}),h('span',{class:'own'+(p?' p':'')},'×'+cnt+(p?' ✦':''))))})});
+      if(!n)list.append(h('div',{class:'mut'},'Aucune carte ne correspond à ces filtres.'))};
+    const f=mkFilters(TF,{own:false,dup:false},draw);draw();
+    return[h('div',{class:'row',style:'justify-content:space-between;margin-bottom:8px'},h('h2',{style:'margin:0'},'Quelle carte donnes-tu à '+peer.name+' ?'),h('button',{class:'btn sm',onclick:()=>{mode='trade';render()}},'← Retour')),
+      h('div',{class:'sm mut',style:'margin-bottom:6px'},'Les exemplaires prismatiques (✦) sont listés à part. Tu ne donnes qu’un exemplaire.'),f,list]};
+  function render(){root.replaceChildren(...(mode==='pick'&&T.state==='open'?pickView():tradeView()))}
+  render()}
 
 // ---------- CODE ----------
 function vCode(v){
