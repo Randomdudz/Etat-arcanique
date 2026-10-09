@@ -675,6 +675,117 @@ input::placeholder{color:#6f8a96}
 /* petits écrans : la zone reste assez large pour la barre du héros (nom, PV, ressources) même si les cases sont petites */
 .field>*{width:max(calc(var(--sw)*6 + 66px),min(600px,100%))}
 .board,.tstrip{width:calc(var(--sw)*6 + 30px);max-width:100%;margin-left:auto;margin-right:auto}
+
+/* ================= DUEL v6 : relance des terrains ================= */
+.rollb{flex:none;width:58px;border-radius:12px;border:2px solid #ffffff33;background:linear-gradient(180deg,#26333b,#182228);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-weight:900;padding:4px 2px;cursor:pointer}
+.rollb .ri{font-size:22px;line-height:1}
+.rollb small{font-size:12px;color:#ffd36b;white-space:nowrap}
+.rollb.can:hover{border-color:#ffd36b;box-shadow:0 0 12px #ffc14566}
+.rollb:active{transform:translateY(1px)}
+.rollb[disabled]{opacity:.45;cursor:default}
+
+/* ================= DUEL v6 : interface sobre, ressources séparées, effets de combat, terrains sur les cases ================= */
+#duel{background:linear-gradient(180deg,#0a0f12,#0c1215);
+  --sw:clamp(56px,min(calc((100vh - 474px)/3.797),calc((100vh - 602px)/2.52),calc((100vw - 700px)/6.25)),150px);--hw:max(84px,calc(var(--sw)*.84))}
+.field{--zw:max(calc(var(--sw)*6 + 66px),min(600px,100%));overflow-y:auto;overflow-x:hidden;scrollbar-width:thin}
+/* zones : même fond sombre partout, un simple liseré distingue les camps */
+.zopp,.zme,.zmid{background:linear-gradient(180deg,#141c21,#0f161a)}
+.zopp{--zb:#ff5d6c40;--zg:transparent}.zme{--zb:#2ec4b640;--zg:transparent}.zmid{--zb:#ffffff1c;--zg:transparent}
+#duel.myturn .zme{--zb:#2ec4b6b0;box-shadow:0 0 0 1px #2ec4b655,0 0 20px #2ec4b62a,0 5px 16px #000a}
+#duel.oppturn .zopp{--zb:#ff5d6cb0;box-shadow:0 0 0 1px #ff5d6c55,0 0 20px #ff5d6c2a,0 5px 16px #000a}
+.board.o .slot,.board.m .slot{border-color:#ffffff2e;background:#ffffff05}
+/* barre du haut : l'aide du moment remplace le titre (plus de barre qui pousse l'écran) ; chrono sobre */
+.dtop{height:52px;flex:none}
+.dtop .info{display:none}
+.dtop.hashint .tt{display:none}
+.dtop.hashint .info{display:flex;flex:1;min-width:0;justify-content:center;align-items:center;gap:12px;background:none;border:0;box-shadow:none;padding:0;position:static}
+.dtop .info .hintline{flex:0 1 auto;min-width:0;font-size:15px;color:#ffd36b;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dtop .info .acts{display:flex;gap:8px;flex:none}
+.dtop .tm.lo{animation:none;box-shadow:none;background:#3a0d14;color:#ff8a98;border-color:#ff4d5e}
+.dtop .tm.mid{box-shadow:none}
+/* héros : identité + PV épurés, puis une case par ressource */
+.hero{background:#0d1418;border:1.5px solid #ffffff1f;gap:0;padding:6px 8px;border-radius:14px;align-items:stretch;box-shadow:0 3px 10px #0008}
+.hero.me,.hero.opp{--hg1:#0d1418;--hg2:#0d1418}
+.hero.me .hav{border-color:#2ec4b6}.hero.opp .hav{border-color:#ff5d6c}
+.hero.act{border-color:#ffffff4d;box-shadow:0 3px 10px #0008}
+.hav{align-self:center;margin-right:10px;width:44px;height:44px;font-size:20px}
+.hid{flex:1;min-width:150px;display:flex;flex-direction:column;justify-content:center;gap:5px;padding-right:12px}
+.hid .hrow .hn{font-size:14.5px}
+.hpl{display:flex;align-items:center;gap:10px}
+.hpl .hbar{flex:1;height:8px;border-radius:99px;background:#ffffff14;border:0;margin:0;overflow:hidden;position:relative}
+.hpl .hbar i{position:absolute;left:0;top:0;bottom:0;background:#e5484d;border-radius:99px;transition:width .5s}
+.hero.low .hpl .hbar i{background:#ff2e3e;box-shadow:0 0 8px #ff2e3e}
+.hpn{font-size:17px;font-weight:900;white-space:nowrap;color:#fff;line-height:1}.hpn i{font-style:normal;color:#ff6b6b}.hpn small{font-size:12px;color:#8ea2ac;font-weight:700}
+.hst{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 12px;border-left:1px solid #ffffff1a;min-width:60px}
+.hst .hl{font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:#8ea2ac;font-weight:800;line-height:1.3}
+.hst b{font-size:17px;font-weight:900;white-space:nowrap;line-height:1.25;color:#fff}.hst b small{font-size:12px;color:#8ea2ac;font-weight:700}
+.hst b i{font-style:normal}.hst.mana b i{color:#5fd0ff}.hst.mvc b i{color:#8ec5ff}
+.hst.mvc{cursor:help}.hst.mvc.out{opacity:.5}
+.hst .crys{max-width:118px;margin-top:2px;justify-content:center}.hst .crys i{width:9px;height:11px}
+@media(max-height:820px){.hst .crys{display:none}}
+/* familles : seul le signe est en couleur */
+.fx{background:#0d1418;border:1.5px solid #ffffff22;color:#dfe9ee}
+.fx .fi{background:color-mix(in srgb,var(--fc) 80%,#000);border:1px solid #ffffff55}
+.fx .pp i{background:#ffffff1f;border-color:#ffffff3a}.fx .pp i.f{background:#fff;border-color:#fff}
+.fx.on{background:#0d1418;color:#fff;border-color:#ffffff5c;box-shadow:none}
+.fx.on .fi{background:var(--fc);color:#000;box-shadow:0 0 10px var(--fc)}
+.fx .tag{background:#ffffff1a;color:#fff}
+/* cartes posées : pas de familles, ATK et PV toujours des mêmes couleurs */
+.card.bd .fc{display:none}
+.card .st b.up,.card .st b.dn,.card .st b.hurt{color:#fff;box-shadow:0 .5cqw 1.5cqw #000a}
+/* cases couvertes par un terrain : elles prennent sa couleur */
+.board .slot.ter{border:2px solid color-mix(in srgb,var(--tc) 85%,#fff 8%);background:color-mix(in srgb,var(--tc) 20%,transparent)}
+.board .slot.ter:not(.empty){box-shadow:0 0 0 2px var(--tc),0 0 12px color-mix(in srgb,var(--tc) 50%,transparent)}
+.board .slot.ter.mvd{background:color-mix(in srgb,var(--tc) 30%,#5ee08a22)}
+/* effets de combat sur les cartes du plateau */
+.card .vfx{position:absolute;inset:0;pointer-events:none;z-index:4;border-radius:inherit;overflow:hidden}
+.card .vfx i{position:absolute;inset:0;display:none;border-radius:inherit}
+.card.bd.eg .v-eg{display:block;background:linear-gradient(125deg,#ffffff4a 0%,#ffffff10 20%,#fff0 32%,#fff0 62%,#ffffff1c 72%,#fff0 84%);box-shadow:inset 0 0 0 1.4cqw #e3f7ffd0,inset 0 0 7cqw #9fe8ff70}
+.card.bd.eg .v-eg::after{content:'';position:absolute;inset:0;background:linear-gradient(115deg,#fff0 40%,#ffffffb0 48%,#fff0 56%) 0 0/300% 100% no-repeat;animation:glass 3.2s ease-in-out infinite}
+@keyframes glass{0%,25%{background-position:130% 0}75%,100%{background-position:-30% 0}}
+.card.bd.tlt .v-tlt{display:block;background:radial-gradient(120% 70% at 50% 108%,#ff2b2bcc,#ff2b2b40 45%,#ff2b2b00 70%);opacity:.55;animation:vpulse 2.4s ease-in-out infinite}
+.card.bd.tlton .v-tlt{opacity:1;background:radial-gradient(130% 85% at 50% 112%,#ff1f1ff0,#ff2b2b70 50%,#ff2b2b00 80%),radial-gradient(90% 45% at 50% -5%,#ff2b2b55,#ff2b2b00)}
+@keyframes vpulse{50%{filter:brightness(1.4)}}
+.card.bd.pzn .v-pzn{display:block;background:linear-gradient(0deg,#7dff3a90,#7dff3a26 40%,#7dff3a00 66%);animation:vpulse 2s ease-in-out infinite}
+.card.bd.blkx .v-blk{display:block;background:linear-gradient(135deg,#d8f3ff70,#7cc8ff30 40%,#d8f3ff60);box-shadow:inset 0 0 9cqw #d8f3ffd0}
+.card.bd.afkx .ci{filter:grayscale(1) brightness(.75)}
+.card.bd.afkx .ca::after{content:'💤';position:absolute;right:5cqw;top:26cqw;font-size:17cqw;z-index:5;animation:floaty 1.8s ease-in-out infinite}
+.card.bd.noatk .ca img,.card.bd.noatk .ca .sy{filter:grayscale(.9) brightness(.8)}
+.card .v-rp{display:none}
+.card.bd.rp .v-rp{display:block;position:absolute;inset:-3.2cqw;border-radius:10cqw;border:2.8cqw solid #c9d3d9;box-shadow:inset 0 0 0 .9cqw #39444b,0 0 0 .9cqw #39444b,0 1cqw 4cqw #000c;pointer-events:none;z-index:8}
+.card.bd.rp .v-rp span{position:absolute;left:50%;bottom:-6cqw;transform:translateX(-50%);font-size:14cqw;line-height:1;background:#c9d3d9;color:#2b343a;border-radius:4cqw 4cqw 9cqw 9cqw;padding:.6cqw 3.2cqw 2.2cqw;border:.9cqw solid #39444b}
+/* main : entièrement visible, grosse loupe au survol */
+.hand{height:calc(var(--hw)*1.52 + 12px);padding:6px 4px 0;margin-top:auto}
+.hc{transform-origin:50% 100%;transition:transform .14s,margin .14s}
+.hc:hover{transform:translateY(-6px) scale(1.8);z-index:40}
+.hc.sel{transform:translateY(-14px)}
+.hc.sel:hover{transform:translateY(-14px) scale(1.8)}
+.hc.incoming{visibility:hidden}
+.hc.drawn{animation:drawn .5s ease-out}
+@keyframes drawn{0%{transform:perspective(600px) rotateY(90deg) scale(1.1)}100%{transform:none}}
+/* deck face cachée */
+.deck{position:absolute;z-index:6;--dkw:clamp(34px,calc((100% - var(--zw))/2 - 26px),84px);width:var(--dkw);aspect-ratio:5/7.6;right:max(4px,calc((100% - var(--zw))/2 - var(--dkw) - 14px));cursor:help}
+.deck.me{bottom:18px}
+.deck.opp{top:12px}
+.deck .dkc{position:absolute;inset:0;transform:translate(calc(var(--j)*-2px),calc(var(--j)*-3px));filter:drop-shadow(0 2px 3px #000b)}
+.deck .dkc .card{width:100%;height:100%}
+.deck .dkc.none{border:2px dashed #ffffff33;border-radius:12%}
+.deck .dkn{position:absolute;left:50%;bottom:-11px;transform:translateX(-50%);background:#0d1418;border:1.5px solid #ffffff44;border-radius:99px;padding:0 8px;font-size:12px;font-weight:900;z-index:3;white-space:nowrap}
+.flyc{position:fixed;z-index:85;transform-origin:0 0;pointer-events:none;filter:drop-shadow(0 10px 16px #000c)}
+.flyc .card{width:100%}
+/* petites hauteurs (portable avec barre des tâches) : tout est plus compact pour que la main reste visible */
+@media(max-height:800px){
+  #duel{--sw:clamp(56px,min(calc((100vh - 400px)/3.797),calc((100vh - 528px)/2.52),calc((100vw - 700px)/6.25)),150px)}
+  .dtop{height:44px;padding:4px 12px}.dtop .tm{font-size:19px}
+  .field{gap:4px;padding:6px 10px 4px}
+  .zone{padding:4px 7px;gap:3px}.zmid{padding:4px 7px}.mid{min-height:0}
+  .hero{padding:4px 8px}.hav{width:36px;height:36px;font-size:17px;margin-right:8px}
+  .hid{gap:3px}.hid .hrow .hn{font-size:13.5px}.hpn{font-size:15px}.hst{padding:0 9px;min-width:52px}.hst b{font-size:15px}.hst .hl{font-size:8.5px}
+  .fxrow{height:22px}.fx{height:20px;font-size:11px}.fx .fi{width:16px;height:16px;font-size:9.5px}
+  .tstrip{height:20px}.tcell{font-size:10.5px}
+  .shT{padding:2px 7px}.shT .ef{display:none}
+  .endb{min-width:110px;font-size:14px}.rollb{width:52px}.rollb .ri{font-size:19px}
+}
 </style>
 <script defer src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
 </head>
@@ -1064,7 +1175,10 @@ function mvWhy(G,s,terr){
   if(mvMax(G)<=0)return 'Les déplacements sont désactivés dans ce défi.';
   if(mvLeft(G,s)<=0)return 'Déplacements épuisés pour ce tour (maximum '+mvMax(G)+').';
   const c=mvCost(G,s);return terr?'Pas assez d’Or pour déplacer un terrain (coût : '+c+' 🪙).':'Pas assez de Démoflux pour déplacer une créature (coût : '+c+' ◆).'}
-function canBuy(G,s,n){if(G.over||G.cur!==s||!G.o.ter||G.p[s].tb)return false;const t=G.shop[n];return!!t&&G.p[s].or>=terrCost(G,s,t)}   // 1 achat par tour
+function canBuy(G,s,n){if(G.over||G.cur!==s||!G.o.ter)return false;const t=G.shop[n];return!!t&&G.p[s].or>=terrCost(G,s,t)}
+// relancer la boutique de terrains : les 2 terrains proposés sont remplacés par 2 nouveaux, pour 2 Or
+const ROLLC=2;
+function canRoll(G,s){return!G.over&&G.cur===s&&!!G.o.ter&&G.p[s].or>=ROLLC&&(G.tdeck.length+G.tdis.length+G.shop.length)>0}
 function canExil(G,s,i){if(G.over||G.cur!==s)return false;const P=G.p[s],c=P.board[i];if(!c||c.ex||!hasF(c.k,'expats'))return false;
   const n=fl(G,s).expats||0;return n>=2&&P.or>=exCost(n)}
 
@@ -1224,7 +1338,7 @@ function startTurn(G,s){
   if(o.evt&&s===G.first&&G.round>0&&G.round%3===0){doEvent(G);if(G.over)return}
   if(o.ter&&G.turn>1)cycleShop(G);
   P.cap=Math.min(o.cap,P.cap+1);P.eth=P.cap;                       // le Démoflux non dépensé est perdu
-  P.or+=o.inc;P.tb=0;P.mvn=0;
+  P.or+=o.inc;P.mvn=0;
   P.board.forEach((c,i)=>{if(c){c.af=0;c.sick=0;if(c.ex){c.ex=0;lg(G,{t:'back',ts:s,i,k:c.k})}}});
   for(let i=0;i<CELLS;i++){const c=P.board[i];if(c&&c.pz>0){dmgC(G,s,i,c.pz,'venin');c.pz--}}
   if(P.pz>0){heroHit(G,s,P.pz,'venin');P.pz--}
@@ -1303,12 +1417,18 @@ function act(G,s,a){
     lg(G,{t:'tmove',ts:s,d:T.d,id:a.id,from,at:a.at,c:cost,r:'or'});
     keepAlive(G,s);P.mvn=(P.mvn||0)+1;break}
   case 'buy':{
-    if(!G.o.ter)return er('Terrains désactivés.');if(P.tb)return er('Un seul achat de terrain par tour.');const t=G.shop[a.n];if(!t)return er('Terrain indisponible.');
+    if(!G.o.ter)return er('Terrains désactivés.');const t=G.shop[a.n];if(!t)return er('Terrain indisponible.');
     const cost=terrCost(G,s,t);if(P.or<cost)return er('Pas assez d’Or.');const sz=TD[t.d].size;
     if(!(isCell(a.at)&&a.at+sz<=CELLS))return er('Emplacement invalide.');
-    P.or-=cost;P.tb=1;G.shop.splice(a.n,1);G.tdis.push(t);const nt=drawTerr(G);if(nt)G.shop.push(nt);
+    P.or-=cost;G.shop.splice(a.n,1);G.tdis.push(t);const nt=drawTerr(G);if(nt)G.shop.push(nt);
     lg(G,{t:'buy',d:t.d,at:a.at,ts:s,c:cost});
     buyTerr(G,s,t,a.at);keepAlive(G,s);break}
+  case 'roll':{
+    if(!G.o.ter)return er('Terrains désactivés.');if(P.or<ROLLC)return er('Il faut '+ROLLC+' Or pour relancer les terrains.');
+    if(!canRoll(G,s))return er('Impossible de relancer les terrains.');
+    P.or-=ROLLC;const old=G.shop.map(t=>t.d);for(const t of G.shop)G.tdis.push(t);G.shop=[];
+    for(let j=0;j<2;j++){const nt=drawTerr(G);if(nt)G.shop.push(nt)}
+    lg(G,{t:'roll',ts:s,c:ROLLC,old,nd:G.shop.map(t=>t.d)});break}
   case 'end':G.aid++;endTurn(G,s);return{ok:true};
   default:return er('Action inconnue.')}
   reap(G);
@@ -1854,6 +1974,9 @@ function cardEl(k,o){
   const cd=CARDS[k],isC=cd.t==='c',E=o.E,cr=o.cr;
   const cls=['card',isC?'c':'s','r'+cd.r];if(o.p)cls.push('prism');if(o.bd)cls.push('bd');if(o.big)cls.push('big');
   if(cr&&cr.eg)cls.push('eg');if(cr&&cr.mut)cls.push('mut-x');if(cr&&cr.ex)cls.push('exil');if(o.tilt)cls.push('tilt');if(o.cls)cls.push(...o.cls);
+  // plateau : effets de combat visibles sur la carte (Rempart, AFK, Tilt, Venin, Bloquée...)
+  if(o.bd&&cr&&E){if(E.kw.rempart)cls.push('rp');if(E.kw.afk&&!cr.aw)cls.push('afkx');if(E.TE&&E.TE.noAtk)cls.push('noatk');
+    if(E.kw.tilt)cls.push('tlt',cr.a>cd.a?'tlton':'tltoff');if(cr.pz>0)cls.push('pzn');if(cr.blk>0)cls.push('blkx')}
   const tx=cd.tx||'',tc=tx.length>118?'ct xl':tx.length>76?'ct l':'ct';
   const kwset=E?E.kw:(()=>{const r={};(cd.kw||[]).forEach(x=>r[x]=1);return r})();
   const kws=KWORDER.filter(x=>kwset[x]||(x==='egide'&&cr&&cr.eg)).map(x=>x==='venin'?h('i',{class:'vn'},'☠'+(kwset.venin>1?kwset.venin:'')):h('i',null,KWI[x][1]));
@@ -1874,7 +1997,9 @@ function cardEl(k,o){
       isC?h('div',{class:'st'},h('b',{class:'at '+ac},a),h('b',{class:'hpv '+hc},hp)):null,
       h('div',{class:'rr'},RAR[cd.r]+(isC?'':' · sort')),
       bdg.length?h('div',{class:'bdg'},bdg):null,tb,
+      o.bd?h('div',{class:'vfx'},h('i',{class:'v-tlt'}),h('i',{class:'v-pzn'}),h('i',{class:'v-blk'}),h('i',{class:'v-eg'})):null,
       cr?h('div',{class:'exo'},'✈️'):null),
+    o.bd?h('div',{class:'v-rp'},h('span',null,'⛊')):null,
     cd.r===3?h('div',{class:'shn'}):null,o.p?h('div',{class:'pfr'}):null,o.tilt?h('div',{class:'glr'}):null)}
 // inclinaison 3D et reflets qui suivent la souris (cartes marquées .tilt)
 let TILT=null;
@@ -1981,7 +2106,7 @@ function applyView(V){
 function mountDuel(){
   const el=$('#duel');el.hidden=false;el.innerHTML='';
   el.append(
-    h('div',{class:'dtop'},h('button',{class:'ibtn',onclick:duelMenu,title:'Menu'},'☰'),h('div',{class:'tt',id:'dtt'}),
+    h('div',{class:'dtop'},h('button',{class:'ibtn',onclick:duelMenu,title:'Menu'},'☰'),h('div',{class:'tt',id:'dtt'}),h('div',{class:'info empty',id:'info'}),
       h('div',{class:'tm',id:'dtm'},ico('timer'),h('span',{id:'dts'},'—'))),
     h('div',{id:'tbar'},h('i')),
     h('div',{class:'dmain'},h('aside',{id:'prev'}),
@@ -1990,7 +2115,7 @@ function mountDuel(){
         h('section',{class:'zone zmid mid'},h('div',{class:'shopz',id:'shop'}),h('div',{class:'evb',id:'evb'}),
           h('button',{class:'endb',id:'endb',onclick:e=>{e.stopPropagation();endTurnClick()}},h('span',{id:'ebt'},'Fin du tour'),h('small',{id:'ebs'}),h('i',{class:'eb',id:'ebb'}))),
         h('section',{class:'zone zme'},h('div',{class:'board m',id:'bMe'}),h('div',{class:'tstrip',id:'tMe'}),h('div',{class:'fxrow',id:'fMe'}),h('div',{id:'hMe'})),
-        h('div',{class:'info empty',id:'info'}),h('div',{class:'hand',id:'hand'})),
+        h('div',{class:'hand',id:'hand'}),h('div',{class:'deck opp',id:'dkOpp'}),h('div',{class:'deck me',id:'dkMe'})),
       h('aside',{id:'hist'})));
   const aim=h('div',{id:'aim'});aim.innerHTML='<svg width="100%" height="100%"><path class="ab"/><path class="al"/><polygon class="ah"/></svg>';el.append(aim);
   DUEL.onMove=e=>{const D=DUEL;if(!D)return;D.mx=e.clientX;D.my=e.clientY;if(!D.aimRaf)D.aimRaf=requestAnimationFrame(()=>{if(DUEL){DUEL.aimRaf=0;aimDraw()}})};
@@ -2061,7 +2186,7 @@ function renderDuel(){
   $('#hOpp').replaceChildren(heroNode(op));$('#hMe').replaceChildren(heroNode(me));
   const ids=new Set();
   for(const s of [op,me]){const B=$(s===me?'#bMe':'#bOpp');B.replaceChildren(...boardNodes(s,ids))}
-  stripNode(op,$('#tOpp'));stripNode(me,$('#tMe'));fxNode(op,$('#fOpp'));fxNode(me,$('#fMe'));
+  stripNode(op,$('#tOpp'));stripNode(me,$('#tMe'));fxNode(op,$('#fOpp'));fxNode(me,$('#fMe'));deckNode(op,$('#dkOpp'));deckNode(me,$('#dkMe'));
   shopNode();evNode();endNode();showInfo();handNode();
   D.prevIds=ids;
   // une créature déplacée glisse de son ancienne case vers la nouvelle
@@ -2082,18 +2207,22 @@ function heroNode(s){
   const D=DUEL,V=D.V,me=V.me,P=V.p[s],isMe=s===me;
   const tot=Math.max(P.cap,P.eth),cr=[];for(let i=0;i<tot;i++)cr.push(h('i',{class:i<P.eth?(i>=P.cap?'x':'f'):''}));
   const pct=Math.max(0,Math.min(100,P.hp/P.mhp*100));
-  const cls='hero '+(isMe?'me':'opp')+(V.cur===s&&!V.over?' act':'')+(D.hl&&D.hl[s+':-1']?(s===me?' tgo':' tg'):'');
+  const cls='hero '+(isMe?'me':'opp')+(V.cur===s&&!V.over?' act':'')+(D.hl&&D.hl[s+':-1']?(s===me?' tgo':' tg'):'')+(pct<=30?' low':'');
   const pb=(ic,n,key,tt)=>h('button',{class:key?'':'dk',title:tt,onclick:key?e=>{e.stopPropagation();pileModal(s,key)}:null},ic+' '+n);
+  // une case par ressource : étiquette + valeur
+  const st=(cl,lab,val,tt,extra)=>h('div',{class:'hst '+cl,title:tt},h('span',{class:'hl'},lab),h('b',null,...val),extra||null);
+  const ml=mvLeft(V,s),mm=mvMax(V);
   const el=h('div',{class:cls,'data-s':s,'data-i':-1},
     h('div',{class:'hav'},(P.nm||'?').trim().charAt(0).toUpperCase()),
-    h('div',{class:'hinfo'},h('div',{class:'hrow'},h('div',{class:'hn'},(isMe?'Toi · ':'')+P.nm),
-      h('span',{class:'piles'},pb('🂠',P.dn,null,'Cartes dans le deck'),pb('✝',P.grave.length,'grave','Cimetière'),pb('🗑',P.disc.length,'disc','Défausse'))),
-      h('div',{class:'hbar'},h('i',{style:'width:'+pct+'%'}),h('span',null,'♥ '+P.hp+' / '+P.mhp))),
+    h('div',{class:'hid'},
+      h('div',{class:'hrow'},h('div',{class:'hn'},(isMe?'Toi · ':'')+P.nm),
+        h('span',{class:'piles'},pb('🂠',P.dn,null,'Cartes dans le deck'),pb('✝',P.grave.length,'grave','Cimetière'),pb('🗑',P.disc.length,'disc','Défausse'))),
+      h('div',{class:'hpl',title:'Points de vie : '+P.hp+' / '+P.mhp},h('div',{class:'hbar'},h('i',{style:'width:'+pct+'%'})),h('b',{class:'hpn'},h('i',null,'♥'),' '+P.hp,h('small',null,'/'+P.mhp)))),
     P.pz>0?h('div',{class:'hpz'},'☠ '+P.pz):null,
-    h('div',{class:'res'},h('div',{class:'crys'},cr),
-      h('div',{class:'rtx'},h('span',{class:'d'},'◆ '+P.eth+'/'+P.cap),V.o.ter?h('span',{class:'o'},'🪙 '+P.or):null,h('span',{class:'mut'},'✋'+P.hand.length),
-        isMe&&V.o.ter&&mvMax(V)>0?h('span',{class:'mvc'+(mvLeft(V,s)?'':' out'),title:'Déplacements ce tour : '+mvLeft(V,s)+' restant'+(mvLeft(V,s)>1?'s':'')+' sur '+mvMax(V)+'.\nProchain : '+mvCost(V,s)+' ◆ (créature) ou '+mvCost(V,s)+' 🪙 (terrain). Le n-ième déplacement du tour coûte n.'},'↔ '+mvLeft(V,s)+'/'+mvMax(V)):null,
-        )));
+    st('mana','Démoflux',[h('i',null,'◆'),' '+P.eth,h('small',null,'/'+P.cap)],'Démoflux : '+P.eth+' sur '+P.cap,h('div',{class:'crys'},cr)),
+    V.o.ter?st('gold','Or',[h('i',null,'🪙'),' '+P.or],'Or : '+P.or):null,
+    st('handc','Main',[h('i',null,'✋'),' '+P.hand.length],'Cartes en main'),
+    isMe&&V.o.ter&&mm>0?st('mvc'+(ml?'':' out'),'Dépl.',[h('i',null,'↔'),' '+ml+'/'+mm],'Déplacements ce tour : '+ml+' restant'+(ml>1?'s':'')+' sur '+mm+'.\nProchain : '+mvCost(V,s)+' ◆ (créature) ou '+mvCost(V,s)+' 🪙 (terrain). Le n-ième déplacement du tour coûte n.'):null);
   el._dz={t:'hero',s};
   el.addEventListener('click',e=>{e.stopPropagation();clickSlot(s,-1)});
   return el}
@@ -2109,13 +2238,13 @@ function fxNode(s,el){
       h('span',{class:'pp'},Array.from({length:Math.max(3,n)},(_,j)=>h('i',{class:j<n?'f':''}))),
       tag?h('span',{class:'tag'},tag):null);
     c.addEventListener('click',e=>{e.stopPropagation();setInfo({fac:f,s})});
-    c.addEventListener('pointerenter',()=>setInfo({fac:f,s}));
     el.append(c)}}
 
 function boardNodes(s,ids){
   const D=DUEL,V=D.V,me=V.me,out=[],B=V.p[s].board,L=fl(V,s);
   for(let i=0;i<CELLS;i++){
     const c=B[i];const sl=h('div',{class:'slot'+(c?'':' empty'),'data-s':s,'data-i':i});sl._dz={t:'slot',s,i};
+    const T=V.o.ter?terrOf(V,s,i):null;if(T&&TD[T.d]){sl.classList.add('ter');sl.style.setProperty('--tc',GAMES[TD[T.d].g].c)}   // case couverte par un terrain
     const sel=D.sel;
     if(!c&&s===me&&sel&&((sel.t==='hand'&&CARDS[sel.k].t==='c')||(sel.t==='cry'&&sel.sl===i)))sl.classList.add('hi');
     if(s===me&&sel&&(sel.t==='atk'||sel.t==='mv')&&sel.f!==i&&mine()&&canMoveC(V,me))sl.classList.add(c?'swp':'mvd');
@@ -2131,7 +2260,6 @@ function boardNodes(s,ids){
       if(s===me)makeDrag(sl,()=>{const V2=DUEL.V;if(!mine()||!V2.p[V2.me].board[i])return null;return{t:'atk',f:i,k:c.k,atk:canAtk(V2,V2.me,i)}});
     }
     sl.addEventListener('click',e=>{e.stopPropagation();clickSlot(s,i)});
-    sl.addEventListener('pointerenter',()=>{if(c&&!(DUEL.sel&&DUEL.sel.t==='terr'))setInfo({k:c.k,cr:c,s,i,p:c.p})});
     out.push(sl)}
   return out}
 
@@ -2147,7 +2275,6 @@ function stripNode(s,el){
     c.addEventListener('click',e=>{const S=DUEL.sel;if(S&&S.t==='tm'&&own&&S.id===id){e.stopPropagation();DUEL.sel=null;renderDuel();return}
       if(S&&(S.t==='terr'||S.t==='tm')&&own)return;e.stopPropagation();
       if(own&&mine()){DUEL.info={terr:T,s};DUEL.sel=(S&&S.t==='tm'&&S.id===id)?null:{t:'tm',id,n,off:cellAt(e.clientX)-st};renderDuel()}else setInfo({terr:T,s})});
-    c.addEventListener('pointerenter',()=>{if(!DUEL.sel)setInfo({terr:T,s})});
     if(own)makeDrag(c,e=>{if(!mine())return null;return{t:'tm',id,n,off:cellAt(e.clientX)-st,d:T.d}});
     el.append(c);i=j}
   if(sel&&sel.t==='terr'&&own&&sel.at!=null){const t=V.shop[sel.n];if(t){const td=TD[t.d];el.append(h('div',{class:'tcell pv',style:'grid-row:1;grid-column:'+(sel.at+1)+' / span '+td.size+';z-index:3;--gc:'+GAMES[td.g].c},GAMES[td.g].ic+' '+td.n))}}
@@ -2163,6 +2290,9 @@ function stripPreview(at,n,col,txt){const el=$('#tMe');if(!el)return;let p=el.qu
 function shopNode(){
   const D=DUEL,V=D.V,me=V.me,el=$('#shop');el.innerHTML='';el.append(h('div',{class:'lb'},'TERRAINS'));
   if(!V.o.ter){el.append(h('div',{class:'mut sm',style:'align-self:center'},'Terrains désactivés'));return}
+  const rc=mine()&&canRoll(V,me);
+  el.append(h('button',{class:'rollb'+(rc?' can':''),disabled:!rc,title:'Relancer les terrains : 2 nouveaux terrains pour '+ROLLC+' Or'+(mine()&&!rc?' (il te faut '+ROLLC+' Or)':''),
+    onclick:e=>{e.stopPropagation();doAct({t:'roll'})}},h('span',{class:'ri'},'🎲'),h('small',null,ROLLC+' 🪙')));
   const keys=V.shop.map(t=>t?t.d:''),prev=D.prevShop||keys;
   V.shop.forEach((t,n)=>{
     if(!t){el.append(h('div',{class:'shT void'},'épuisé'));return}
@@ -2172,7 +2302,6 @@ function shopNode(){
       h('div',{class:'r1'},h('span',null,g.ic+' '+g.n),h('span',{class:'sz'},Array.from({length:td.size},()=>h('i'))),h('span',{class:'pr'},'🪙'+cost)),h('b',null,td.n),
       h('div',{class:'ef'},td.g==='bazar'?td.tn:'1 : '+td.t1+' · 2 : '+td.t2));
     d.addEventListener('click',e=>{e.stopPropagation();clickShop(n)});
-    d.addEventListener('pointerenter',()=>{if(!(D.sel&&D.sel.t==='terr'))setInfo({shop:n})});
     makeDrag(d,()=>{const V2=DUEL.V;if(!mine()||!canBuy(V2,V2.me,n))return null;return{t:'terr',n}});
     el.append(d)});
   D.prevShop=keys}
@@ -2194,10 +2323,30 @@ function handNode(){
     const w=h('div',{class:'hc'+(can?' can':'')+(m&&!can?' np':'')+(D.sel&&(D.sel.t==='hand'||D.sel.t==='cry')&&D.sel.i===i?' sel':'')+(D.dragHand===i?' drag':'')},
       cardEl(hd.k,{p:hd.p,cost}));
     w.addEventListener('click',e=>{e.stopPropagation();clickHand(i)});
-    w.addEventListener('pointerenter',()=>setInfo({k:hd.k,p:hd.p,hand:i}));
     makeDrag(w,()=>{const V2=DUEL.V;if(!mine()||!playable(V2,V2.me,i))return null;return{t:'hand',i,k:hd.k,p:hd.p}});
     el.append(w)});
-  el.scrollLeft=sc}
+  el.scrollLeft=sc;fitHand()}
+// si la main est plus large que la place disponible, les cartes se chevauchent (au lieu de déborder de l'écran)
+function fitHand(){const el=$('#hand');if(!el)return;const cs=[...el.children];if(!cs.length)return;
+  cs.forEach(c=>c.style.marginLeft='');const W=el.clientWidth-16,w=cs[0].getBoundingClientRect().width,n=cs.length,g=8;
+  if(n>1&&n*w+(n-1)*g>W){const m=Math.max(-w*.62,(W-n*w)/(n-1));cs.forEach((c,j)=>{if(j)c.style.marginLeft=(m-g)+'px'})}}
+window.addEventListener('resize',()=>{if(DUEL&&DUEL.V)fitHand()});
+// deck face cachée : une pile de dos de cartes avec le nombre de cartes restantes
+function deckNode(s,el){if(!el)return;const P=DUEL.V.p[s],n=P.dn||0,k=Math.min(4,Math.ceil(n/8));
+  el.replaceChildren(...Array.from({length:Math.max(1,k)},(_,j)=>h('div',{class:'dkc'+(n?'':' none'),style:'--j:'+j},n?backEl():null)),
+    h('b',{class:'dkn',title:'Cartes dans le deck'},String(n)));el.title=(s===DUEL.V.me?'Ton deck':'Deck adverse')+' : '+n+' carte'+(n>1?'s':'')}
+// animation de pioche : un dos de carte part du deck vers la main
+function drawFly(s,idx,delay){
+  setTimeout(()=>{const D=DUEL;if(!D||!D.V)return;const me=D.V.me,from=$(s===me?'#dkMe':'#dkOpp');if(!from)return;
+    let to;if(s===me){const hs=$$('#hand .hc');to=hs[idx]||hs[hs.length-1]}else to=$('#hOpp .hst.handc')||$('#hOpp');
+    if(!to||!from.isConnected)return;const top=from.lastElementChild&&from.lastElementChild.previousElementSibling||from;
+    const a=top.getBoundingClientRect(),b=to.getBoundingClientRect();if(!a.width)return;
+    const f=h('div',{class:'flyc',style:'left:'+a.left+'px;top:'+a.top+'px;width:'+a.width+'px'},backEl());document.body.append(f);
+    if(s===me)to.classList.add('incoming');
+    const sc=s===me?b.width/a.width:.45,dx=b.left-a.left+(s===me?0:b.width/2-a.width*sc/2),dy=b.top-a.top;
+    const an=f.animate([{transform:'translate(0,0) rotate(0deg) scale(1)'},{transform:'translate('+dx*.45+'px,'+(dy*.45-70)+'px) rotate(-10deg) scale('+(1+sc)*.6+')',offset:.5},
+      {transform:'translate('+dx+'px,'+dy+'px) rotate(0deg) scale('+sc+')',opacity:s===me?1:.15}],{duration:560,easing:'cubic-bezier(.3,.6,.3,1)'});
+    an.onfinish=()=>{f.remove();if(s===me&&to.isConnected){to.classList.remove('incoming');to.classList.add('drawn');setTimeout(()=>to.classList.remove('drawn'),520)}}},delay||0)}
 
 // ---------- panneau d'aperçu (gauche) et bandeau d'information ----------
 function setInfo(x){DUEL.info=x;showInfo()}
@@ -2253,7 +2402,7 @@ function showPrev(I){
       tc.at!=null?h('button',{class:'btn gold sm',onclick:e=>{e.stopPropagation();buyTerr_(D.sel.n,Math.max(0,Math.min(D.sel.at,CELLS-TD[tc.t.d].size)))}},'Placer ici (🪙 '+tc.cost+')'):null,
       h('button',{class:'btn sm',onclick:e=>{e.stopPropagation();D.sel=null;renderDuel()}},'Annuler')));
     return}
-  if(!I){el.append(h('div',{class:'mut sm',style:'margin-top:8px;line-height:1.5'},'Survole une carte, une créature, un terrain ou une famille pour voir ses détails ici.',h('br'),h('br'),
+  if(!I){el.append(h('div',{class:'mut sm',style:'margin-top:8px;line-height:1.5'},'Clique sur une carte, une créature, un terrain ou une famille pour voir ses détails ici. Clic droit : fiche complète épinglée.',h('br'),h('br'),
     'Glisse une carte de ta main sur ton plateau pour la jouer, une de tes créatures sur un ennemi pour attaquer, ou sur une autre case de ton plateau pour la déplacer (◆). Glisse tes terrains le long de leur bande pour les déplacer (🪙). Les déplacements sont limités et coûtent de plus en plus cher : voir « ↔ » à côté de tes ressources.',h('br'),h('br'),
     'Clic droit sur n’importe quelle carte : fiche détaillée épinglée.'));return}
   if(I.fac){const F=FAC[I.fac];el.append(h('div',{class:'fbadge',style:'--gc:'+F.c+';margin:0 auto 8px'},F.ic),...facDetail(I));return}
@@ -2279,7 +2428,7 @@ function showInfo(){
   else if(I&&!I.fac&&I.k&&CARDS[I.k]){
     if(sel&&sel.t==='hand'&&CARDS[sel.k].t==='s'&&!cryTg(CARDS[sel.k]))act.push(h('button',{class:'btn pri sm',style:'--h:#2ec4b6;--ht:#032521',onclick:e=>{e.stopPropagation();playSpellOn(sel.i,null)}},'Jouer le sort'));
     if(sel)act.push(h('button',{class:'btn sm',onclick:e=>{e.stopPropagation();D.sel=null;renderDuel()}},'Annuler'))}
-  box.classList.toggle('empty',!ht&&!act.length);
+  box.classList.toggle('empty',!ht&&!act.length);const tp=$('.dtop');if(tp)tp.classList.toggle('hashint',!!(ht||act.length));
   if(ht)box.append(h('div',{class:'hintline'},'👉 '+ht));
   if(act.length)box.append(h('div',{class:'acts'},act))}
 
@@ -2524,10 +2673,11 @@ function lunge(s,i,ts,ti,delay){
     an.onfinish=()=>{c.style.zIndex=''}},delay||0)}
 const STORY=['+2/+2','dégâts au héros adverse','pioche','renforts','soin'];
 function animate(es){
-  const D=DUEL,V=D.V,me=V.me;let t=0;const FL=420;
+  const D=DUEL,V=D.V,me=V.me;let t=0;const FL=420;D._dk=0;
   for(const e of es){
     switch(e.t){
     case 'turn':banner(e.s===me?'À TOI DE JOUER':'TOUR ADVERSE',e.s===me?'#2ec4b6':'#ff5d6c');t+=250;break;
+    case 'draw':{if(e.ts===me){const hl=V.p[me].hand.length,nd=es.filter(x=>x.t==='draw'&&x.ts===me).length;D._dk=(D._dk||0);drawFly(me,hl-nd+(D._dk++),t)}else drawFly(e.ts,0,t);t+=160;break}
     case 'play':if(e.ts!==me&&e.s!==me){castShow(e.k,e.p,t);t+=650}
       if(e.tg&&CARDS[e.k]&&CARDS[e.k].t==='s'&&!es.some(x=>x.t==='dmg'&&x.si===-1&&x.ss===e.ts))proj(elAt(e.ts,-1),elAt(e.tg.s,e.tg.i),CARDS[e.k].col||'#fff',CARDS[e.k].sym,t,FL);break;
     case 'atk':lunge(1-e.ts,e.i,e.ts,e.ti,t);
@@ -2636,6 +2786,7 @@ function histNodes(e){
   case 'chaos':return['sys',[by(e),h('span',{class:'vb'},'🌀'),CHAOSN[e.n]]];
   case 'tcyc':return TD[e.d]&&TD[e.nd]?['tfx',[h('span',{class:'vb'},'🔄'),terrChip(e.d),A,terrChip(e.nd)]]:null;
   case 'buy':return['buy',[h('span',{class:'vb'},'🏟'),terrChip(e.d),h('span',{class:'cst'},'−'+e.c+' 🪙')]];
+  case 'roll':return['buy',[h('span',{class:'vb'},'🎲'),'Terrains relancés',h('span',{class:'cst'},'−'+e.c+' 🪙'),A,...(e.nd||[]).filter(d=>TD[d]).map(terrChip)]];
   case 'ev':return['sys',[chip('🌀','Événement','#ffc145'),e.n]];
   case 'fat':return['dmg',[srcChip('fat'),h('span',{class:'dm'},'−'+e.n)]];
   case 'res':return['sys',[h('span',{class:'vb'},'🏳'),'Abandon']];
@@ -2655,9 +2806,6 @@ function renderHist(){
     if(!grp||grp.a!==e.a){flush();grp={a:e.a,s:e.s,n:[]}}
     const r=histNodes(e);if(r)grp.n.push(h('div',{class:'hr k-'+r[0]+(grp.n.length?'':' main')},r[1]))}
   flush();el.append(list);if(atBottom||!D._hs)el.scrollTop=el.scrollHeight;D._hs=1}
-// survoler une pastille de carte de l'historique affiche sa fiche à gauche
-document.addEventListener('pointerover',e=>{const D=DUEL;if(!D||!D.V||!e.target.closest)return;const c=e.target.closest('#hist .mi[data-k]');
-  if(c&&CARDS[c.dataset.k]&&!(D.sel&&D.sel.t==='terr')&&D.hk!==c){D.hk=c;setInfo({k:c.dataset.k,p:0})}else if(!c)D.hk=null});
 
 // ---------- fin de duel ----------
 function showResult(){
@@ -2735,12 +2883,13 @@ function rulesNodes(){
     li('Decks :',ECON.deck+' cartes, 2 exemplaires maximum par carte (1 seul pour les épiques). Chaque personnage existe en 3 versions : commune, rare et épique.'),
     li('Démoflux ◆ :','ta ressource. +1 maximum à chaque tour (jusqu’à '+OPTDEF.cap+'). Ce que tu ne dépenses pas est perdu à la fin du tour.'),
     li('Jouer :','glisse une carte de ta main sur un emplacement libre de ton plateau (6 emplacements). Glisse une de tes créatures sur un ennemi pour attaquer (ou clique, puis clique sur la cible). Espace / Entrée : fin du tour.'),
-    li('Déplacements :','pendant ton tour, glisse une de tes créatures sur une autre case de ton plateau (ou sur une autre de tes créatures pour les échanger), et glisse tes terrains le long de leur bande. Ça coûte : 1 ◆ (Démoflux) pour une créature, 1 🪙 (Or) pour un terrain, et le 2e déplacement du tour coûte 2, le 3e coûte 3. Par défaut, 2 déplacements maximum par tour (réglable dans les options du défi). Une créature déplacée garde son état : elle n’attaque pas plus et ne déclenche aucun effet d’arrivée. Un seul achat de terrain par tour.'),
+    li('Déplacements :','pendant ton tour, glisse une de tes créatures sur une autre case de ton plateau (ou sur une autre de tes créatures pour les échanger), et glisse tes terrains le long de leur bande. Ça coûte : 1 ◆ (Démoflux) pour une créature, 1 🪙 (Or) pour un terrain, et le 2e déplacement du tour coûte 2, le 3e coûte 3. Par défaut, 2 déplacements maximum par tour (réglable dans les options du défi). Une créature déplacée garde son état : elle n’attaque pas plus et ne déclenche aucun effet d’arrivée.'),
     li('Cimetière et défausse :','les créatures détruites vont au cimetière ✝, les sorts joués et les cartes défaussées ou brûlées vont à la défausse 🗑. Quand ton deck est vide, les deux sont mélangés pour former un nouveau deck. Les cartes Bannies et les jetons disparaissent.'),
     li('Familles :','chaque créature appartient à une ou deux familles. Leurs bonus s’activent dès 2 créatures de la même famille sur ton plateau, et la plupart grandissent avec chaque membre en plus. La barre au-dessus de ton héros montre les familles en jeu.'),
-    li('Terrains 🏟 :','la zone du milieu propose 2 terrains, renouvelés à chaque tour. Achète-en un avec ton Or 🪙 (+'+OPTDEF.inc+' par tour) et pose-le sur 1 à 3 de tes cases. Chaque créature posée dessus profite de son effet selon son affinité avec le jeu (les points ⚔️ 🥚 🏆 🎯 sur la carte : 0, 1 ou 2). Les terrains Bazar 🌀 profitent à tout le monde.'),
+    li('Terrains 🏟 :','la zone du milieu propose 2 terrains, renouvelés à chaque tour. Achète-les avec ton Or 🪙 (+'+OPTDEF.inc+' par tour), autant que tu peux en payer, et pose-les sur 1 à 3 de tes cases. Le bouton 🎲 à gauche des terrains relance la boutique (2 nouveaux terrains) pour 2 Or. Chaque créature posée dessus profite de son effet selon son affinité avec le jeu (les points ⚔️ 🥚 🏆 🎯 sur la carte : 0, 1 ou 2). Les terrains Bazar 🌀 profitent à tout le monde.'),
     li('Second joueur :','commence avec une carte de plus, la Pièce (+1 Démoflux), 1 Or et 5 PV de plus (45 au lieu de 40 par défaut).'),
     li('Fiche détaillée :','clic droit sur n’importe quelle carte, créature, terrain ou famille pour afficher sa fiche complète, épinglée tant que tu ne la fermes pas.'),
+    li('Effets en combat :','sur le plateau, les états importants se voient sur la carte : Égide = reflet de verre, Rempart = cadre de bouclier, Tilt = brume rouge (plus forte une fois déclenché), AFK = carte grisée (inciblable tant qu’elle n’a pas attaqué), Venin subi = teinte verte, Bloquée = givre. Une case couverte par un terrain prend la couleur de ce terrain.'),
     li('Historique :','chaque ligne montre qui a fait quoi : la carte, le terrain ou la famille qui a causé l’effet, puis la cible. Survole une pastille pour voir la fiche, clic droit pour l’épingler.'),
     li('Échanges :','dans l’onglet Amis, « ⇄ Échanger » propose un échange à un ami connecté. Chacun choisit UNE carte à donner (normale ou prismatique) ; vous voyez tous les deux les deux cartes avant de valider, et l’échange n’a lieu que si les deux valident la même paire. Changer de carte annule les validations.'),
     li('Chrono :','tu as '+OPTDEF.tim+' secondes par tour (réglable). À la fin du temps, ton tour passe tout seul.'),
