@@ -67,7 +67,7 @@ svg.ic{width:1em;height:1em;fill:currentColor;stroke:none;display:block;flex:non
 .chip.on{background:var(--h);border-color:#fff;color:var(--ht);box-shadow:0 0 12px color-mix(in srgb,var(--h) 50%,transparent)}
 .chip.off{opacity:.45}
 .chip i{font-style:normal}
-input[type=text],input:not([type]){background:#0b1418;border:2px solid #34505e;border-radius:12px;color:#fff;padding:10px 12px;font:inherit;min-width:0}
+input[type=text],input[type=password],input:not([type]){background:#0b1418;border:2px solid #34505e;border-radius:12px;color:#fff;padding:10px 12px;font:inherit;min-width:0}
 input:focus{outline:3px solid color-mix(in srgb,var(--h) 45%,transparent);border-color:var(--h)}
 input::placeholder{color:#6f8a96}
 .dot{width:10px;height:10px;border-radius:50%;background:#556;display:inline-block}.dot.on{background:var(--ok);box-shadow:0 0 8px var(--ok)}
@@ -868,8 +868,23 @@ span.gico.ge{font-style:normal}
 .rollb.side{position:absolute;flex-direction:row;gap:8px;border-radius:12px;font-size:14px}
 .rollb.side .ri{font-size:20px}
 
+/* ===== v11 : nom complet façon Magic (« Lisdoon, patriarche ») ===== */
+.card .nm.n1{font-size:6.6cqw}
+.card .nm.n2{font-size:5.8cqw}
+.card .nm.n3,.card .nm.n4{font-size:5.5cqw;letter-spacing:0;white-space:normal;line-height:1.04;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;text-overflow:clip}
+.card .bnm.ful{line-height:1.02;padding-bottom:2.4cqw}
+.card .bnm.ful small{display:block;font-size:7.4cqw;font-weight:700;font-style:italic;opacity:.92;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card .fc i.gm{background:color-mix(in srgb,var(--fc) 70%,#111)}
+.card .fc i.gm img.gico{width:6cqw;height:6cqw}
+/* ===== v11 : compte en ligne et transfert ===== */
+#accb{cursor:pointer;font-size:16px;margin-left:-4px;filter:drop-shadow(0 1px 3px #000a)}
+.accf{display:grid;gap:8px;max-width:420px}
+.accf input{font-size:16px;font-weight:600;padding:9px 12px}
+.accmsg{min-height:20px;margin-top:8px;font-weight:700}
+textarea.acccode{width:100%;min-height:62px;margin-top:10px;background:#0b1418;color:#cfe3ea;border:2px solid #2b404b;border-radius:10px;padding:8px 10px;font:12px/1.35 ui-monospace,Menlo,Consolas,monospace;resize:vertical;word-break:break-all}
 </style>
 <script defer src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<script src="cloud-config.js"></script>
 </head>
 <body>
 <div id="app"><header id="top"></header><main id="view"></main></div>
@@ -908,22 +923,22 @@ const FAC={
     tiers:[[2,'Début de ton tour : +2 Or.'],[3,'+3 Or.'],[4,'+4 Or.'],[5,'+5 Or.'],[6,'+6 Or.']]},
   expats:{n:'EXPATS',ic:'✈️',c:'#3ec5ff',d:'Ceux qui vivent à l’étranger.',
     sum:'Paie de l’Or pour qu’un Expat « disparaisse à l’étranger » : il est inciblable jusqu’à ton prochain tour.',
-    tiers:[[2,'Disparaître à l’étranger : 5 Or.'],[3,'4 Or.'],[4,'3 Or.'],[5,'2 Or.']]},
+    tiers:[[2,'Disparaître à l’étranger : 2 Or.'],[3,'1 Or.'],[5,'gratuit.']]},
   ravages:{n:'RAVAGÉS',ic:'🌀',c:'#ff8a1f',d:'Le chaos incarné.',
     sum:'Fin de ton tour : 1 missile par palier débloqué (2 Ravagés = 1 missile, 3 = 2 missiles, etc.). Un missile inflige 1 dégât à un ennemi au hasard.',
     tiers:[[2,'Fin de ton tour : 1 missile.'],[3,'2 missiles.'],[4,'3 missiles.'],[5,'4 missiles.'],[6,'5 missiles.']]},
-  alien:{n:'EXTRATERRESTRES',ic:'👽',c:'#ffd23f',d:'Venus d’ailleurs, de bien plus loin que l’Andorre.',
-    sum:'À son arrivée, un Extraterrestre vole 1 Or à l’adversaire pour chaque autre Extraterrestre sur ton plateau.',
+  alien:{n:'EXTRATERRITORIAUX',ic:'👽',c:'#ffd23f',d:'Venus d’ailleurs, de bien plus loin que l’Andorre.',
+    sum:'À son arrivée, un Extraterritorial vole 1 Or à l’adversaire pour chaque autre Extraterritorial sur ton plateau.',
     tiers:[[2,'Arrivée : vole 1 Or.'],[3,'Vole 2 Or.'],[4,'Vole 3 Or.'],[5,'Vole 4 Or.'],[6,'Vole 5 Or.']]},
   xeno:{n:'XÉNOPHOBES',ic:'🚧',c:'#e2483d',d:'Ils n’aiment pas trop les visiteurs venus d’ailleurs.',
-    sum:'Quand un Xénophobe attaque un Extraterrestre, il gagne +1 ATK pour chaque autre Xénophobe sur ton plateau.',
-    tiers:[[2,'+1 ATK contre les Extraterrestres.'],[3,'+2 ATK.'],[4,'+3 ATK.'],[5,'+4 ATK.'],[6,'+5 ATK.']]},
+    sum:'Quand un Xénophobe attaque un Extraterritorial, il gagne +1 ATK pour chaque autre Xénophobe sur ton plateau.',
+    tiers:[[2,'+1 ATK contre les Extraterritoriaux.'],[3,'+2 ATK.'],[4,'+3 ATK.'],[5,'+4 ATK.'],[6,'+5 ATK.']]},
   vestige:{n:'VESTIGES',ic:'🏛',c:'#c8b48a',d:'Les anciens du serveur : ils ont tout vu, et ils sont toujours là.',
     sum:'Tes Vestiges ont +1 PV pour chaque autre Vestige sur ton plateau.',
     tiers:[[2,'+1 PV.'],[3,'+2 PV.'],[4,'+3 PV.'],[5,'+4 PV.'],[6,'+5 PV.']]}};
 const FACK=Object.keys(FAC);
 function facTier(f,n){let t=null;for(const x of FAC[f].tiers)if(n>=x[0])t=x;return t}
-function exCost(n){return n>=5?2:n===4?3:n===3?4:5}
+function exCost(n){return n>=5?0:n>=3?1:2}
 
 const KWI={rempart:['Rempart','⛊'],venin:['Venin','☠'],siphon:['Siphon','♥'],hate:['Hâte','⚡'],egide:['Égide','✧'],
   croissance:['Croissance','✚'],frenesie:['Frénésie','⚔⚔'],afk:['AFK','💤'],insolence:['Insolence','♛'],tilt:['Tilt','😡'],respawn:['Respawn','↺'],vip:['VIP','🎟'],deso:['Désorienté','💫']};
@@ -981,7 +996,7 @@ xulyes:{n:'Xulyes',fac:['alien','farmer'],sc:{wow:2,dofus:0,lol:1,cs:1},lore:'To
   {st:'Commandant des armées',c:6,a:4,h:5,kw:['vip'],aura:{others:1,a:1,h:1},tx:'VIP. Tes autres créatures ont +1/+1.'}]},
 losk:{n:'Losk',fac:['toxic','xeno','expats'],sc:{wow:2,dofus:2,lol:1,cs:0},lore:'Déménagé en Andorre pour la fiscalité. Ne parle plus que de bitcoin. Sous son déguisement de requin, il optimise tout, surtout ta trésorerie.',v:[
   {st:'Dévoreur de chapeau',c:2,a:4,h:5,cry:[{t:'bounceOwn',tg:'ac'}],tx:'Cri d’arrivée : renvoie une de tes autres créatures dans ta main (s’il est seul, c’est lui qui y retourne).'},
-  {st:'Bitcoin Maxi',c:3,a:3,h:5,cry:[{t:'dblOr',max:5}],tx:'Cri d’arrivée : double ton Or (+5 max).'},
+  {st:'Bitcoin Maxi',stl:'Bitcoin Maxi',c:3,a:3,h:5,cry:[{t:'dblOr',max:5}],tx:'Cri d’arrivée : double ton Or (+5 max).'},
   {st:'Crypto farmer',c:5,a:4,h:5,sot:[{t:'or',n:5}],tx:'Début de ton tour : gagne 5 Or.'}]},
 sadamie:{n:'Sadamie',fac:['ravages','alien'],sc:{wow:1,dofus:1,lol:1,cs:1},lore:'Pour lui, le jeu n’est pas une compétition, c’est un amusement ;). Son activité préférée : invoquer Chanssus pour atteindre le combo le plus broken de l’histoire. Triche aux jeux de cartes… et perd quand même.',v:[
   {st:'Adorateur de Chanssus',c:2,a:2,h:2,cry:[{t:'add',k:'chanssus',n:1}],last:[{t:'drawOpp',n:1}],tx:'Cri d’arrivée : ajoute un Chanssus à ta main. Agonie : l’adversaire pioche 1 carte.'},
@@ -991,14 +1006,14 @@ lasorius:{n:'Lasorius',fac:['xeno','weebos','farmer'],sc:{wow:2,dofus:1,lol:0,cs
   {st:'Le Muet',c:2,a:2,h:2,cry:[{t:'hurtMe',n:1},{t:'dmg',n:2,tg:'ec'}],tx:'Cri d’arrivée : ton héros subit 1 dégât, puis inflige 2 dégâts à une créature ennemie.'},
   {st:'Avatar de la rancune',c:3,a:3,h:3,cry:[{t:'hurtMe',n:3},{t:'dmg',n:4,tg:'ec'}],tx:'Cri d’arrivée : ton héros subit 3 dégâts, puis inflige 4 dégâts à une créature ennemie.'},
   {st:'Instigateur sournois',c:7,a:1,h:1,cry:[{t:'swap',tg:'ec',tg2:'acs'}],tx:'Cri d’arrivée : échange une de tes créatures (lui compris) contre une créature ennemie : chacune passe dans l’autre camp.'}]},
-osiris:{n:'Osiris',fac:['toxic','farmer','expats'],sc:{wow:0,dofus:2,lol:1,cs:0},lore:'Capuche, lunettes noires, jamais un mot de trop. Son venin parle pour lui. Dreos le traite de débile, Laloutre le provoque ; il n’oublie rien. Il devient redoutable quand Maki est dans les parages.',v:[
+osiris:{n:'Osiris',fac:['toxic','farmer','expats'],sc:{wow:0,dofus:2,lol:1,cs:1},lore:'Capuche, lunettes noires, jamais un mot de trop. Son venin parle pour lui. Dreos le traite de débile, Laloutre le provoque ; il n’oublie rien. Il devient redoutable quand Maki est dans les parages.',v:[
   {st:'Joueur retraité',c:2,a:0,h:4,eot:[{t:'draw',n:1,if:{ter:'lol'}},{t:'or',n:2,if:{ter:'dofus'}}],tx:'Fin de ton tour : sur un terrain LoL, pioche 1 carte ; sur un terrain Dofus, gagne 2 Or.'},
-  {st:'Jak',c:3,a:2,h:3,last:[{t:'summon',k:'mmejack',n:1}],tx:'Agonie : invoque Mme Jack, une vache 3/6.'},
+  {st:'Jak',stl:'Jak',c:3,a:2,h:3,last:[{t:'summon',k:'mmejack',n:1}],tx:'Agonie : invoque Mme Jack, une vache 3/6.'},
   {st:'Expert bluffeur',c:5,a:4,h:5,kw:['venin'],cry:[{t:'pzDbl'},{t:'buff',a:2,h:2,self:1,if:{has:'maki'}}],tx:'Venin. Cri d’arrivée : double le Venin de tous les ennemis. Si Maki est sur ton plateau, gagne +2/+2.'}]},
-maki:{n:'Maki',fac:[],sc:{wow:0,dofus:2,lol:2,cs:0},lore:'Représentante de la noblesse, nom à 14 particules. Son lait est réputé dans tout l’État Arcanique. Inséparable d’Osiris.',v:[
-  {st:'Fan d’Osiris',c:2,a:2,h:3,withB:{b:'osiris',a:1,h:2},tx:'+1/+2 tant que tu contrôles un Osiris.'},
-  {st:'Chef coach de crêpe au sucre',c:2,a:2,h:3,cry:[{t:'affUp',g:'lol',tg:'ac'}],tx:'Cri d’arrivée : une de tes créatures gagne +1 d’affinité LoL (2 maximum).'},
-  {st:'Aristocrate condescendant',c:4,a:3,h:6,tax:1,tx:'Pour l’attaquer, l’adversaire doit te payer 1 Or (sans Or, il ne peut pas l’attaquer).'}]},
+maki:{n:'Maki',fac:[],sc:{wow:0,dofus:2,lol:2,cs:0},withKw:{b:'osiris',kw:['siphon']},lore:'Représentante de la noblesse, nom à 14 particules. Son lait est réputé dans tout l’État Arcanique. Inséparable d’Osiris.',v:[
+  {st:'Fan d’Osiris',c:2,a:2,h:3,cry:[{t:'tutor',b:'osiris'}],tx:'Siphon tant que tu contrôles un Osiris. Cri d’arrivée : pioche un Osiris au hasard dans ton deck.'},
+  {st:'Chef coach de crêpe au sucre',c:2,a:2,h:3,cry:[{t:'affUp',g:'lol',tg:'ac'}],tx:'Siphon tant que tu contrôles un Osiris. Cri d’arrivée : une de tes créatures gagne +1 d’affinité LoL (2 maximum).'},
+  {st:'Aristocrate condescendant',c:4,a:3,h:6,tax:1,tx:'Siphon tant que tu contrôles un Osiris. Chaque créature doit payer 1 Or pour attaquer Maki, aristocrate condescendant.'}]},
 randal:{n:'George Rendal',fac:['expats','ravages'],sc:{wow:2,dofus:2,lol:2,cs:2},lore:'Anglais. A déjà tout fait, partout, avec tout le monde, selon lui. Chaque récit est invérifiable, et personne n’ose vérifier.',v:[
   {st:'Le Conteur',c:2,a:2,h:2,cry:[{t:'rand',list:[[{t:'buff',a:1,h:1,self:1}],[{t:'dmgFace',n:2}],[{t:'draw',n:1}],[{t:'summon',k:'pleb',n:1}],[{t:'heal',n:3}]]}],tx:'Cri d’arrivée : petite histoire au hasard : +1/+1, 2 dégâts à l’adversaire, pioche 1, invoque 1 Pleb ou soigne 3.'},
   {st:'L’Anglais',c:3,a:3,h:3,cry:[{t:'rand',list:[[{t:'buff',a:2,h:2,self:1}],[{t:'dmgFace',n:4}],[{t:'draw',n:2}],[{t:'summon',k:'pleb',n:2}],[{t:'heal',n:5}]]}],tx:'Cri d’arrivée : raconte une histoire au hasard : +2/+2, 4 dégâts à l’adversaire, pioche 2, invoque 2 Plebs ou soigne 5.'},
@@ -1013,7 +1028,7 @@ laloutre:{n:'Laloutre',fac:['toxic','xeno'],sc:{wow:1,dofus:0,lol:1,cs:2},lore:'
   {st:'Mélomane toxique',c:5,a:3,h:4,kw:['tilt','venin'],cry:[{t:'clashT',k:'osiris',n:3,tg:'ec'}],tilt:[{t:'pzAll',n:1}],tx:'Venin. Cri d’arrivée : 3 dégâts à une créature ennemie (un Osiris est détruit). Tilt : 1 Venin à tous les ennemis.'}]},
 elkatrix:{n:'Elkatrix',fac:['toxic','xeno','weebos'],sc:{wow:2,dofus:2,lol:2,cs:1},lore:'Meilleur moine du monde, meilleur casino du monde ; sinon, à temps de jeu égal, il vous le fait payer. 25 comptes bannis sur LoL et il revient toujours. Vient de se faire opérer de l’appendicite.',v:[
   {st:'Doux comme un agneau',c:3,a:1,h:1,dblLol:1,tx:'Les effets des terrains LoL sous tes créatures s’appliquent deux fois.'},
-  {st:'Top 3 Guardian',c:4,a:3,h:5,sot:[{t:'healT',g:'wow',n:2}],tx:'Début de ton tour : soigne de 2 PV tes créatures sur un terrain WoW.'},
+  {st:'Top 3 Guardian',c:4,a:3,h:5,sot:[{t:'healT',g:'wow',n:2},{t:'healT',g:'dofus',n:2}],tx:'Début de ton tour : soigne de 2 PV tes créatures sur un terrain WoW ou Dofus.'},
   {st:'Unleashed',c:5,a:4,h:5,allyDieLol:{a:2,h:2},tx:'Chaque fois qu’une de tes autres créatures meurt sur un terrain LoL, gagne +2/+2.'}]},
 dreos:{n:'Dreos',fac:['alien','farmer'],sc:{wow:2,dofus:2,lol:1,cs:0},lore:'Fait son footing en forêt à 3 h du matin : il se couche ou il se lève, personne ne sait. Souffre-douleur d’Elkatrix, il se venge en traitant Osiris de débile. Gifted sur les MMO, ungifted sur le reste.',v:[
   {st:'Mot de merde',c:2,a:1,h:3,kw:['rempart'],pzBack:1,tx:'Rempart. Chaque créature qui l’attaque reçoit 1 Venin.'},
@@ -1021,12 +1036,12 @@ dreos:{n:'Dreos',fac:['alien','farmer'],sc:{wow:2,dofus:2,lol:1,cs:0},lore:'Fait
   {st:'Surrender to madness',c:4,a:3,h:7,cry:[{t:'madness'}],sot:[{t:'madness'}],last:[{t:'lose'}],tx:'Cri d’arrivée, puis début de chacun de tes tours : gagne N Démoflux et N Or, et pioche N cartes (N = 1, puis 2, puis 3…). Agonie : tu perds la partie.'}]},
 minuit:{n:'Minuit',fac:['xeno','weebos'],sc:{wow:2,dofus:0,lol:1,cs:0},lore:'Chill, turbo weeb, fan inconditionnelle de Taylor Swift. Vit pour les GROS NOMBRES : son pire souvenir reste le stat squish de WoW, quand ses crits sont passés de 15 millions à 20 000.',v:[
   {st:'Golem Pfizer',c:2,a:0,h:3,healGrow:1,tx:'Gagne +1 ATK chaque fois qu’il est soigné.'},
-  {st:'Raciste originel',c:3,a:3,h:3,cry:[{t:'dmgFac',f:'alien',n:3}],tx:'Cri d’arrivée : inflige 3 dégâts à toutes les créatures Extraterrestres (des deux camps).'},
+  {st:'Raciste originel',c:3,a:3,h:3,cry:[{t:'dmgFac',f:'alien',n:3}],tx:'Cri d’arrivée : inflige 3 dégâts à tous les Extraterritoriaux (des deux camps).'},
   {st:'Chef de raid',c:6,a:4,h:5,aura:{g:'wow',a:2,h:1},last:[{t:'killAll'}],tx:'Tes créatures sur un terrain WoW ont +2/+1. Agonie : détruit toutes les créatures.'}]},
 lisdoon:{n:'Lisdoon',fac:['xeno'],sc:{wow:1,dofus:0,lol:2,cs:0},lore:'Tout doux d’habitude, ancien gros reconverti en séducteur. Lance une partie de LoL et le gremlin se réveille, sans pitié. Va bientôt être père, et ses commentaires ressemblent à ceux d’une IA de boomer.',v:[
   {st:'Gomuscu',c:2,a:1,h:3,offGT:{kw:['croissance']},tx:'Croissance tant qu’il n’est pas sur un terrain de jeu.'},
   {st:'Patriarche',c:3,a:2,h:3,last:[{t:'summon',k:'heritier',n:1}],tx:'Agonie : invoque un Héritier (Croissance).'},
-  {st:'Roro',c:6,a:5,h:6,onT:{g:'lol',kw:['frenesie']},tx:'Rage de Roro : sur un terrain LoL, peut attaquer deux fois par tour.'}]},
+  {st:'Roro',stl:'Roro',c:6,a:5,h:6,onT:{g:'lol',kw:['frenesie']},tx:'Rage de Roro : sur un terrain LoL, peut attaquer deux fois par tour.'}]},
 loractys:{n:'Loractys',fac:['alien','weebos'],sc:{wow:1,dofus:2,lol:1,cs:1},lore:'Parle à toute vitesse, toujours depuis la Chine. Sigma player à l’esprit tordu : il trouve le bug que personne n’avait vu, sur tous les jeux. Goat fast learner. Se marie bientôt.',v:[
   {st:'Débit rapide',c:2,a:2,h:2,kw:['hate'],tx:'Hâte.'},
   {st:'Chasseur de bugs',c:4,a:4,h:5,kw:['hate'],cry:[{t:'steal'}],tx:'Hâte. Cri d’arrivée : ajoute à ta main une copie d’une carte au hasard de la main adverse.'},
@@ -1041,7 +1056,7 @@ homz:{n:'Homz',fac:['alien','farmer'],sc:{wow:2,dofus:0,lol:1,cs:1},lore:'Fan d�
   {st:'Porteur de la flamme',c:5,a:4,h:6,kw:['vip'],aura:{fac:'xeno',a:1},xenoAll:1,tx:'VIP. Tes Xénophobes ont +1 ATK et leur bonus de famille s’applique contre toutes les créatures.'}]},
 boku:{n:'Boku',fac:['weebos'],sc:{wow:0,dofus:0,lol:2,cs:1},lore:'GM et turbo weeb, OTP Katarina : chaque kill donne envie d’en refaire un. Ne s’est énervé que DEUX fois dans toute sa vie. Il en reste une.',v:[
   {st:'Présence apaisante',c:2,a:2,h:3,eot:[{t:'healAdj',n:1}],tx:'Fin de ton tour : soigne de 1 PV les créatures à côté de lui.'},
-  {st:'Japan Expo enjoyer',c:4,a:3,h:4,cry:[{t:'summon',k:'weeb',n:2}],tx:'Cri d’arrivée : invoque 2 Weebs 1/1 (Weebos).'},
+  {st:'Japan Expo enjoyer',stl:'Japan Expo enjoyer',c:4,a:3,h:4,cry:[{t:'summon',k:'weeb',n:2}],tx:'Cri d’arrivée : invoque 2 Weebs 1/1 (Weebos).'},
   {st:'Maître KATARINA',c:7,a:5,h:4,kw:['hate','tilt'],reset:1,tilt:[{t:'dmgAll',n:1}],tx:'Hâte. Reset : après avoir détruit une créature en attaquant, peut attaquer à nouveau. Tilt : 1 dégât à toutes les créatures ennemies.'}]},
 haddmi:{n:'Haddmi',fac:['xeno'],sc:{wow:0,dofus:0,lol:1,cs:2},lore:'Meneur d’un discord rival : une armée à lui tout seul. Bosse chez Vitality, niveau 10 sur FACEIT. Se vexe au quart de tour, et ça le fait tilt.',v:[
   {st:'Le Vexé',c:3,a:3,h:5,kw:['tilt'],cry:[{t:'summon',k:'pleb',n:1}],tilt:[{t:'summon',k:'pleb',n:1}],tx:'Cri d’arrivée : invoque 1 Pleb (son armée). Tilt : invoque 1 Pleb.'},
@@ -1054,17 +1069,17 @@ potatoll:{n:'Potatoll',fac:['alien','ravages'],sc:{wow:2,dofus:1,lol:2,cs:1},lor
 bambou:{n:'Golwyd Bambou',fac:['vestige'],sc:{wow:1,dofus:0,lol:1,cs:1},lore:'Créateur du serveur. N’y a pas mis les pieds depuis 20 ans (??). Il revient, regarde l’état du salon, et décide de tout reformater.',v:[
   {st:'Le Fantôme',c:3,a:3,h:3,kw:['afk'],tx:'AFK.'},
   {st:'Le Créateur',c:6,a:4,h:5,kw:['afk'],cry:[{t:'banTopE'}],tx:'AFK. Cri d’arrivée : Bannit la créature ennemie la plus coûteuse.'},
-  {st:'Grand Reformatage',c:10,a:5,h:5,kw:['afk'],cry:[{t:'wipe'}],tx:'AFK. Cri d’arrivée : Bannit toutes les autres créatures.'}]},
+  {st:'Grand Reformatage',stl:'grand reformatage',c:10,a:5,h:5,kw:['afk'],cry:[{t:'wipe'}],tx:'AFK. Cri d’arrivée : Bannit toutes les autres créatures.'}]},
 // nouveaux personnages : r = rareté de chaque version (toutes ne sont pas encore créées) ; sym/col = illustration en attendant une photo
 takk:{n:'Takk',fac:['alien','weebos','expats'],sc:{wow:2,dofus:1,lol:1,cs:0},sym:'✈',col:'#e86fb0',lore:'Toujours entre deux voyages, et toujours avec une nouvelle waifu à son retour.',v:[
-  {r:1,st:'TN Lacoste',c:2,a:3,h:2,kw:['hate'],tx:'Hâte.'},
+  {r:1,st:'TN Lacoste',stl:'TN Lacoste',c:2,a:3,h:2,kw:['hate'],tx:'Hâte.'},
   {r:2,st:'Enchaîneur de waifus',c:3,a:2,h:3,cry:[{t:'summon',k:'waifu',n:1}],onBack:[{t:'summon',k:'waifu',n:1}],tx:'Cri d’arrivée, et à chaque retour de voyage : invoque une Waifu 1/1 (Weebos).'}]},
 kirua:{n:'Kirua',fac:['alien','vestige'],sc:{wow:0,dofus:2,lol:0,cs:2},sym:'❄',col:'#7cc8ff',lore:'Panthère sur le terrain, reine des neiges en dehors, et le serveur plante dès que Kirua se connecte.',v:[
   {r:1,st:'Crasheur de serveur',c:2,a:2,h:3,cry:[{t:'blk',rnd:1,n:1}],tx:'Cri d’arrivée : Bloque une créature ennemie au hasard.'},
   {r:2,st:'La panthère',c:4,a:3,h:4,kw:['hate','tilt'],tilt:[{t:'dmgFace',n:3}],tx:'Hâte. Tilt : inflige 3 dégâts au héros adverse.'},
   {r:3,st:'La reine des neiges',c:5,a:4,h:5,cry:[{t:'blizzard'}],tx:'Cri d’arrivée : pose le terrain Blizzard (2 cases) sur le plateau adverse : les créatures dessus ne peuvent pas attaquer tant qu’il reste.'}]},
 rasta:{n:'Rasta',fac:['expats','ravages','vestige'],sc:{wow:0,dofus:2,lol:0,cs:1},sym:'☁',col:'#6fbf4a',lore:'On le sent arriver avant de le voir. Quand on lui dit « viens dehors », il le prend au pied de la lettre.',v:[
-  {r:2,st:'Viens dehors',c:3,a:3,h:3,cry:[{t:'summon',k:'piccolo',n:1,if:{gt:1}},{t:'tdestroy',self:1,here:1,if:{gt:1}}],tx:'Cri d’arrivée : s’il est posé sur un terrain de jeu, détruit ce terrain et invoque Piccolo (Extraterrestre 2/3, Siphon).'},
+  {r:2,st:'Viens dehors',c:3,a:3,h:3,cry:[{t:'summon',k:'piccolo',n:1,if:{gt:1}},{t:'tdestroy',self:1,here:1,if:{gt:1}}],tx:'Cri d’arrivée : s’il est posé sur un terrain de jeu, détruit ce terrain et invoque Piccolo (Extraterritorial 2/3, Siphon).'},
   {r:3,st:'Aura nauséabonde',c:6,a:4,h:5,noPz:1,cry:[{t:'pzEvery',n:2}],sot:[{t:'pzAll',n:1}],tx:'Insensible au Venin. Cri d’arrivée : 2 Venin à toutes les autres créatures. Début de ton tour : 1 Venin à tous les ennemis.'}]},
 natingaz:{n:'Natingaz',fac:['weebos'],sc:{wow:2,dofus:1,lol:1,cs:0},sym:'⌨',col:'#9aa7b0',lore:'Privé d’ordinateur : chaque fois qu’il s’approche d’un jeu, ça fait mal, mais il en tire toujours quelque chose.',v:[
   {r:1,st:'Privé d’ordinateur',c:2,a:2,h:3,kw:['tilt'],cry:[{t:'hurtSelf',n:2,if:{gt:1}}],tilt:[{t:'draw',n:1}],tx:'Cri d’arrivée : s’il est posé sur un terrain de jeu, subit 2 dégâts. Tilt : pioche 1 carte.'}]},
@@ -1072,13 +1087,13 @@ gobi:{n:'Gobi',fac:['farmer','ravages'],sc:{wow:2,dofus:2,lol:0,cs:0},sym:'⚔',
   {r:1,st:'Chef des noobs',c:2,a:2,h:2,kw:['deso'],cry:[{t:'hurtSelf',n:1},{t:'summon',k:'noob',n:2}],tx:'Désorienté. Cri d’arrivée : subit 1 dégât et invoque 2 Noobs 1/1 Désorientés.'},
   {r:2,st:'Slayer of Sludgefist',c:3,a:3,h:4,save1:1,tx:'La première fois qu’il devrait mourir, il reste à 1 PV et devient invincible jusqu’à ton prochain tour.'}]},
 lanfear:{n:'Lanfear',fac:['toxic','vestige'],sc:{wow:1,dofus:1,lol:1,cs:0},sym:'🎙',col:'#b07cff',lore:'Son micro grésille tellement que plus personne ne sait où il en est.',v:[
-  {r:2,st:'Micro de merde',c:4,a:3,h:5,cry:[{t:'desoAll'}],tx:'Cri d’arrivée : toutes les créatures ennemies deviennent Désorientées.'}]},
+  {r:2,st:'Micro de merde',c:4,a:3,h:5,cry:[{t:'desoAll'}],tx:'Cri d’arrivée : toutes les créatures ennemies sont Désorientées pendant leur prochain tour.'}]},
 saja:{n:'Saja',fac:['xeno'],sc:{wow:1,dofus:1,lol:1,cs:1},sym:'⚖',col:'#8a8f98',lore:'Tout ce qui est à sa gauche s’affaiblit, tout ce qui est à sa droite se renforce.',v:[
   {r:3,st:'Fascisme incarné',c:5,a:4,h:5,aura:{pos:1},tx:'Les créatures à sa gauche ont -1/-1, celles à sa droite +1/+1 (sur les deux plateaux).'}]}};
 const BASEK=Object.keys(BASES);
 
 const CARDS={};
-BASEK.forEach(b=>{const B=BASES[b];B.v.forEach((v,j)=>{const r=v.r||j+1;CARDS[b+r]=Object.assign({t:'c',n:B.n,base:b,art:b,r,fac:B.fac,sc:B.sc,lore:B.lore,sym:B.sym,col:B.col},v)})});
+BASEK.forEach(b=>{const B=BASES[b];B.v.forEach((v,j)=>{const r=v.r||j+1;CARDS[b+r]=Object.assign({t:'c',n:B.n,base:b,art:b,r,fac:B.fac,sc:B.sc,lore:B.lore,sym:B.sym,col:B.col,withKw:B.withKw},v)})});
 Object.assign(CARDS,{
 // ----- jetons -----
 pleb:{t:'c',n:'Pleb',r:1,c:1,a:1,h:1,fac:[],sc:{},tok:1,tx:'Jeton. Aucun effet.',sym:'·',col:'#8a5a2b',lore:'Le rôle de base de chaque membre.'},
@@ -1087,7 +1102,7 @@ weeb:{t:'c',n:'Weeb',r:1,c:1,a:1,h:1,fac:['weebos'],sc:{},tok:1,tx:'Jeton (Weebo
 kiwi:{t:'c',n:'Kiwi',r:1,c:1,a:1,h:1,fac:[],sc:{},tok:1,kw:['hate'],tx:'Jeton. Hâte.',sym:'🐈',col:'#c9a36b',lore:'Le chat de Potatoll. Il griffe d’abord, il réfléchit ensuite.'},
 waifu:{t:'c',n:'Waifu',r:1,c:1,a:1,h:1,fac:['weebos'],sc:{},tok:1,tx:'Jeton (Weebos).',sym:'💕',col:'#ff8fc8',lore:'Encore une, ramenée de voyage par Takk.'},
 mmejack:{t:'c',n:'Mme Jack',r:1,c:5,a:3,h:6,fac:[],sc:{},tok:1,tx:'Jeton. Une vache.',sym:'🐄',col:'#d9d2c3',lore:'La vache de Jak. Elle ne bouge pas, mais elle encaisse.'},
-piccolo:{t:'c',n:'Piccolo',r:1,c:3,a:2,h:3,fac:['alien'],sc:{},tok:1,kw:['siphon'],tx:'Jeton (Extraterrestre). Siphon.',sym:'👽',col:'#5fbf5a',lore:'Venu de Namek. Il a suivi Rasta dehors.'},
+piccolo:{t:'c',n:'Piccolo',r:1,c:3,a:2,h:3,fac:['alien'],sc:{},tok:1,kw:['siphon'],tx:'Jeton (Extraterritorial). Siphon.',sym:'👽',col:'#5fbf5a',lore:'Venu de Namek. Il a suivi Rasta dehors.'},
 noob:{t:'c',n:'Noob',r:1,c:1,a:1,h:1,fac:[],sc:{},tok:1,kw:['deso'],tx:'Jeton. Désorienté.',sym:'?',col:'#9aa7b0',lore:'Il ne sait pas où il va, mais il y va.'},
 bot:{t:'c',n:'Bot de modération',r:1,c:3,a:2,h:5,fac:[],sc:{},tok:1,kw:['rempart'],tx:'Jeton. Rempart.',sym:'⚙',col:'#2a8f86',lore:'Il applique le règlement, sans état d’âme.'},
 chanssus:{t:'c',n:'Chanssus',r:1,c:1,a:1,h:1,fac:[],sc:{},tok:1,kw:['hate'],cry:[{t:'combo',a:1,h:1,max:3}],
@@ -1121,11 +1136,43 @@ everyone:{t:'s',n:'@everyone',r:3,c:5,fx:[{t:'dmgAll',n:4,side:'both'}],tx:'Infl
 reconnexion:{t:'s',n:'Reconnexion',r:3,c:3,fx:[{t:'rez'}],tx:'Invoque la dernière créature de ton cimetière.',sym:'↺',col:'#2f9e4f',lore:'« Je suis de retour, vous m’avez manqué ? »'},
 toxicite:{t:'s',n:'Toxicité',r:3,c:5,fx:[{t:'pzAll',n:2}],tx:'Ajoute 2 Venin à tous les ennemis (créatures et héros).',sym:'☣',col:'#6f9a2c',lore:'Un message toxique et tout le salon est contaminé.'},
 clip:{t:'s',n:'Clip',r:3,c:3,tg:'ac',fx:[{t:'clone'}],tx:'Invoque une copie d’une créature alliée.',sym:'🎬',col:'#ff7a3d',lore:'Un clip à rejouer en boucle : la même action, deux fois.'},
+// ----- sorts de famille : forts dans le bon deck, inutiles ailleurs (fam = famille concernée) -----
+signalement:{t:'s',n:'Signalements',r:1,c:3,fam:'toxic',fx:[{t:'drawPz',n:1,max:3}],tx:'Pioche 1 carte, +1 pour chaque ennemi qui a du Venin (héros compris, 3 cartes max).',sym:'🚩',col:'#8bd346',lore:'Signalé pour comportement toxique… par tout le salon, en même temps.'},
+ambiance:{t:'s',n:'Ambiance toxique',r:2,c:3,fam:'toxic',fx:[{t:'pzBurst'}],tx:'Chaque créature ennemie subit autant de dégâts qu’elle a de Venin.',sym:'🤢',col:'#5f8f1f',lore:'Le vocal est devenu irrespirable. Même le bot est parti.'},
+binge:{t:'s',n:'Binge-watching',r:1,c:4,fam:'weebos',cred:{f:'weebos',min:2},fx:[{t:'draw',n:2}],tx:'Coûte 1 de moins pour chaque Weebos que tu contrôles (2 minimum). Pioche 2 cartes.',sym:'📺',col:'#ff6fae',lore:'« Encore un épisode. » Il est 6 h du matin.'},
+genkidama:{t:'s',n:'Genkidama',r:1,c:2,fam:'weebos',tg:'ec',fx:[{t:'dmgFam',f:'weebos',n:0}],tx:'Inflige à une créature ennemie 1 dégât par Weebos que tu contrôles.',sym:'🔵',col:'#4fb4ff',lore:'Weebos du monde entier, donnez-moi un peu de votre énergie !'},
+achat:{t:'s',n:'Achat compulsif',r:1,c:0,fam:'farmer',fx:[{t:'goldDraw',max:6,per:2}],tx:'Dépense jusqu’à 6 Or : pioche 1 carte par tranche de 2 Or dépensés.',sym:'🛒',col:'#d9a441',lore:'On farme pour acheter, et on achète pour farmer.'},
+p2w:{t:'s',n:'Pay to win',r:2,c:1,fam:'farmer',tg:'ec',fx:[{t:'goldDmg',max:6}],tx:'Dépense tout ton Or (6 max) : inflige autant de dégâts à une créature ennemie.',sym:'💳',col:'#b8862a',lore:'Pourquoi s’entraîner quand on peut payer ?'},
+lowcost:{t:'s',n:'Vol low-cost',r:1,c:0,fam:'expats',tg:'ac',tgf:'f:expats',fx:[{t:'exilT'},{t:'draw',n:1}],tx:'Une de tes créatures Expats part à l’étranger (inciblable jusqu’à ton prochain tour). Pioche 1 carte.',sym:'🛫',col:'#3ec5ff',lore:'Bagage cabine uniquement, siège non inclinable, café à 6 €.'},
+valise:{t:'s',n:'Coup de valise',r:1,c:2,fam:'expats',tg:'ec',fx:[{t:'dmgEx',n:3,per:2}],tx:'Inflige 3 dégâts à une créature ennemie, +2 pour chaque créature que tu as à l’étranger.',sym:'🧳',col:'#2a9fd6',lore:'23 kg en soute, et toute la frustration du voyage.'},
+folie:{t:'s',n:'Coup de folie',r:1,c:2,fam:'ravages',fx:[{t:'draw',n:2},{t:'discSelf',n:1,if:{nfac:['ravages',2]}}],tx:'Pioche 2 cartes, puis défausse 1 carte au hasard. Si tu contrôles 2 Ravagés ou plus, tu ne défausses rien.',sym:'🎲',col:'#ff8a1f',lore:'Personne n’a compris le plan. Lui non plus.'},
+soiree:{t:'s',n:'Soirée ravagée',r:2,c:3,fam:'ravages',fx:[{t:'rndFam',f:'ravages',n:2}],tx:'Lance 2 missiles, +1 par Ravagé que tu contrôles.',sym:'🎆',col:'#e0701a',lore:'Le lendemain, personne ne se souvient de rien. Le salon, si.'},
+immunite:{t:'s',n:'Immunité diplomatique',r:2,c:2,fam:'alien',fx:[{t:'exFam',f:'alien'},{t:'stealOr',f:'alien'}],tx:'Tes Extraterritoriaux deviennent inciblables (ni attaques, ni sorts, ni effets ennemis) jusqu’à ton prochain tour. Vole 1 Or à l’adversaire par Extraterritorial que tu contrôles.',sym:'🛂',col:'#ffd23f',lore:'Valise diplomatique : on ne fouille pas.'},
+enlevement:{t:'s',n:'Enlèvement',r:3,c:4,fam:'alien',tg:'ec',tgf:'cf:alien',needSlot:1,fx:[{t:'ctl'}],tx:'Prends le contrôle d’une créature ennemie qui coûte au plus le nombre d’Extraterritoriaux que tu contrôles.',sym:'🛸',col:'#c9b02f',lore:'Un rayon lumineux, un « bip », et plus de voisin.'},
+gatekeeping:{t:'s',n:'Gatekeeping',r:1,c:2,fam:'xeno',fx:[{t:'tempFam',f:'xeno',a:2},{t:'draw',n:1}],tx:'Tes Xénophobes gagnent +2 ATK pendant ce tour. Pioche 1 carte.',sym:'🙅',col:'#e2483d',lore:'« T’as pas le niveau pour venir ici. »'},
+videur:{t:'s',n:'Videur',r:2,c:3,fam:'xeno',tg:'ec',tgf:'cf:xeno',fx:[{t:'ban'}],tx:'Bannit une créature ennemie qui coûte au plus le nombre de Xénophobes que tu contrôles.',sym:'🕶',col:'#b8352c',lore:'« Pas ce soir. Ni aucun autre soir. »'},
+mieuxavant:{t:'s',n:'C’était mieux avant',r:2,c:3,fam:'vestige',needSlot:1,fx:[{t:'rezFam',f:'vestige'}],tx:'Invoque le dernier Vestige de ton cimetière.',sym:'📼',col:'#c8b48a',lore:'« À l’époque, on jouait sans patch, et on était contents. »'},
+nostalgie:{t:'s',n:'Nostalgie',r:1,c:2,fam:'vestige',fx:[{t:'drawFam',f:'vestige',n:1,max:3}],tx:'Pioche 1 carte, +1 par Vestige que tu contrôles (3 max).',sym:'🕰',col:'#a8956b',lore:'Il ressort les screenshots de 2009. Tout le monde a l’air si jeune.'},
+// ----- sorts d'affinité : ils comptent l'affinité de tes créatures ou les terrains du jeu (gam = jeu concerné) -----
+rois:{t:'s',n:'Bénédiction des rois',r:2,c:4,gam:'wow',fx:[{t:'buffAff',g:'wow'}],tx:'Tes créatures gagnent +1/+1 par point d’affinité WoW.',sym:'👑',col:'#e8b33a',lore:'Un buff de 30 minutes. Il dure toute la partie, c’est un bug.'},
+drain:{t:'s',n:'Drain de vie',r:1,c:3,gam:'wow',tg:'ec',fx:[{t:'drainAff',g:'wow',max:5}],tx:'Inflige à une créature ennemie 1 dégât par point d’affinité WoW de tes créatures (5 max) et soigne ton héros d’autant.',sym:'🩸',col:'#9b2fd6',lore:'Le démoniste ne s’arrête jamais de canaliser.'},
+parchemin:{t:'s',n:'Parchemin de sagesse',r:1,c:2,gam:'dofus',fx:[{t:'drawAff',g:'dofus',lv:1,max:3}],tx:'Pioche 1 carte pour chaque créature que tu contrôles qui a une affinité Dofus (3 max).',sym:'📜',col:'#3cc46b',lore:'+101 en Sagesse. Ça ne rend pas plus sage, mais ça aide.'},
+feca:{t:'s',n:'Bouclier Féca',r:1,c:1,gam:'dofus',fx:[{t:'egideA',g:'dofus'}],tx:'Tes créatures qui ont une affinité Dofus gagnent Égide.',sym:'🛡',col:'#2f9e5a',lore:'Le Féca ne tape pas fort, mais personne ne le tape tout court.'},
+flash:{t:'s',n:'Flash',r:1,c:1,gam:'lol',tg:'ac',fx:[{t:'flash',g:'lol'},{t:'draw',n:1}],tx:'Une de tes créatures peut attaquer dès ce tour et gagne +1 ATK par point d’affinité LoL pendant ce tour. Pioche 1 carte.',sym:'🏃',col:'#3d8bff',lore:'Flash en 1v4. Coco approuve.'},
+smite:{t:'s',n:'Smite',r:1,c:2,gam:'lol',tg:'ec',fx:[{t:'alt',c:{anyT:'lol'},a:[{t:'dmg',n:6}],b:[{t:'dmg',n:3}]}],tx:'Inflige 3 dégâts à une créature ennemie, ou 6 si tu contrôles une créature sur un terrain LoL.',sym:'🌩',col:'#c8aa6e',lore:'Le Nashor est à toi. Enfin, normalement.'},
+fumigene:{t:'s',n:'Fumigène',r:1,c:1,gam:'cs',fx:[{t:'exilTer',g:'cs'},{t:'draw',n:1}],tx:'Tes créatures sur un terrain CS deviennent inciblables jusqu’à ton prochain tour. Pioche 1 carte.',sym:'💨',col:'#ff7a3d',lore:'Il entre dans la smoke. Personne ne l’en a jamais vu ressortir.'},
+headshot:{t:'s',n:'Headshot',r:2,c:3,gam:'cs',tg:'ec',fx:[{t:'alt',c:{aff:['cs',2]},a:[{t:'kill'}],b:[{t:'dmg',n:1}]}],tx:'Détruit une créature ennemie si tu contrôles une créature qui a 2 d’affinité CS ; sinon, inflige-lui 1 dégât.',sym:'⌖',col:'#f3ab3d',lore:'One tap. Pas de discussion.'},
+smurf:{t:'s',n:'Smurf',r:1,c:1,tg:'ac',fx:[{t:'affAll'},{t:'buff',a:1,h:1}],tx:'Une de tes créatures gagne +1/+1 et +1 d’affinité dans tous les jeux (2 max).',sym:'🧢',col:'#7c5cff',lore:'Nouveau compte, même main. Il « découvre le jeu ».'},
+freelance:{t:'s',n:'Freelance',r:1,c:1,tg:'ac',tgf:'nofam',fx:[{t:'buff',a:2,h:2}],tx:'Une de tes créatures sans famille gagne +2/+2.',sym:'💼',col:'#9aa7b0',lore:'Pas de guilde, pas de clan, pas de patron. Que des factures.'},
+multi:{t:'s',n:'Multi-casquettes',r:1,c:1,tg:'ac',fx:[{t:'buffFam',a:1,h:1}],tx:'Une de tes créatures gagne +1/+1 par famille à laquelle elle appartient.',sym:'🎩',col:'#c77dff',lore:'Toxic le lundi, Farmer le mardi, Expat le reste de la semaine.'},
 // ----- jetons sorts -----
 cadeau:{t:'s',n:'Cadeau',r:1,c:0,tok:1,fx:[{t:'draw',n:1}],tx:'Jeton. Pioche 1 carte.',sym:'🎁',col:'#e0483f',lore:'Un petit paquet déposé au pied du sapin.'},
 piece:{t:'s',n:'Pièce',r:1,c:0,tok:1,fx:[{t:'eth',n:1}],tx:'Jeton. Gagne 1 Démoflux ce tour-ci.',sym:'●',col:'#ffc145',lore:'Pour le second joueur : un peu d’avance.'}
 });
 Object.keys(CARDS).forEach(k=>{CARDS[k].k=k});
+// nom complet façon Magic : le titre suit le nom (« Lisdoon, patriarche ») ; stl = titre tel qu'il s'écrit dans le nom complet
+function stOf(cd){return cd.stl||(cd.st?cd.st[0].toLowerCase()+cd.st.slice(1):'')}
+function fullName(k){const cd=typeof k==='string'?CARDS[k]:k;return!cd?'':cd.st?cd.n+', '+stOf(cd):cd.n}
 const POOL=Object.keys(CARDS).filter(k=>!CARDS[k].tok);                 // cartes collectionnables
 // collection de départ : toutes les communes en 2 exemplaires
 const STARTER=POOL.filter(k=>CARDS[k].r===1);
@@ -1253,8 +1300,8 @@ function tfx(T,k){if(!T)return null;const t=TD[T.d];return t.e[affOf(k,t.g)]||nu
 // terrain de jeu = WoW, Dofus, LoL ou CS ; les autres terrains sont neutres
 function isGT(T){return!!T&&TD[T.d].g!=='bazar'}
 function tgOf(G,s,i){const T=terrOf(G,s,i);return T?TD[T.d].g:null}
-// affinité d'une créature en jeu (Maki, chef coach : +1 d'affinité LoL, 2 maximum)
-function affC(c,g){if(g==='bazar')return 1;let a=affOf(c.k,g);if(g==='lol'&&c.lb)a=Math.min(2,a+c.lb);return a}
+// affinité d'une créature en jeu (Maki, chef coach : +1 d'affinité LoL ; Smurf : +1 dans tous les jeux ; 2 maximum)
+function affC(c,g){if(g==='bazar')return 1;const b=affOf(c.k,g),x=(c.ab||0)+(g==='lol'?(c.lb||0):0);return x?Math.min(2,b+x):b}
 function tfxC(T,c){if(!T)return null;const t=TD[T.d];return t.e[affC(c,t.g)]||null}
 // Elkatrix (doux comme un agneau) : les effets des terrains LoL de son camp s'appliquent deux fois
 function tMul(G,s,T){if(!T||TD[T.d].g!=='lol')return 1;for(const b of G.p[s].board)if(b&&!b.mut&&CARDS[b.k].dblLol)return 2;return 1}
@@ -1278,6 +1325,8 @@ function kwOf(G,s,c,L,TE,T){
   const cd=CARDS[c.k],r={};if(!c.mut&&cd.kw)for(const x of cd.kw)r[x]=1;
   if(!c.mut&&c.tr)r.rempart=1;                                       // Rempart gagné en jeu (Tilt du Provocateur)
   if(c.ds)r.deso=1;                                                  // Désorienté (Lanfear) : un état, il reste même Mute
+  if(!c.mut&&c.th)r.hate=1;                                          // Flash : peut attaquer dès ce tour
+  if(!c.mut&&cd.withKw&&G.p[s].board.some(b=>b&&b!==c&&CARDS[b.k].base===cd.withKw.b))for(const x of cd.withKw.kw)r[x]=1;   // Maki : Siphon avec un Osiris
   if(!c.mut&&cd.onT&&T&&TD[T.d].g===cd.onT.g)for(const x of cd.onT.kw)r[x]=1;   // mots-clés gagnés sur un terrain d'un jeu (Lisdoon, Roro)
   if(!c.mut&&cd.offGT&&!isGT(T))for(const x of cd.offGT.kw)r[x]=1;             // ... hors d'un terrain de jeu (Lisdoon, Gomuscu)
   if(TE&&TE.kw)for(const x in TE.kw)r[x]=1;
@@ -1286,7 +1335,7 @@ function kwOf(G,s,c,L,TE,T){
   if(v>0)r.venin=v;else delete r.venin;
   return r}
 function eff(G,s,i,L){
-  const P=G.p[s],c=P.board[i],cd=CARDS[c.k];let a=c.a,h=c.h;L=L||fl(G,s);
+  const P=G.p[s],c=P.board[i],cd=CARDS[c.k];let a=c.a+(c.ta||0),h=c.h;L=L||fl(G,s);
   const T=terrOf(G,s,i),TE=tfxC(T,c);
   if(TE){const m=tMul(G,s,T);a+=(TE.a||0)*m;h+=(TE.h||0)*m}
   if(T&&!c.mut&&cd.gr&&cd.gr.g===TD[T.d].g){a+=cd.gr.a;h+=cd.gr.h}
@@ -1313,10 +1362,17 @@ function targets(G,s,spec,tgf,exc){
   const r=[],e=1-s;
   const hero=sd=>r.push({s:sd,i:-1});
   const cr=sd=>{const L=fl(G,sd);G.p[sd].board.forEach((c,i)=>{if(!c||c.id===exc)return;const E=eff(G,sd,i,L);
-    if(E.kw.afk&&!c.aw)return;if(sd!==s&&(c.ex||E.kw.insolence))return;if(tgf==='hurt'&&c.dm<=0)return;if(tgf==='c2'&&CARDS[c.k].c>2)return;r.push({s:sd,i})})};
+    if(E.kw.afk&&!c.aw)return;if(sd!==s&&(c.ex||E.kw.insolence))return;if(!tgfOk(G,s,c,tgf))return;r.push({s:sd,i})})};
   switch(spec){case 'any':hero(s);hero(e);cr(s);cr(e);break;case 'e':hero(e);cr(e);break;case 'c':cr(s);cr(e);break;
     case 'ec':cr(e);break;case 'ac':cr(s);break}
   return r}
+// filtres de cible : blessée, coût 2 ou moins, d'une famille (f:toxic), sans famille,
+// coût au plus égal au nombre de tes créatures d'une famille (cf:alien = Enlèvement, cf:xeno = Videur)
+function tgfOk(G,s,c,tgf){if(!tgf)return true;const cd=CARDS[c.k];
+  if(tgf==='hurt')return c.dm>0;if(tgf==='c2')return cd.c<=2;if(tgf==='nofam')return!cd.fac.length;
+  if(tgf.slice(0,2)==='f:')return cd.fac.indexOf(tgf.slice(2))>=0;
+  if(tgf.slice(0,3)==='cf:')return cd.c<=(fl(G,s)[tgf.slice(3)]||0);
+  return true}
 // VIP : attaquable seulement quand il n'y a plus que des VIP sur son plateau ; Maki (aristocrate) : il faut 1 Or pour l'attaquer
 function atkTargets(G,s){
   const e=1-s,L=fl(G,e),r=[],B=G.p[e].board;let taunt=false;
@@ -1329,7 +1385,7 @@ function canAtk(G,s,i){
   if(G.over||G.cur!==s)return false;const c=G.p[s].board[i];if(!c||c.blk>0)return false;
   // une créature à 0 ATK peut attaquer (elle n'inflige pas de dégâts)
   const E=eff(G,s,i);if(E.TE&&E.TE.noAtk)return false;if(c.sick&&!E.kw.hate)return false;return c.af<(E.kw.frenesie?2:1)+(c.xat||0)}
-function costOf(G,s,h){return CARDS[h.k].c}
+function costOf(G,s,h){const cd=CARDS[h.k];if(!cd.cred||!G)return cd.c;return Math.max(cd.cred.min||0,cd.c-(fl(G,s)[cd.cred.f]||0))}   // Binge-watching : moins cher par Weebos
 function cryTg(cd){if(cd.t==='s')return cd.tg?{tg:cd.tg,tgf:cd.tgf}:null;
   const l=cd.cry;if(!l)return null;for(const o of l)if(o.tg)return{tg:o.tg,tgf:o.tgf,tg2:o.tg2};return null}
 // 2e cible (Lasorius, instigateur) : une de tes créatures, ou la case où il arrive (lui-même)
@@ -1337,7 +1393,7 @@ function tg2List(G,s,sl){const r=targets(G,s,'ac');if(sl!=null)r.push({s,i:sl});
 function playable(G,s,i){
   if(G.over||G.cur!==s)return false;const P=G.p[s],h=P.hand[i];if(!h||h.k==='?')return false;const cd=CARDS[h.k];
   if(costOf(G,s,h)>P.eth)return false;
-  if(cd.t==='c')return P.board.some(c=>!c);
+  if(cd.t==='c'||cd.needSlot){if(!P.board.some(c=>!c))return false;if(cd.t==='c')return true}
   const sp=cryTg(cd);if(sp)return targets(G,s,sp.tg,sp.tgf).length>0;return true}
 function terrCost(G,s,t){let c=TD[t.d].cost;if(G&&s!=null)for(const b of G.p[s].board)if(b&&!b.mut&&CARDS[b.k].tdisc)c-=1;return Math.max(1,c)}
 // ---------- déplacements : coût et plafond ----------
@@ -1448,6 +1504,10 @@ function reap(G){
 function cond(G,c,x){
   if(c.has){const B=G.p[x.s].board;return B.some(b=>b&&CARDS[b.k].base===c.has&&(!x.self||b.id!==x.self.id))}
   if(c.comb)return G.played>0;
+  if(c.fac)return(fl(G,x.s)[c.fac[0]]||0)>=c.fac[1];                // au moins N créatures d'une famille
+  if(c.nfac)return(fl(G,x.s)[c.nfac[0]]||0)<c.nfac[1];
+  if(c.anyT)return G.p[x.s].board.some((b,i)=>b&&tgOf(G,x.s,i)===c.anyT);   // une de tes créatures sur un terrain de ce jeu
+  if(c.aff)return G.p[x.s].board.some(b=>b&&affC(b,c.aff[0])>=c.aff[1]);   // une de tes créatures avec cette affinité
   if(c.ter||c.gt||c.ngt){const i=selfI(G,x),T=i>=0?terrOf(G,x.s,i):null;if(c.ter)return!!T&&TD[T.d].g===c.ter;if(c.gt)return isGT(T);return!isGT(T)}
   return true}
 function sides(op,x){return op.both?[0,1]:[x.s]}
@@ -1557,6 +1617,38 @@ const OPS={
   affUp(G,op,x){const c=tgC(G,x);if(!c)return;const before=affC(c,op.g);c.lb=Math.min(2,(c.lb||0)+1);if(affC(c,op.g)>before)lg(G,{t:'aff',ts:x.tg.s,i:x.tg.i,k:c.k,g:op.g,n:affC(c,op.g)})},
   hurtSelf(G,op,x){const i=selfI(G,x);if(i>=0)dmgC(G,x.s,i,op.n,x.src,false,x)},
   pzEvery(G,op,x){for(const s of[0,1])G.p[s].board.forEach((c,i)=>{if(c&&!(x.self&&c.id===x.self.id))addPz(G,s,i,op.n,x)})},   // Venin à toutes les autres créatures
+  tutor(G,op,x){const P=G.p[x.s],ix=[];P.deck.forEach((c,j)=>{if(CARDS[c.k].base===op.b)ix.push(j)});if(!ix.length)return;   // pioche un personnage précis au hasard dans le deck
+    const c=P.deck.splice(pick(G,ix),1)[0];if(P.hand.length>=G.o.hand){toGrave(P,c);lg(G,{t:'burn',ts:x.s,k:c.k})}else{P.hand.push(c);lg(G,{t:'draw',ts:x.s,n:1})}},
+  // ----- sorts de famille et d'affinité -----
+  alt(G,op,x){fx0(G,cond(G,op.c,x)?op.a:op.b,x)},                                                                // effet A si la condition est remplie, sinon B
+  drawPz(G,op,x){const P=G.p[1-x.s];let n=(op.n||0)+(P.pz>0?1:0);P.board.forEach(c=>{if(c&&c.pz>0)n++});draw(G,x.s,Math.min(n,op.max||99))},   // Signalements : 1 carte par ennemi empoisonné
+  pzBurst(G,op,x){const e=1-x.s;G.p[e].board.forEach((c,i)=>{if(c&&c.pz>0)dmgC(G,e,i,c.pz,x.src,false,x)})},          // Ambiance toxique : dégâts = Venin
+  dmgFam(G,op,x){if(!vt(G,x.tg))return;hit(G,x.tg.s,x.tg.i,(op.n||0)+(fl(G,x.s)[op.f]||0),x.src,x)},                  // Genkidama : +1 dégât par membre de la famille
+  goldDraw(G,op,x){const P=G.p[x.s],per=op.per||2,n=Math.floor(Math.min(P.or,op.max||99)/per);if(n<=0)return;      // Achat compulsif : Or -> cartes
+    P.or-=n*per;lg(G,{t:'pay',ts:x.s,n:n*per,k:x.src});draw(G,x.s,n)},
+  goldDmg(G,op,x){if(!vt(G,x.tg))return;const P=G.p[x.s],n=Math.min(P.or,op.max||99);if(n<=0)return;               // Pay to win : Or -> dégâts
+    P.or-=n;lg(G,{t:'pay',ts:x.s,n,k:x.src});hit(G,x.tg.s,x.tg.i,n,x.src,x)},
+  exilT(G,op,x){const c=tgC(G,x);if(!c||c.ex)return;c.ex=1;lg(G,{t:'exil',ts:x.tg.s,i:x.tg.i,k:c.k,n:0})},             // Vol low-cost : part à l'étranger gratuitement
+  dmgEx(G,op,x){if(!vt(G,x.tg))return;let n=op.n||0;G.p[x.s].board.forEach(c=>{if(c&&c.ex&&!c.fum)n+=op.per||0});hit(G,x.tg.s,x.tg.i,n,x.src,x)},   // Coup de valise
+  rndFam(G,op,x){OPS.rnd(G,{n:1,times:(op.n||0)+(fl(G,x.s)[op.f]||0)},x)},                                          // Soirée ravagée : missiles
+  stealOr(G,op,x){const E=G.p[1-x.s],n=Math.min(E.or,(op.n||0)+(op.f?(fl(G,x.s)[op.f]||0):0));if(n<=0)return;      // vole de l'Or
+    E.or-=n;G.p[x.s].or+=n;lg(G,{t:'gold',ts:x.s,n,from:1-x.s,src:x.src,ss:1-x.s,si:-1})},
+  tempFam(G,op,x){G.p[x.s].board.forEach((c,i)=>{if(c&&hasF(c.k,op.f)){c.ta=(c.ta||0)+op.a;lg(G,{t:'buff',ts:x.s,i,k:c.k,ba:op.a,bh:0,tmp:1})}})},   // +ATK pendant ce tour
+  rezFam(G,op,x){const P=G.p[x.s];if(!P.board.some(b=>!b))return;                                                   // C'était mieux avant : dernier membre de la famille au cimetière
+    for(let j=P.grave.length-1;j>=0;j--){const k=P.grave[j].k;if(CARDS[k].t==='c'&&hasF(k,op.f)){const g=P.grave.splice(j,1)[0];summon(G,x.s,g.k,{p:g.p,real:1});return}}},
+  drawFam(G,op,x){draw(G,x.s,Math.min(op.max||99,(op.n||0)+(fl(G,x.s)[op.f]||0)))},                                   // Nostalgie
+  buffAff(G,op,x){G.p[x.s].board.forEach((c,i)=>{if(!c)return;const n=affC(c,op.g);if(n>0){c.a+=n;c.h+=n;lg(G,{t:'buff',ts:x.s,i,k:c.k,ba:n,bh:n})}})},   // Bénédiction des rois
+  drainAff(G,op,x){if(!vt(G,x.tg))return;let n=0;G.p[x.s].board.forEach(c=>{if(c)n+=affC(c,op.g)});n=Math.min(n,op.max||99);if(n<=0)return;   // Drain de vie
+    hit(G,x.tg.s,x.tg.i,n,x.src,x);heal(G,x.s,n,x.src)},
+  drawAff(G,op,x){let n=0;G.p[x.s].board.forEach(c=>{if(c&&affC(c,op.g)>=(op.lv||1))n++});draw(G,x.s,Math.min(n,op.max||99))},   // Parchemin de sagesse
+  egideT(G,op,x){G.p[x.s].board.forEach((c,i)=>{if(c&&!c.eg&&tgOf(G,x.s,i)===op.g){c.eg=1;lg(G,{t:'kwg',ts:x.s,i,k:c.k,kw:'egide'})}})},   // Bouclier Féca
+  flash(G,op,x){const c=tgC(G,x);if(!c)return;const n=affC(c,op.g);if(n>0){c.ta=(c.ta||0)+n;lg(G,{t:'buff',ts:x.tg.s,i:x.tg.i,k:c.k,ba:n,bh:0,tmp:1})}   // Flash
+    if(!c.th){c.th=1;lg(G,{t:'kwg',ts:x.tg.s,i:x.tg.i,k:c.k,kw:'hate'})}},
+  exilTer(G,op,x){G.p[x.s].board.forEach((c,i)=>{if(c&&!c.ex&&tgOf(G,x.s,i)===op.g){c.ex=1;c.fum=1;lg(G,{t:'exil',ts:x.s,i,k:c.k,n:0,fum:1})}})},   // Fumigène : inciblables
+  exFam(G,op,x){G.p[x.s].board.forEach((c,i)=>{if(c&&!c.ex&&hasF(c.k,op.f)){c.ex=1;c.fum=2;lg(G,{t:'exil',ts:x.s,i,k:c.k,n:0,fum:2})}})},   // Immunité diplomatique : inciblables
+  egideA(G,op,x){G.p[x.s].board.forEach((c,i)=>{if(c&&!c.eg&&affC(c,op.g)>0){c.eg=1;lg(G,{t:'kwg',ts:x.s,i,k:c.k,kw:'egide'})}})},   // Bouclier Féca : selon l'affinité
+  affAll(G,op,x){const c=tgC(G,x);if(!c||(c.ab||0)>=2)return;c.ab=(c.ab||0)+1;lg(G,{t:'aff',ts:x.tg.s,i:x.tg.i,k:c.k,g:'all',n:c.ab})},   // Smurf
+  buffFam(G,op,x){const c=tgC(G,x);if(!c)return;const n=CARDS[c.k].fac.length;if(n>0)OPS.buff(G,{a:n*op.a,h:n*op.h},x)},   // Multi-casquettes
   desoAll(G,op,x){G.p[1-x.s].board.forEach((c,i)=>{if(c&&!c.ds){c.ds=1;lg(G,{t:'kwg',ts:1-x.s,i,k:c.k,kw:'deso'})}})},
   blizzard(G,op,x){const e=1-x.s,P=G.p[e],n=TD.blizzard.size;let at=0,bv=-1;                                        // Kirua : terrain Blizzard sur le plateau adverse
     for(let st=0;st+n<=CELLS;st++){let v=0;for(let j=st;j<st+n;j++)if(P.board[j])v+=1+eff(G,e,j).a*.1;if(v>bv){bv=v;at=st}}
@@ -1582,7 +1674,7 @@ function startTurn(G,s){
   P.cap=Math.min(o.cap,P.cap+1);P.eth=P.cap;                       // le Démoflux non dépensé est perdu
   P.or+=o.inc;P.mvn=0;
   const back=[];
-  P.board.forEach((c,i)=>{if(c){c.af=0;c.sick=0;c.inv=0;c.xat=c.xa||0;c.xa=0;if(c.ex){c.ex=0;lg(G,{t:'back',ts:s,i,k:c.k});back.push(c)}}});
+  P.board.forEach((c,i)=>{if(c){c.af=0;c.sick=0;c.inv=0;c.xat=c.xa||0;c.xa=0;if(c.ex){c.ex=0;lg(G,{t:'back',ts:s,i,k:c.k,fum:c.fum||0});if(!c.fum)back.push(c)}c.fum=0}});
   for(const c of back){const i=slotOf(G,s,c),cd=CARDS[c.k];if(i>=0&&!c.mut&&cd.onBack&&!G.over)runFx(G,cd.onBack,{s,src:c.k,self:c,tg:null,pc:0,sl:i,ss:s,si:i})}   // Takk : à son retour de voyage
   for(let i=0;i<CELLS;i++){const c=P.board[i];if(c&&c.pz>0){dmgC(G,s,i,c.pz,'venin');c.pz--}}
   if(P.pz>0){heroHit(G,s,P.pz,'venin');P.pz--}
@@ -1598,7 +1690,7 @@ function endTurn(G,s){
   const L=fl(G,s);
   if((L.ravages||0)>=2){lg(G,{t:'fac',f:'ravages',ts:s,n:L.ravages});const x={ss:s,si:-2};
     for(let j=0;j<L.ravages-1;j++){const tl=targets(G,s,'e');if(!tl.length)break;const t=pick(G,tl);hit(G,t.s,t.i,1,'ravages',x);reap(G);if(G.over)return}}
-  P.board.forEach(c=>{if(c&&c.blk>0)c.blk--});
+  P.board.forEach(c=>{if(!c)return;if(c.blk>0)c.blk--;c.ds=0;c.ta=0;c.th=0});   // Désorienté (Lanfear) : seulement pendant son prochain tour ; bonus « pendant ce tour »
   if(G.turn>=MAXT){const a=G.p[0].hp,b=G.p[1].hp;G.over={w:a===b?-1:(a>b?0:1)};return}
   startTurn(G,1-s)}
 
@@ -1635,6 +1727,7 @@ function act(G,s,a){
         const x={s,src:h.k,self:c,tg,tg2,pc,sl:a.sl,ss:s,si:a.sl};
         runFx(G,cd.cry,x);if(twice&&!G.over){lg(G,{t:'echo',ts:s,i:a.sl,k:h.k});runFx(G,cd.cry,x)}}
     }else{
+      if(cd.needSlot&&!P.board.some(c=>!c))return er('Il te faut une case libre.');
       if(sp){const L=targets(G,s,sp.tg,sp.tgf);if(!inList(L,a.tg))return er('Choisis une cible valide.');tg=resolveTg(G,a.tg)}
       P.hand.splice(a.i,1);P.eth-=cost;
       const pc=G.played;G.played++;
@@ -1647,7 +1740,7 @@ function act(G,s,a){
     const AT=atkTargets(G,s);if(!inList(AT,a.tg))return er('Cible invalide (Rempart, VIP ?).');
     let t=a.tg;const A=P.board[a.f];
     if(eff(G,s,a.f).kw.deso){t=pick(G,AT);lg(G,{t:'deso',ts:s,i:a.f,k:A.k,to:t.i})}     // Désorienté : la cible est tirée au hasard
-    if(t.i>=0){const D=G.p[t.s].board[t.i];if(D&&!D.mut&&CARDS[D.k].tax){P.or-=1;G.p[t.s].or+=1;lg(G,{t:'tax',ts:s,k:D.k,n:1})}}   // Maki : 1 Or pour l'attaquer
+    if(t.i>=0){const D=G.p[t.s].board[t.i];if(D&&!D.mut&&CARDS[D.k].tax){P.or-=1;lg(G,{t:'tax',ts:s,k:D.k,n:1})}}   // Maki : chaque attaque contre lui coûte 1 Or
     attack(G,s,a.f,t);break}
   case 'exil':{
     if(!canExil(G,s,a.i))return er('Voyage impossible.');const n=fl(G,s).expats,cost=exCost(n),c=P.board[a.i];
@@ -1766,6 +1859,7 @@ function cval(G,s,i,W,L){
   if(k.insolence)v+=1.2;if(k.respawn&&!c.rs)v+=1.6;if(k.vip)v+=1.2;if(k.deso)v-=.5;if(c.inv)v+=3;
   if(!c.mut){if(cd.aura)v+=2;if(cd.tax)v+=.8;if(cd.noRet)v+=E.a*.3;if(cd.save1&&!c.sv)v+=2;if(cd.xatk)v+=.6;if(cd.dblLol)v+=1;if(cd.killGrow||cd.allyDieLol)v+=.8;if(cd.healGrow)v+=.4;if(cd.pzBack)v+=.6}
   if(c.xat)v+=E.a*.8*c.xat;
+  if(c.ta)v-=c.ta*W.atk*.75;                                   // ATK temporaire (Gatekeeping, Flash) : seulement pour ce tour
   if(!c.mut){if(cd.sot)v+=2;if(cd.eot)v+=1.5;if(cd.last)v+=1.2;if(cd.reset)v+=1;if(cd.dbl)v+=3;if(cd.tdisc)v+=1}
   if(E.TE){if(E.TE.sot||E.TE.eot)v+=tval({sot:E.TE.sot,eot:E.TE.eot});if(E.TE.vsC)v+=E.TE.vsC*.6;if(E.TE.aram)v+=E.TE.aram*.5;if(E.TE.last)v+=1}
   if(c.blk)v-=E.a*.8;if(c.pz)v-=Math.min(c.pz*(c.pz+1)/2,hp)*.9;
@@ -1840,14 +1934,18 @@ function aiMull(G,s){const H=G.p[s].hand,r=[];H.forEach((c,i)=>{if(CARDS[c.k].c>
   if(!H.some(c=>CARDS[c.k].c<=2)){let bi=-1,bc=3;H.forEach((c,i)=>{const k=CARDS[c.k].c;if(r.indexOf(i)<0&&k>bc){bc=k;bi=i}});if(bi>=0)r.push(bi)}
   return r}
 const ARCH={
-  toxic:{n:'Toxic',ic:'☣️',c:'#8bd346',w:'bal',fam:['toxic'],pri:['flame','toxicite','sanction','ping','clutch','raid']},
-  weebos:{n:'Weebos',ic:'🌸',c:'#ff6fae',w:'bal',fam:['weebos'],pri:['boost','premade','clutch','ping','nerf']},
-  farmer:{n:'Farmers',ic:'🌾',c:'#d9a441',w:'ctrl',fam:['farmer'],pri:['giveaway','pizza','botspell','raid','clutch']},
-  expats:{n:'Expats',ic:'✈️',c:'#3ec5ff',w:'bal',fam:['expats'],pri:['nitro','webhook','giveaway','boost','ping']},
-  ravages:{n:'Ravagés',ic:'🌀',c:'#ff8a1f',w:'agro',fam:['ravages'],pri:['raid','ping','webhook','premade']},
-  alien:{n:'Extraterrestres',ic:'👽',c:'#ffd23f',w:'bal',fam:['alien'],pri:['screenshot','kick','spam','pizza']},
-  xeno:{n:'Xénophobes',ic:'🚧',c:'#e2483d',w:'bal',fam:['xeno'],pri:['nerf','sanction','boost','ping']},
-  vestige:{n:'Vestiges',ic:'🏛',c:'#c8b48a',w:'ctrl',fam:['vestige'],pri:['pizza','clutch','sanction','giveaway']},
+  toxic:{n:'Toxic',ic:'☣️',c:'#8bd346',w:'bal',fam:['toxic'],pri:['ambiance','signalement','flame','toxicite','sanction','ping','clutch']},
+  weebos:{n:'Weebos',ic:'🌸',c:'#ff6fae',w:'bal',fam:['weebos'],pri:['genkidama','binge','boost','premade','clutch','ping']},
+  farmer:{n:'Farmers',ic:'🌾',c:'#d9a441',w:'ctrl',fam:['farmer'],pri:['p2w','achat','pizza','botspell','raid','clutch']},
+  expats:{n:'Expats',ic:'✈️',c:'#3ec5ff',w:'bal',fam:['expats'],pri:['valise','lowcost','nitro','webhook','boost','ping']},
+  ravages:{n:'Ravagés',ic:'🌀',c:'#ff8a1f',w:'agro',fam:['ravages'],pri:['soiree','folie','raid','ping','webhook','premade']},
+  alien:{n:'Extraterritoriaux',ic:'👽',c:'#ffd23f',w:'bal',fam:['alien'],pri:['enlevement','immunite','screenshot','kick','pizza']},
+  xeno:{n:'Xénophobes',ic:'🚧',c:'#e2483d',w:'bal',fam:['xeno'],pri:['videur','gatekeeping','nerf','sanction','boost']},
+  vestige:{n:'Vestiges',ic:'🏛',c:'#c8b48a',w:'ctrl',fam:['vestige'],pri:['mieuxavant','nostalgie','pizza','clutch','sanction']},
+  wow:{n:'Affinité WoW',ic:'⚔️',c:'#e8b33a',w:'bal',fam:[],aff:'wow',pri:['rois','drain','smurf','pizza','clutch']},
+  dofus:{n:'Affinité Dofus',ic:'🥚',c:'#3cc46b',w:'bal',fam:[],aff:'dofus',pri:['parchemin','feca','smurf','sanction','giveaway']},
+  lol:{n:'Affinité LoL',ic:'🏆',c:'#3d8bff',w:'bal',fam:[],aff:'lol',pri:['smite','flash','smurf','boost','ping']},
+  cs:{n:'Affinité CS',ic:'🎯',c:'#ff7a3d',w:'bal',fam:[],aff:'cs',pri:['headshot','fumigene','smurf','ping','webhook']},
   rush:{n:'Rush',ic:'⚡',c:'#ff7a3d',w:'agro',fam:[],pri:['coco2','loractys1','coco1','boku1','mikalev1','lisdoon1','randal1','sada1','ping','webhook','boost','premade','loractys2','boku2','coco3','boku3','loractys3','haddmi1'],agro:1},
   ctrl:{n:'Contrôle',ic:'🛡️',c:'#3d8bff',w:'ctrl',fam:[],pri:['raid','clutch','sanction','pizza','everyone','ban','giveaway','dreos2','simon2','simon3','dreos3','maki3','sada3','bambou2','bambou3','mikalev3','minuit3'],ctrl:1}};
 const ARCHK=Object.keys(ARCH);
@@ -1858,8 +1956,10 @@ function cardScore(k,A){
   if(cd.t==='c'){v+=(cd.a+cd.h-2*cd.c-1)*.6+(cd.kw?cd.kw.length*.5:0)+(cd.cry||cd.last||cd.sot||cd.eot?1:0);
     for(const f of cd.fac)if(A.fam.indexOf(f)>=0)v+=7;
     if(A.agro){if(cd.c<=3)v+=2;if(cd.kw&&cd.kw.indexOf('hate')>=0)v+=2}
-    if(A.ctrl){if(cd.c>=5)v+=1.5;if(cd.kw&&(cd.kw.indexOf('rempart')>=0||cd.kw.indexOf('insolence')>=0))v+=1.5}}
-  else{v+=1;}
+    if(A.ctrl){if(cd.c>=5)v+=1.5;if(cd.kw&&(cd.kw.indexOf('rempart')>=0||cd.kw.indexOf('insolence')>=0))v+=1.5}
+    if(A.aff){const x=(cd.sc&&cd.sc[A.aff])||0;v+=x===2?7:x===1?1.5:-1}
+    if(!cd.fac.length&&A.pri.indexOf('freelance')>=0)v+=2}
+  else{v+=1;if(cd.fam)v+=A.fam.indexOf(cd.fam)>=0?2:-6;if(cd.gam)v+=A.aff===cd.gam?2:-6}           // sorts de famille / d'affinité : seulement dans le bon deck
   const pi=A.pri.indexOf(k);if(pi>=0)v+=6-pi*.4;
   return v}
 // courbe visée pour 30 cartes
@@ -1882,7 +1982,7 @@ function autoDeck(coll,arch,size,rs){
   return out}
 function pickArch(coll,rs){
   // l'IA joue un archétype dont elle possède assez de cartes
-  const sc=ARCHK.map(a=>{const d=autoDeck(coll,a);const A=ARCH[a];return{a,v:d.filter(k=>CARDS[k].fac&&CARDS[k].fac.some(f=>A.fam.indexOf(f)>=0)||A.pri.indexOf(k)>=0).length}});
+  const sc=ARCHK.map(a=>{const d=autoDeck(coll,a);const A=ARCH[a];return{a,v:d.filter(k=>CARDS[k].fac&&CARDS[k].fac.some(f=>A.fam.indexOf(f)>=0)||A.pri.indexOf(k)>=0||(A.aff&&CARDS[k].sc&&CARDS[k].sc[A.aff]===2)).length}});
   const mx=Math.max(...sc.map(x=>x.v));const top=sc.filter(x=>x.v>=mx-4).map(x=>x.a);return top[Math.floor(rs*top.length)%top.length]}
 
 // ============ STOCKAGE LOCAL : profil, 💎, collection, decks, amis ============
@@ -1915,16 +2015,106 @@ function freshState(){
   st.decks[1]={name:'Farmers',cards:autoDeck(coll,'farmer')};
   st.decks[2]={name:'Toxic',cards:autoDeck(coll,'toxic')};
   return st}
+// communes ajoutées en v11 : offertes (2 exemplaires) aux sauvegardes plus anciennes, comme toute la collection de départ
+const NEWC11=['signalement','binge','genkidama','achat','lowcost','valise','folie','gatekeeping','nostalgie','drain','parchemin','feca','flash','smite','fumigene','smurf','freelance','multi'];
+function grantStarter(st){
+  if(!Array.isArray(st.st0))st.st0=STARTER.filter(k=>NEWC11.indexOf(k)<0);
+  for(const k of STARTER)if(st.st0.indexOf(k)<0){const e=st.coll[k]||(st.coll[k]={n:0,p:0});e.n+=2;st.st0.push(k)}}
+// vérifie et met à niveau une sauvegarde (locale, du compte en ligne ou importée) ; null si elle est invalide
+function fixS(st){
+  if(!st||typeof st!=='object'||st.v!==3||!st.coll||typeof st.coll!=='object'||!Array.isArray(st.decks))return null;
+  st.opt=Object.assign({},OPTDEF,st.opt||{});st.seen=st.seen||{};st.friends=Array.isArray(st.friends)?st.friends:[];st.stats=st.stats||{w:0,l:0};
+  st.gems=Math.max(0,Math.floor(+st.gems||0));st.name=String(st.name||'').slice(0,16);if(!st.code)st.code=genCode();st.sel=st.sel|0;
+  st.decks=st.decks.map((d,i)=>({name:(d&&d.name)||('Deck '+(i+1)),cards:((d&&d.cards)||[]).filter(e=>{const k=String(e).replace('*','');return CARDS[k]&&POOL.indexOf(k)>=0})}));
+  for(const k of Object.keys(st.coll)){const e=st.coll[k];if(!CARDS[k]||!e||typeof e!=='object')delete st.coll[k];else{e.n=Math.max(0,e.n|0);e.p=Math.max(0,e.p|0)}}
+  delete st.opt.pw;delete st.opt.rel;
+  if(!st.daily||st.daily.d!==today())st.daily={d:today(),earned:0,first:false};
+  grantStarter(st);
+  return st}
 function loadS(){
-  try{const r=localStorage.getItem(LS_KEY);if(r){S=JSON.parse(r)}}catch(e){}
-  if(!S||S.v!==3)S=freshState();
-  S.opt=Object.assign({},OPTDEF,S.opt||{});S.seen=S.seen||{};
-  S.decks=(S.decks||[]).map((d,i)=>({name:(d&&d.name)||('Deck '+(i+1)),cards:((d&&d.cards)||[]).filter(e=>{const k=String(e).replace('*','');return CARDS[k]&&POOL.indexOf(k)>=0})}));
-  for(const k of Object.keys(S.coll||{}))if(!CARDS[k])delete S.coll[k];
-  delete S.opt.pw;delete S.opt.rel;
-  if(S.daily.d!==today())S.daily={d:today(),earned:0,first:false};
+  let st=null;try{const r=localStorage.getItem(LS_KEY);if(r)st=JSON.parse(r)}catch(e){}
+  S=fixS(st);if(!S){S=freshState();S.st0=STARTER.slice()}
   return S}
-function saveS(){try{localStorage.setItem(LS_KEY,JSON.stringify(S))}catch(e){}}
+// nosync : écriture locale seulement (sauvegarde qui vient d'être reçue du compte en ligne)
+function saveS(nosync){if(!nosync)S.upd=Date.now();try{localStorage.setItem(LS_KEY,JSON.stringify(S))}catch(e){}if(!nosync&&typeof cloudSoon==='function')cloudSoon()}
+
+// ============ COMPTES : la collection, les decks et les 💎 suivent le joueur d'un ordinateur à l'autre ============
+// Sauvegarde en ligne avec Firebase (Authentication par e-mail / mot de passe + Cloud Firestore), appelés par leur API web.
+// La configuration (apiKey, projectId) est lue dans cloud-config.js, à côté du jeu ; vide = comptes désactivés.
+const CLOUD=Object.assign({apiKey:'',projectId:''},(typeof window!=='undefined'&&window.EA_CLOUD)||{});
+const ACC_KEY='etat_arcanique_compte',BAK_KEY='etat_arcanique_secours';
+let ACC=null,ACC_T=0,ACC_ST='',ACC_BUSY=false,ACC_DIRTY=false;   // compte connecté, envoi programmé, état affiché, envoi en cours, modifs à envoyer
+function cloudOn(){return!!(CLOUD.apiKey&&CLOUD.projectId)}
+function accLoad(){try{ACC=JSON.parse(localStorage.getItem(ACC_KEY)||'null')}catch(e){ACC=null}if(ACC&&(!ACC.uid||!ACC.rt))ACC=null;return ACC}
+function accSave(){try{if(ACC)localStorage.setItem(ACC_KEY,JSON.stringify({uid:ACC.uid,id:ACC.id,em:ACC.em,rt:ACC.rt,last:ACC.last||0}));else localStorage.removeItem(ACC_KEY)}catch(e){}}
+// identifiant : un pseudo (transformé en adresse interne, jamais utilisée pour écrire) ou une vraie adresse e-mail
+function accEmail(id){id=String(id||'').trim();if(/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(id))return id.toLowerCase();
+  const s=id.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9._-]+/g,'-').replace(/^[-._]+|[-._]+$/g,'');
+  return s?s+'@joueurs.etat-arcanique.fr':''}
+function accIsMail(id){return/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(String(id||'').trim())}
+const ACC_ERR={EMAIL_EXISTS:'Ce pseudo (ou cet e-mail) est déjà utilisé par un autre compte.',EMAIL_NOT_FOUND:'Aucun compte avec ce pseudo.',INVALID_PASSWORD:'Mot de passe incorrect.',
+  INVALID_LOGIN_CREDENTIALS:'Pseudo ou mot de passe incorrect.',INVALID_EMAIL:'Pseudo ou adresse e-mail invalide.',WEAK_PASSWORD:'Mot de passe trop court : 6 caractères minimum.',
+  MISSING_PASSWORD:'Entre un mot de passe.',TOO_MANY_ATTEMPTS_TRY_LATER:'Trop de tentatives : réessaie dans quelques minutes.',USER_DISABLED:'Ce compte est désactivé.',
+  OPERATION_NOT_ALLOWED:'La connexion par e-mail et mot de passe n’est pas activée dans le projet Firebase.',TOKEN_EXPIRED:'Session expirée : reconnecte-toi.',
+  INVALID_REFRESH_TOKEN:'Session expirée : reconnecte-toi.',USER_NOT_FOUND:'Compte introuvable : reconnecte-toi.',PERMISSION_DENIED:'Accès refusé par le serveur (règles Firestore ?).',
+  API_KEY_INVALID:'Configuration Firebase invalide (apiKey).',NOT_FOUND:'Base Firestore introuvable (projectId ?).'};
+function accErr(m){m=String(m||'');const k=m.split(/[ :]/)[0];return ACC_ERR[k]||(m?'Erreur du serveur : '+m:'Serveur injoignable (connexion internet ?).')}
+async function accFetch(url,o){let r;try{r=await fetch(url,o)}catch(e){throw new Error(accErr(''))}
+  const j=await r.json().catch(()=>({}));if(!r.ok){const e=j.error||{};throw new Error(accErr(e.status==='PERMISSION_DENIED'||e.status==='NOT_FOUND'?e.status:e.message))}return j}
+const IDT='https://identitytoolkit.googleapis.com/v1/accounts:';
+async function accAuth(mode,id,pw){                                   // mode : 'signUp' (création) ou 'signInWithPassword' (connexion)
+  const em=accEmail(id);if(!em)throw new Error('Entre un pseudo ou une adresse e-mail.');
+  const j=await accFetch(IDT+mode+'?key='+encodeURIComponent(CLOUD.apiKey),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:em,password:pw,returnSecureToken:true})});
+  ACC={uid:j.localId,id:String(id).trim(),em,rt:j.refreshToken,tok:j.idToken,exp:Date.now()+(+j.expiresIn||3600)*1000-60000,last:0};accSave();return ACC}
+async function accTok(){if(!ACC)throw new Error('Non connecté.');if(ACC.tok&&Date.now()<ACC.exp)return ACC.tok;
+  const j=await accFetch('https://securetoken.googleapis.com/v1/token?key='+encodeURIComponent(CLOUD.apiKey),{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},
+    body:'grant_type=refresh_token&refresh_token='+encodeURIComponent(ACC.rt)});
+  ACC.tok=j.id_token;ACC.rt=j.refresh_token||ACC.rt;ACC.exp=Date.now()+(+j.expires_in||3600)*1000-60000;accSave();return ACC.tok}
+function accDoc(){return'https://firestore.googleapis.com/v1/projects/'+encodeURIComponent(CLOUD.projectId)+'/databases/(default)/documents/saves/'+encodeURIComponent(ACC.uid)}
+async function cloudGet(){const tok=await accTok();let r;try{r=await fetch(accDoc(),{headers:{Authorization:'Bearer '+tok}})}catch(e){throw new Error(accErr(''))}
+  if(r.status===404)return null;const j=await r.json().catch(()=>({}));if(!r.ok){const e=j.error||{};throw new Error(accErr(e.status||e.message))}
+  const f=j.fields||{};if(!f.data||!f.data.stringValue)return null;let data=null;try{data=JSON.parse(f.data.stringValue)}catch(e){}
+  return{data,upd:+((f.upd&&f.upd.integerValue)||0)}}
+async function cloudPut(keep){const tok=await accTok();ACC_DIRTY=false;
+  const body={fields:{data:{stringValue:JSON.stringify(S)},upd:{integerValue:String(S.upd||0)},pseudo:{stringValue:S.name||''},ver:{stringValue:APPV}}};
+  try{await accFetch(accDoc(),{method:'PATCH',keepalive:!!keep,headers:{Authorization:'Bearer '+tok,'Content-Type':'application/json'},body:JSON.stringify(body)})}catch(e){ACC_DIRTY=true;throw e}
+  ACC.last=Date.now();accSave()}
+function accState(st,err){ACC_ST=st;if(ACC)ACC.err=err||'';if(typeof refreshTop==='function')refreshTop();if(typeof accRefresh==='function')accRefresh()}
+// après chaque sauvegarde locale : envoi au compte (regroupé, 1,5 s plus tard)
+function cloudSoon(){if(!ACC||!cloudOn())return;ACC_DIRTY=true;clearTimeout(ACC_T);ACC_T=setTimeout(cloudSync,1500)}
+async function cloudSync(){if(!ACC||!cloudOn())return;if(ACC_BUSY){clearTimeout(ACC_T);ACC_T=setTimeout(cloudSync,1500);return}
+  ACC_BUSY=true;accState('sync');try{await cloudPut();accState('ok')}catch(e){accState('err',e.message)}finally{ACC_BUSY=false}
+  if(ACC_DIRTY&&ACC_ST==='ok')cloudSoon()}
+function accBackup(){try{localStorage.setItem(BAK_KEY,JSON.stringify(S))}catch(e){}}
+function useState(st,upd){S=st;if(upd!=null)S.upd=upd;saveS(upd!=null)}
+// connexion / création : en se connectant, on récupère la sauvegarde du compte (la progression locale est gardée en copie de secours) ;
+// en créant un compte, la progression actuelle devient celle du compte
+async function accLogin(mode,id,pw){
+  if(!cloudOn())throw new Error('Les comptes en ligne ne sont pas activés sur cette version du jeu.');
+  await accAuth(mode,id,pw);
+  try{if(mode==='signUp'){S.upd=S.upd||Date.now();await cloudPut();accState('ok');return'new'}
+    const c=await cloudGet(),st=c&&fixS(c.data);
+    if(st){accBackup();useState(st,c.upd);accState('ok');return'loaded'}
+    S.upd=S.upd||Date.now();await cloudPut();accState('ok');return'pushed'}
+  catch(e){accState('err',e.message);throw e}}
+// au démarrage, si le joueur est déjà connecté : la version la plus récente gagne (celle du compte ou celle de cet ordinateur)
+async function accBoot(onLoaded){accLoad();if(!ACC||!cloudOn())return;accState('sync');
+  try{const c=await cloudGet(),st=c&&fixS(c.data);
+    if(st&&c.upd>(S.upd||0)){useState(st,c.upd);accState('ok');onLoaded&&onLoaded();return}
+    if(!st||(S.upd||0)>c.upd){S.upd=S.upd||Date.now();await cloudPut()}
+    accState('ok')}catch(e){accState('err',e.message)}}
+function accLogout(){if(ACC&&ACC_DIRTY&&cloudOn())cloudPut(true).catch(()=>{});clearTimeout(ACC_T);ACC=null;accSave();accState('')}
+async function accReset(id){const em=accEmail(id);if(!accIsMail(id))throw new Error('La récupération du mot de passe ne marche qu’avec une adresse e-mail.');
+  await accFetch(IDT+'sendOobCode?key='+encodeURIComponent(CLOUD.apiKey),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({requestType:'PASSWORD_RESET',email:em})})}
+if(typeof window!=='undefined')document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'&&ACC&&ACC_DIRTY&&cloudOn()){clearTimeout(ACC_T);cloudPut(true).catch(()=>{})}});
+// ----- transfert sans compte : code de sauvegarde (texte à copier) ou fichier .json -----
+function saveCode(){const j=JSON.stringify(S);return'EA1-'+sha256(j).slice(0,8)+'-'+btoa(unescape(encodeURIComponent(j)))}
+function readSave(txt){txt=String(txt||'').trim();let j=null;
+  const m=txt.replace(/\s+/g,'').match(/^EA1-([0-9a-f]{8})-([A-Za-z0-9+/=]+)$/);
+  if(m){try{j=decodeURIComponent(escape(atob(m[2])))}catch(e){return null}if(sha256(j).slice(0,8)!==m[1])return null}
+  else if(txt[0]==='{')j=txt;else return null;
+  let st=null;try{st=JSON.parse(j)}catch(e){return null}return fixS(st)}
+function importSave(st){accBackup();useState(st)}
 
 // ----- collection -----
 function ownedN(k){const e=S.coll[k];return e?e.n+e.p:0}
@@ -1968,13 +2158,13 @@ function redeemCode(txt){
 function deckCount(d){const c={};for(const e of d.cards){const k=e.replace('*','');c[k]=(c[k]||0)+1}return c}
 function deckCheck(d){
   if(d.cards.length!==ECON.deck)return{ok:false,err:d.cards.length+' / '+ECON.deck+' cartes'};
-  const c=deckCount(d);for(const k in c){if(c[k]>LIMIT(CARDS[k].r))return{ok:false,err:CARDS[k].n+' : max '+LIMIT(CARDS[k].r)};if(c[k]>ownedN(k))return{ok:false,err:CARDS[k].n+' non possédée'}}
+  const c=deckCount(d);for(const k in c){if(c[k]>LIMIT(CARDS[k].r))return{ok:false,err:fullName(k)+' : max '+LIMIT(CARDS[k].r)};if(c[k]>ownedN(k))return{ok:false,err:fullName(k)+' non possédée'}}
   return{ok:true}}
 // transforme une liste de clés en liste avec version prismatique quand elle est possédée
 function withPrism(list){const used={};return list.map(k=>{k=k.replace('*','');const e=S.coll[k]||{n:0,p:0};used[k]=(used[k]||0)+1;return used[k]<=e.p?k+'*':k})}
 
 // ============ HÔTE DE PARTIE (IA locale ou en ligne) + RÉSEAU PEERJS ============
-const APPV='3.3';
+const APPV='3.4';
 function peerId(code){return 'etat-arcanique-'+String(code).replace('ARCANE-','').toLowerCase()}
 function validCode(c){return /^ARCANE-[A-Z0-9]{6}$/.test(String(c||'').trim().toUpperCase())}
 
@@ -2182,6 +2372,7 @@ const ICONS={
  code:'<circle cx="8" cy="12" r="5"/><circle cx="8" cy="12" r="1.9" fill="var(--ic2,#0b1418)"/><path d="M12.5 10.8H21v2.6h-2v2.6h-2.6v-2.6h-3.9z"/>',
  timer:'<circle cx="12" cy="13.2" r="7.8" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M12 8.6v4.8l3.2 1.8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><path d="M9.2 2.8h5.6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>',
  guide:'<path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z" opacity=".55"/><path d="M5 17a3 3 0 0 1 3-3h11v6H8a3 3 0 0 1-3-3z"/>',
+ acct:'<circle cx="12" cy="7.6" r="3.9"/><path d="M4.3 20.6c0-4.4 3.4-7.4 7.7-7.4s7.7 3 7.7 7.4z"/><path d="M15.6 18.4h5.2a2.2 2.2 0 0 0 .2-4.4 3 3 0 0 0-5.7-.8 2.3 2.3 0 0 0 .3 5.2z" fill="var(--ic2,#0b1418)" stroke="currentColor" stroke-width="1.3"/>',
  gear:'<circle cx="12" cy="12" r="3.2" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M12 2.8v3M12 18.2v3M2.8 12h3M18.2 12h3M5.5 5.5l2.1 2.1M16.4 16.4l2.1 2.1M18.5 5.5l-2.1 2.1M7.6 16.4l-2.1 2.1" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>',
  hist:'<path d="M5 3.5h14v17l-3.5-2-3.5 2-3.5-2L5 20.5z" opacity=".9"/><path d="M8.5 8h7M8.5 11.5h7M8.5 15h4" stroke="var(--ic2,#0b1418)" stroke-width="1.8" stroke-linecap="round"/>'};
 function ico(n,cls){const e=document.createElement('span');e.className='icw'+(cls?' '+cls:'');e.style.display='contents';
@@ -2206,7 +2397,7 @@ function terrFxEl(t){
 function tcardEl(t,o){o=o||{};const td=TD[t.d],g=GAMES[td.g];
   return h('div',{class:'tcard',style:'--gc:'+g.c},o.cost!=null?h('span',{class:'tp'},'🪙'+o.cost):null,h('span',{class:'tg'},gi(td.g)),h('b',null,td.n),szEl(td.size))}
 function miniAv(k){const cd=CARDS[k],a=artOf(k);return a?h('img',{src:a,alt:''}):h('u',{style:'background:'+(cd.col||'#2b404b')},cd.sym||'✦')}
-function memEl(k){return h('span',{class:'mem',style:'border-color:'+RCOL[CARDS[k].r],onclick:()=>showCard(k)},miniAv(k),CARDS[k].n)}
+function memEl(k){return h('span',{class:'mem',style:'border-color:'+RCOL[CARDS[k].r],onclick:()=>showCard(k)},miniAv(k),fullName(k))}
 // versions existantes d'un personnage (les nouveaux n'ont pas encore leurs 3 raretés)
 function versOf(b){return[1,2,3].filter(r=>CARDS[b+r])}
 function baseEl(b){const B=BASES[b],k0=b+versOf(b)[0];return h('span',{class:'mem',onclick:()=>showCard(k0)},miniAv(k0),B.n,h('span',{class:'rd'},versOf(b).map(r=>h('i',{style:'background:'+RCOL[r]}))))}
@@ -2246,6 +2437,8 @@ function backEl(){return h('div',{class:'card cardback'},h('div',{class:'ci'}))}
 function affRow(k){const cd=CARDS[k];return h('div',{class:'afr'},AFG.map(g=>{const a=(cd.sc&&cd.sc[g])||0;
   return h('span',{class:a?'':'z',style:'--gc:'+GAMES[g].c,title:'Affinité '+GAMES[g].n+' : '+a},gi(g),pips(a))}))}
 // o : {p prismatique, bd plateau, cr créature, E stats effectives, L familles, big, cost, cls[]}
+// le nom complet (« Lisdoon, patriarche ») rapetisse quand il est long, comme sur une carte Magic
+function nmCls(cd){const n=fullName(cd).length;return n>29?' n4':n>24?' n3':n>19?' n2':n>15?' n1':''}
 function cardEl(k,o){
   o=o||{};if(!k||k==='?'||!CARDS[k])return backEl();
   const cd=CARDS[k],isC=cd.t==='c',E=o.E,cr=o.cr;
@@ -2261,15 +2454,16 @@ function cardEl(k,o){
   if(isC&&E){a=E.a;hp=E.hp;ac=a>cd.a?'up':a<cd.a?'dn':'';hc=hp<E.h?'hurt':(E.h>cd.h?'up':'')}
   const bdg=[];if(cr){if(cr.pz>0)bdg.push(h('i',{class:'pz'},'☠'+cr.pz));if(cr.blk>0)bdg.push(h('i',{class:'blk'},'🔒'));if(cr.mut)bdg.push(h('i',null,'🔇'));
     if(cr.inv)bdg.push(h('i',{class:'inv',title:'Invincible jusqu’à son prochain tour'},'✨'));if(cr.xat>0||cr.xa>0)bdg.push(h('i',{title:'Attaques en plus'},'⚔+'+((cr.xat||0)+(cr.xa||0))));
-    if(cr.lb)bdg.push(h('i',{title:'Affinité LoL +'+cr.lb},gi('lol'),'+'+cr.lb))}
+    if(cr.lb)bdg.push(h('i',{title:'Affinité LoL +'+cr.lb},gi('lol'),'+'+cr.lb));if(cr.ab)bdg.push(h('i',{title:'Smurf : affinité +'+cr.ab+' dans tous les jeux'},'🧢+'+cr.ab))}
   let tb=null;
-  if(o.bd&&E&&E.T){const td=TD[E.T.d],g=GAMES[td.g],af=affOf(k,td.g);tb=h('div',{class:'tb'+(af?'':' z'),style:'--gc:'+g.c,title:td.n+' : '+terrFor(k,E.T.d).tx},gi(td.g),td.g==='bazar'?null:pips(af))}
+  if(o.bd&&E&&E.T){const td=TD[E.T.d],g=GAMES[td.g],af=cr?affC(cr,td.g):affOf(k,td.g);tb=h('div',{class:'tb'+(af?'':' z'),style:'--gc:'+g.c,title:td.n+' : '+terrFor(k,E.T.d).tx},gi(td.g),td.g==='bazar'?null:pips(af))}
   return h('div',{class:cls.join(' '),'data-k':k,'data-id':cr?cr.id:null},
     h('div',{class:'ci'},
-      h('div',{class:'cn'},h('span',{class:'cc'},o.cost!=null?o.cost:cd.c),h('span',{class:'nm'},cd.n),o.p?h('span',{class:'pst',title:'Prismatique'},'✦'):null,h('span',{class:'rg',title:RAR[cd.r]},RGEM[cd.r])),
+      h('div',{class:'cn'},h('span',{class:'cc'},o.cost!=null?o.cost:cd.c),h('span',{class:'nm'+nmCls(cd)},fullName(cd)),o.p?h('span',{class:'pst',title:'Prismatique'},'✦'):null,h('span',{class:'rg',title:RAR[cd.r]},RGEM[cd.r])),
       h('div',{class:'ca'},artNode(k),o.p?[h('div',{class:'holo'}),h('div',{class:'hgl'}),sparks(k)]:null,
-        cd.st?h('div',{class:'ep'},cd.st):isC?null:h('div',{class:'ep sp'},'Sort'),h('div',{class:'bnm'},cd.n),
-        h('div',{class:'fc'},(cd.fac||[]).map(f=>h('i',{class:o.L?((o.L[f]||0)>=2?'on':'off'):'',style:'--fc:'+FAC[f].c,title:FAC[f].n},FAC[f].ic,h('em',null,FAC[f].n)))),
+        isC?null:h('div',{class:'ep sp'},'Sort'),h('div',{class:'bnm'+(cd.st?' ful':'')},cd.st?cd.n+',':cd.n,cd.st?h('small',null,stOf(cd)):null),
+        h('div',{class:'fc'},(cd.fac||(cd.fam?[cd.fam]:[])).map(f=>h('i',{class:o.L?((o.L[f]||0)>=2?'on':'off'):'',style:'--fc:'+FAC[f].c,title:isC?FAC[f].n:'Sort de famille : '+FAC[f].n},FAC[f].ic,h('em',null,FAC[f].n))),
+          cd.gam?h('i',{class:'gm',style:'--fc:'+GAMES[cd.gam].c,title:'Sort d’affinité '+GAMES[cd.gam].n},gi(cd.gam),h('em',null,GAMES[cd.gam].n)):null),
         h('div',{class:'kws'},kws)),
       isC&&!cd.tok?affRow(k):null,
       h('div',{class:tc},h('span',null,txNodes(tx))),
@@ -2278,7 +2472,7 @@ function cardEl(k,o){
       bdg.length?h('div',{class:'bdg'},bdg):null,tb,
       o.bd?h('div',{class:'vfx'},h('i',{class:'v-tlt'}),h('i',{class:'v-pzn'}),h('i',{class:'v-blk'}),h('i',{class:'v-eg'})):null,
       o.rdy?h('div',{class:'atkb ok',title:'Peut attaquer'},'⚔'):o.why?h('div',{class:'atkb no',title:o.why[1]},o.why[0]):null,
-      cr?h('div',{class:'exo'},'✈️'):null),
+      cr?h('div',{class:'exo',title:cr.fum===2?'Immunité diplomatique : inciblable':cr.fum?'Dans la fumée : inciblable':'À l’étranger : inciblable'},cr.fum===2?'🛂':cr.fum?'💨':'✈️'):null),
     o.bd?h('div',{class:'v-rp'},h('span',null,'⛊')):null,
     cd.r===3?h('div',{class:'shn'}):null,o.p?h('div',{class:'pfr'}):null,o.tilt?h('div',{class:'glr'}):null)}
 // inclinaison 3D et reflets qui suivent la souris (cartes marquées .tilt)
@@ -2325,8 +2519,12 @@ function showCard(k,opts){
     h('div',{class:'detail'},
       h('div',null,cardEl(k,{big:true,tilt:1,p:opts.p||(e.p>0&&!opts.plain)}),vers?h('div',{class:'sm mut',style:'margin-top:10px'},vl.length===3?'Les 3 versions :':'Les '+vl.length+' versions :'):null,vers),
       h('div',null,
-        h('h2',null,cd.n),cd.st?h('div',{style:'color:#ffd36b;font-weight:700;font-style:italic;margin:-6px 0 6px'},cd.st):null,
+        h('h2',null,fullName(cd)),
         h('div',{class:'mut sm'},(cd.t==='c'?'Créature':'Sort')+' · '+RAR[cd.r]+' · coût '+cd.c+(cd.tok?' · jeton':'')),
+        cd.fam?h('div',{style:'margin:8px 0'},h('span',{class:'chip',style:'cursor:default;border-color:'+FAC[cd.fam].c+';background:'+FAC[cd.fam].c+'33'},'Sort de famille : '+FAC[cd.fam].ic+' '+FAC[cd.fam].n),
+          h('div',{class:'sm',style:'margin-top:4px'},'Pensé pour un deck '+FAC[cd.fam].n+' : presque inutile ailleurs.')):null,
+        cd.gam?h('div',{style:'margin:8px 0'},h('span',{class:'chip',style:'cursor:default;border-color:'+GAMES[cd.gam].c+';background:'+GAMES[cd.gam].c+'33'},gi(cd.gam),' Sort d’affinité '+GAMES[cd.gam].n),
+          h('div',{class:'sm',style:'margin-top:4px'},'Pensé pour un deck de créatures très affinées '+GAMES[cd.gam].n+' (et leurs terrains).')):null,
         (cd.fac&&cd.fac.length)?cd.fac.map(f=>h('div',{style:'margin:8px 0'},h('span',{class:'chip',style:'cursor:default;border-color:'+FAC[f].c+';background:'+FAC[f].c+'33'},FAC[f].ic+' '+FAC[f].n),
           h('div',{class:'sm',style:'margin-top:4px'},FAC[f].sum),facTiers(f,0))):null,
         cd.t==='c'&&!cd.tok?h('div',null,h('div',{class:'sm mut',style:'margin-top:8px'},'Affinités (effet des terrains de chaque jeu ; les terrains neutres profitent à toutes les créatures) :'),
@@ -2716,7 +2914,7 @@ function terrDetail(ctx){
   else if(ctx.at!=null){const at=Math.max(0,Math.min(ctx.at,CELLS-td.size));cells=[];for(let i=at;i<at+td.size;i++)cells.push(i)}
   const rows=[];let empty=0,over=0;
   const addRow=c=>{const r=terrFor(c.k,t.d);
-    rows.push(h('div',{class:'pv'},miniAv(c.k),h('b',null,CARDS[c.k].n+(td.g==='bazar'?'':' · aff. '+r.a)),h('span',{class:r.a?'gn':'nn'},r.a?'✔':'✕')),
+    rows.push(h('div',{class:'pv'},miniAv(c.k),h('b',null,fullName(c.k)+(td.g==='bazar'?'':' · aff. '+r.a)),h('span',{class:r.a?'gn':'nn'},r.a?'✔':'✕')),
       h('div',{class:'sm',style:'margin:-2px 0 2px 34px;color:'+(r.a?'#c9f5d6':'#8aa3ae')},r.tx))};
   if(cells){cells.forEach(i=>{const c=P.board[i];if(c)addRow(c);else empty++;if(!ctx.placed&&P.cells[i]&&P.cells[i]!==t.id)over++})}
   else if(!ctx.placed){const L=[];P.board.forEach(c=>{if(c)L.push({c,v:affOf(c.k,td.g)})});L.sort((a,b)=>b.v-a.v).slice(0,4).forEach(x=>addRow(x.c))}
@@ -2756,7 +2954,7 @@ function showPrev(I){
   if(I.fac){const F=FAC[I.fac];el.append(h('div',{class:'fbadge',style:'--gc:'+F.c+';margin:0 auto 8px'},F.ic),...facDetail(I));return}
   if(!I.k||!CARDS[I.k])return;
   const cd=CARDS[I.k],defs=defsFor(I.k);
-  el.append(h('div',null,cardEl(I.k,{big:true,p:I.p}),h('div',{class:'pn'},cd.n),cd.st?h('div',{class:'pe'},cd.st):null,
+  el.append(h('div',null,cardEl(I.k,{big:true,p:I.p}),h('div',{class:'pn'},fullName(cd)),
     h('div',{class:'pd'},(cd.t==='c'?'Créature':'Sort')+' · '+RAR[cd.r]+' · coût '+cd.c),
     I.cr?(()=>{const V=D.V,c=V.p[I.s].board[I.i];if(!c)return null;const E=eff(V,I.s,I.i);const out=[];
       if(E.T){const r=terrFor(c.k,E.T.d);out.push(h('div',{class:'pd'},h('b',null,'Terrain '+TD[E.T.d].n+' : '),r.tx))}
@@ -2789,7 +2987,7 @@ function clickHand(i){
   if(D.sel&&D.sel.t==='hand'&&D.sel.i===i){
     if(cd.t==='s'&&!cryTg(cd)&&playable(V,me,i)){playSpellOn(i,null);return}
     D.sel=null;renderDuel();return}
-  if(!playable(V,me,i)){toast(costOf(V,me,hd)>V.p[me].eth?'Pas assez de Démoflux.':cd.t==='c'?'Plateau plein.':'Aucune cible valide.');D.sel=null;renderDuel();return}
+  if(!playable(V,me,i)){toast(costOf(V,me,hd)>V.p[me].eth?'Pas assez de Démoflux.':cd.t==='c'||(cd.needSlot&&!V.p[me].board.some(c=>!c))?'Plateau plein.':'Aucune cible valide.');D.sel=null;renderDuel();return}
   D.sel={t:'hand',i,k:hd.k};renderDuel()}
 function clickShop(n){
   const D=DUEL,V=D.V,me=V.me,t=V.shop[n];if(!t||Date.now()-D.dragT<300)return;
@@ -2937,11 +3135,13 @@ function cardNodes(I){
     if(E.T){const r=terrFor(c.k,E.T.d);out.push(h('div',{class:'pd'},h('b',null,'Terrain '+TD[E.T.d].n+' : '),r.tx))}
     if(c.ex)out.push(h('div',{class:'pd'},h('b',null,'✈️ À l’étranger : '),'inciblable jusqu’au prochain tour de son propriétaire.'));
     if(E.kw.venin)out.push(h('div',{class:'pd'},h('b',null,'Venin '+E.kw.venin),' (avec les bonus Toxic).'))}}
-  return[h('div',{class:'pn'},cd.n),cd.st?h('div',{class:'pe'},cd.st):null,
+  return[h('div',{class:'pn'},fullName(cd)),
     h('div',{class:'pd'},(cd.t==='c'?'Créature':'Sort')+' · '+RAR[cd.r]+' · coût '+cd.c+(cd.tok?' · jeton':'')),
     h('div',{class:'pd txt'},txNodes(cd.tx||'')),
     ...out,
     (cd.fac||[]).length?h('div',{class:'pd'},cd.fac.map(f=>h('div',null,h('b',{style:'color:'+FAC[f].c},FAC[f].ic+' '+FAC[f].n+' : '),FAC[f].sum))):null,
+    cd.fam?h('div',{class:'pd'},h('b',{style:'color:'+FAC[cd.fam].c},'Sort de famille : '+FAC[cd.fam].ic+' '+FAC[cd.fam].n)):null,
+    cd.gam?h('div',{class:'pd'},h('b',{style:'color:'+GAMES[cd.gam].c},'Sort d’affinité ',gi(cd.gam),' '+GAMES[cd.gam].n)):null,
     cd.t==='c'&&!cd.tok?h('div',{class:'pd'},h('b',null,'Affinités : '),AFG.map(g=>h('span',{class:'afi'},gi(g),' '+((cd.sc&&cd.sc[g])||0)))):null,
     ...defs.map(d=>h('div',{class:'pd'},h('b',null,d[0]+' : '),d[1])),
     cd.lore?h('div',{class:'lore'},'« '+cd.lore+' »'):null].filter(Boolean)}
@@ -3049,10 +3249,10 @@ function animate(es){
       break}
     case 'fac':{const F=FAC[e.f],n=e.n;famBurst(e.ts,e.f,e.f==='ravages'?(n-1)+' missile'+(n>2?'s':'')+' !':e.f==='farmer'?'+'+n+' Or':e.f==='alien'?'Vol de '+(n-1)+' Or':'×'+n,t);t+=550;break}
     case 'tfx':{const td=TD[e.d];if(!td)break;flashSlot(e.ts,e.i,GAMES[td.g].c,t);popAt(e.ts,e.i,[gi(td.g),' '+td.n],'txt',t);t+=260;break}
-    case 'buff':popAt(e.ts,e.i,sg(e.ba)+'/'+sg(e.bh),'buf',t);t+=110;break;
+    case 'buff':popAt(e.ts,e.i,e.tmp?sg(e.ba)+' ATK ce tour':sg(e.ba)+'/'+sg(e.bh),'buf',t);t+=110;break;
     case 'tilt':flashSlot(e.ts,e.i,'#ff2b2b',t+120);popAt(e.ts,e.i,'😡 Tilt !','txt',t+120);t+=320;break;
     case 'egide':popAt(e.ts,e.i,'✧ Égide !','txt',t);t+=100;break;
-    case 'kwg':popAt(e.ts,e.i,e.kw==='rempart'?'⛊ Rempart':e.kw==='deso'?'💫 Désorienté':'✧ Égide','buf',t);t+=100;break;
+    case 'kwg':popAt(e.ts,e.i,(KWI[e.kw]?KWI[e.kw][1]+' '+KWI[e.kw][0]:e.kw),'buf',t);t+=100;break;
     case 'deso':popAt(1-e.ts,e.i,'💫 au hasard','txt',t);t+=200;break;
     case 'ctl':popAt(e.to,e.ti,'⇄ change de camp','txt',t);t+=250;break;
     case 'swap':popAt(e.ts,e.i,'⇄ échange','txt',t);popAt(1-e.ts,e.ti,'⇄ échange','txt',t);t+=300;break;
@@ -3060,7 +3260,8 @@ function animate(es){
     case 'tgift':{const td=TD[e.d];if(td)for(let j=e.at;j<e.at+td.size;j++)flashSlot(e.ts,j,'#bfe8ff',t);popAt(e.ts,-1,[gi(td?td.g:'bazar'),' '+(td?td.n:'')],'txt',t);t+=300;break}
     case 'save':popAt(e.ts,e.i,'✨ 1 PV, invincible !','buf',t);t+=250;break;
     case 'inv':popAt(e.ts,e.i,'✨ invincible','txt',t);break;
-    case 'aff':popAt(e.ts,e.i,[gi(e.g),' affinité '+e.n],'buf',t);t+=150;break;
+    case 'aff':popAt(e.ts,e.i,e.g==='all'?'🧢 affinité +1 partout':[gi(e.g),' affinité '+e.n],'buf',t);t+=150;break;
+    case 'pay':popAt(e.ts,-1,'🪙 −'+e.n,'txt',t);t+=150;break;
     case 'tax':popAt(e.ts,-1,'🪙 −'+e.n,'txt',t);break;
     case 'xa':popAt(e.ts,e.i,'⚔ +1 attaque','buf',t);break;
     case 'eth':popAt(e.ts,-1,'◆ +'+e.n,'buf',t);break;
@@ -3069,8 +3270,8 @@ function animate(es){
     case 'sum':if(e.rs)popAt(e.ts,e.i,'↺ Respawn','buf',t);break;
     case 'mute':popAt(e.ts,e.i,'🔇 Mute','txt',t);t+=100;break;
     case 'blk':{const se=srcEl(e);if(se)proj(se,elAt(e.ts,e.i),'#3ec5ff','🔒',t,FL*.8);popAt(e.ts,e.i,'🔒','txt',t+(se?FL*.8:0));t+=120;break}
-    case 'exil':popAt(e.ts,e.i,'✈️ À l’étranger !','txt',t);famBurst(e.ts,'expats','Voyage : −'+e.n+' Or',t);t+=500;break;
-    case 'back':popAt(e.ts,e.i,'🏠 De retour','txt',t);t+=100;break;
+    case 'exil':if(e.fum){popAt(e.ts,e.i,e.fum===2?'🛂 Immunité':'💨 Dans la fumée','txt',t);t+=150;break}popAt(e.ts,e.i,'✈️ À l’étranger !','txt',t);if(e.n)famBurst(e.ts,'expats','Voyage : −'+e.n+' Or',t);t+=e.n?500:150;break;
+    case 'back':popAt(e.ts,e.i,e.fum===2?'🛂 Fin de l’immunité':e.fum?'💨 Sort de la fumée':'🏠 De retour','txt',t);t+=100;break;
     case 'tmove':{const td=TD[e.d];if(td){const P=V.p[e.ts];for(let j=0;j<CELLS;j++)if(P.cells[j]===e.id)flashSlot(e.ts,j,GAMES[td.g].c,t)}t+=150;break}
     case 'reshuf':banner('♻ '+(e.ts===me?'Ton':'Son')+' cimetière est remélangé dans '+(e.ts===me?'ton':'son')+' deck','#8bd346');t+=400;break;
     case 'echo':popAt(e.ts,e.i,'×2 Cri d’arrivée','buf',t);t+=200;break;
@@ -3092,7 +3293,7 @@ function sg(n){n=n||0;return(n>0?'+':'')+n}
 // coût payé pour une action (déplacement) : pastille « −1 ◆ » ou « −1 🪙 »
 function costTag(e){return e.c?h('span',{class:'cst'},'−'+e.c+(e.r==='or'?' 🪙':' ◆')):null}
 function mini(k){const cd=CARDS[k];if(!cd)return h('span',{class:'mi'},'?');
-  return h('span',{class:'mi','data-k':k,title:cd.n+(cd.st?' — '+cd.st:'')+' · clic droit : fiche',style:'--mc:'+RCOL[cd.r]},miniAv(k),cd.n)}
+  return h('span',{class:'mi','data-k':k,title:fullName(cd)+' · clic droit : fiche',style:'--mc:'+RCOL[cd.r]},miniAv(k),fullName(cd))}
 function heroChip(s){const V=DUEL.V,P=V.p[s];return h('span',{class:'mi hch'+(s===V.me?' me':' op')},h('u',null,(P.nm||'?').charAt(0).toUpperCase()),s===V.me?'Toi':P.nm)}
 function tgChip(s,i,k){return i<0?heroChip(s):mini(k)}
 function terrChip(d){const t=TD[d];if(!t)return h('span',{class:'mut'},'terrain');const g=GAMES[t.g];return chip(gi(t.g),t.n,g.c,'Terrain '+g.n+' — '+t.n)}
@@ -3131,18 +3332,18 @@ function histNodes(e){
   case 'add':return['card',[by(e),h('span',{class:'vb'},'🂱 +'),who(e),e.k?mini(e.k):'une carte']];
   case 'mull':return['card',[h('span',{class:'vb'},'♻'),heroChip(e.ts),e.n?'remplace '+e.n+' carte'+(e.n>1?'s':'')+' (mulligan)':'garde sa main (mulligan)']];
   case 'disc':return['card',[h('span',{class:'vb'},'✝'),who(e),mini(e.k),'défaussée (cimetière)',by(e)]];
-  case 'buff':return['buff',[by(e),h('span',{class:'vb'},'⬆'),mini(e.k),h('span',{class:'bf'},sg(e.ba)+'/'+sg(e.bh))]];
+  case 'buff':return['buff',[by(e),h('span',{class:'vb'},'⬆'),mini(e.k),h('span',{class:'bf'},e.tmp?sg(e.ba)+' ATK':sg(e.ba)+'/'+sg(e.bh)),e.tmp?'pendant ce tour':null]];
   case 'tilt':return['buff',[h('span',{class:'vb'},'😡'),mini(e.k),'est tilt : son effet Tilt se déclenche']];
-  case 'kwg':return['buff',[by(e),h('span',{class:'vb'},e.kw==='rempart'?'⛊':e.kw==='deso'?'💫':'✧'),mini(e.k),e.kw==='deso'?'devient Désorienté':'gagne '+(e.kw==='rempart'?'Rempart':'Égide')]];
+  case 'kwg':return['buff',[by(e),h('span',{class:'vb'},KWI[e.kw]?KWI[e.kw][1]:'✧'),mini(e.k),e.kw==='deso'?'devient Désorienté':'gagne '+(KWI[e.kw]?KWI[e.kw][0]:e.kw)+(e.kw==='insolence'?' jusqu’au prochain tour':e.kw==='hate'?' pour ce tour':'')]];
   case 'mute':return['ctl',[by(e),h('span',{class:'vb'},'🔇'),mini(e.k),'réduit au silence']];
   case 'blk':return['ctl',[by(e),h('span',{class:'vb'},'🔒'),mini(e.k),'bloquée']];
   case 'kick':return['ctl',[by(e),h('span',{class:'vb'},'⤴'),mini(e.k),'renvoyée en main']];
   case 'egide':return['buff',[h('span',{class:'vb'},'✧'),mini(e.k),'Égide : dégâts annulés']];
   case 'steal':return['card',[by(e),h('span',{class:'vb'},'📸'),e.k?mini(e.k):'copie une carte']];
-  case 'exil':return['move',[h('span',{class:'vb'},'✈️'),mini(e.k),'part à l’étranger',h('span',{class:'cst'},'−'+e.n+' 🪙')]];
+  case 'exil':return['move',e.fum?[h('span',{class:'vb'},e.fum===2?'🛂':'💨'),mini(e.k),e.fum===2?'immunité diplomatique (inciblable)':'disparaît dans la fumée (inciblable)']:[h('span',{class:'vb'},'✈️'),mini(e.k),'part à l’étranger',e.n?h('span',{class:'cst'},'−'+e.n+' 🪙'):'(gratuit)']];
   case 'move':return['move',[h('span',{class:'vb'},'↔'),mini(e.k),e.k2?['⇄',mini(e.k2)]:'déplacé(e)',costTag(e)]];
   case 'tmove':return['move',[h('span',{class:'vb'},'↔'),terrChip(e.d),'déplacé',costTag(e)]];
-  case 'back':return['move',[h('span',{class:'vb'},'🏠'),mini(e.k),'est de retour']];
+  case 'back':return['move',[h('span',{class:'vb'},e.fum===2?'🛂':e.fum?'💨':'🏠'),mini(e.k),e.fum===2?'n’est plus inciblable':e.fum?'sort de la fumée':'est de retour']];
   case 'reshuf':return['card',[h('span',{class:'vb'},'♻'),'Cimetière remélangé : deck reformé ('+e.n+' cartes)']];
   case 'echo':return['play',[h('span',{class:'vb'},'×2'),mini(e.k)]];
   case 'story':return['sys',[by(e),h('span',{class:'vb'},'📖'),STORY[e.n]]];
@@ -3160,7 +3361,8 @@ function histNodes(e){
   case 'tgift':return['tfx',[by(e),h('span',{class:'vb'},'❄'),terrChip(e.d),'posé chez',heroChip(e.ts)]];
   case 'save':return['buff',[h('span',{class:'vb'},'✨'),mini(e.k),'reste à 1 PV et devient invincible']];
   case 'inv':return['buff',[h('span',{class:'vb'},'✨'),mini(e.k),'invincible : aucun dégât']];
-  case 'aff':return['buff',[by(e),h('span',{class:'vb'},'↑'),mini(e.k),'affinité',gi(e.g),String(e.n)]];
+  case 'aff':return['buff',[by(e),h('span',{class:'vb'},'↑'),mini(e.k),...(e.g==='all'?['+1 d’affinité dans tous les jeux']:['affinité',gi(e.g),String(e.n)])]];
+  case 'pay':return['gold',[h('span',{class:'vb'},'🪙'),heroChip(e.ts),'dépense '+e.n+' Or',e.k?mini(e.k):null]];
   case 'tax':return['gold',[h('span',{class:'vb'},'🪙'),heroChip(e.ts),'paie '+e.n+' Or pour attaquer',mini(e.k)]];
   case 'xa':return['buff',[by(e),h('span',{class:'vb'},'⚔'),mini(e.k),'pourra attaquer une fois de plus']];
   case 'eth':return['buff',[by(e),h('span',{class:'vb'},'◆'),heroChip(e.ts),'+'+e.n+' Démoflux']];
@@ -3200,9 +3402,10 @@ function showResult(){
 // ============ UI : menus (jouer, boutique, collection, decks, amis, code) ============
 var CUR='play';let DECKI=null,FR_T=0,CT='cards',SETOPEN=false;
 const CF={q:'',t:0,r:0,fac:'',cost:0,aff:'',afl:0,own:false,dup:false},DF={q:'',t:0,r:0,fac:'',cost:0,aff:'',afl:0,own:true,dup:false};
-const TABS=[['play','Jouer','play'],['shop','Boutique','shop'],['coll','Collection','coll'],['decks','Decks','decks'],['friends','Amis','friends'],['code','Code','code']];
-const THUE={play:['#ff7a3d','#2a1000'],shop:['#2ec4b6','#032521'],coll:['#3d8bff','#001a3d'],decks:['#ffc145','#2e2000'],friends:['#ff4fa0','#3a0020'],code:['#8bd346','#152800']};
-function refreshTop(){const g=$('#gemn');if(g)g.textContent=S.gems;const n=$('#pname');if(n)n.textContent=S.name||''}
+const TABS=[['play','Jouer','play'],['shop','Boutique','shop'],['coll','Collection','coll'],['decks','Decks','decks'],['friends','Amis','friends'],['acct','Compte','acct'],['code','Code','code']];
+const THUE={play:['#ff7a3d','#2a1000'],shop:['#2ec4b6','#032521'],coll:['#3d8bff','#001a3d'],decks:['#ffc145','#2e2000'],friends:['#ff4fa0','#3a0020'],acct:['#7c5cff','#12052e'],code:['#8bd346','#152800']};
+function refreshTop(){const g=$('#gemn');if(g)g.textContent=S.gems;const n=$('#pname');if(n)n.textContent=S.name||'';
+  const c=$('#accb');if(c){c.textContent=ACC?(ACC_ST==='err'?'⚠️':ACC_ST==='sync'?'⏳':'☁️'):'';c.title=ACC?'Compte '+ACC.id+' · '+accStTxt():'';c.hidden=!ACC}}
 function ph(icon,title,right){return h('h3',null,h('span',{class:'pi'},ICONS[icon]?ico(icon):icon),title,right?h('span',{style:'margin-left:auto;font-size:13px;font-weight:700'},right):null)}
 function go(t){
   CUR=t;clearInterval(FR_T);if(t!=='decks')DECKI=null;
@@ -3210,7 +3413,7 @@ function go(t){
   TABS.forEach(x=>nav.append(h('button',{class:x[0]===t?'on':'',style:'--h:'+THUE[x[0]][0]+';--ht:'+THUE[x[0]][1],onclick:()=>go(x[0])},
     h('span',{class:'ni'},ico(x[2])),h('span',{class:'nl'},x[1]))));
   const v=$('#view');v.innerHTML='';v.scrollTop=0;v.dataset.t=t;
-  ({play:vPlay,shop:vShop,coll:vColl,decks:vDecks,friends:vFriends,code:vCode})[t](v);refreshTop()}
+  ({play:vPlay,shop:vShop,coll:vColl,decks:vDecks,friends:vFriends,acct:vAcct,code:vCode})[t](v);refreshTop()}
 function gotoGuide(sec){CT=sec;go('coll')}
 
 // ---------- JOUER ----------
@@ -3342,7 +3545,7 @@ function revealPack(ov,pack,idx,total,prism){
       if(big)for(let j=0;j<22;j++){const a=Math.random()*6.283,d=90+Math.random()*150;
         const sp=h('div',{class:'spark',style:'--dx:'+Math.cos(a)*d+'px;--dy:'+Math.sin(a)*d+'px;--gc:'+(c.p?'hsl('+rint(0,360)+',100%,70%)':gc)});stage.append(sp);setTimeout(()=>sp.remove(),1300)}
       if(c.isNew)stage.append(h('div',{class:'newr'},'NOUVELLE CARTE'));
-      msg.innerHTML='';msg.append(h('b',{style:'color:'+RCOL[c.rar]+';font-size:17px'},(c.p?'✦ Prismatique · ':'')+cd.n+(cd.st?' — '+cd.st:'')),h('br'),RAR[c.rar]+' · '+(cd.t==='c'?'Créature':'Sort')+' · tu en possèdes '+ownedN(c.k));
+      msg.innerHTML='';msg.append(h('b',{style:'color:'+RCOL[c.rar]+';font-size:17px'},(c.p?'✦ Prismatique · ':'')+fullName(cd)),h('br'),RAR[c.rar]+' · '+(cd.t==='c'?'Créature':'Sort')+' · tu en possèdes '+ownedN(c.k));
       const s=slots.children[i];s.classList.remove('cur');s.classList.add('f');s.style.setProperty('--rc',gc);s.append(miniAv(c.k));
       const last=i===pack.length-1;
       btns.replaceChildren(h('button',{class:'btn pri',style:'--h:#2ec4b6;--ht:#032521',onclick:doTap},last?(idx<total-1?'Booster suivant':'Voir le butin'):'Carte suivante'),h('button',{class:'btn sm',onclick:skipAll},'Tout révéler'));
@@ -3355,7 +3558,7 @@ function lootScreen(ov,all,n,prism){
   const best=sorted[0],rare=all.filter(c=>c.rar>=2).length,nw=all.filter(c=>c.isNew).length;
   const price=(prism?ECON.prism:ECON.booster);
   ov.append(h('h2',{style:'font-size:28px'},'Butin : '+all.length+' cartes'),
-    h('div',{class:'mut sm',style:'text-align:center'},rare+' Rare'+(rare>1?'s':'')+' ou mieux · '+nw+' nouvelle'+(nw>1?'s':'')+' · meilleure : '+CARDS[best.k].n),
+    h('div',{class:'mut sm',style:'text-align:center'},rare+' Rare'+(rare>1?'s':'')+' ou mieux · '+nw+' nouvelle'+(nw>1?'s':'')+' · meilleure : '+fullName(best.k)),
     h('div',{class:'loot'},h('div',{class:'cgrid',style:'grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:16px 12px;padding:8px 4px'},sorted.map(c=>
       h('div',{class:'cc2',onclick:()=>{ov.remove();showCard(c.k,{p:c.p})}},cardEl(c.k,{p:c.p,tilt:1}),c.isNew?h('span',{class:'nw'},'NEW'):null)))),
     h('div',{class:'row',style:'justify-content:center'},
@@ -3367,11 +3570,11 @@ const norm=t=>String(t||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,''
 function cardFilter(F){const q=norm(F.q).trim();
   return k=>{const c=CARDS[k];
     if(F.t&&c.t!==F.t)return false;if(F.r&&c.r!==F.r)return false;
-    if(F.fac&&(c.fac||[]).indexOf(F.fac)<0)return false;
+    if(F.fac&&(c.fac||[]).indexOf(F.fac)<0&&c.fam!==F.fac)return false;
     if(F.cost&&(F.cost>=7?c.c<7:c.c!==F.cost))return false;
-    if(F.aff&&!(c.t==='c'&&!c.tok&&((c.sc&&c.sc[F.aff])||0)>=(F.afl||1)))return false;   // affinité : 1 ou plus, ou 2 seulement
+    if(F.aff&&!(c.t==='c'&&!c.tok&&((c.sc&&c.sc[F.aff])||0)>=(F.afl||1))&&c.gam!==F.aff)return false;   // affinité : 1 ou plus, ou 2 seulement (et les sorts de ce jeu)
     if(F.own&&ownedN(k)<=0)return false;if(F.dup&&!canRecycle(k))return false;
-    if(q&&norm(c.n+' '+(c.st||'')+' '+c.tx+' '+(c.fac||[]).map(f=>FAC[f].n).join(' ')).indexOf(q)<0)return false;
+    if(q&&norm(c.n+' '+(c.st||'')+' '+c.tx+' '+(c.fac||[]).concat(c.fam?[c.fam]:[]).map(f=>FAC[f].n).join(' ')+(c.gam?' '+GAMES[c.gam].n:'')).indexOf(q)<0)return false;
     return true}}
 function filterCount(F){return ['t','r','fac','cost','aff','q'].filter(k=>F[k]).length+(F.dup?1:0)}
 function resetF(F,own){F.q='';F.t=0;F.r=0;F.fac='';F.cost=0;F.aff='';F.afl=0;F.dup=false;F.own=own}
@@ -3424,7 +3627,7 @@ function collModal(k){
     h('div',{class:'bar',style:'margin:8px 0'},h('i',{style:'width:'+Math.min(100,e.n/need*100)+'%'})),
     h('div',{class:'sm mut'},'Recyclage : '+need+' exemplaires identiques = 1 version prismatique ('+Math.min(e.n,need)+' / '+need+').'),
     h('div',{class:'row',style:'margin-top:8px'},
-      h('button',{class:'btn gold sm',disabled:!canRecycle(k),onclick:()=>{if(doRecycle(k)){toast('✦ '+CARDS[k].n+' prismatique obtenue !');closeModal();go('coll');setTimeout(()=>collModal(k),50)}}},'♻ Recycler → prismatique'),
+      h('button',{class:'btn gold sm',disabled:!canRecycle(k),onclick:()=>{if(doRecycle(k)){toast('✦ '+fullName(k)+' prismatique obtenue !');closeModal();go('coll');setTimeout(()=>collModal(k),50)}}},'♻ Recycler → prismatique'),
       h('button',{class:'btn sm',onclick:()=>{const c=$('#modal .detail .card');if(c)c.replaceWith(cardEl(k,{big:true,tilt:1,p:!c.classList.contains('prism')}))}},'Aperçu prismatique')))});
   return box}
 // terrains : toutes les infos avant le duel
@@ -3444,18 +3647,20 @@ function cTerr(v){
       g==='bazar'?h('div',{class:'sm',style:'margin-top:8px;color:#ffd36b'},'Potatoll (fou du Bazar) déclenche ses effets du Bazar deux fois sur un terrain neutre.'):
       [h('div',{class:'sm',style:'margin:10px 0 2px;font-weight:700'},'Affinité 2 :'),h('div',{class:'members'},b2.length?b2.map(baseEl):h('span',{class:'mut sm'},'Personne.')),
        h('div',{class:'sm',style:'margin:8px 0 2px;font-weight:700'},'Affinité 1 :'),h('div',{class:'members'},b1.length?b1.map(baseEl):h('span',{class:'mut sm'},'Personne.')),
-       g==='lol'?h('div',{class:'sm',style:'margin-top:8px;color:#ffd36b'},'Sur un terrain LoL, Lisdoon (Roro) attaque deux fois par tour ; Elkatrix (doux comme un agneau) double les effets des terrains LoL de ton camp.'):null]))});
+       g==='lol'?h('div',{class:'sm',style:'margin-top:8px;color:#ffd36b'},'Sur un terrain LoL, Lisdoon (Roro) attaque deux fois par tour ; Elkatrix (doux comme un agneau) double les effets des terrains LoL de ton camp.'):null,
+       POOL.some(k=>CARDS[k].gam===g)?h('div',{class:'sm',style:'margin-top:8px'},h('b',null,'Sorts d’affinité : '),POOL.filter(k=>CARDS[k].gam===g).map(k=>memEl(k))):null]))});
   v.append(grid)}
 function cFam(v){
   v.append(h('div',{class:'panel hl'},ph('🧬','Les familles'),
-    h('div',{style:'line-height:1.5;font-size:14.5px'},'Chaque personnage appartient à une ou deux familles (ses 3 versions aussi). Compte les créatures d’une même famille ',h('b',null,'sur ton plateau'),' : dès ',h('b',null,'2'),', le bonus s’active, et la plupart grandissent avec chaque membre supplémentaire. Pendant le duel, la barre au-dessus de ton héros affiche chaque famille et son bonus actuel, et chaque déclenchement est annoncé à l’écran.')));
+    h('div',{style:'line-height:1.5;font-size:14.5px'},'Chaque personnage appartient à une, deux ou trois familles (parfois aucune), et toutes ses versions aussi. Compte les créatures d’une même famille ',h('b',null,'sur ton plateau'),' : dès ',h('b',null,'2'),', le bonus s’active, et la plupart grandissent avec chaque membre supplémentaire. Pendant le duel, la barre au-dessus de ton héros affiche chaque famille et son bonus actuel, et chaque déclenchement est annoncé à l’écran.')));
   const grid=h('div',{class:'ggrid'});
   FACK.forEach(f=>{
-    const F=FAC[f],mem=BASEK.filter(b=>BASES[b].fac.indexOf(f)>=0);
+    const F=FAC[f],mem=BASEK.filter(b=>BASES[b].fac.indexOf(f)>=0),nc=POOL.filter(k=>CARDS[k].t==='c'&&CARDS[k].fac.indexOf(f)>=0).length,sp=POOL.filter(k=>CARDS[k].fam===f);
     grid.append(h('div',{class:'gcard',style:'--gc:'+F.c},
-      h('div',{class:'gh'},h('div',{class:'gi'},F.ic),h('div',null,h('b',null,F.n),h('small',null,F.d+' · '+mem.length+' personnages ('+mem.length*3+' cartes)'))),
+      h('div',{class:'gh'},h('div',{class:'gi'},F.ic),h('div',null,h('b',null,F.n),h('small',null,F.d+' · '+mem.length+' personnages ('+nc+' cartes)'))),
       h('div',{class:'sm',style:'line-height:1.4'},F.sum),
-      facTiers(f,0),h('div',{class:'members'},mem.map(baseEl))))});
+      facTiers(f,0),h('div',{class:'members'},mem.map(baseEl)),
+      sp.length?h('div',{class:'sm',style:'margin-top:8px'},h('b',null,'Sorts de famille : '),sp.map(k=>memEl(k))):null))});
   v.append(grid)}
 function cKw(v){
   v.append(h('div',{class:'panel hl'},ph('📖','Mots-clés'),h('div',{class:'kwrow'},
@@ -3503,7 +3708,7 @@ function vDeckEdit(v,di){
           h('button',{class:'btn sm danger',onclick:()=>{d.cards=[];redo()}},'Vider')),
         h('div',{class:'dlist',style:'grid-template-columns:1fr'},Object.keys(cnt).sort(sortK).map(k=>
           h('div',{class:'dl',style:'border-left:4px solid '+RCOL[CARDS[k].r]},h('span',{class:'dc'},CARDS[k].c),miniAv(k),
-            h('span',{class:'dn',style:'color:'+RCOL[CARDS[k].r],title:CARDS[k].st||'',onclick:()=>showCard(k)},RGEM[CARDS[k].r]+' '+CARDS[k].n+(CARDS[k].st?' · '+CARDS[k].st:'')),h('span',{class:'mut'},'×'+cnt[k]),
+            h('span',{class:'dn',style:'color:'+RCOL[CARDS[k].r],onclick:()=>showCard(k)},RGEM[CARDS[k].r]+' '+fullName(k)),h('span',{class:'mut'},'×'+cnt[k]),
             h('button',{class:'btn sm',onclick:()=>{d.cards.splice(d.cards.indexOf(k),1);redo()}},'−')))),
         d.cards.length?null:h('div',{class:'mut sm'},'Deck vide : ajoute des cartes à droite.')),
       h('div',{class:'panel'},ph('coll','Ajouter depuis ma collection'),h('div',{class:'sm mut',style:'margin:-6px 0 8px'},'Clic : ajouter · clic droit : détails'),mkFilters(DF,{own:true},draw),h('div',{style:'margin:8px 0 12px;text-align:right'},cn),grid)));
@@ -3514,7 +3719,9 @@ function curve(d){
     h('div',{style:'flex:1;text-align:center;font-size:11px;font-weight:700;color:#cfdde3'},h('div',{style:'height:'+(n/m*38)+'px;background:linear-gradient(180deg,#bff1ff,#14a8e6);border-radius:3px;min-height:'+(n?3:0)+'px'}),n||'',h('div',{style:'color:#7f97a2'},i===10?'10':i))))}
 const ARCHD={toxic:'Empile le Venin : chaque Toxic renforce les autres.',weebos:'Des créatures rapides et solides, protégées en groupe.',farmer:'Accumule l’Or et achète les meilleurs terrains.',
   expats:'Or, contrôle et voyages à l’étranger pour protéger tes pièces clés.',ravages:'Chaos, missiles aléatoires et effets du Bazar.',alien:'Soins, vol d’Or et gros bannissements.',
-  xeno:'Créatures Tilt robustes qui punissent les Extraterrestres.',rush:'Cartes bon marché, Hâte et dégâts directs : finir vite.',ctrl:'Retire les menaces, soigne, puis gagne avec les gros monstres.',vestige:'Les anciens du serveur : plus ils sont nombreux sur ton plateau, plus ils encaissent.'};
+  xeno:'Créatures Tilt robustes qui punissent les Extraterritoriaux.',rush:'Cartes bon marché, Hâte et dégâts directs : finir vite.',ctrl:'Retire les menaces, soigne, puis gagne avec les gros monstres.',vestige:'Les anciens du serveur : plus ils sont nombreux sur ton plateau, plus ils encaissent.',
+  wow:'Créatures très affinées WoW, terrains WoW et sorts qui comptent ton affinité WoW.',dofus:'Affinité Dofus : pioche, Égide et créatures solides sur les terrains Dofus.',
+  lol:'Affinité LoL : attaques surprises (Flash) et Smite sur les terrains LoL.',cs:'Affinité CS : Headshot, fumigènes et terrains CS.'};
 function autoModal(di){
   const d=S.decks[di];
   modal(h('div',null,h('h2',null,'Construire automatiquement'),h('p',{class:'mut sm'},'Choisis un style : le deck est composé avec ce que tu possèdes.'),
@@ -3626,10 +3833,10 @@ function tradeWindow(conn,peer){
     done:()=>{mode='trade';render()},
     closed:why=>{leave();toast(why==='cancel'?'Échange annulé.':why==='peer'?peer.name+' a annulé l’échange. Rien n’a été échangé.':why==='fail'?'Échange impossible : une des cartes n’est plus disponible. Rien n’a été échangé.':'Connexion coupée : rien n’a été échangé.')}});
   const info=o=>{const cd=CARDS[o.k];
-    return h('div',{class:'tinfo'},h('b',null,cd.n+(o.p?' ✦':'')),
+    return h('div',{class:'tinfo'},h('b',null,fullName(cd)+(o.p?' ✦':'')),
       h('div',{class:'sm mut'},(cd.t==='c'?'Créature':'Sort')+' · '+RAR[cd.r]+' · coût '+cd.c+(o.p?' · prismatique':'')),
       h('div',{class:'sm ttx'},txNodes(cd.tx)),
-      (cd.fac&&cd.fac.length)?h('div',{class:'tfs'},cd.fac.map(f=>h('span',{class:'chip',style:'cursor:default;padding:2px 9px;font-size:12px;border-color:'+FAC[f].c+';background:'+FAC[f].c+'33'},FAC[f].ic+' '+FAC[f].n))):null)};
+      (cd.fac&&cd.fac.length||cd.fam)?h('div',{class:'tfs'},(cd.fac||[cd.fam]).map(f=>h('span',{class:'chip',style:'cursor:default;padding:2px 9px;font-size:12px;border-color:'+FAC[f].c+';background:'+FAC[f].c+'33'},FAC[f].ic+' '+FAC[f].n))):null)};
   const side=(cls,title,o,foot)=>h('div',{class:'tside '+cls},h('div',{class:'tl'},title),
     o?h('div',{class:'tcw'},cardEl(o.k,{big:true,p:!!o.p,tilt:1})):h('div',{class:'tempty'},cls==='me'?'Aucune carte choisie':peer.name+' n’a pas encore choisi de carte'),
     o?info(o):null,foot);
@@ -3678,6 +3885,59 @@ function vCode(v){
   v.append(h('div',{class:'panel hl',style:'max-width:620px'},ph('code','Code'),h('p',{class:'mut sm',style:'margin:0 0 10px'},'Entre un code pour recevoir des 💎 (réservé aux tests).'),
     h('div',{class:'row'},i,h('button',{class:'btn pri',onclick:go_},'Valider')),out))}
 
+// ---------- COMPTE : sauvegarde en ligne et transfert de la progression ----------
+let ACCM='in';                                                        // formulaire : 'in' = connexion, 'up' = création
+function accStTxt(){if(!ACC)return'';const t=ACC.last?new Date(ACC.last).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}):'';
+  return ACC_ST==='sync'?'☁️ Synchronisation…':ACC_ST==='err'?'⚠️ '+(ACC.err||'Synchronisation impossible.')+' Tes changements restent sur cet ordinateur et seront envoyés plus tard.':
+    ACC_ST==='ok'?'✔ Progression sauvegardée en ligne'+(t?' (à '+t+')':'')+'.':''}
+function accRefresh(){const e=$('#accst');if(e){e.textContent=accStTxt();e.style.color=ACC_ST==='err'?'#ffb3c0':ACC_ST==='ok'?'#6dffa0':''}}
+function dlFile(name,txt){const a=h('a',{href:URL.createObjectURL(new Blob([txt],{type:'application/json'})),download:name});document.body.append(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)}
+function askImport(st,src){ask('Remplacer ta progression ?','La progression de '+src+' ('+Object.keys(st.coll).length+' cartes différentes, '+st.gems+' 💎) va remplacer celle de cet ordinateur. Une copie de secours de ta progression actuelle est gardée.',
+  [{t:'Annuler'},{t:'Remplacer',c:'pri',f:()=>{importSave(st);toast('✔ Progression importée.');refreshTop();go('acct')}}])}
+function vAcct(v){
+  const pan=h('div',{class:'panel hl',style:'max-width:700px;--h:'+THUE.acct[0]},ph('acct','Compte en ligne'));
+  if(!cloudOn()){
+    pan.append(h('p',null,'Les comptes en ligne ne sont pas encore activés sur cette version du jeu : il manque la configuration du serveur de sauvegarde (fichier ',h('b',null,'cloud-config.js'),' à côté du jeu).'),
+      h('p',{class:'mut sm'},'En attendant, tu peux déjà emporter ta progression sur un autre ordinateur avec le transfert ci-dessous.'))}
+  else if(ACC){
+    pan.append(h('p',{style:'margin:0 0 6px'},'Connecté avec le compte ',h('b',null,ACC.id),'.'),h('div',{id:'accst',class:'sm',style:'margin-bottom:8px'}),
+      h('p',{class:'mut sm'},'Ta collection, tes decks, tes 💎, tes amis et tes réglages sont envoyés sur ton compte à chaque changement. Sur un autre ordinateur, connecte-toi avec le même pseudo et le même mot de passe : tu retrouves tout.'),
+      h('div',{class:'row'},h('button',{class:'btn pri',onclick:()=>{ACC_DIRTY=true;cloudSync()}},'☁️ Synchroniser maintenant'),
+        h('button',{class:'btn',onclick:()=>ask('Se déconnecter ?','Ta progression reste sur cet ordinateur, mais elle ne sera plus envoyée sur ton compte.',[{t:'Annuler'},{t:'Se déconnecter',c:'pri',f:()=>{accLogout();go('acct')}}])},'Se déconnecter')))}
+  else{
+    const idI=h('input',{placeholder:'Pseudo (ou adresse e-mail)',autocomplete:'username',maxlength:60,spellcheck:'false',autocapitalize:'off'}),
+      pwI=h('input',{type:'password',placeholder:'Mot de passe (6 caractères minimum)',autocomplete:ACCM==='up'?'new-password':'current-password'}),
+      pw2=h('input',{type:'password',placeholder:'Confirme le mot de passe',autocomplete:'new-password'}),msg=h('div',{class:'sm accmsg'});
+    if(ACCM==='up'&&S.name)idI.value=S.name;
+    const say=(t,ok)=>{msg.textContent=t;msg.style.color=ok?'#6dffa0':'#ffb3c0'};
+    const submit=async()=>{
+      if(ACCM==='up'&&pwI.value!==pw2.value){say('Les deux mots de passe ne sont pas identiques.');return}
+      btn.disabled=true;msg.style.color='';msg.textContent='Connexion…';
+      try{const r=await accLogin(ACCM==='up'?'signUp':'signInWithPassword',idI.value,pwI.value);
+        toast(r==='new'?'✔ Compte créé : ta progression est sauvegardée en ligne.':r==='loaded'?'✔ Connecté : progression du compte chargée.':'✔ Connecté : ta progression est maintenant sauvegardée sur ton compte.');
+        refreshTop();go('acct')}catch(e){say(e.message)}finally{btn.disabled=false}};
+    const btn=h('button',{class:'btn gold',onclick:submit},ACCM==='up'?'Créer mon compte':'Se connecter');
+    [idI,pwI,pw2].forEach(i=>i.addEventListener('keydown',e=>{if(e.key==='Enter')submit()}));
+    pan.append(h('div',{class:'row',style:'margin-bottom:10px'},[['in','Se connecter'],['up','Créer un compte']].map(([k,l])=>h('span',{class:'chip'+(ACCM===k?' on':''),style:'--h:'+THUE.acct[0]+';--ht:#fff',onclick:()=>{ACCM=k;go('acct')}},l))),
+      h('p',{class:'mut sm',style:'margin:0 0 10px'},ACCM==='up'?'Crée un compte pour sauvegarder en ligne ta progression actuelle (collection, decks, 💎, amis) et la retrouver sur n’importe quel ordinateur.':
+        'Connecte-toi pour retrouver la progression de ton compte. Celle de cet ordinateur est remplacée (une copie de secours est gardée).'),
+      h('div',{class:'accf'},idI,pwI,ACCM==='up'?pw2:null),
+      h('div',{class:'row',style:'margin-top:10px'},btn,ACCM==='in'?h('button',{class:'btn sm',onclick:async()=>{try{await accReset(idI.value);say('E-mail de réinitialisation envoyé.',1)}catch(e){say(e.message)}}},'Mot de passe oublié ?'):null),msg,
+      h('p',{class:'mut sm',style:'margin:8px 0 0'},'Avec un pseudo, un mot de passe oublié ne peut pas être récupéré ; avec une adresse e-mail, si.'))}
+  // transfert sans compte : code à copier ou fichier
+  const code=h('textarea',{class:'acccode',readonly:true,placeholder:'Ton code de sauvegarde apparaîtra ici.'}),paste=h('textarea',{class:'acccode',placeholder:'Colle ici un code de sauvegarde (il commence par EA1-)…'});
+  const file=h('input',{type:'file',accept:'.json,application/json,text/plain',style:'display:none'});
+  file.addEventListener('change',()=>{const f=file.files&&file.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const st=readSave(r.result);file.value='';if(!st){toast('Fichier de sauvegarde invalide.');return}askImport(st,'ce fichier')};r.readAsText(f)});
+  let bak=null;try{bak=localStorage.getItem(BAK_KEY)}catch(e){}
+  const tr=h('div',{class:'panel',style:'max-width:700px'},ph('decks','Transférer sans compte'),
+    h('p',{class:'mut sm',style:'margin:0 0 10px'},'Sur l’ancien ordinateur, copie ton code de sauvegarde (ou télécharge le fichier). Sur le nouveau, colle le code (ou ouvre le fichier) ici.'),
+    h('div',{class:'row'},h('button',{class:'btn pri',onclick:()=>{code.value=saveCode();code.select();try{navigator.clipboard.writeText(code.value).then(()=>toast('✔ Code copié.'),()=>toast('Code prêt : copie-le (Ctrl+C).'))}catch(e){toast('Code prêt : copie-le (Ctrl+C).')}}},'📋 Copier mon code de sauvegarde'),
+      h('button',{class:'btn',onclick:()=>dlFile('etat-arcanique-sauvegarde-'+today()+'.json',JSON.stringify(S))},'⬇ Télécharger le fichier')),code,
+    h('div',{class:'row',style:'margin-top:12px'},h('button',{class:'btn gold',onclick:()=>{const st=readSave(paste.value);if(!st){toast('Code de sauvegarde invalide ou incomplet.');return}askImport(st,'ce code')}},'Importer ce code'),
+      h('button',{class:'btn',onclick:()=>file.click()},'📂 Ouvrir un fichier'),file,
+      bak?h('button',{class:'btn sm',onclick:()=>{let st=null;try{st=fixS(JSON.parse(bak))}catch(e){}if(st)askImport(st,'la copie de secours');else toast('Copie de secours illisible.')}},'↺ Restaurer la copie de secours'):null),paste);
+  v.append(pan,tr);accRefresh()}
+
 // ---------- démarrage ----------
 function askName(then){
   const i=h('input',{value:'Joueur'+rint(100,999),maxlength:16,style:'width:100%;font-size:18px;font-weight:700'});
@@ -3689,8 +3949,9 @@ function askName(then){
 function boot(){
   loadS();
   const lg=h('div',{class:'logo'});lg.innerHTML=EMBLEM;lg.append(h('b',null,'L’ÉTAT ARCANIQUE'));
-  $('#top').append(lg,h('nav',{id:'nav'}),h('span',{id:'pname'}),h('div',{class:'gems',title:'Tes diamants'},h('span',{class:'gi'},'💎'),h('span',{id:'gemn'},S.gems)));
+  $('#top').append(lg,h('nav',{id:'nav'}),h('span',{id:'pname'}),h('span',{id:'accb',hidden:true,onclick:()=>go('acct')}),h('div',{class:'gems',title:'Tes diamants'},h('span',{class:'gi'},'💎'),h('span',{id:'gemn'},S.gems)));
   go('play');
+  accBoot(()=>{if(!DUEL)go(CUR);refreshTop();toast('☁️ Progression chargée depuis ton compte.')});   // déjà connecté : on récupère la sauvegarde la plus récente
   const after=()=>{
     const m=location.hash.match(/#(ARCANE-[A-Z0-9]{6})/i);
     if(m){const code=m[1].toUpperCase();history.replaceState(null,'',location.pathname+location.search);
