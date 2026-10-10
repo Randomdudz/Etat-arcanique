@@ -832,6 +832,11 @@ span.gico.ge{font-style:normal}
 .achip em{font-style:normal;font-size:12.5px;font-weight:800}
 .achip.on{background:color-mix(in srgb,var(--fc) 42%,#15222a)!important;box-shadow:0 0 12px color-mix(in srgb,var(--fc) 70%,transparent);color:#fff!important}
 .achip .afl{background:#fff;color:#111;border-radius:99px;padding:0 7px;font-size:12px;font-weight:900;line-height:18px}
+/* états des nouvelles cartes sur le plateau : Désorienté (étoiles qui tournent), invincible (halo doré) */
+.card.bd.desox .ca::before{content:'💫';position:absolute;left:5cqw;top:26cqw;font-size:15cqw;z-index:5;animation:dizzy 2.4s linear infinite}
+@keyframes dizzy{0%{transform:rotate(0) translateX(0)}50%{transform:rotate(180deg) translateX(2cqw)}100%{transform:rotate(360deg) translateX(0)}}
+.card.bd.invx{box-shadow:0 0 0 1.2cqw #ffe27a,0 0 6cqw #ffd23f}
+.card .bdg i.inv{background:#ffd23f;color:#3a2600}
 </style>
 <script defer src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
 </head>
@@ -841,12 +846,12 @@ span.gico.ge{font-style:normal}
 <script>// ============ DATA : cartes, terrains, familles, règles ============
 const GAMES={
   wow:{n:'WoW',ic:'⚔️',c:'#e8b33a'},dofus:{n:'Dofus',ic:'🥚',c:'#3cc46b'},lol:{n:'LoL',ic:'🏆',c:'#3d8bff'},
-  cs:{n:'CS',ic:'🎯',c:'#ff7a3d'},bazar:{n:'Bazar',ic:'🌀',c:'#ff4fa0'}};
-// logos des vrais jeux (LoL et CS : Simple Icons, CC0 ; WoW et Dofus : dessinés d'après leurs emblèmes)
+  cs:{n:'CS',ic:'🎯',c:'#ff7a3d'},bazar:{n:'Neutre',ic:'🌀',c:'#ff4fa0'}};
+// logos des vrais jeux (LoL et CS : Simple Icons, CC0 ; LoL aux couleurs de l'icône du client, intérieur bleu ; WoW et Dofus : dessinés d'après leurs emblèmes)
 const GSVG={
   wow:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><defs><radialGradient id="b" cx="50%" cy="36%" r="68%"><stop offset="0" stop-color="#3a6cc0"/><stop offset="1" stop-color="#0a1836"/></radialGradient><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff2bf"/><stop offset=".5" stop-color="#ebbd4e"/><stop offset="1" stop-color="#93600f"/></linearGradient></defs><circle cx="12" cy="12" r="11.1" fill="url(#b)" stroke="#d9b45c" stroke-width="1.3"/><path d="M3.5 6.1h4.9l-.6 1 1.8 6.3 1.8-4.8-.5-1.5h2.2l-.5 1.5 1.8 4.8 1.8-6.3-.6-1h4.9l-1.1 1.1-3.8 11.5h-2.1L12 14l-1.6 4.7H8.3L4.6 7.2z" fill="url(#g)" stroke="#2e1b04" stroke-width=".55" stroke-linejoin="round"/></svg>',
   dofus:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><defs><radialGradient id="e" cx="38%" cy="30%" r="78%"><stop offset="0" stop-color="#e2ffa8"/><stop offset=".33" stop-color="#6ad65c"/><stop offset=".78" stop-color="#1e7a34"/><stop offset="1" stop-color="#0d441d"/></radialGradient></defs><circle cx="12" cy="12" r="11.1" fill="#2a1a0b" stroke="#cfa64e" stroke-width="1.3"/><path d="M12 3.3c-3.6 0-6 5.4-6 9.5 0 3.8 2.7 6.9 6 6.9s6-3.1 6-6.9c0-4.1-2.4-9.5-6-9.5z" fill="url(#e)" stroke="#06260f" stroke-width=".7"/><ellipse cx="9.9" cy="8.4" rx="1.25" ry="2.1" fill="#fff" opacity=".6" transform="rotate(-22 9.9 8.4)"/><circle cx="14.3" cy="13.6" r=".95" fill="#c4ff96" opacity=".55"/><circle cx="11.3" cy="16.4" r=".7" fill="#c4ff96" opacity=".5"/><circle cx="14.6" cy="9.6" r=".6" fill="#c4ff96" opacity=".45"/></svg>',
-  lol:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11.1" fill="#0a1428" stroke="#c8aa6e" stroke-width="1.3"/><g transform="translate(4.3 4.3) scale(.64)"><path fill="#c8aa6e" d="m1.912 0l1.212 2.474v19.053L1.912 24h14.73l1.337-4.682H8.33V0ZM12 1.516c-.913 0-1.798.112-2.648.312v1.74A9.7 9.7 0 0 1 12 3.2c5.267 0 9.536 4.184 9.536 9.348a9.2 9.2 0 0 1-2.3 6.086l-.273.954l-.602 2.112c2.952-1.993 4.89-5.335 4.89-9.122C23.25 6.468 18.213 1.516 12 1.516m0 2.673c-.924 0-1.814.148-2.648.414v13.713h8.817a8.25 8.25 0 0 0 2.36-5.768c0-4.617-3.818-8.359-8.529-8.359M2.104 7.312A10.86 10.86 0 0 0 .75 12.576c0 1.906.492 3.7 1.355 5.266z"/></g></svg>',
+  lol:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f0e6d2"/><stop offset=".45" stop-color="#c8aa6e"/><stop offset="1" stop-color="#785a28"/></linearGradient><radialGradient id="b" cx="62%" cy="52%" r="55%"><stop offset="0" stop-color="#cdfaff"/><stop offset=".35" stop-color="#0ac8e8"/><stop offset=".75" stop-color="#0a5f9e"/><stop offset="1" stop-color="#062b52"/></radialGradient></defs><circle cx="12" cy="12" r="11.1" fill="#010a13" stroke="#c8aa6e" stroke-width="1.3"/><g transform="translate(4.3 4.3) scale(.64)"><path fill="url(#b)" d="M12 4.189c-.924 0-1.814.148-2.648.414v13.713h8.817a8.25 8.25 0 0 0 2.36-5.768c0-4.617-3.818-8.359-8.529-8.359Z"/><path fill="url(#g)" d="M12 1.516c-.913 0-1.798.112-2.648.312v1.74A9.7 9.7 0 0 1 12 3.2c5.267 0 9.536 4.184 9.536 9.348a9.2 9.2 0 0 1-2.3 6.086l-.273.954l-.602 2.112c2.952-1.993 4.89-5.335 4.89-9.122C23.25 6.468 18.213 1.516 12 1.516Z"/><path fill="url(#g)" d="M2.104 7.312A10.86 10.86 0 0 0 .75 12.576c0 1.906.492 3.7 1.355 5.266z"/><path fill="url(#g)" stroke="#2b1d08" stroke-width=".35" d="M1.912 0l1.212 2.474v19.053L1.912 24h14.73l1.337-4.682H8.33V0Z"/></g></svg>',
   cs:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11.1" fill="#f3ab3d" stroke="#2a1a06" stroke-width="1.1"/><g transform="translate(3.6 3.7) scale(.69)"><path fill="#141414" d="M21.71 3.235a.02.02 0 0 1-.022-.022c.002-.081.004-.37.005-.424c0-.129-.143-.183-.212-.083l-.229.333a.02.02 0 0 1-.02.01h-6.55a.047.047 0 0 1-.048-.046l-.013-.177a.048.048 0 0 1 .056-.048l.335.032a.06.06 0 0 0 .063-.045l.244-.989a.05.05 0 0 0-.03-.054l-.227-.085a.04.04 0 0 1-.026-.03c-.041-.171-.377-1.323-1.993-1.58c-.787-.125-1.302.21-1.577.478a1.6 1.6 0 0 0-.302.41l-.097.212a2 2 0 0 0-.046.234l.051.982a.11.11 0 0 0 .043.085l.354.153l-.196.325a.055.055 0 0 1-.053.04s-.417.01-.622.02c-.386.015-1.245.485-1.878 1.838l-.724 1.55a.07.07 0 0 1-.068.04l-.578.001c-.035 0-.073.028-.088.06L6.364 9a.11.11 0 0 0 .017.108l.627.392a.06.06 0 0 1 .02.058l-.328.967a.2.2 0 0 1-.023.062l-.435.382a.1.1 0 0 0-.035.06l-.598 1.53a.06.06 0 0 1-.06.045l-.336.002a.163.163 0 0 0-.162.149l-.201 2.288l-.016.121l-.158.908a.13.13 0 0 1-.034.055l-.558.427a4.8 4.8 0 0 0-.767 1.001l-1.86 3.924a.8.8 0 0 0-.078.322l.132.235c.002.084-.032.456-.07.53l-.624 1.09a.1.1 0 0 0-.003.085l.03.07l.094.187L2.829 24c.118.011.247-.14.251-.3l.103-1.297l-.027-.195l3.606-4.232c.095-.114.222-.317.286-.45l1.719-3.79a.17.17 0 0 1 .1-.088l.109-.035a.17.17 0 0 1 .183.053c.15.181.504.781.676 1.032c.143.208.85 1.23 1.158 1.567c.086.093.349.198.466.27a.083.083 0 0 1 .03.112l-1.03 1.808l-.455 2.136a1 1 0 0 0-.036.152l-.412 1.483c.003.188-.14.286-.153.507l-.15 1.084a.06.06 0 0 0 .059.061l2.544.014q.142-.001.286-.006l.075-.007c.124-.016.563-.076.75-.15a.6.6 0 0 0 .227-.13c.185-.194.2-.278.203-.398a.3.3 0 0 0-.028-.105a.12.12 0 0 0-.06-.047l-1.18-.356a.37.37 0 0 1-.19-.134l-.317-.47a.09.09 0 0 1 .018-.097l.618-.609a.2.2 0 0 0 .048-.072l1.904-4.488c.089-.285.059-.605 0-.944c-.044-.25-.686-1.326-.854-1.624l-1.286-2.251c-.079-.138-.19-.133-.228-.276l-.073-1.118a.04.04 0 0 1 .036-.05l.33-.028a.1.1 0 0 0 .075-.048l1.147-2.155a.1.1 0 0 0-.002-.094l-.235-.29a.09.09 0 0 1-.001-.088l.352-.38a.054.054 0 0 1 .073-.02l.934.526a.4.4 0 0 0 .186.05c.26-.001.686-.154.908-.29a.4.4 0 0 0 .139-.148l.458-1.07c.006-.014.027-.012.03.003l.127.595a.064.064 0 0 0 .079.05l1.35-.3a.066.066 0 0 0 .05-.078l-.319-1.344a.07.07 0 0 1 .01-.054l.13-.203a.3.3 0 0 0 .037-.082l.159-.725a.04.04 0 0 1 .04-.032l3.732.005a.09.09 0 0 0 .093-.093v-.634a.02.02 0 0 1 .022-.021h1.439a.047.047 0 0 0 .046-.047V3.28a.047.047 0 0 0-.046-.047h-1.44z"/></g></svg>'};
 const GK=['wow','dofus','lol','cs','bazar'];
 const AFG=['wow','dofus','lol','cs'];                       // jeux avec une affinité (le Bazar est neutre)
@@ -887,7 +892,7 @@ function facTier(f,n){let t=null;for(const x of FAC[f].tiers)if(n>=x[0])t=x;retu
 function exCost(n){return n>=5?2:n===4?3:n===3?4:5}
 
 const KWI={rempart:['Rempart','⛊'],venin:['Venin','☠'],siphon:['Siphon','♥'],hate:['Hâte','⚡'],egide:['Égide','✧'],
-  croissance:['Croissance','✚'],frenesie:['Frénésie','⚔⚔'],afk:['AFK','💤'],insolence:['Insolence','♛'],tilt:['Tilt','😡'],respawn:['Respawn','↺']};
+  croissance:['Croissance','✚'],frenesie:['Frénésie','⚔⚔'],afk:['AFK','💤'],insolence:['Insolence','♛'],tilt:['Tilt','😡'],respawn:['Respawn','↺'],vip:['VIP','🎟'],deso:['Désorienté','💫']};
 // glossaire : [regex, définition] — les mots reconnus dans les textes reçoivent une infobulle
 const GLOS=[
   [/Cri d’arrivée/,'Effet qui se déclenche quand la carte est jouée depuis la main.'],
@@ -904,6 +909,11 @@ const GLOS=[
   [/Insolence/,'Ne peut pas être ciblée par les sorts et effets ennemis (elle peut être attaquée).'],
   [/Tilt/,'Chaque fois que la créature subit des dégâts et survit, son effet « Tilt : … » se déclenche (chaque carte a le sien).'],
   [/Respawn/,'Revient une fois avec 1 PV quand elle meurt.'],
+  [/VIP/,'Ne peut être attaquée que si elle est seule sur son plateau, ou s’il n’y reste que des VIP (les sorts et effets peuvent la cibler).'],
+  [/Désorienté(?:e|es|s)?/,'Quand elle attaque, sa cible est tirée au hasard parmi les ennemis qu’elle peut attaquer (créature ou héros).'],
+  [/terrains? de jeu/,'Terrain de jeu : un terrain WoW, Dofus, LoL ou CS. Les autres terrains sont neutres.'],
+  [/terrains? neutres?/,'Terrain neutre : un terrain qui n’est d’aucun jeu ; il profite à toutes les créatures, quelle que soit leur affinité.'],
+  [/[Ii]nvincible/,'Ne subit aucun dégât et ne peut pas mourir.'],
   [/Reset/,'Après avoir détruit une créature en attaquant, peut attaquer à nouveau.'],
   [/Gremlin/,'Bonus de stats tant que la créature se trouve sur un terrain du jeu indiqué.'],
   [/missiles?/,'Missile : 1 dégât à un ennemi au hasard (héros ou créature).'],
@@ -914,11 +924,11 @@ const GLOS=[
   [/Kick/,'La créature retourne dans la main de son propriétaire.'],
   [/[Cc]imetière/,'Les sorts joués, les créatures détruites et les cartes défaussées ou brûlées y vont. Quand ton deck est vide, ton cimetière est mélangé pour former un nouveau deck.'],
   [/[Dd]éfausse/,'Défausser une carte : elle quitte la main et va au cimetière.'],
-  [/Affinité/,'Score d’une créature sur un jeu (0, 1 ou 2). Les terrains de ce jeu donnent leur effet selon l’affinité ; 0 = aucun effet. Les terrains Bazar profitent à tout le monde.'],
+  [/Affinité/,'Score d’une créature sur un jeu (0, 1 ou 2). Les terrains de ce jeu donnent leur effet selon l’affinité ; 0 = aucun effet. Les terrains neutres profitent à tout le monde.'],
   [/à l’étranger/,'Disparaître à l’étranger (Expats) : la créature est inciblable (ni attaques, ni sorts, ni effets ennemis) jusqu’au début de ton prochain tour.'],
   [/Démoflux/,'Ressource du duel : +1 maximum par tour. Tu la dépenses pour jouer tes cartes ; ce que tu ne dépenses pas est perdu à la fin du tour.'],
   [/Or/,'Monnaie du duel : achète des terrains et paie les voyages des Expats.'],
-  [/Terrain/,'Couvre 1 à 3 cases de ton plateau. Chaque créature posée dessus profite de l’effet du terrain selon son affinité avec le jeu (les terrains Bazar profitent à toutes).']];
+  [/Terrain/,'Couvre 1 à 3 cases de ton plateau. Chaque créature posée dessus profite de l’effet du terrain selon son affinité avec le jeu (les terrains neutres profitent à toutes).']];
 
 // ----- personnages : 3 versions chacun (commune, rare, épique), même illustration -----
 // sc = affinité (0-2) sur chaque jeu ; cry = Cri d'arrivée, last = Agonie, sot/eot = début/fin de ton tour
@@ -928,61 +938,61 @@ mikalev:{n:'Mikalev',fac:['alien'],sc:{wow:0,dofus:0,lol:1,cs:2},lore:'Vrai shin
   {st:'Le Réparateur',c:3,a:1,h:3,kw:['afk'],eot:[{t:'heal',n:2},{t:'healA',n:2,rnd:1}],tx:'AFK. Fin de ton tour : soigne ton héros de 2 PV et une autre créature alliée blessée de 2 PV.'},
   {st:'Voix de Taz',c:5,a:3,h:4,kw:['afk'],eot:[{t:'heal',n:2},{t:'healA',n:2,all:1}],tx:'AFK. Fin de ton tour : soigne ton héros et toutes tes créatures de 2 PV.'}]},
 coco:{n:'Coco',fac:['ravages','weebos'],sc:{wow:1,dofus:0,lol:1,cs:1},lore:'« Si j’avais lancé mon E avant mon A, ça se passait bien ! » Flash en 1v4, meurt, et trouve toujours une explication absurde. A vécu en communauté autosuffisante avec des zadistes mangeurs de potiron.',v:[
-  {st:'Flash raté',c:1,a:2,h:1,last:[{t:'draw',n:1}],tx:'Agonie : pioche 1 carte.'},
+  {st:'Esprit tourmenté',c:2,a:0,h:5,kw:['tilt'],tilt:[{t:'draw',n:3},{t:'discSelf',n:2}],tx:'Tilt : pioche 3 cartes, puis défausse 2 cartes au hasard.'},
   {st:'Flash en 1v4',c:2,a:2,h:2,kw:['hate'],last:[{t:'draw',n:1}],tx:'Hâte. Agonie : pioche 1 carte.'},
   {st:'Roi du potiron',c:4,a:5,h:3,kw:['hate'],last:[{t:'draw',n:1},{t:'rnd',n:2,times:1}],tx:'Hâte. Agonie : pioche 1 carte et inflige 2 dégâts à un ennemi au hasard.'}]},
 xulyes:{n:'Xulyes',fac:['farmer'],sc:{wow:2,dofus:0,lol:1,cs:1},lore:'Tourelle de commandement du serveur : il distribue des directives, et gare à toi si tu ne les suis pas, il casse son clavier. 90 heures par semaine dans son resto, et toujours un ARAM Mayhem à lancer.',v:[
-  {st:'Le Distributeur',c:2,a:2,h:2,cry:[{t:'add',k:'cadeau',n:1}],tx:'Cri d’arrivée : ajoute un Cadeau à ta main.'},
-  {st:'Tourelle de commandement',c:3,a:3,h:5,cry:[{t:'buff',a:1,h:0,others:1}],tx:'Cri d’arrivée : tes autres créatures gagnent +1 ATK.'},
-  {st:'Le Restaurateur',c:5,a:4,h:6,cry:[{t:'add',k:'cadeau',n:1}],sot:[{t:'add',k:'cadeau',n:1},{t:'or',n:1}],tx:'Cri d’arrivée : ajoute un Cadeau à ta main. Début de ton tour : ajoute un Cadeau à ta main et gagne 1 Or.'}]},
+  {st:'Briseur d’écrans',c:1,a:2,h:1,last:[{t:'rnd2',n:1}],tx:'Agonie : 1 dégât à deux ennemis différents au hasard.'},
+  {st:'Serveur charmant',c:3,a:3,h:4,cry:[{t:'or',n:3,if:{ngt:1}}],tx:'Cri d’arrivée : s’il n’est pas sur un terrain de jeu, gagne 3 Or.'},
+  {st:'Commandant des armées',c:6,a:4,h:5,kw:['vip'],aura:{others:1,a:1,h:1},tx:'VIP. Tes autres créatures ont +1/+1.'}]},
 losk:{n:'Losk',fac:['expats'],sc:{wow:1,dofus:1,lol:1,cs:1},lore:'Déménagé en Andorre pour la fiscalité. Ne parle plus que de bitcoin. Sous son déguisement de requin, il optimise tout, surtout ta trésorerie.',v:[
-  {st:'Le Requin',c:2,a:2,h:3,sot:[{t:'or',n:1}],tx:'Début de ton tour : gagne 1 Or.'},
+  {st:'Dévoreur de chapeau',c:2,a:4,h:5,cry:[{t:'bounceOwn',tg:'ac'}],tx:'Cri d’arrivée : renvoie une de tes autres créatures dans ta main (s’il est seul, c’est lui qui y retourne).'},
   {st:'Bitcoin Maxi',c:3,a:3,h:5,cry:[{t:'dblOr',max:5}],tx:'Cri d’arrivée : double ton Or (+5 max).'},
-  {st:'Exilé fiscal',c:5,a:5,h:6,sot:[{t:'or',n:2}],tdisc:1,tx:'Début de ton tour : gagne 2 Or. Tes terrains coûtent 1 Or de moins.'}]},
+  {st:'Crypto farmer',c:5,a:4,h:5,sot:[{t:'or',n:5}],tx:'Début de ton tour : gagne 5 Or.'}]},
 sadamie:{n:'Sadamie',fac:['ravages','alien'],sc:{wow:1,dofus:1,lol:1,cs:1},lore:'Pour lui, le jeu n’est pas une compétition, c’est un amusement ;). Son activité préférée : invoquer Chanssus pour atteindre le combo le plus broken de l’histoire. Triche aux jeux de cartes… et perd quand même.',v:[
-  {st:'Le Tricheur',c:2,a:2,h:2,cry:[{t:'add',k:'chanssus',n:1}],last:[{t:'drawOpp',n:1}],tx:'Cri d’arrivée : ajoute un Chanssus à ta main. Agonie : l’adversaire pioche 1 carte.'},
-  {st:'Invocateur de Chanssus',c:3,a:3,h:3,cry:[{t:'add',k:'chanssus',n:2}],last:[{t:'drawOpp',n:1}],tx:'Cri d’arrivée : ajoute 2 Chanssus à ta main. Agonie : l’adversaire pioche 1 carte.'},
-  {st:'Combo Broken',c:5,a:5,h:5,cry:[{t:'add',k:'chanssus0',n:2}],last:[{t:'drawOpp',n:1}],tx:'Cri d’arrivée : ajoute 2 Chanssus truqués (coût 0) à ta main. Agonie : l’adversaire pioche 1 carte.'}]},
+  {st:'Adorateur de Chanssus',c:2,a:2,h:2,cry:[{t:'add',k:'chanssus',n:1}],last:[{t:'drawOpp',n:1}],tx:'Cri d’arrivée : ajoute un Chanssus à ta main. Agonie : l’adversaire pioche 1 carte.'},
+  {st:'Agent du chaos',c:3,a:3,h:3,cry:[{t:'deckSummon'}],tx:'Cri d’arrivée : chaque joueur invoque une créature au hasard de son deck.'},
+  {st:'Comboteur fou',c:5,a:5,h:5,cry:[{t:'add',k:'chanssus0',n:2}],last:[{t:'drawOpp',n:1}],tx:'Cri d’arrivée : ajoute 2 Chanssus truqués (coût 0) à ta main. Agonie : l’adversaire pioche 1 carte.'}]},
 lasorius:{n:'Lasorius',fac:['farmer','weebos'],sc:{wow:2,dofus:1,lol:0,cs:0},lore:'A honte de sa voix de fillette de 8 ans : mute 90 % du temps, pas de micro depuis 7 ans. Mille heures par mois sur WoW. Prêt à se couper le bras pour que son pire ennemi perde sa main.',v:[
   {st:'Le Muet',c:2,a:2,h:2,cry:[{t:'hurtMe',n:1},{t:'dmg',n:2,tg:'ec'}],tx:'Cri d’arrivée : ton héros subit 1 dégât, puis inflige 2 dégâts à une créature ennemie.'},
-  {st:'Bras coupé',c:3,a:3,h:3,cry:[{t:'hurtMe',n:3},{t:'dmg',n:4,tg:'ec'}],tx:'Cri d’arrivée : ton héros subit 3 dégâts, puis inflige 4 dégâts à une créature ennemie.'},
-  {st:'Voix de fillette',c:5,a:4,h:5,kw:['insolence'],cry:[{t:'hurtMe',n:2},{t:'disc',n:2}],tx:'Insolence. Cri d’arrivée : ton héros subit 2 dégâts ; l’adversaire défausse 2 cartes au hasard.'}]},
+  {st:'Avatar de la rancune',c:3,a:3,h:3,cry:[{t:'hurtMe',n:3},{t:'dmg',n:4,tg:'ec'}],tx:'Cri d’arrivée : ton héros subit 3 dégâts, puis inflige 4 dégâts à une créature ennemie.'},
+  {st:'Instigateur sournois',c:7,a:1,h:1,cry:[{t:'swap',tg:'ec',tg2:'acs'}],tx:'Cri d’arrivée : échange une de tes créatures (lui compris) contre une créature ennemie : chacune passe dans l’autre camp.'}]},
 osiris:{n:'Osiris',fac:['toxic'],sc:{wow:0,dofus:2,lol:1,cs:0},lore:'Capuche, lunettes noires, jamais un mot de trop. Son venin parle pour lui. Dreos le traite de débile, Laloutre le provoque ; il n’oublie rien. Il devient redoutable quand Maki est dans les parages.',v:[
-  {st:'La Capuche',c:2,a:2,h:2,kw:['venin'],tx:'Venin.'},
-  {st:'Le Venimeux',c:3,a:3,h:4,kw:['venin'],cry:[{t:'buff',a:2,h:2,self:1,if:{has:'maki'}}],tx:'Venin. Cri d’arrivée : si Maki est sur ton plateau, gagne +2/+2.'},
-  {st:'Lunettes noires',c:5,a:4,h:5,kw:['venin'],cry:[{t:'pzDbl'},{t:'buff',a:2,h:2,self:1,if:{has:'maki'}}],tx:'Venin. Cri d’arrivée : double le Venin de tous les ennemis. Si Maki est sur ton plateau, gagne +2/+2.'}]},
+  {st:'Joueur retraité',c:2,a:0,h:4,eot:[{t:'draw',n:1,if:{ter:'lol'}},{t:'or',n:2,if:{ter:'dofus'}}],tx:'Fin de ton tour : sur un terrain LoL, pioche 1 carte ; sur un terrain Dofus, gagne 2 Or.'},
+  {st:'Jak',c:3,a:2,h:3,last:[{t:'summon',k:'mmejack',n:1}],tx:'Agonie : invoque Mme Jack, une vache 3/6.'},
+  {st:'Expert bluffeur',c:5,a:4,h:5,kw:['venin'],cry:[{t:'pzDbl'},{t:'buff',a:2,h:2,self:1,if:{has:'maki'}}],tx:'Venin. Cri d’arrivée : double le Venin de tous les ennemis. Si Maki est sur ton plateau, gagne +2/+2.'}]},
 maki:{n:'Maki',fac:['alien'],sc:{wow:0,dofus:2,lol:2,cs:0},lore:'Représentante de la noblesse, nom à 14 particules. Son lait est réputé dans tout l’État Arcanique. Inséparable d’Osiris.',v:[
-  {st:'La Laitière',c:2,a:2,h:3,cry:[{t:'heal',n:3}],tx:'Cri d’arrivée : soigne ton héros de 3 PV.'},
-  {st:'Noblesse oblige',c:3,a:2,h:3,cry:[{t:'heal',n:4},{t:'buff',a:2,h:2,self:1,if:{has:'osiris'}}],tx:'Cri d’arrivée : soigne ton héros de 4 PV. Si Osiris est sur ton plateau, gagne +2/+2.'},
-  {st:'Quatorze particules',c:5,a:3,h:5,kw:['rempart'],cry:[{t:'heal',n:5},{t:'pairBuff',k:'osiris',a:2,h:2,if:{has:'osiris'}}],tx:'Rempart. Cri d’arrivée : soigne ton héros de 5 PV. Si Osiris est sur ton plateau, vous gagnez tous les deux +2/+2.'}]},
+  {st:'Fan d’Osiris',c:2,a:2,h:3,withB:{b:'osiris',a:1,h:2},tx:'+1/+2 tant que tu contrôles un Osiris.'},
+  {st:'Chef coach de crêpe au sucre',c:2,a:2,h:3,cry:[{t:'affUp',g:'lol',tg:'ac'}],tx:'Cri d’arrivée : une de tes créatures gagne +1 d’affinité LoL (2 maximum).'},
+  {st:'Aristocrate condescendant',c:4,a:3,h:6,tax:1,tx:'Pour l’attaquer, l’adversaire doit te payer 1 Or (sans Or, il ne peut pas l’attaquer).'}]},
 randal:{n:'George Rendal',fac:['expats','alien'],sc:{wow:2,dofus:2,lol:2,cs:2},lore:'Anglais. A déjà tout fait, partout, avec tout le monde, selon lui. Chaque récit est invérifiable, et personne n’ose vérifier.',v:[
   {st:'Le Conteur',c:2,a:2,h:2,cry:[{t:'rand',list:[[{t:'buff',a:1,h:1,self:1}],[{t:'dmgFace',n:2}],[{t:'draw',n:1}],[{t:'summon',k:'pleb',n:1}],[{t:'heal',n:3}]]}],tx:'Cri d’arrivée : petite histoire au hasard : +1/+1, 2 dégâts à l’adversaire, pioche 1, invoque 1 Pleb ou soigne 3.'},
   {st:'L’Anglais',c:3,a:3,h:3,cry:[{t:'rand',list:[[{t:'buff',a:2,h:2,self:1}],[{t:'dmgFace',n:4}],[{t:'draw',n:2}],[{t:'summon',k:'pleb',n:2}],[{t:'heal',n:5}]]}],tx:'Cri d’arrivée : raconte une histoire au hasard : +2/+2, 4 dégâts à l’adversaire, pioche 2, invoque 2 Plebs ou soigne 5.'},
   {st:'Il a tout fait',c:5,a:4,h:4,cry:[{t:'rand',times:2,list:[[{t:'buff',a:2,h:2,self:1}],[{t:'dmgFace',n:4}],[{t:'draw',n:2}],[{t:'summon',k:'pleb',n:2}],[{t:'heal',n:5}]]}],tx:'Cri d’arrivée : raconte 2 histoires au hasard (+2/+2, 4 dégâts à l’adversaire, pioche 2, 2 Plebs ou soin 5).'}]},
-sada:{n:'Sada',fac:['expats'],sc:{wow:1,dofus:1,lol:1,cs:2},lore:'PAN PAN BOOM BOOM. Mémoire de poisson rouge, cœur d’or, poils partout. Instamute + block rien qu’à la voix. Docteur du serveur : il règle vos soucis informatiques depuis l’Australie, où il vient de s’installer.',v:[
-  {st:'PAN PAN',c:2,a:2,h:3,cry:[{t:'blk',tg:'ec'}],tx:'Cri d’arrivée : Bloque une créature ennemie.'},
-  {st:'BOOM BOOM',c:3,a:3,h:5,cry:[{t:'mute',tg:'ec'},{t:'blk'}],tx:'Cri d’arrivée : Mute et Bloque une créature ennemie.'},
-  {st:'Docteur d’Australie',c:5,a:4,h:6,cry:[{t:'mute',tg:'ec'},{t:'blk'}],eot:[{t:'healA',n:2,all:1}],tx:'Cri d’arrivée : Mute et Bloque une créature ennemie. Fin de ton tour : soigne toutes tes créatures de 2 PV.'}]},
+sada:{n:'Sadagod',fac:['expats'],sc:{wow:1,dofus:1,lol:1,cs:2},lore:'PAN PAN BOOM BOOM. Mémoire de poisson rouge, cœur d’or, poils partout. Instamute + block rien qu’à la voix. Docteur du serveur : il règle vos soucis informatiques depuis l’Australie, où il vient de s’installer.',v:[
+  {st:'Instamuter',c:2,a:2,h:3,cry:[{t:'mute',tg:'c'}],tx:'Cri d’arrivée : Mute une créature.'},
+  {st:'Poisson rouge',c:1,a:2,h:2,cry:[{t:'discSelf',n:1}],last:[{t:'draw',n:1}],tx:'Cri d’arrivée : défausse 1 carte au hasard. Agonie : pioche 1 carte.'},
+  {st:'Master baiter',c:5,a:4,h:5,kw:['vip'],xatk:1,tx:'VIP. Chaque fois qu’une de tes créatures meurt pendant le tour adverse, il peut attaquer une fois de plus à ton prochain tour.'}]},
 laloutre:{n:'Laloutre',fac:['toxic','xeno'],sc:{wow:1,dofus:0,lol:1,cs:2},lore:'Poste des clips CS toute la journée en écoutant du classique. Pense que la micro est un cerveau, et ne le lui dis surtout pas. Adore se clasher avec Osiris et sa bande.',v:[
   {st:'Le Clippeur',c:2,a:2,h:3,kw:['tilt'],cry:[{t:'rnd',n:1,times:1}],tilt:[{t:'rnd',n:1,times:1}],tx:'Cri d’arrivée : lance 1 missile. Tilt : lance 1 missile.'},
   {st:'Le Provocateur',c:3,a:3,h:4,kw:['tilt'],cry:[{t:'clash',k:'osiris',n:3,n2:1}],tilt:[{t:'taunt'}],tx:'Cri d’arrivée : 3 dégâts à un Osiris ennemi s’il y en a un, sinon 1 dégât à un ennemi au hasard. Tilt : gagne Rempart.'},
   {st:'Mélomane toxique',c:5,a:3,h:4,kw:['tilt','venin'],cry:[{t:'clashT',k:'osiris',n:3,tg:'ec'}],tilt:[{t:'pzAll',n:1}],tx:'Venin. Cri d’arrivée : 3 dégâts à une créature ennemie (un Osiris est détruit). Tilt : 1 Venin à tous les ennemis.'}]},
 elkatrix:{n:'Elkatrix',fac:['toxic'],sc:{wow:2,dofus:2,lol:2,cs:1},lore:'Meilleur moine du monde, meilleur casino du monde ; sinon, à temps de jeu égal, il vous le fait payer. 25 comptes bannis sur LoL et il revient toujours. Vient de se faire opérer de l’appendicite.',v:[
-  {st:'Compte n°25',c:2,a:2,h:2,kw:['respawn'],tx:'Respawn.'},
-  {st:'Le Banni',c:4,a:3,h:3,kw:['venin','respawn'],tx:'Venin. Respawn.'},
-  {st:'Meilleur moine du monde',c:7,a:5,h:5,kw:['venin','respawn'],rsFull:1,tx:'Venin. Respawn : revient avec tous ses PV.'}]},
+  {st:'Doux comme un agneau',c:3,a:1,h:1,dblLol:1,tx:'Les effets des terrains LoL sous tes créatures s’appliquent deux fois.'},
+  {st:'Top 3 Guardian',c:4,a:3,h:5,sot:[{t:'healT',g:'wow',n:2}],tx:'Début de ton tour : soigne de 2 PV tes créatures sur un terrain WoW.'},
+  {st:'Unleashed',c:5,a:4,h:5,allyDieLol:{a:2,h:2},tx:'Chaque fois qu’une de tes autres créatures meurt sur un terrain LoL, gagne +2/+2.'}]},
 dreos:{n:'Dreos',fac:['farmer','xeno'],sc:{wow:2,dofus:2,lol:1,cs:0},lore:'Fait son footing en forêt à 3 h du matin : il se couche ou il se lève, personne ne sait. Souffre-douleur d’Elkatrix, il se venge en traitant Osiris de débile. Gifted sur les MMO, ungifted sur le reste.',v:[
-  {st:'Joggeur de 3 h',c:2,a:1,h:4,kw:['rempart'],tx:'Rempart.'},
-  {st:'Le Souffre-douleur',c:4,a:3,h:5,kw:['rempart','croissance'],tx:'Rempart. Croissance.'},
-  {st:'Gifted des MMO',c:6,a:2,h:6,kw:['rempart','croissance','egide'],tx:'Rempart. Croissance. Égide.'}]},
+  {st:'Mot de merde',c:2,a:1,h:3,kw:['rempart'],pzBack:1,tx:'Rempart. Chaque créature qui l’attaque reçoit 1 Venin.'},
+  {st:'Rusheur serveur',c:3,a:3,h:3,kw:['hate'],cry:[{t:'draw',n:1,if:{ter:'dofus'}}],tx:'Hâte. Cri d’arrivée : s’il est posé sur un terrain Dofus, pioche 1 carte.'},
+  {st:'Surrender to madness',c:4,a:3,h:7,cry:[{t:'madness'}],sot:[{t:'madness'}],last:[{t:'lose'}],tx:'Cri d’arrivée, puis début de chacun de tes tours : gagne N Démoflux et N Or, et pioche N cartes (N = 1, puis 2, puis 3…). Agonie : tu perds la partie.'}]},
 minuit:{n:'Minuit',fac:['weebos','farmer'],sc:{wow:2,dofus:0,lol:1,cs:0},lore:'Chill, turbo weeb, fan inconditionnelle de Taylor Swift. Vit pour les GROS NOMBRES : son pire souvenir reste le stat squish de WoW, quand ses crits sont passés de 15 millions à 20 000.',v:[
-  {st:'Turbo weeb',c:2,a:2,h:2,kw:['siphon'],tx:'Siphon.'},
-  {st:'Swiftie',c:4,a:3,h:4,kw:['siphon'],cry:[{t:'dbl',tg:'ac',max:3}],tx:'Siphon. Cri d’arrivée : double l’ATK d’une autre créature alliée (+3 max).'},
-  {st:'GROS NOMBRES',c:6,a:3,h:5,kw:['siphon'],cry:[{t:'dblAH',tg:'ac',max:4}],tx:'Siphon. Cri d’arrivée : double l’ATK et les PV d’une autre créature alliée (+4/+4 max).'}]},
+  {st:'Golem Pfizer',c:2,a:0,h:3,healGrow:1,tx:'Gagne +1 ATK chaque fois qu’il est soigné.'},
+  {st:'Raciste originel',c:3,a:3,h:3,cry:[{t:'dmgFac',f:'alien',n:3}],tx:'Cri d’arrivée : inflige 3 dégâts à toutes les créatures Extraterrestres (des deux camps).'},
+  {st:'Chef de raid',c:6,a:4,h:5,aura:{g:'wow',a:2,h:1},last:[{t:'killAll'}],tx:'Tes créatures sur un terrain WoW ont +2/+1. Agonie : détruit toutes les créatures.'}]},
 lisdoon:{n:'Lisdoon',fac:['toxic','ravages'],sc:{wow:1,dofus:0,lol:2,cs:0},lore:'Tout doux d’habitude, ancien gros reconverti en séducteur. Lance une partie de LoL et le gremlin se réveille, sans pitié. Va bientôt être père, et ses commentaires ressemblent à ceux d’une IA de boomer.',v:[
-  {st:'Tout doux',c:2,a:2,h:1,last:[{t:'summon',k:'heritier',n:1}],tx:'Agonie : invoque un Héritier.'},
-  {st:'Le Gremlin',c:4,a:3,h:4,gr:{g:'lol',a:2,h:1},last:[{t:'summon',k:'heritier',n:1}],tx:'Gremlin : +2/+1 sur un terrain LoL. Agonie : invoque un Héritier.'},
-  {st:'Futur papa',c:6,a:4,h:6,gr:{g:'lol',a:3,h:2},cry:[{t:'summon',k:'heritier',n:1}],last:[{t:'summon',k:'heritier',n:1}],tx:'Gremlin : +3/+2 sur un terrain LoL. Cri d’arrivée et Agonie : invoque un Héritier.'}]},
+  {st:'Gomuscu',c:2,a:1,h:3,offGT:{kw:['croissance']},tx:'Croissance tant qu’il n’est pas sur un terrain de jeu.'},
+  {st:'Patriarche',c:3,a:2,h:3,last:[{t:'summon',k:'heritier',n:1}],tx:'Agonie : invoque un Héritier (Croissance).'},
+  {st:'Roro',c:6,a:5,h:6,onT:{g:'lol',kw:['frenesie']},tx:'Rage de Roro : sur un terrain LoL, peut attaquer deux fois par tour.'}]},
 loractys:{n:'Loractys',fac:['expats'],sc:{wow:1,dofus:2,lol:1,cs:1},lore:'Parle à toute vitesse, toujours depuis la Chine. Sigma player à l’esprit tordu : il trouve le bug que personne n’avait vu, sur tous les jeux. Goat fast learner. Se marie bientôt.',v:[
   {st:'Débit rapide',c:2,a:2,h:2,kw:['hate'],tx:'Hâte.'},
   {st:'Chasseur de bugs',c:4,a:4,h:5,kw:['hate'],cry:[{t:'steal'}],tx:'Hâte. Cri d’arrivée : ajoute à ta main une copie d’une carte au hasard de la main adverse.'},
@@ -992,33 +1002,59 @@ simon:{n:'Simon',fac:['toxic','xeno'],sc:{wow:0,dofus:0,lol:2,cs:1},lore:'Monolo
   {st:'Roi de l’insolence',c:4,a:3,h:6,kw:['insolence'],eot:[{t:'blk',rnd:1}],tx:'Insolence. Fin de ton tour : Bloque une créature ennemie au hasard.'},
   {st:'Salle du temps',c:7,a:4,h:6,kw:['insolence'],eot:[{t:'blk',rnd:1,n:2}],tx:'Insolence. Fin de ton tour : Bloque 2 créatures ennemies au hasard.'}]},
 homz:{n:'Homz',fac:['farmer','ravages'],sc:{wow:2,dofus:0,lol:1,cs:1},lore:'Fan d’armes, de tanks, d’avions et de missiles ; OTP WoW Classic, rang 14 rien que ça. Scrolle plus de 2000 réels par jour. Très contrarié quand on lui confisque son joint.',v:[
-  {st:'Le Militaire',c:3,a:2,h:2,cry:[{t:'rnd',n:1,times:2}],tx:'Cri d’arrivée : lance 2 missiles.'},
-  {st:'Lance-missiles',c:5,a:5,h:6,cry:[{t:'rnd',n:1,times:4}],tx:'Cri d’arrivée : lance 4 missiles.'},
-  {st:'Rang 14',c:7,a:6,h:6,cry:[{t:'rnd',n:1,times:6}],eot:[{t:'rnd',n:1,times:1}],tx:'Cri d’arrivée : lance 6 missiles. Fin de ton tour : lance 1 missile.'}]},
+  {st:'Scrolleur invétéré',c:2,a:3,h:4,cry:[{t:'blk',tg:'ec'},{t:'blkSelf',n:3}],tx:'Cri d’arrivée : Bloque une créature ennemie, mais il est lui-même Bloqué pendant ses 2 prochains tours.'},
+  {st:'À la recherche du R14',c:4,a:3,h:5,kw:['rempart'],killGrow:{g:'wow',a:1,h:1},tx:'Rempart. Chaque fois qu’il tue une créature en combat sur un terrain WoW, gagne +1/+1.'},
+  {st:'Porteur de la flamme',c:5,a:4,h:6,kw:['vip'],aura:{fac:'xeno',a:1},xenoAll:1,tx:'VIP. Tes Xénophobes ont +1 ATK et leur bonus de famille s’applique contre toutes les créatures.'}]},
 boku:{n:'Boku',fac:['weebos','xeno'],sc:{wow:0,dofus:0,lol:2,cs:1},lore:'GM et turbo weeb, OTP Katarina : chaque kill donne envie d’en refaire un. Ne s’est énervé que DEUX fois dans toute sa vie. Il en reste une.',v:[
-  {st:'OTP Katarina',c:3,a:3,h:3,kw:['hate'],tx:'Hâte.'},
-  {st:'Le GM',c:5,a:4,h:4,kw:['hate'],reset:1,tx:'Hâte. Reset : après avoir détruit une créature en attaquant, peut attaquer à nouveau.'},
-  {st:'La Troisième Colère',c:7,a:5,h:4,kw:['hate','tilt'],reset:1,tilt:[{t:'dmgAll',n:1}],tx:'Hâte. Reset : après avoir détruit une créature en attaquant, peut attaquer à nouveau. Tilt : 1 dégât à toutes les créatures ennemies.'}]},
+  {st:'Présence apaisante',c:2,a:2,h:3,eot:[{t:'healAdj',n:1}],tx:'Fin de ton tour : soigne de 1 PV les créatures à côté de lui.'},
+  {st:'Japan Expo enjoyer',c:4,a:3,h:4,cry:[{t:'summon',k:'weeb',n:2}],tx:'Cri d’arrivée : invoque 2 Weebs 1/1 (Weebos).'},
+  {st:'Maître KATARINA',c:7,a:5,h:4,kw:['hate','tilt'],reset:1,tilt:[{t:'dmgAll',n:1}],tx:'Hâte. Reset : après avoir détruit une créature en attaquant, peut attaquer à nouveau. Tilt : 1 dégât à toutes les créatures ennemies.'}]},
 haddmi:{n:'Haddmi',fac:['xeno'],sc:{wow:0,dofus:0,lol:1,cs:2},lore:'Meneur d’un discord rival : une armée à lui tout seul. Bosse chez Vitality, niveau 10 sur FACEIT. Se vexe au quart de tour, et ça le fait tilt.',v:[
   {st:'Le Vexé',c:3,a:3,h:5,kw:['tilt'],cry:[{t:'summon',k:'pleb',n:1}],tilt:[{t:'summon',k:'pleb',n:1}],tx:'Cri d’arrivée : invoque 1 Pleb (son armée). Tilt : invoque 1 Pleb.'},
-  {st:'Chef de guerre',c:5,a:4,h:6,kw:['tilt'],cry:[{t:'summon',k:'pleb',n:2}],tilt:[{t:'buff',a:1,h:1,k:'pleb'}],tx:'Cri d’arrivée : invoque 2 Plebs (son armée). Tilt : tes Plebs gagnent +1/+1.'},
-  {st:'Niveau 10 FACEIT',c:8,a:5,h:8,kw:['frenesie','tilt'],tilt:[{t:'dmgFace',n:2}],tx:'Frénésie. Tilt : inflige 2 dégâts au héros adverse (headshot).'}]},
+  {st:'Chef dissident',c:4,a:3,h:3,cry:[{t:'ctl',tg:'ec',tgf:'c2'}],tx:'Cri d’arrivée : prend le contrôle d’une créature ennemie qui coûte 2 ou moins.'},
+  {st:'Sniper d’élite',c:6,a:4,h:5,kw:['tilt'],noRet:1,tilt:[{t:'grow',a:1,h:0}],tx:'Ne subit pas de dégâts quand il attaque. Tilt : gagne +1 ATK.'}]},
 potatoll:{n:'Potatoll',fac:['ravages'],sc:{wow:2,dofus:1,lol:2,cs:1},lore:'Plus gros troll du serveur, meneur de la bande et complètement ravagé. Quand il lance les dés, c’est tout l’État Arcanique qui tremble.',v:[
-  {st:'Petit troll',c:3,a:2,h:3,cry:[{t:'chaos'}],tx:'Cri d’arrivée : déclenche un effet du Bazar au hasard.'},
-  {st:'Le Ravagé',c:6,a:5,h:7,sot:[{t:'chaos'}],tx:'Début de ton tour : déclenche un effet du Bazar au hasard (deux fois sur un terrain Bazar).'},
-  {st:'Maître du Bazar',c:7,a:6,h:8,sot:[{t:'chaos'}],eot:[{t:'chaos'}],tx:'Début et fin de ton tour : déclenche un effet du Bazar au hasard (deux fois sur un terrain Bazar).'}]},
+  {st:'Serviteur de Kiwi',c:2,a:2,h:3,cry:[{t:'summon',k:'kiwi',n:1}],tx:'Cri d’arrivée : invoque Kiwi, un chat 1/1 avec Hâte.'},
+  {st:'Désinstallation sauvage',c:3,a:3,h:3,last:[{t:'tdestroy'}],tx:'Agonie : détruit un terrain adverse au hasard.'},
+  {st:'Fou du Bazar',c:7,a:6,h:8,sot:[{t:'chaos'}],eot:[{t:'chaos'}],tx:'Début et fin de ton tour : déclenche un effet du Bazar au hasard (deux fois sur un terrain neutre).'}]},
 bambou:{n:'Golwyd Bambou',fac:['alien'],sc:{wow:1,dofus:0,lol:1,cs:1},lore:'Créateur du serveur. N’y a pas mis les pieds depuis 20 ans (??). Il revient, regarde l’état du salon, et décide de tout reformater.',v:[
   {st:'Le Fantôme',c:3,a:3,h:3,kw:['afk'],tx:'AFK.'},
   {st:'Le Créateur',c:6,a:4,h:5,kw:['afk'],cry:[{t:'banTopE'}],tx:'AFK. Cri d’arrivée : Bannit la créature ennemie la plus coûteuse.'},
-  {st:'Grand Reformatage',c:10,a:5,h:5,kw:['afk'],cry:[{t:'wipe'}],tx:'AFK. Cri d’arrivée : Bannit toutes les autres créatures.'}]}};
+  {st:'Grand Reformatage',c:10,a:5,h:5,kw:['afk'],cry:[{t:'wipe'}],tx:'AFK. Cri d’arrivée : Bannit toutes les autres créatures.'}]},
+// nouveaux personnages : r = rareté de chaque version (toutes ne sont pas encore créées) ; sym/col = illustration en attendant une photo
+takk:{n:'Takk',fac:['expats','weebos'],sc:{wow:1,dofus:1,lol:1,cs:1},sym:'✈',col:'#e86fb0',lore:'Toujours entre deux voyages, et toujours avec une nouvelle waifu à son retour.',v:[
+  {r:1,st:'TN Lacoste',c:2,a:3,h:2,kw:['hate'],tx:'Hâte.'},
+  {r:2,st:'Enchaîneur de waifus',c:3,a:2,h:3,cry:[{t:'summon',k:'waifu',n:1}],onBack:[{t:'summon',k:'waifu',n:1}],tx:'Cri d’arrivée, et à chaque retour de voyage : invoque une Waifu 1/1 (Weebos).'}]},
+kirua:{n:'Kirua',fac:['weebos'],sc:{wow:1,dofus:1,lol:1,cs:1},sym:'❄',col:'#7cc8ff',lore:'Panthère sur le terrain, reine des neiges en dehors, et le serveur plante dès que Kirua se connecte.',v:[
+  {r:1,st:'Crasheur de serveur',c:2,a:2,h:3,cry:[{t:'blk',rnd:1,n:1}],tx:'Cri d’arrivée : Bloque une créature ennemie au hasard.'},
+  {r:2,st:'La panthère',c:4,a:3,h:4,kw:['hate','tilt'],tilt:[{t:'dmgFace',n:3}],tx:'Hâte. Tilt : inflige 3 dégâts au héros adverse.'},
+  {r:3,st:'La reine des neiges',c:5,a:4,h:5,cry:[{t:'blizzard'}],tx:'Cri d’arrivée : pose le terrain Blizzard (2 cases) sur le plateau adverse : les créatures dessus ne peuvent pas attaquer tant qu’il reste.'}]},
+rasta:{n:'Rasta',fac:['toxic'],sc:{wow:1,dofus:1,lol:1,cs:1},sym:'☁',col:'#6fbf4a',lore:'On le sent arriver avant de le voir. Quand on lui dit « viens dehors », il le prend au pied de la lettre.',v:[
+  {r:2,st:'Viens dehors',c:3,a:3,h:3,cry:[{t:'summon',k:'piccolo',n:1,if:{gt:1}},{t:'tdestroy',self:1,here:1,if:{gt:1}}],tx:'Cri d’arrivée : s’il est posé sur un terrain de jeu, détruit ce terrain et invoque Piccolo (Extraterrestre 2/3, Siphon).'},
+  {r:3,st:'Aura nauséabonde',c:6,a:4,h:5,noPz:1,cry:[{t:'pzEvery',n:2}],sot:[{t:'pzAll',n:1}],tx:'Insensible au Venin. Cri d’arrivée : 2 Venin à toutes les autres créatures. Début de ton tour : 1 Venin à tous les ennemis.'}]},
+natingaz:{n:'Natingaz',fac:['farmer'],sc:{wow:1,dofus:1,lol:1,cs:1},sym:'⌨',col:'#9aa7b0',lore:'Privé d’ordinateur : chaque fois qu’il s’approche d’un jeu, ça fait mal, mais il en tire toujours quelque chose.',v:[
+  {r:1,st:'Privé d’ordinateur',c:2,a:2,h:3,kw:['tilt'],cry:[{t:'hurtSelf',n:2,if:{gt:1}}],tilt:[{t:'draw',n:1}],tx:'Cri d’arrivée : s’il est posé sur un terrain de jeu, subit 2 dégâts. Tilt : pioche 1 carte.'}]},
+gobi:{n:'Gobi',fac:['ravages'],sc:{wow:2,dofus:0,lol:1,cs:0},sym:'⚔',col:'#c0563b',lore:'Il a vaincu Sludgefist. Il mène sa troupe de noobs au combat, sans trop savoir dans quelle direction.',v:[
+  {r:1,st:'Chef des noobs',c:2,a:2,h:2,kw:['deso'],cry:[{t:'hurtSelf',n:1},{t:'summon',k:'noob',n:2}],tx:'Désorienté. Cri d’arrivée : subit 1 dégât et invoque 2 Noobs 1/1 Désorientés.'},
+  {r:2,st:'Slayer of Sludgefist',c:3,a:3,h:4,save1:1,tx:'La première fois qu’il devrait mourir, il reste à 1 PV et devient invincible jusqu’à ton prochain tour.'}]},
+lanfear:{n:'Lanfear',fac:['weebos'],sc:{wow:1,dofus:1,lol:1,cs:1},sym:'🎙',col:'#b07cff',lore:'Son micro grésille tellement que plus personne ne sait où il en est.',v:[
+  {r:2,st:'Micro de merde',c:4,a:3,h:5,cry:[{t:'desoAll'}],tx:'Cri d’arrivée : toutes les créatures ennemies deviennent Désorientées.'}]},
+saja:{n:'Saja',fac:['xeno'],sc:{wow:1,dofus:1,lol:1,cs:1},sym:'⚖',col:'#8a8f98',lore:'Tout ce qui est à sa gauche s’affaiblit, tout ce qui est à sa droite se renforce.',v:[
+  {r:3,st:'Fascisme incarné',c:5,a:4,h:5,aura:{pos:1},tx:'Les créatures à sa gauche ont -1/-1, celles à sa droite +1/+1 (sur les deux plateaux).'}]}};
 const BASEK=Object.keys(BASES);
 
 const CARDS={};
-BASEK.forEach(b=>{const B=BASES[b];B.v.forEach((v,j)=>{CARDS[b+(j+1)]=Object.assign({t:'c',n:B.n,base:b,art:b,r:j+1,fac:B.fac,sc:B.sc,lore:B.lore},v)})});
+BASEK.forEach(b=>{const B=BASES[b];B.v.forEach((v,j)=>{const r=v.r||j+1;CARDS[b+r]=Object.assign({t:'c',n:B.n,base:b,art:b,r,fac:B.fac,sc:B.sc,lore:B.lore,sym:B.sym,col:B.col},v)})});
 Object.assign(CARDS,{
 // ----- jetons -----
 pleb:{t:'c',n:'Pleb',r:1,c:1,a:1,h:1,fac:[],sc:{},tok:1,tx:'Jeton. Aucun effet.',sym:'·',col:'#8a5a2b',lore:'Le rôle de base de chaque membre.'},
 heritier:{t:'c',n:'Héritier',r:1,c:1,a:1,h:1,fac:[],sc:{},tok:1,kw:['croissance'],tx:'Jeton. Croissance.',sym:'♡',col:'#d65a7a',lore:'Il grandit vite, comme son père… et il n’aime pas qu’on lui parle de LoL.'},
+weeb:{t:'c',n:'Weeb',r:1,c:1,a:1,h:1,fac:['weebos'],sc:{},tok:1,tx:'Jeton (Weebos).',sym:'🌸',col:'#ff7ab8',lore:'Venu de la Japan Expo, il n’en est jamais reparti.'},
+kiwi:{t:'c',n:'Kiwi',r:1,c:1,a:1,h:1,fac:[],sc:{},tok:1,kw:['hate'],tx:'Jeton. Hâte.',sym:'🐈',col:'#c9a36b',lore:'Le chat de Potatoll. Il griffe d’abord, il réfléchit ensuite.'},
+waifu:{t:'c',n:'Waifu',r:1,c:1,a:1,h:1,fac:['weebos'],sc:{},tok:1,tx:'Jeton (Weebos).',sym:'💕',col:'#ff8fc8',lore:'Encore une, ramenée de voyage par Takk.'},
+mmejack:{t:'c',n:'Mme Jack',r:1,c:5,a:3,h:6,fac:[],sc:{},tok:1,tx:'Jeton. Une vache.',sym:'🐄',col:'#d9d2c3',lore:'La vache de Jak. Elle ne bouge pas, mais elle encaisse.'},
+piccolo:{t:'c',n:'Piccolo',r:1,c:3,a:2,h:3,fac:['alien'],sc:{},tok:1,kw:['siphon'],tx:'Jeton (Extraterrestre). Siphon.',sym:'👽',col:'#5fbf5a',lore:'Venu de Namek. Il a suivi Rasta dehors.'},
+noob:{t:'c',n:'Noob',r:1,c:1,a:1,h:1,fac:[],sc:{},tok:1,kw:['deso'],tx:'Jeton. Désorienté.',sym:'?',col:'#9aa7b0',lore:'Il ne sait pas où il va, mais il y va.'},
 bot:{t:'c',n:'Bot de modération',r:1,c:3,a:2,h:5,fac:[],sc:{},tok:1,kw:['rempart'],tx:'Jeton. Rempart.',sym:'⚙',col:'#2a8f86',lore:'Il applique le règlement, sans état d’âme.'},
 chanssus:{t:'c',n:'Chanssus',r:1,c:1,a:1,h:1,fac:[],sc:{},tok:1,kw:['hate'],cry:[{t:'combo',a:1,h:1,max:3}],
   tx:'Jeton. Hâte. Cri d’arrivée : gagne +1/+1 pour chaque autre carte jouée ce tour (+3/+3 max).',sym:'✺',col:'#e0483f',lore:'Invoqué par Sadamie pour le combo le plus broken du monde.'},
@@ -1085,6 +1121,7 @@ const TDEF=[
  {d:'kebab',g:'bazar',n:'Kebab de 4 h du mat’',size:1,cost:2,tn:'Agonie : soigne ton héros de 4 PV.',f:()=>({last:[{t:'heal',n:4}]})},
  {d:'vocal',g:'bazar',n:'Salon vocal AFK',size:2,cost:2,tn:'+0/+2, mais ne peut pas attaquer (elle est AFK).',f:()=>({h:2,noAtk:1})},
  {d:'andorre',g:'bazar',n:'Afterwork en Andorre',size:1,cost:1,tn:'Début de ton tour : gagne 1 Or.',f:()=>({sot:[{t:'or',n:1}]})},
+ {d:'blizzard',g:'bazar',n:'Blizzard',size:2,cost:0,uniq:1,tn:'Terrain de Kirua : les créatures dessus ne peuvent pas attaquer tant qu’il reste.',f:()=>({noAtk:1})},
  {d:'cave',g:'bazar',n:'La cave de Homz',size:2,cost:4,tn:'Fin de ton tour : lance 1 missile.',f:()=>({eot:[{t:'rnd',n:1,times:1}]})}];
 const TD={};TDEF.forEach(t=>{t.e=t.g==='bazar'?[null,t.f(1),t.f(1)]:[null,t.f(1),t.f(2)];TD[t.d]=t});
 function affOf(k,g){if(g==='bazar')return 1;const cd=CARDS[k];return(cd&&cd.sc&&cd.sc[g])||0}
@@ -1141,7 +1178,7 @@ function newGame(cfg){
       grave:[],terrs:[],cells:Array(CELLS).fill(0),cap:0,eth:0,or:0,fat:0,rsh:0};
     P.deck=cfg.decks[s].map(e=>{const p=e.endsWith('*');return mkCard(G,p?e.slice(0,-1):e,p)});
     shuf(G,P.deck);G.p.push(P)}
-  if(o.ter){G.tdeck=shuf(G,TDEF.map(t=>({d:t.d})));G.shop=[G.tdeck.pop(),G.tdeck.pop()]}
+  if(o.ter){G.tdeck=shuf(G,TDEF.filter(t=>!t.uniq).map(t=>({d:t.d})));G.shop=[G.tdeck.pop(),G.tdeck.pop()]}
   G.nev=ri(G,EVENTS.length);
   for(let s=0;s<2;s++){const n=s===G.first?3:4;const P=G.p[s];for(let j=0;j<n;j++){const c=P.deck.pop();if(c)P.hand.push(c)}}
   const sec=G.p[1-G.first];
@@ -1178,9 +1215,36 @@ function cloneG(G){
 function fl(G,s){const n={};for(const c of G.p[s].board)if(c)for(const f of CARDS[c.k].fac)n[f]=(n[f]||0)+1;return n}
 function terrOf(G,s,i){const P=G.p[s],id=P.cells[i];if(!id)return null;for(const t of P.terrs)if(t.id===id)return t;return null}
 function tfx(T,k){if(!T)return null;const t=TD[T.d];return t.e[affOf(k,t.g)]||null}
-function kwOf(G,s,c,L,TE){
+// terrain de jeu = WoW, Dofus, LoL ou CS ; les autres terrains sont neutres
+function isGT(T){return!!T&&TD[T.d].g!=='bazar'}
+function tgOf(G,s,i){const T=terrOf(G,s,i);return T?TD[T.d].g:null}
+// affinité d'une créature en jeu (Maki, chef coach : +1 d'affinité LoL, 2 maximum)
+function affC(c,g){if(g==='bazar')return 1;let a=affOf(c.k,g);if(g==='lol'&&c.lb)a=Math.min(2,a+c.lb);return a}
+function tfxC(T,c){if(!T)return null;const t=TD[T.d];return t.e[affC(c,t.g)]||null}
+// Elkatrix (doux comme un agneau) : les effets des terrains LoL de son camp s'appliquent deux fois
+function tMul(G,s,T){if(!T||TD[T.d].g!=='lol')return 1;for(const b of G.p[s].board)if(b&&!b.mut&&CARDS[b.k].dblLol)return 2;return 1}
+function runT(G,s,T,l,x){const n=tMul(G,s,T);for(let j=0;j<n&&!G.over;j++)runFx(G,l,x)}
+// auras des créatures en jeu (Xulyes, Minuit, Homz, Saja) : bonus reçu par la créature c en (s,i)
+function auraOf(G,s,i,c){let a=0,h=0;
+  for(const t of[0,1]){const B=G.p[t].board;for(let j=0;j<CELLS;j++){const b=B[j];if(!b||b.mut)continue;const au=CARDS[b.k].aura;if(!au)continue;
+    if(au.pos){if(t===s&&j===i)continue;if(i<j){a--;h--}else if(i>j){a++;h++}continue}   // Saja : à sa gauche -1/-1, à sa droite +1/+1, sur les deux plateaux
+    if(t!==s||(au.others&&j===i))continue;
+    if(au.g&&tgOf(G,s,i)!==au.g)continue;if(au.fac&&!hasF(c.k,au.fac))continue;
+    a+=au.a||0;h+=au.h||0}}
+  return{a,h}}
+// une aura qui disparaît ne tue pas : les PV qu'elle donnait sont retirés des dégâts subis d'abord
+function auraOff(G,s,i){const src=G.p[s].board[i];if(!src||src.mut||!CARDS[src.k].aura)return;
+  const before=[[],[]];for(const t of[0,1])G.p[t].board.forEach((c,j)=>{before[t][j]=c?auraOf(G,t,j,c).h:0});
+  const sv=src.mut;src.mut=1;
+  for(const t of[0,1])G.p[t].board.forEach((c,j)=>{if(!c||c===src)return;const d=before[t][j]-auraOf(G,t,j,c).h;if(d>0)c.dm=Math.max(0,c.dm-d)});
+  src.mut=sv}
+function xenoAll(G,s){return G.p[s].board.some(b=>b&&!b.mut&&CARDS[b.k].xenoAll)}
+function kwOf(G,s,c,L,TE,T){
   const cd=CARDS[c.k],r={};if(!c.mut&&cd.kw)for(const x of cd.kw)r[x]=1;
   if(!c.mut&&c.tr)r.rempart=1;                                       // Rempart gagné en jeu (Tilt du Provocateur)
+  if(c.ds)r.deso=1;                                                  // Désorienté (Lanfear) : un état, il reste même Mute
+  if(!c.mut&&cd.onT&&T&&TD[T.d].g===cd.onT.g)for(const x of cd.onT.kw)r[x]=1;   // mots-clés gagnés sur un terrain d'un jeu (Lisdoon, Roro)
+  if(!c.mut&&cd.offGT&&!isGT(T))for(const x of cd.offGT.kw)r[x]=1;             // ... hors d'un terrain de jeu (Lisdoon, Gomuscu)
   if(TE&&TE.kw)for(const x in TE.kw)r[x]=1;
   if(TE&&TE.tilt)r.tilt=1;
   let v=r.venin?1:0;if(cd.fac.indexOf('toxic')>=0&&(L.toxic||0)>=2)v+=L.toxic-1;
@@ -1188,11 +1252,13 @@ function kwOf(G,s,c,L,TE){
   return r}
 function eff(G,s,i,L){
   const P=G.p[s],c=P.board[i],cd=CARDS[c.k];let a=c.a,h=c.h;L=L||fl(G,s);
-  const T=terrOf(G,s,i),TE=tfx(T,c.k);
-  if(TE){a+=TE.a||0;h+=TE.h||0}
+  const T=terrOf(G,s,i),TE=tfxC(T,c);
+  if(TE){const m=tMul(G,s,T);a+=(TE.a||0)*m;h+=(TE.h||0)*m}
   if(T&&!c.mut&&cd.gr&&cd.gr.g===TD[T.d].g){a+=cd.gr.a;h+=cd.gr.h}
   if(cd.fac.indexOf('weebos')>=0&&(L.weebos||0)>=2)h+=1;
-  return{a:a<0?0:a,h,hp:h-c.dm,kw:kwOf(G,s,c,L,TE),T,TE}}
+  if(!c.mut&&cd.withB&&P.board.some(b=>b&&b!==c&&CARDS[b.k].base===cd.withB.b)){a+=cd.withB.a;h+=cd.withB.h}   // Maki : +1/+2 avec un Osiris
+  const au=auraOf(G,s,i,c);a+=au.a;h+=au.h;
+  return{a:a<0?0:a,h,hp:h-c.dm,kw:kwOf(G,s,c,L,TE,T),T,TE}}
 // valeur approximative d'un effet de terrain (IA)
 function tval(TE){if(!TE)return 0;let v=(TE.a||0)*1.1+(TE.h||0)*.9;
   if(TE.kw){if(TE.kw.hate)v+=.8;if(TE.kw.insolence)v+=1;if(TE.kw.rempart)v+=1;if(TE.kw.siphon)v+=1.4}
@@ -1211,21 +1277,26 @@ function targets(G,s,spec,tgf,exc){
   const r=[],e=1-s;
   const hero=sd=>r.push({s:sd,i:-1});
   const cr=sd=>{const L=fl(G,sd);G.p[sd].board.forEach((c,i)=>{if(!c||c.id===exc)return;const E=eff(G,sd,i,L);
-    if(E.kw.afk&&!c.aw)return;if(sd!==s&&(c.ex||E.kw.insolence))return;if(tgf==='hurt'&&c.dm<=0)return;r.push({s:sd,i})})};
+    if(E.kw.afk&&!c.aw)return;if(sd!==s&&(c.ex||E.kw.insolence))return;if(tgf==='hurt'&&c.dm<=0)return;if(tgf==='c2'&&CARDS[c.k].c>2)return;r.push({s:sd,i})})};
   switch(spec){case 'any':hero(s);hero(e);cr(s);cr(e);break;case 'e':hero(e);cr(e);break;case 'c':cr(s);cr(e);break;
     case 'ec':cr(e);break;case 'ac':cr(s);break}
   return r}
+// VIP : attaquable seulement quand il n'y a plus que des VIP sur son plateau ; Maki (aristocrate) : il faut 1 Or pour l'attaquer
 function atkTargets(G,s){
-  const e=1-s,L=fl(G,e),r=[];let taunt=false;
-  G.p[e].board.forEach((c,i)=>{if(!c)return;const E=eff(G,e,i,L);if(hidden(E,c))return;r.push({s:e,i});if(E.kw.rempart)taunt=true});
+  const e=1-s,L=fl(G,e),r=[],B=G.p[e].board;let taunt=false;
+  const Es=B.map((c,i)=>c?eff(G,e,i,L):null),vipOnly=B.every((c,i)=>!c||Es[i].kw.vip);
+  B.forEach((c,i)=>{if(!c)return;const E=Es[i];if(hidden(E,c))return;if(E.kw.vip&&!vipOnly)return;
+    if(!c.mut&&CARDS[c.k].tax&&G.p[s].or<1)return;r.push({s:e,i});if(E.kw.rempart)taunt=true});
   if(taunt)return r.filter(t=>eff(G,e,t.i,L).kw.rempart);
   r.push({s:e,i:-1});return r}
 function canAtk(G,s,i){
   if(G.over||G.cur!==s)return false;const c=G.p[s].board[i];if(!c||c.blk>0)return false;
-  const E=eff(G,s,i);if(E.a<=0||(E.TE&&E.TE.noAtk))return false;if(c.sick&&!E.kw.hate)return false;return c.af<(E.kw.frenesie?2:1)}
+  const E=eff(G,s,i);if(E.a<=0||(E.TE&&E.TE.noAtk))return false;if(c.sick&&!E.kw.hate)return false;return c.af<(E.kw.frenesie?2:1)+(c.xat||0)}
 function costOf(G,s,h){return CARDS[h.k].c}
 function cryTg(cd){if(cd.t==='s')return cd.tg?{tg:cd.tg,tgf:cd.tgf}:null;
-  const l=cd.cry;if(!l)return null;for(const o of l)if(o.tg)return{tg:o.tg,tgf:o.tgf};return null}
+  const l=cd.cry;if(!l)return null;for(const o of l)if(o.tg)return{tg:o.tg,tgf:o.tgf,tg2:o.tg2};return null}
+// 2e cible (Lasorius, instigateur) : une de tes créatures, ou la case où il arrive (lui-même)
+function tg2List(G,s,sl){const r=targets(G,s,'ac');if(sl!=null)r.push({s,i:sl});return r}
 function playable(G,s,i){
   if(G.over||G.cur!==s)return false;const P=G.p[s],h=P.hand[i];if(!h||h.k==='?')return false;const cd=CARDS[h.k];
   if(costOf(G,s,h)>P.eth)return false;
@@ -1256,27 +1327,30 @@ function heroHit(G,s,n,src,q,x){if(n<=0)return 0;G.p[s].hp-=n;if(!q)lg(G,{t:'dmg
 function dmgC(G,s,i,n,src,q,x){
   const c=G.p[s].board[i];if(!c||n<=0)return 0;
   if(c.eg){c.eg=0;lg(G,{t:'egide',ts:s,i,k:c.k});return 0}
+  if(c.inv){lg(G,{t:'inv',ts:s,i,k:c.k});return 0}
   c.dm+=n;
   if(!q)lg(G,{t:'dmg',ts:s,i,k:c.k,src,n,ss:x?x.ss:null,si:x?x.si:null});
   if(eff(G,s,i).hp>0)tiltQ(G,s,i);return n}
 // Tilt : quand une créature subit des dégâts et survit, son effet « Tilt : … » se déclenche (celui de la carte,
 // puis celui du terrain sous elle). Les déclenchements sont mis en file et résolus après le coup en cours
 // (après les dégâts de riposte d'un combat, par exemple), au plus 40 par action pour éviter les boucles.
-function tiltQ(G,s,i){const c=G.p[s].board[i];if(!c)return;const TE=tfx(terrOf(G,s,i),c.k);
+function tiltQ(G,s,i){const c=G.p[s].board[i];if(!c)return;const TE=tfxC(terrOf(G,s,i),c);
   if((!c.mut&&CARDS[c.k].tilt)||(TE&&TE.tilt))G.tq.push({s,id:c.id})}
 function flushTilt(G){
   if(G.tf||!G.tq||!G.tq.length)return;G.tf=1;
   try{for(let n=0;n<40&&G.tq.length&&!G.over;n++){
     const q=G.tq.shift(),P=G.p[q.s],i=P.board.findIndex(b=>b&&b.id===q.id);if(i<0)continue;
-    const c=P.board[i],cd=CARDS[c.k],T=terrOf(G,q.s,i),TE=tfx(T,c.k);if(eff(G,q.s,i).hp<=0)continue;
+    const c=P.board[i],cd=CARDS[c.k],T=terrOf(G,q.s,i),TE=tfxC(T,c);if(eff(G,q.s,i).hp<=0)continue;
     const L=[];if(!c.mut&&cd.tilt)L.push([cd.tilt,c.k]);if(TE&&TE.tilt)L.push([TE.tilt,'T:'+T.d]);if(!L.length)continue;
     c.tc=(c.tc||0)+1;lg(G,{t:'tilt',ts:q.s,i,k:c.k});
-    for(const[l,src]of L){if(G.over)break;const j=slotOf(G,q.s,c);if(j<0)break;runFx(G,l,{s:q.s,src,self:c,tg:null,pc:0,sl:j,ss:q.s,si:j})}}
+    for(const[l,src]of L){if(G.over)break;const j=slotOf(G,q.s,c);if(j<0)break;const x={s:q.s,src,self:c,tg:null,pc:0,sl:j,ss:q.s,si:j};if(src[0]==='T')runT(G,q.s,T,l,x);else runFx(G,l,x)}}
   }finally{G.tf=0;G.tq.length=0}}
 function hit(G,s,i,n,src,x){return i<0?heroHit(G,s,n,src,false,x):dmgC(G,s,i,n,src,false,x)}
 function heal(G,s,n,src){const P=G.p[s],v=Math.min(n,P.mhp-P.hp);if(v>0){P.hp+=v;lg(G,{t:'heal',ts:s,n:v,src})}return v}
-function healC(G,s,i,n){const c=G.p[s].board[i];if(!c||c.dm<=0)return 0;const v=Math.min(n,c.dm);c.dm-=v;lg(G,{t:'hc',ts:s,i,k:c.k,n:v});return v}
-function addPz(G,s,i,n,x){if(n<=0)return;if(i<0)G.p[s].pz+=n;else{const c=G.p[s].board[i];if(!c)return;c.pz+=n}
+function healC(G,s,i,n){const c=G.p[s].board[i];if(!c||c.dm<=0)return 0;const v=Math.min(n,c.dm);c.dm-=v;lg(G,{t:'hc',ts:s,i,k:c.k,n:v});
+  if(!c.mut&&CARDS[c.k].healGrow){c.a+=1;lg(G,{t:'buff',ts:s,i,k:c.k,ba:1,bh:0})}       // Minuit (golem Pfizer) : +1 ATK à chaque soin
+  return v}
+function addPz(G,s,i,n,x){if(n<=0)return;if(i<0)G.p[s].pz+=n;else{const c=G.p[s].board[i];if(!c||(!c.mut&&CARDS[c.k].noPz))return;c.pz+=n}
   lg(G,{t:'pz',ts:s,i,k:i<0?null:G.p[s].board[i].k,n,src:x?x.src:undefined,ss:x?x.ss:null,si:x?x.si:null})}
 function gold(G,s,n,src,x){if(n<=0)return;G.p[s].or+=n;lg(G,{t:'gold',ts:s,n,src,ss:x?x.ss:null,si:x?x.si:null})}
 // cimetière : sorts joués, créatures mortes, cartes défaussées ou brûlées (les jetons n'y vont pas)
@@ -1292,13 +1366,17 @@ function draw(G,s,n){const P=G.p[s];
 function give(G,s,k,n){const P=G.p[s];for(let j=0;j<n;j++){
   if(P.hand.length>=G.o.hand){lg(G,{t:'burn',ts:s,k});continue}P.hand.push(mkCard(G,k));lg(G,{t:'add',ts:s,k,pv:s})}}
 // une créature arrive sur une case : effet « Arrivée » du terrain
-function arrive(G,s,i){const c=G.p[s].board[i];if(!c)return;const T=terrOf(G,s,i),TE=tfx(T,c.k);
-  if(TE&&TE.arr){lg(G,{t:'tfx',ts:s,i,d:T.d,k:c.k});runFx(G,TE.arr,{s,src:'T:'+T.d,self:c,sl:i,ss:s,si:i,tg:null,pc:0})}}
+function arrive(G,s,i){const c=G.p[s].board[i];if(!c)return;const T=terrOf(G,s,i),TE=tfxC(T,c);
+  if(TE&&TE.arr){lg(G,{t:'tfx',ts:s,i,d:T.d,k:c.k});runT(G,s,T,TE.arr,{s,src:'T:'+T.d,self:c,sl:i,ss:s,si:i,tg:null,pc:0})}}
 function summon(G,s,k,o){
   o=o||{};const P=G.p[s];let sl=o.sl;if(sl==null||sl<0||P.board[sl])sl=bestSlot(G,s,k);if(sl<0)return null;
   const c=mkC(G,k,o.p);c.sm=o.real?0:1;if(o.a!=null){c.a=o.a;c.h=o.h}P.board[sl]=c;lg(G,{t:'sum',ts:s,i:sl,k});arrive(G,s,sl);return c}
-function removeC(G,s,i,ban){const c=G.p[s].board[i];if(!c)return null;G.p[s].board[i]=null;
+function removeC(G,s,i,ban){const c=G.p[s].board[i];if(!c)return null;auraOff(G,s,i);G.p[s].board[i]=null;
   lg(G,{t:'die',ts:s,i,k:c.k,ban:ban?1:0});return c}
+
+// une créature change de camp et arrive sur la case ti (elle garde son état ; elle ne peut pas attaquer ce tour-ci)
+function moveCtl(G,fs,fi,ts,ti){const c=G.p[fs].board[fi];if(!c||G.p[ts].board[ti])return null;auraOff(G,fs,fi);G.p[fs].board[fi]=null;
+  c.sick=1;c.af=0;c.ex=0;c.xa=0;c.xat=0;G.p[ts].board[ti]=c;lg(G,{t:'ctl',ts:fs,i:fi,to:ts,ti,k:c.k});return c}
 
 // ---------- morts ----------
 function checkOver(G){
@@ -1311,10 +1389,16 @@ function reap(G){
     outer:for(const s of [G.cur,1-G.cur]){const L=fl(G,s);for(let i=0;i<CELLS;i++){const c=G.p[s].board[i];if(c){const E=eff(G,s,i,L);if(E.hp<=0){d={s,i,c,E};break outer}}}}
     if(!d)break;
     const{s,i,c,E}=d,cd=CARDS[c.k],P=G.p[s];
+    if(E.h>0&&(c.inv||(!c.mut&&cd.save1&&!c.sv))){                             // Gobi : la première fois, il reste à 1 PV et devient invincible
+      if(!c.inv){c.sv=1;c.inv=1;lg(G,{t:'save',ts:s,i,k:c.k})}c.dm=Math.max(0,E.h-1);continue}
     removeC(G,s,i,false);if(!c.sm)toGrave(P,c);
+    const onLol=!!E.T&&TD[E.T.d].g==='lol',oppT=G.cur!==s;
+    P.board.forEach((b,j)=>{if(!b||b.mut)return;const bd=CARDS[b.k];
+      if(onLol&&bd.allyDieLol){b.a+=bd.allyDieLol.a;b.h+=bd.allyDieLol.h;lg(G,{t:'buff',ts:s,i:j,k:b.k,ba:bd.allyDieLol.a,bh:bd.allyDieLol.h})}
+      if(oppT&&bd.xatk){b.xa=(b.xa||0)+1;lg(G,{t:'xa',ts:s,i:j,k:b.k,n:b.xa})}});
     const x={s,src:c.k,self:c,tg:null,pc:G.played,sl:i,ss:s,si:i};
     if(!c.mut&&cd.last)runFx(G,cd.last,x);
-    if(E.TE&&E.TE.last&&!G.over){lg(G,{t:'tfx',ts:s,i,d:E.T.d,k:c.k});runFx(G,E.TE.last,Object.assign({},x,{src:'T:'+E.T.d}))}
+    if(E.TE&&E.TE.last&&!G.over){lg(G,{t:'tfx',ts:s,i,d:E.T.d,k:c.k});runT(G,s,E.T,E.TE.last,Object.assign({},x,{src:'T:'+E.T.d}))}
     if(E.kw.respawn&&!c.rs&&!G.over&&!P.board[i]){
       const gi=P.grave.findIndex(q=>q.id===c.id);if(gi>=0)P.grave.splice(gi,1);
       const n=mkC(G,c.k,c.p);n.a=c.a;n.h=c.h;n.rs=1;n.sick=1;n.sm=c.sm;n.mut=c.mut;P.board[i]=n;
@@ -1326,7 +1410,9 @@ function reap(G){
 // ---------- effets ----------
 function cond(G,c,x){
   if(c.has){const B=G.p[x.s].board;return B.some(b=>b&&CARDS[b.k].base===c.has&&(!x.self||b.id!==x.self.id))}
-  if(c.comb)return G.played>0;return true}
+  if(c.comb)return G.played>0;
+  if(c.ter||c.gt||c.ngt){const i=selfI(G,x),T=i>=0?terrOf(G,x.s,i):null;if(c.ter)return!!T&&TD[T.d].g===c.ter;if(c.gt)return isGT(T);return!isGT(T)}
+  return true}
 function sides(op,x){return op.both?[0,1]:[x.s]}
 function allEnemy(G,s){const r=[{s:1-s,i:-1}];G.p[1-s].board.forEach((c,i)=>{if(c)r.push({s:1-s,i})});return r}
 function vt(G,t){return!!t&&(t.i<0||(G.p[t.s].board[t.i]&&G.p[t.s].board[t.i].id===t.id))}
@@ -1352,7 +1438,6 @@ const OPS={
   healSelf(G,op,x){const i=selfI(G,x);if(i>=0)healC(G,x.s,i,op.n)},
   grow(G,op,x){const i=selfI(G,x);if(i<0)return;const c=G.p[x.s].board[i];c.a+=op.a;c.h+=op.h;lg(G,{t:'buff',ts:x.s,i,k:c.k,ba:op.a,bh:op.h})},
   egide(G,op,x){const i=selfI(G,x);if(i<0)return;const c=G.p[x.s].board[i];if(c.eg)return;c.eg=1;lg(G,{t:'kwg',ts:x.s,i,k:c.k,kw:'egide'})},
-  taunt(G,op,x){const i=selfI(G,x);if(i<0)return;const c=G.p[x.s].board[i];if(c.tr)return;c.tr=1;lg(G,{t:'kwg',ts:x.s,i,k:c.k,kw:'rempart'})},
   draw(G,op,x){for(const s of sides(op,x))draw(G,s,op.n)},
   drawOpp(G,op,x){draw(G,1-x.s,op.n)},
   disc(G,op,x){for(const s of(op.both?[0,1]:[1-x.s])){const P=G.p[s];for(let j=0;j<op.n&&P.hand.length;j++){const c=P.hand.splice(ri(G,P.hand.length),1)[0];toGrave(P,c);lg(G,{t:'disc',ts:s,k:c.k})}}},
@@ -1381,7 +1466,7 @@ const OPS={
   kick(G,op,x){const c=tgC(G,x);if(!c)return;const t=x.tg;
     removeC(G,t.s,t.i,true);lg(G,{t:'kick',ts:t.s,k:c.k});const P=G.p[t.s],card={k:c.k,id:++G.uid,p:c.p};
     if(P.hand.length<G.o.hand)P.hand.push(card);else toGrave(P,card)},
-  mute(G,op,x){const c=tgC(G,x);if(!c)return;c.mut=1;lg(G,{t:'mute',ts:x.tg.s,i:x.tg.i,k:c.k})},
+  mute(G,op,x){const c=tgC(G,x);if(!c)return;auraOff(G,x.tg.s,x.tg.i);c.mut=1;lg(G,{t:'mute',ts:x.tg.s,i:x.tg.i,k:c.k})},
   blk(G,op,x){
     if(op.rnd){for(let j=0;j<(op.n||1);j++){const L=targets(G,x.s,'ec').filter(t=>!G.p[t.s].board[t.i].blk);if(!L.length)return;
       const t=pick(G,L),c=G.p[t.s].board[t.i];c.blk=1;lg(G,{t:'blk',ts:t.s,i:t.i,k:c.k,ss:x.ss,si:x.si})}return}
@@ -1405,7 +1490,40 @@ const OPS={
     else dmgC(G,x.tg.s,x.tg.i,op.n,x.src,false,x)},
   combo(G,op,x){const i=selfI(G,x);if(i<0)return;const n=Math.min(x.pc||0,op.max||99);if(n<=0)return;
     const c=G.p[x.s].board[i];c.a+=op.a*n;c.h+=op.h*n;lg(G,{t:'buff',ts:x.s,i,k:c.k,ba:op.a*n,bh:op.h*n})},
-  wipe(G,op,x){for(const s of[0,1])G.p[s].board.forEach((c,i)=>{if(c&&!(x.self&&c.id===x.self.id))removeC(G,s,i,true)})}
+  wipe(G,op,x){for(const s of[0,1])G.p[s].board.forEach((c,i)=>{if(c&&!(x.self&&c.id===x.self.id))removeC(G,s,i,true)})},
+  // ----- effets ajoutés avec les nouvelles cartes -----
+  taunt(G,op,x){const i=selfI(G,x);if(i<0)return;const c=G.p[x.s].board[i];if(c.tr)return;c.tr=1;lg(G,{t:'kwg',ts:x.s,i,k:c.k,kw:'rempart'})},
+  healT(G,op,x){G.p[x.s].board.forEach((c,i)=>{if(c&&tgOf(G,x.s,i)===op.g)healC(G,x.s,i,op.n)})},                  // tes créatures sur un terrain du jeu op.g
+  healAdj(G,op,x){const me=selfI(G,x);if(me<0)return;for(const j of[me-1,me+1])if(j>=0&&j<CELLS&&G.p[x.s].board[j])healC(G,x.s,j,op.n)},   // créatures à côté
+  bounceOwn(G,op,x){const P=G.p[x.s];let j=-1;if(tgC(G,x)&&x.tg.s===x.s)j=x.tg.i;else j=selfI(G,x);if(j<0)return;   // une de tes créatures (sinon lui-même) retourne en main
+    const c=P.board[j];removeC(G,x.s,j,true);lg(G,{t:'kick',ts:x.s,k:c.k});const card={k:c.k,id:++G.uid,p:c.p};if(P.hand.length<G.o.hand)P.hand.push(card);else toGrave(P,card)},
+  blkSelf(G,op,x){const i=selfI(G,x);if(i<0)return;const c=G.p[x.s].board[i];c.blk=Math.max(c.blk,op.n);lg(G,{t:'blk',ts:x.s,i,k:c.k})},
+  tdestroy(G,op,x){const e=op.self?x.s:1-x.s,P=G.p[e];let id=0;                                                    // détruit un terrain (le sien sous lui, ou un adverse au hasard)
+    if(op.here){const i=selfI(G,x);id=i>=0?P.cells[i]:0}else{const ids=[...new Set(P.cells.filter(Boolean))];id=ids.length?pick(G,ids):0}
+    if(!id)return;const T=P.terrs.find(q=>q.id===id);P.cells=P.cells.map(v=>v===id?0:v);P.terrs=P.terrs.filter(q=>q.id!==id);
+    lg(G,{t:'tdes',ts:e,d:T?T.d:null});keepAlive(G,e)},
+  madness(G,op,x){const i=selfI(G,x);if(i<0)return;const c=G.p[x.s].board[i],P=G.p[x.s];c.mn=(c.mn||0)+1;const n=c.mn;   // Dreos : N Démoflux, N Or, N cartes
+    P.eth+=n;lg(G,{t:'eth',ts:x.s,n});gold(G,x.s,n,x.src,x);draw(G,x.s,n)},
+  lose(G,op,x){if(G.over)return;lg(G,{t:'lose',ts:x.s});G.over={w:1-x.s,lose:1}},
+  discSelf(G,op,x){const P=G.p[x.s];for(let j=0;j<op.n&&P.hand.length;j++){const c=P.hand.splice(ri(G,P.hand.length),1)[0];toGrave(P,c);lg(G,{t:'disc',ts:x.s,k:c.k})}},
+  rnd2(G,op,x){const L=targets(G,x.s,'e');const a=pick(G,L);if(!a)return;const ida=a.i<0?-1:G.p[a.s].board[a.i].id;hit(G,a.s,a.i,op.n,x.src,x);reap(G);if(G.over)return;   // 2 ennemis différents
+    const L2=targets(G,x.s,'e').filter(t=>!(t.s===a.s&&(a.i<0?t.i<0:G.p[t.s].board[t.i]&&G.p[t.s].board[t.i].id===ida)));const b=pick(G,L2);if(b)hit(G,b.s,b.i,op.n,x.src,x)},
+  dmgFac(G,op,x){for(const s of[0,1])G.p[s].board.forEach((c,i)=>{if(c&&hasF(c.k,op.f))dmgC(G,s,i,op.n,x.src,false,x)})},   // toutes les créatures d'une famille, des deux camps
+  killAll(G,op,x){for(const s of[0,1])G.p[s].board.forEach(c=>{if(c)c.dm+=99999})},
+  deckSummon(G,op,x){for(const s of[x.s,1-x.s]){const P=G.p[s],ix=[];P.deck.forEach((c,j)=>{if(CARDS[c.k].t==='c')ix.push(j)});   // chaque joueur invoque une créature de son deck
+    if(!ix.length||!P.board.some(b=>!b))continue;const c=P.deck.splice(pick(G,ix),1)[0];summon(G,s,c.k,{p:c.p,real:1})}},
+  ctl(G,op,x){const c=tgC(G,x);if(!c)return;const j=G.p[x.s].board.findIndex(b=>!b);if(j<0)return;moveCtl(G,x.tg.s,x.tg.i,x.s,j);keepAlive(G,x.s);arrive(G,x.s,j)},   // prend le contrôle
+  swap(G,op,x){const e=tgC(G,x);if(!e)return;const me=x.tg2==='self'?selfI(G,x):(x.tg2&&vt(G,x.tg2)?x.tg2.i:-1);if(me<0)return;   // Lasorius : échange de camp
+    const A=G.p[x.s].board[me],B=e,bi=x.tg.i,bs=x.tg.s;auraOff(G,x.s,me);auraOff(G,bs,bi);G.p[x.s].board[me]=null;G.p[bs].board[bi]=null;
+    for(const c of[A,B]){c.sick=1;c.af=0;c.ex=0;c.xa=0;c.xat=0}G.p[x.s].board[me]=B;G.p[bs].board[bi]=A;
+    lg(G,{t:'swap',ts:x.s,i:me,k:A.k,k2:B.k,ti:bi});keepAlive(G,0);keepAlive(G,1);arrive(G,x.s,me);arrive(G,bs,bi)},
+  affUp(G,op,x){const c=tgC(G,x);if(!c)return;const before=affC(c,op.g);c.lb=Math.min(2,(c.lb||0)+1);if(affC(c,op.g)>before)lg(G,{t:'aff',ts:x.tg.s,i:x.tg.i,k:c.k,g:op.g,n:affC(c,op.g)})},
+  hurtSelf(G,op,x){const i=selfI(G,x);if(i>=0)dmgC(G,x.s,i,op.n,x.src,false,x)},
+  pzEvery(G,op,x){for(const s of[0,1])G.p[s].board.forEach((c,i)=>{if(c&&!(x.self&&c.id===x.self.id))addPz(G,s,i,op.n,x)})},   // Venin à toutes les autres créatures
+  desoAll(G,op,x){G.p[1-x.s].board.forEach((c,i)=>{if(c&&!c.ds){c.ds=1;lg(G,{t:'kwg',ts:1-x.s,i,k:c.k,kw:'deso'})}})},
+  blizzard(G,op,x){const e=1-x.s,P=G.p[e],n=TD.blizzard.size;let at=0,bv=-1;                                        // Kirua : terrain Blizzard sur le plateau adverse
+    for(let st=0;st+n<=CELLS;st++){let v=0;for(let j=st;j<st+n;j++)if(P.board[j])v+=1+eff(G,e,j).a*.1;if(v>bv){bv=v;at=st}}
+    lg(G,{t:'tgift',d:'blizzard',at,ts:e});buyTerr(G,e,{d:'blizzard'},at);keepAlive(G,e)}
 };
 
 // ---------- événements ----------
@@ -1417,8 +1535,8 @@ function doEvent(G){const ev=EVENTS[G.nev];G.nev=ri(G,EVENTS.length);lg(G,{t:'ev
 function boardHooks(G,s,key){
   const P=G.p[s];
   for(let i=0;i<CELLS;i++){const c=P.board[i];if(c&&!c.mut&&CARDS[c.k][key]){runFx(G,CARDS[c.k][key],{s,src:c.k,self:c,tg:null,pc:0,sl:i,ss:s,si:i});if(G.over)return}}
-  for(let i=0;i<CELLS;i++){const c=P.board[i];if(!c)continue;const T=terrOf(G,s,i),TE=tfx(T,c.k);
-    if(TE&&TE[key]){lg(G,{t:'tfx',ts:s,i,d:T.d,k:c.k});runFx(G,TE[key],{s,src:'T:'+T.d,self:c,tg:null,pc:0,sl:i,ss:s,si:i});if(G.over)return}}}
+  for(let i=0;i<CELLS;i++){const c=P.board[i];if(!c)continue;const T=terrOf(G,s,i),TE=tfxC(T,c);
+    if(TE&&TE[key]){lg(G,{t:'tfx',ts:s,i,d:T.d,k:c.k});runT(G,s,T,TE[key],{s,src:'T:'+T.d,self:c,tg:null,pc:0,sl:i,ss:s,si:i});if(G.over)return}}}
 function startTurn(G,s){
   const P=G.p[s],o=G.o;G.cur=s;G.turn++;G.aid++;G.played=0;if(s===G.first)G.round++;
   lg(G,{t:'turn',n:G.round});
@@ -1426,7 +1544,9 @@ function startTurn(G,s){
   if(o.ter&&G.turn>1)cycleShop(G);
   P.cap=Math.min(o.cap,P.cap+1);P.eth=P.cap;                       // le Démoflux non dépensé est perdu
   P.or+=o.inc;P.mvn=0;
-  P.board.forEach((c,i)=>{if(c){c.af=0;c.sick=0;if(c.ex){c.ex=0;lg(G,{t:'back',ts:s,i,k:c.k})}}});
+  const back=[];
+  P.board.forEach((c,i)=>{if(c){c.af=0;c.sick=0;c.inv=0;c.xat=c.xa||0;c.xa=0;if(c.ex){c.ex=0;lg(G,{t:'back',ts:s,i,k:c.k});back.push(c)}}});
+  for(const c of back){const i=slotOf(G,s,c),cd=CARDS[c.k];if(i>=0&&!c.mut&&cd.onBack&&!G.over)runFx(G,cd.onBack,{s,src:c.k,self:c,tg:null,pc:0,sl:i,ss:s,si:i})}   // Takk : à son retour de voyage
   for(let i=0;i<CELLS;i++){const c=P.board[i];if(c&&c.pz>0){dmgC(G,s,i,c.pz,'venin');c.pz--}}
   if(P.pz>0){heroHit(G,s,P.pz,'venin');P.pz--}
   reap(G);if(G.over)return;
@@ -1462,7 +1582,9 @@ function act(G,s,a){
     const sp=cryTg(cd);let tg=null;
     if(cd.t==='c'){
       if(!isCell(a.sl)||P.board[a.sl])return er('Emplacement invalide.');
-      if(sp){const L=targets(G,s,sp.tg,sp.tgf);if(L.length){if(!inList(L,a.tg))return er('Choisis une cible.');tg=resolveTg(G,a.tg)}}
+      let tg2=null;
+      if(sp){const L=targets(G,s,sp.tg,sp.tgf);if(L.length){if(!inList(L,a.tg))return er('Choisis une cible.');tg=resolveTg(G,a.tg);
+        if(sp.tg2){if(!inList(tg2List(G,s,a.sl),a.tg2))return er('Choisis la créature à échanger.');tg2=a.tg2.s===s&&a.tg2.i===a.sl?'self':resolveTg(G,a.tg2)}}}
       P.hand.splice(a.i,1);P.eth-=cost;
       const c=mkC(G,h.k,h.p);P.board[a.sl]=c;
       const pc=G.played;G.played++;
@@ -1473,7 +1595,7 @@ function act(G,s,a){
           if(n>0){E.or-=n;P.or+=n;lg(G,{t:'gold',ts:s,n,from:1-s,src:'alien',ss:1-s,si:-1})}}}
       if(cd.cry&&!G.over){
         const twice=P.board.some(b=>b&&b.id!==c.id&&!b.mut&&CARDS[b.k].dbl);
-        const x={s,src:h.k,self:c,tg,pc,sl:a.sl,ss:s,si:a.sl};
+        const x={s,src:h.k,self:c,tg,tg2,pc,sl:a.sl,ss:s,si:a.sl};
         runFx(G,cd.cry,x);if(twice&&!G.over){lg(G,{t:'echo',ts:s,i:a.sl,k:h.k});runFx(G,cd.cry,x)}}
     }else{
       if(sp){const L=targets(G,s,sp.tg,sp.tgf);if(!inList(L,a.tg))return er('Choisis une cible valide.');tg=resolveTg(G,a.tg)}
@@ -1485,8 +1607,11 @@ function act(G,s,a){
     break}
   case 'atk':{
     if(!P.board[a.f]||!canAtk(G,s,a.f))return er('Cette créature ne peut pas attaquer.');
-    if(!inList(atkTargets(G,s),a.tg))return er('Cible invalide (Rempart ?).');
-    attack(G,s,a.f,a.tg);break}
+    const AT=atkTargets(G,s);if(!inList(AT,a.tg))return er('Cible invalide (Rempart, VIP ?).');
+    let t=a.tg;const A=P.board[a.f];
+    if(eff(G,s,a.f).kw.deso){t=pick(G,AT);lg(G,{t:'deso',ts:s,i:a.f,k:A.k,to:t.i})}     // Désorienté : la cible est tirée au hasard
+    if(t.i>=0){const D=G.p[t.s].board[t.i];if(D&&!D.mut&&CARDS[D.k].tax){P.or-=1;G.p[t.s].or+=1;lg(G,{t:'tax',ts:s,k:D.k,n:1})}}   // Maki : 1 Or pour l'attaquer
+    attack(G,s,a.f,t);break}
   case 'exil':{
     if(!canExil(G,s,a.i))return er('Voyage impossible.');const n=fl(G,s).expats,cost=exCost(n),c=P.board[a.i];
     P.or-=cost;c.ex=1;lg(G,{t:'exil',ts:s,i:a.i,k:c.k,n:cost});break}
@@ -1560,17 +1685,24 @@ function attack(G,s,i,t){
   else{
     const D=G.p[e].board[t.i],LD=fl(G,e),ED=eff(G,e,t.i,LD),did=D.id;
     let pa=EA.a,xb=0;
-    if(hasF(A.k,'xeno')&&hasF(D.k,'alien')&&(L.xeno||0)>=2){xb=L.xeno-1;pa+=xb}
-    if(EA.TE&&EA.TE.vsC)pa+=EA.TE.vsC;
+    if(hasF(A.k,'xeno')&&(hasF(D.k,'alien')||xenoAll(G,s))&&(L.xeno||0)>=2){xb=L.xeno-1;pa+=xb}   // Homz (porteur de la flamme) : contre toutes les créatures
+    if(EA.TE&&EA.TE.vsC)pa+=EA.TE.vsC*tMul(G,s,EA.T);
     const rd=(LD.weebos||0)>=3&&hasF(D.k,'weebos')&&pa>0?1:0,ra=(L.weebos||0)>=3&&hasF(A.k,'weebos')&&ED.a>0?1:0;
-    const d1=dmgC(G,e,t.i,pa-rd,A.k,true),d2=dmgC(G,s,i,ED.a-ra,D.k,true);
+    const noRet=!A.mut&&CARDS[A.k].noRet;                                  // Haddmi (sniper) : ne subit pas de riposte
+    const d1=dmgC(G,e,t.i,pa-rd,A.k,true),d2=noRet?0:dmgC(G,s,i,ED.a-ra,D.k,true);
     lg(G,{t:'atk',k:A.k,i,ts:e,ti:t.i,to:D.k,n:d1,r:d2,xb,rd,ra});
+    if(!D.mut&&CARDS[D.k].pzBack&&G.p[s].board[i]===A)addPz(G,s,i,CARDS[D.k].pzBack,{ss:e,si:t.i,src:D.k});   // Dreos (mot de merde) : Venin à qui l'attaque
     if(EA.kw.venin&&d1>0){addPz(G,e,t.i,EA.kw.venin,xa);if(toxA&&EA.TE&&EA.TE.aram)heal(G,s,Math.min(EA.kw.venin,EA.TE.aram),'T:aram')}
     if(ED.kw.venin&&d2>0){addPz(G,s,i,ED.kw.venin,{ss:e,si:t.i,src:D.k});if(hasF(D.k,'toxic')&&ED.TE&&ED.TE.aram)heal(G,e,Math.min(ED.kw.venin,ED.TE.aram),'T:aram')}
     if(EA.kw.siphon&&d1>0)heal(G,s,d1,A.k);if(ED.kw.siphon&&d2>0)heal(G,e,d2,D.k);
+    const aT=EA.T,dT=ED.T;
     reap(G);
-    const nd=G.p[e].board[t.i];
-    if(!G.over&&(!nd||nd.id!==did)&&!A.mut&&CARDS[A.k].reset&&G.p[s].board[i]&&G.p[s].board[i].id===A.id)A.af=Math.max(0,A.af-1)}
+    const nd=G.p[e].board[t.i],aAlive=G.p[s].board[i]&&G.p[s].board[i].id===A.id;
+    if(!G.over&&(!nd||nd.id!==did)&&!A.mut&&CARDS[A.k].reset&&aAlive)A.af=Math.max(0,A.af-1);
+    // Homz (R14) : chaque créature tuée en combat sur un terrain WoW lui donne +1/+1
+    const kg=(C,cs,ci,T)=>{const g=!C.mut&&CARDS[C.k].killGrow;if(g&&T&&TD[T.d].g===g.g){C.a+=g.a;C.h+=g.h;lg(G,{t:'buff',ts:cs,i:ci,k:C.k,ba:g.a,bh:g.h})}};
+    if(!G.over&&aAlive&&(!nd||nd.id!==did))kg(A,s,i,aT);
+    if(!G.over&&nd&&nd.id===did&&!aAlive)kg(D,e,t.i,dT)}
 }
 
 // ---------- vue d'un joueur (main adverse et pioches masquées) ; hist = nouveautés depuis `from` ----------
@@ -1594,7 +1726,9 @@ function cval(G,s,i,W,L){
   let v=(noA?E.a*.2:E.a)*W.atk+hp*W.hpw;
   if(k.rempart)v+=1+hp*.15;if(k.venin)v+=1+k.venin*.6+E.a*.2;if(k.siphon)v+=E.a*.35;if(k.hate)v+=.3;
   if(c.eg)v+=1.8;if(k.croissance)v+=2.2;if(k.frenesie)v+=E.a*.9;if(k.tilt)v+=.8;if(k.afk&&!c.aw)v+=.8;
-  if(k.insolence)v+=1.2;if(k.respawn&&!c.rs)v+=1.6;
+  if(k.insolence)v+=1.2;if(k.respawn&&!c.rs)v+=1.6;if(k.vip)v+=1.2;if(k.deso)v-=.5;if(c.inv)v+=3;
+  if(!c.mut){if(cd.aura)v+=2;if(cd.tax)v+=.8;if(cd.noRet)v+=E.a*.3;if(cd.save1&&!c.sv)v+=2;if(cd.xatk)v+=.6;if(cd.dblLol)v+=1;if(cd.killGrow||cd.allyDieLol)v+=.8;if(cd.healGrow)v+=.4;if(cd.pzBack)v+=.6}
+  if(c.xat)v+=E.a*.8*c.xat;
   if(!c.mut){if(cd.sot)v+=2;if(cd.eot)v+=1.5;if(cd.last)v+=1.2;if(cd.reset)v+=1;if(cd.dbl)v+=3;if(cd.tdisc)v+=1}
   if(E.TE){if(E.TE.sot||E.TE.eot)v+=tval({sot:E.TE.sot,eot:E.TE.eot});if(E.TE.vsC)v+=E.TE.vsC*.6;if(E.TE.aram)v+=E.TE.aram*.5;if(E.TE.last)v+=1}
   if(c.blk)v-=E.a*.8;if(c.pz)v-=Math.min(c.pz*(c.pz+1)/2,hp)*.9;
@@ -1624,7 +1758,7 @@ function moves(G,s){
     if(!playable(G,s,i))return;const key=h.k+(h.p?'*':'');if(seen[key])return;seen[key]=1;
     const cd=CARDS[h.k],sp=cryTg(cd);
     if(cd.t==='c'){const L=sp?targets(G,s,sp.tg,sp.tgf):[];
-      for(const sl of candSlots(G,s,h.k)){if(L.length)for(const t of L)M.push({t:'play',i,sl,tg:t});else M.push({t:'play',i,sl})}}
+      for(const sl of candSlots(G,s,h.k)){if(L.length)for(const t of L){if(sp.tg2)for(const t2 of tg2List(G,s,sl))M.push({t:'play',i,sl,tg:t,tg2:t2});else M.push({t:'play',i,sl,tg:t})}else M.push({t:'play',i,sl})}}
     else{if(sp)for(const t of targets(G,s,sp.tg,sp.tgf))M.push({t:'play',i,tg:t});else M.push({t:'play',i})}});
   for(let i=0;i<CELLS;i++)if(canAtk(G,s,i))for(const t of atkTargets(G,s))M.push({t:'atk',f:i,tg:t});
   for(let i=0;i<CELLS;i++)if(canExil(G,s,i))M.push({t:'exil',i});
@@ -1802,7 +1936,7 @@ function deckCheck(d){
 function withPrism(list){const used={};return list.map(k=>{k=k.replace('*','');const e=S.coll[k]||{n:0,p:0};used[k]=(used[k]||0)+1;return used[k]<=e.p?k+'*':k})}
 
 // ============ HÔTE DE PARTIE (IA locale ou en ligne) + RÉSEAU PEERJS ============
-const APPV='3.2';
+const APPV='3.3';
 function peerId(code){return 'etat-arcanique-'+String(code).replace('ARCANE-','').toLowerCase()}
 function validCode(c){return /^ARCANE-[A-Z0-9]{6}$/.test(String(c||'').trim().toUpperCase())}
 
@@ -2017,7 +2151,7 @@ function ico(n,cls){const e=document.createElement('span');e.className='icw'+(cl
 const EMBLEM='<svg viewBox="0 0 32 32"><defs><linearGradient id="lgE" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffd36b"/><stop offset=".55" stop-color="#ff7a3d"/><stop offset="1" stop-color="#ff4fa0"/></linearGradient></defs><path d="M16 2l11.5 6.5v13L16 28 4.5 21.5v-13z" fill="#123a40" stroke="url(#lgE)" stroke-width="2"/><path d="M16 8l2.2 5.2 5.3.4-4 3.6 1.2 5.3L16 19.6l-4.7 2.9 1.2-5.3-4-3.6 5.3-.4z" fill="url(#lgE)"/></svg>';
 
 // ----- terrains, familles, affinités : visuels -----
-// icône d'un jeu : le vrai logo (WoW, Dofus, LoL, CS), l'emoji pour le Bazar
+// icône d'un jeu : le vrai logo (WoW, Dofus, LoL, CS), l'emoji pour les terrains neutres
 const GURI={};for(const g in GSVG)GURI[g]='data:image/svg+xml,'+encodeURIComponent(GSVG[g]);
 function gi(g){return GURI[g]?h('img',{class:'gico',src:GURI[g],alt:GAMES[g].n,draggable:'false'}):h('span',{class:'gico ge'},GAMES[g]?GAMES[g].ic:'?')}
 function pips(n,max){return h('b',null,Array.from({length:max||2},(_,j)=>h('i',{class:j<n?'f':''})))}
@@ -2035,7 +2169,9 @@ function tcardEl(t,o){o=o||{};const td=TD[t.d],g=GAMES[td.g];
   return h('div',{class:'tcard',style:'--gc:'+g.c},o.cost!=null?h('span',{class:'tp'},'🪙'+o.cost):null,h('span',{class:'tg'},gi(td.g)),h('b',null,td.n),szEl(td.size))}
 function miniAv(k){const cd=CARDS[k],a=artOf(k);return a?h('img',{src:a,alt:''}):h('u',{style:'background:'+(cd.col||'#2b404b')},cd.sym||'✦')}
 function memEl(k){return h('span',{class:'mem',style:'border-color:'+RCOL[CARDS[k].r],onclick:()=>showCard(k)},miniAv(k),CARDS[k].n)}
-function baseEl(b){const B=BASES[b];return h('span',{class:'mem',onclick:()=>showCard(b+'1')},miniAv(b+'1'),B.n,h('span',{class:'rd'},[1,2,3].map(r=>h('i',{style:'background:'+RCOL[r]}))))}
+// versions existantes d'un personnage (les nouveaux n'ont pas encore leurs 3 raretés)
+function versOf(b){return[1,2,3].filter(r=>CARDS[b+r])}
+function baseEl(b){const B=BASES[b],k0=b+versOf(b)[0];return h('span',{class:'mem',onclick:()=>showCard(k0)},miniAv(k0),B.n,h('span',{class:'rd'},versOf(b).map(r=>h('i',{style:'background:'+RCOL[r]}))))}
 function facTiers(f,n){const F=FAC[f];
   return h('div',{class:'tiers',style:'--gc:'+F.c},F.tiers.map(t=>h('div',{class:'tier'+(n>=t[0]?' on':'')},h('span',{class:'tn'},'×'+t[0]),h('span',null,t[1]))))}
 function facTag(f,n){if(n<2)return null;
@@ -2060,7 +2196,7 @@ function defsFor(k,extra){
   return out}
 
 // ----- carte -----
-const KWORDER=['rempart','venin','siphon','hate','egide','croissance','frenesie','afk','insolence','tilt','respawn'];
+const KWORDER=['vip','rempart','venin','siphon','hate','egide','croissance','frenesie','afk','insolence','tilt','respawn','deso'];
 function artNode(k){
   const cd=CARDS[k],a=artOf(k);
   if(a)return h('img',{src:a,alt:'',draggable:'false'});
@@ -2079,13 +2215,15 @@ function cardEl(k,o){
   if(cr&&cr.eg)cls.push('eg');if(cr&&cr.mut)cls.push('mut-x');if(cr&&cr.ex)cls.push('exil');if(o.tilt)cls.push('tilt');if(o.cls)cls.push(...o.cls);
   // plateau : effets de combat visibles sur la carte (Rempart, AFK, Tilt, Venin, Bloquée...)
   if(o.bd&&cr&&E){if(E.kw.rempart)cls.push('rp');if(E.kw.afk&&!cr.aw)cls.push('afkx');if(E.TE&&E.TE.noAtk)cls.push('noatk');
-    if(E.kw.tilt)cls.push('tlt',cr.tc>0?'tlton':'tltoff');if(cr.pz>0)cls.push('pzn');if(cr.blk>0)cls.push('blkx')}
+    if(E.kw.tilt)cls.push('tlt',cr.tc>0?'tlton':'tltoff');if(cr.pz>0)cls.push('pzn');if(cr.blk>0)cls.push('blkx');if(E.kw.deso)cls.push('desox');if(cr.inv)cls.push('invx')}
   const tx=cd.tx||'',tc=tx.length>118?'ct xl':tx.length>76?'ct l':'ct';
   const kwset=E?E.kw:(()=>{const r={};(cd.kw||[]).forEach(x=>r[x]=1);return r})();
   const kws=KWORDER.filter(x=>kwset[x]||(x==='egide'&&cr&&cr.eg)).map(x=>x==='venin'?h('i',{class:'vn'},'☠'+(kwset.venin>1?kwset.venin:'')):h('i',null,KWI[x][1]));
   let a=cd.a,hp=cd.h,ac='',hc='';
   if(isC&&E){a=E.a;hp=E.hp;ac=a>cd.a?'up':a<cd.a?'dn':'';hc=hp<E.h?'hurt':(E.h>cd.h?'up':'')}
-  const bdg=[];if(cr){if(cr.pz>0)bdg.push(h('i',{class:'pz'},'☠'+cr.pz));if(cr.blk>0)bdg.push(h('i',{class:'blk'},'🔒'));if(cr.mut)bdg.push(h('i',null,'🔇'))}
+  const bdg=[];if(cr){if(cr.pz>0)bdg.push(h('i',{class:'pz'},'☠'+cr.pz));if(cr.blk>0)bdg.push(h('i',{class:'blk'},'🔒'));if(cr.mut)bdg.push(h('i',null,'🔇'));
+    if(cr.inv)bdg.push(h('i',{class:'inv',title:'Invincible jusqu’à son prochain tour'},'✨'));if(cr.xat>0||cr.xa>0)bdg.push(h('i',{title:'Attaques en plus'},'⚔+'+((cr.xat||0)+(cr.xa||0))));
+    if(cr.lb)bdg.push(h('i',{title:'Affinité LoL +'+cr.lb},gi('lol'),'+'+cr.lb))}
   let tb=null;
   if(o.bd&&E&&E.T){const td=TD[E.T.d],g=GAMES[td.g],af=affOf(k,td.g);tb=h('div',{class:'tb'+(af?'':' z'),style:'--gc:'+g.c,title:td.n+' : '+terrFor(k,E.T.d).tx},gi(td.g),td.g==='bazar'?null:pips(af))}
   return h('div',{class:cls.join(' '),'data-k':k,'data-id':cr?cr.id:null},
@@ -2142,16 +2280,17 @@ function ask(title,msg,btns,opt){
 function showCard(k,opts){
   opts=opts||{};const cd=CARDS[k];const e=S.coll[k]||{n:0,p:0};
   const defs=defsFor(k);
-  const vers=cd.base?h('div',{class:'vers'},[1,2,3].map(r=>{const kk=cd.base+r;return h('div',{class:'v'+(kk===k?' on':''),title:RAR[r],onclick:()=>{(opts.coll?collModal:showCard)(kk)}},cardEl(kk))})):null;
+  const vl=cd.base?versOf(cd.base):[];
+  const vers=vl.length>1?h('div',{class:'vers'},vl.map(r=>{const kk=cd.base+r;return h('div',{class:'v'+(kk===k?' on':''),title:RAR[r],onclick:()=>{(opts.coll?collModal:showCard)(kk)}},cardEl(kk))})):null;
   const box=h('div',null,
     h('div',{class:'detail'},
-      h('div',null,cardEl(k,{big:true,tilt:1,p:opts.p||(e.p>0&&!opts.plain)}),vers?h('div',{class:'sm mut',style:'margin-top:10px'},'Les 3 versions :'):null,vers),
+      h('div',null,cardEl(k,{big:true,tilt:1,p:opts.p||(e.p>0&&!opts.plain)}),vers?h('div',{class:'sm mut',style:'margin-top:10px'},vl.length===3?'Les 3 versions :':'Les '+vl.length+' versions :'):null,vers),
       h('div',null,
         h('h2',null,cd.n),cd.st?h('div',{style:'color:#ffd36b;font-weight:700;font-style:italic;margin:-6px 0 6px'},cd.st):null,
         h('div',{class:'mut sm'},(cd.t==='c'?'Créature':'Sort')+' · '+RAR[cd.r]+' · coût '+cd.c+(cd.tok?' · jeton':'')),
         (cd.fac&&cd.fac.length)?cd.fac.map(f=>h('div',{style:'margin:8px 0'},h('span',{class:'chip',style:'cursor:default;border-color:'+FAC[f].c+';background:'+FAC[f].c+'33'},FAC[f].ic+' '+FAC[f].n),
           h('div',{class:'sm',style:'margin-top:4px'},FAC[f].sum),facTiers(f,0))):null,
-        cd.t==='c'&&!cd.tok?h('div',null,h('div',{class:'sm mut',style:'margin-top:8px'},'Affinités (effet des terrains de chaque jeu ; les terrains Bazar profitent à tous) :'),
+        cd.t==='c'&&!cd.tok?h('div',null,h('div',{class:'sm mut',style:'margin-top:8px'},'Affinités (effet des terrains de chaque jeu ; les terrains neutres profitent à toutes les créatures) :'),
           h('div',{class:'scores'},AFG.map(g=>h('span',{style:'border-color:'+GAMES[g].c},gi(g),' '+GAMES[g].n+' : '+((cd.sc&&cd.sc[g])||0))))):null,
         h('div',{class:'defs'},defs.map(d=>h('div',null,h('b',null,d[0]+' : '),d[1]))),
         cd.lore?h('div',{class:'lore'},'« '+cd.lore+' »'):null,
@@ -2262,7 +2401,7 @@ function computeHL(){
   const D=DUEL,V=D.V,me=V.me,s=D.sel,hl={};if(!s||!mine())return hl;
   const put=L=>L.forEach(t=>hl[t.s+':'+t.i]=1);
   if(s.t==='hand'){const cd=CARDS[V.p[me].hand[s.i].k];if(cd.t==='s'){const sp=cryTg(cd);if(sp)put(targets(V,me,sp.tg,sp.tgf))}}
-  else if(s.t==='cry')put(targets(V,me,s.sp.tg,s.sp.tgf));
+  else if(s.t==='cry')put(s.t1?tg2List(V,me,s.sl):targets(V,me,s.sp.tg,s.sp.tgf));
   else if(s.t==='atk')put(atkTargets(V,me));
   return hl}
 function isHL(s,i){return !!(DUEL.hl&&DUEL.hl[s+':'+i])}
@@ -2271,7 +2410,7 @@ function hintText(){
   if(s.t==='hand'){const cd=CARDS[V.p[V.me].hand[s.i].k];
     if(cd.t==='c')return 'Clique sur un emplacement libre (ou glisse la carte)';
     return cryTg(cd)?'Choisis une cible':'Clique à nouveau sur la carte pour la jouer'}
-  if(s.t==='cry')return 'Choisis la cible du Cri d’arrivée';
+  if(s.t==='cry')return s.t1?'Choisis ta créature à échanger (ou sa propre case pour l’échanger lui-même)':s.sp.tg2?'Choisis la créature ennemie à prendre':'Choisis la cible du Cri d’arrivée';
   const me=V.me,mc=canMoveC(V,me),mt=canMoveT(V,me);
   if(s.t==='atk')return 'Choisis qui attaquer'+(mc?', ou une case de ton plateau pour déplacer cette créature (◆ '+mvCost(V,me)+')':'');
   if(s.t==='mv')return mc?'Choisis une case de ton plateau pour déplacer cette créature (◆ '+mvCost(V,me)+')':mvWhy(V,me,0);
@@ -2491,7 +2630,7 @@ function terrDetail(ctx){
   out.push(...[h('h4',null,gi(td.g),' '+td.n),
     h('div',{class:'mut sm'},'Terrain '+g.n+' · '+td.size+' case'+(td.size>1?'s':'')+(ctx.cost!=null?' · 🪙 '+ctx.cost:'')+(ctx.placed?' · posé sur '+(ctx.s===me?'ton':'son')+' plateau':'')),
     terrFxEl(td),
-    td.g==='lol'?h('div',{class:'sm',style:'color:#ffd36b'},'Lisdoon (rare, épique) y gagne aussi son bonus Gremlin.'):null,
+    td.g==='lol'?h('div',{class:'sm',style:'color:#ffd36b'},'Lisdoon (Roro) y attaque deux fois par tour.'):null,
     td.g==='bazar'?h('div',{class:'sm mut'},'Terrain neutre : profite à toutes les créatures, quelle que soit leur affinité.'):h('div',{class:'sm mut'},'L’effet dépend de l’affinité '+g.n+' de chaque créature (points sur la carte).')].filter(Boolean));
   let cells=null;
   if(ctx.placed){cells=[];for(let i=0;i<CELLS;i++)if(P.cells[i]===t.id)cells.push(i)}
@@ -2592,7 +2731,8 @@ function clickSlot(s,i){
     if(sel.t==='hand'){const cd=CARDS[V.p[me].hand[sel.i].k];
       if(cd.t==='c'){if(s===me&&i>=0&&!c){playCreatureAt(sel.i,i);return}}
       else if(cd.tg&&isHL(s,i)){playSpellOn(sel.i,{s,i});return}}
-    else if(sel.t==='cry'){if(isHL(s,i)){doAct({t:'play',i:sel.i,sl:sel.sl,tg:{s,i}});return}}
+    else if(sel.t==='cry'){if(isHL(s,i)){if(sel.sp.tg2&&!sel.t1){D.sel=Object.assign({},sel,{t1:{s,i}});renderDuel();return}
+      const a={t:'play',i:sel.i,sl:sel.sl,tg:sel.t1||{s,i}};if(sel.t1)a.tg2={s,i};doAct(a);return}}
     else if(sel.t==='atk'||sel.t==='mv'){
       if(sel.t==='atk'&&isHL(s,i)){doAct({t:'atk',f:sel.f,tg:{s,i}});return}
       if(s===me&&i>=0&&i===sel.f){D.sel=null;renderDuel();return}
@@ -2833,7 +2973,19 @@ function animate(es){
     case 'buff':popAt(e.ts,e.i,sg(e.ba)+'/'+sg(e.bh),'buf',t);t+=110;break;
     case 'tilt':flashSlot(e.ts,e.i,'#ff2b2b',t+120);popAt(e.ts,e.i,'😡 Tilt !','txt',t+120);t+=320;break;
     case 'egide':popAt(e.ts,e.i,'✧ Égide !','txt',t);t+=100;break;
-    case 'kwg':popAt(e.ts,e.i,e.kw==='rempart'?'⛊ Rempart':'✧ Égide','buf',t);t+=100;break;
+    case 'kwg':popAt(e.ts,e.i,e.kw==='rempart'?'⛊ Rempart':e.kw==='deso'?'💫 Désorienté':'✧ Égide','buf',t);t+=100;break;
+    case 'deso':popAt(1-e.ts,e.i,'💫 au hasard','txt',t);t+=200;break;
+    case 'ctl':popAt(e.to,e.ti,'⇄ change de camp','txt',t);t+=250;break;
+    case 'swap':popAt(e.ts,e.i,'⇄ échange','txt',t);popAt(1-e.ts,e.ti,'⇄ échange','txt',t);t+=300;break;
+    case 'tdes':banner('💥 Terrain détruit','#ff8a1f');t+=300;break;
+    case 'tgift':{const td=TD[e.d];if(td)for(let j=e.at;j<e.at+td.size;j++)flashSlot(e.ts,j,'#bfe8ff',t);popAt(e.ts,-1,[gi(td?td.g:'bazar'),' '+(td?td.n:'')],'txt',t);t+=300;break}
+    case 'save':popAt(e.ts,e.i,'✨ 1 PV, invincible !','buf',t);t+=250;break;
+    case 'inv':popAt(e.ts,e.i,'✨ invincible','txt',t);break;
+    case 'aff':popAt(e.ts,e.i,[gi(e.g),' affinité '+e.n],'buf',t);t+=150;break;
+    case 'tax':popAt(e.ts,-1,'🪙 −'+e.n,'txt',t);break;
+    case 'xa':popAt(e.ts,e.i,'⚔ +1 attaque','buf',t);break;
+    case 'eth':popAt(e.ts,-1,'◆ +'+e.n,'buf',t);break;
+    case 'lose':banner('☠ Surrender to madness','#ff4d5e');t+=400;break;
     case 'die':ghostDie(e.ts,e.i,e.ban,t);if(e.ban)popAt(e.ts,e.i,'⛔ Banni','txt',t);t+=90;break;
     case 'sum':if(e.rs)popAt(e.ts,e.i,'↺ Respawn','buf',t);break;
     case 'mute':popAt(e.ts,e.i,'🔇 Mute','txt',t);t+=100;break;
@@ -2902,7 +3054,7 @@ function histNodes(e){
   case 'disc':return['card',[h('span',{class:'vb'},'✝'),who(e),mini(e.k),'défaussée (cimetière)',by(e)]];
   case 'buff':return['buff',[by(e),h('span',{class:'vb'},'⬆'),mini(e.k),h('span',{class:'bf'},sg(e.ba)+'/'+sg(e.bh))]];
   case 'tilt':return['buff',[h('span',{class:'vb'},'😡'),mini(e.k),'est tilt : son effet Tilt se déclenche']];
-  case 'kwg':return['buff',[by(e),h('span',{class:'vb'},e.kw==='rempart'?'⛊':'✧'),mini(e.k),'gagne '+(e.kw==='rempart'?'Rempart':'Égide')]];
+  case 'kwg':return['buff',[by(e),h('span',{class:'vb'},e.kw==='rempart'?'⛊':e.kw==='deso'?'💫':'✧'),mini(e.k),e.kw==='deso'?'devient Désorienté':'gagne '+(e.kw==='rempart'?'Rempart':'Égide')]];
   case 'mute':return['ctl',[by(e),h('span',{class:'vb'},'🔇'),mini(e.k),'réduit au silence']];
   case 'blk':return['ctl',[by(e),h('span',{class:'vb'},'🔒'),mini(e.k),'bloquée']];
   case 'kick':return['ctl',[by(e),h('span',{class:'vb'},'⤴'),mini(e.k),'renvoyée en main']];
@@ -2922,6 +3074,18 @@ function histNodes(e){
   case 'ev':return['sys',[chip('🌀','Événement','#ffc145'),e.n]];
   case 'fat':return['dmg',[srcChip('fat'),h('span',{class:'dm'},'−'+e.n)]];
   case 'res':return['sys',[h('span',{class:'vb'},'🏳'),'Abandon']];
+  case 'deso':return['atk',[h('span',{class:'vb'},'💫'),mini(e.k),'Désorienté : cible tirée au hasard']];
+  case 'ctl':return['ctl',[by(e),h('span',{class:'vb'},'⇄'),mini(e.k),'change de camp']];
+  case 'swap':return['ctl',[by(e),h('span',{class:'vb'},'⇄'),mini(e.k),'et',mini(e.k2),'échangent de camp']];
+  case 'tdes':return['tfx',[by(e),h('span',{class:'vb'},'💥'),e.d?terrChip(e.d):'terrain','détruit',who(e)]];
+  case 'tgift':return['tfx',[by(e),h('span',{class:'vb'},'❄'),terrChip(e.d),'posé chez',heroChip(e.ts)]];
+  case 'save':return['buff',[h('span',{class:'vb'},'✨'),mini(e.k),'reste à 1 PV et devient invincible']];
+  case 'inv':return['buff',[h('span',{class:'vb'},'✨'),mini(e.k),'invincible : aucun dégât']];
+  case 'aff':return['buff',[by(e),h('span',{class:'vb'},'↑'),mini(e.k),'affinité',gi(e.g),String(e.n)]];
+  case 'tax':return['gold',[h('span',{class:'vb'},'🪙'),heroChip(e.ts),'paie '+e.n+' Or pour attaquer',mini(e.k)]];
+  case 'xa':return['buff',[by(e),h('span',{class:'vb'},'⚔'),mini(e.k),'pourra attaquer une fois de plus']];
+  case 'eth':return['buff',[by(e),h('span',{class:'vb'},'◆'),heroChip(e.ts),'+'+e.n+' Démoflux']];
+  case 'lose':return['sys',[h('span',{class:'vb'},'☠'),heroChip(e.ts),'perd la partie (Surrender to madness)']];
   default:return null}}
 function renderHist(){
   const D=DUEL,V=D.V,me=V.me,el=$('#hist');if(!el)return;
@@ -2945,7 +3109,7 @@ function showResult(){
   let rw=null;if(V.o.rw&&!D.rewarded){D.rewarded=true;rw=rewardDuel(win)}
   const box=h('div',{style:'text-align:center'},
     h('h2',{style:'font-size:34px;color:'+(win?'#ffd36b':draw?'#fff':'#ff8a98')},draw?'Égalité':win?'Victoire !':'Défaite'),
-    h('p',{class:'mut'},V.over.res?(win?'Ton adversaire a abandonné.':'Tu as abandonné.'):win?'L’État Arcanique est à toi.':'Ton adversaire a eu le dernier mot.'),
+    h('p',{class:'mut'},V.over.res?(win?'Ton adversaire a abandonné.':'Tu as abandonné.'):V.over.lose?(win?'Son Dreos (Surrender to madness) est mort : il perd la partie.':'Ton Dreos (Surrender to madness) est mort : tu perds la partie.'):win?'L’État Arcanique est à toi.':'Ton adversaire a eu le dernier mot.'),
     rw?h('div',{class:'panel'},h('div',{style:'font-size:24px;font-weight:800'},'+'+rw.gain+' 💎'),
       h('div',{class:'mut sm'},(win?'Victoire : '+rw.base:'Participation : '+rw.base)+(rw.bonus?' · 1re victoire du jour : +'+rw.bonus:'')+(rw.capped?' · plafond quotidien atteint ('+ECON.cap+')':''))):
       (V.o.rw?null:h('p',{class:'mut sm'},'Duel amical : pas de récompense.')),
@@ -3019,8 +3183,11 @@ function rulesNodes(){
     li('Déplacements :','pendant ton tour, glisse une de tes créatures sur une autre case de ton plateau (ou sur une autre de tes créatures pour les échanger), et glisse tes terrains le long de leur bande. Ça coûte : 1 ◆ (Démoflux) pour une créature, 1 🪙 (Or) pour un terrain, et le 2e déplacement du tour coûte 2, le 3e coûte 3. Par défaut, 2 déplacements maximum par tour (réglable dans les options du défi). Une créature déplacée garde son état : elle n’attaque pas plus et ne déclenche aucun effet d’arrivée.'),
     li('Cimetière ✝ :','les sorts joués, les créatures détruites et les cartes défaussées ou brûlées (main pleine) vont toutes au cimetière, affiché à côté de ton deck (clique dessus pour le voir). Quand ton deck est vide, ton cimetière est mélangé pour former un nouveau deck. Les cartes Bannies et les jetons disparaissent.'),
     li('Familles :','chaque créature appartient à une ou deux familles. Leurs bonus s’activent dès 2 créatures de la même famille sur ton plateau, et la plupart grandissent avec chaque membre en plus. La barre au-dessus de ton héros montre les familles en jeu.'),
-    li('Terrains 🏟 :','la zone du milieu propose 2 terrains, renouvelés à chaque tour. Achète-les avec ton Or 🪙 (+'+OPTDEF.inc+' par tour), autant que tu peux en payer, et pose-les sur 1 à 3 de tes cases. Le bouton 🎲 à gauche des terrains relance la boutique (2 nouveaux terrains) pour 2 Or. Chaque créature posée dessus profite de son effet selon son affinité avec le jeu (les points ⚔️ 🥚 🏆 🎯 sur la carte : 0, 1 ou 2). Les terrains Bazar 🌀 profitent à tout le monde.'),
+    li('Terrains 🏟 :','la zone du milieu propose 2 terrains, renouvelés à chaque tour. Achète-les avec ton Or 🪙 (+'+OPTDEF.inc+' par tour), autant que tu peux en payer, et pose-les sur 1 à 3 de tes cases. Le bouton 🎲 à gauche des terrains relance la boutique (2 nouveaux terrains) pour 2 Or. Chaque créature posée dessus profite de son effet selon son affinité avec le jeu (les points à côté des logos des jeux sur la carte : 0, 1 ou 2). WoW, Dofus, LoL et CS sont des terrains de jeu ; les terrains neutres 🌀 profitent à tout le monde.'),
     li('Second joueur :','commence avec une carte de plus, la Pièce (+1 Démoflux, donnée après le mulligan), 1 Or et 5 PV de plus (45 au lieu de 40 par défaut).'),
+    li('VIP 🎟 :','une créature VIP ne peut être attaquée que si elle est seule sur son plateau, ou s’il n’y reste que des VIP. Les sorts et effets peuvent toujours la viser.'),
+    li('Désorienté 💫 :','quand une créature Désorientée attaque, sa cible est tirée au hasard parmi les ennemis qu’elle peut attaquer (créature ou héros).'),
+    li('Terrains de jeu :','les terrains WoW, Dofus, LoL et CS sont des terrains de jeu ; les autres sont neutres. Certaines cartes réagissent selon qu’elles sont posées sur un terrain de jeu ou non.'),
     li('Tilt 😡 :','quand une créature avec Tilt subit des dégâts et survit, son effet « Tilt : … » se déclenche. Chaque carte a le sien : missile, Rempart, Venin sur tous les ennemis, Plebs, dégâts au héros… (l’Arène 2v2 donne aussi un Tilt : soin de 2 PV).'),
     li('Fiche détaillée :','clic droit sur n’importe quelle carte, créature, terrain ou famille pour afficher sa fiche complète, épinglée tant que tu ne la fermes pas.'),
     li('Effets en combat :','sur le plateau, les états importants se voient sur la carte : Égide = reflet de verre, Rempart = cadre de bouclier, Tilt = brume rouge (plus forte une fois déclenché), AFK = carte grisée (inciblable tant qu’elle n’a pas attaqué), Venin subi = teinte verte, Bloquée = givre. Une case couverte par un terrain prend la couleur de ce terrain.'),
@@ -3145,11 +3312,9 @@ function mkFilters(F,opt,onChange){
       row('Rareté',[1,2,3].map(r=>h('span',{class:'chip'+(F.r===r?' on':''),style:F.r===r?'':'color:'+RCOL[r],onclick:()=>set('r',r)},RAR[r]))),
       row('Famille',FACK.map(f=>h('span',{class:'chip fchip'+(F.fac===f?' on':''),style:'--fc:'+FAC[f].c,title:FAC[f].n,onclick:()=>set('fac',f)},FAC[f].ic,h('em',null,FAC[f].n)))),
       row('Coût',[1,2,3,4,5,6,7].map(c=>h('span',{class:'chip cchip'+(F.cost===c?' on':''),onclick:()=>set('cost',c)},c===7?'7+':String(c)))),
-      // affinité avec un jeu : un clic = affinité 1 ou plus, deux clics = affinité 2 seulement, trois clics = plus de filtre
+      // affinité avec un jeu (1 ou 2, sans distinction) : un clic pour filtrer, un autre pour retirer le filtre
       row('Affinité',AFG.map(g=>{const on=F.aff===g;return h('span',{class:'chip achip'+(on?' on':''),style:'--fc:'+GAMES[g].c,
-        title:'Créatures avec une affinité '+GAMES[g].n+(on?(F.afl===2?' de 2 (clique pour retirer le filtre)':' de 1 ou plus (clique pour n’avoir que l’affinité 2)'):' (clique : 1 ou plus, puis 2)'),
-        onclick:()=>{if(!on){F.aff=g;F.afl=1}else if(F.afl!==2)F.afl=2;else{F.aff='';F.afl=0}draw();onChange()}},
-        gi(g),h('em',null,GAMES[g].n),on?h('b',{class:'afl'},F.afl===2?'2':'1+'):null)})),
+        title:'Créatures qui ont une affinité avec '+GAMES[g].n,onclick:()=>{F.aff=on?'':g;F.afl=on?0:1;draw();onChange()}},gi(g),h('em',null,GAMES[g].n))})),
       ...(extra.length?[row('',extra)]:[]))};
   draw();return box}
 
@@ -3188,19 +3353,19 @@ function cTerr(v){
   v.append(h('div',{class:'panel hl'},ph('🏟','Les terrains'),
     h('div',{style:'line-height:1.5;font-size:14.5px'},
       'Pendant un duel, la zone du milieu propose ',h('b',null,'2 terrains'),'. ',h('b',{style:'color:#ffd0a0'},'À chaque tour, le plus ancien est remplacé'),' par un nouveau tiré dans la pioche commune ; si tu en achètes un, il est aussi remplacé tout de suite. Tu l’achètes avec ton ',h('b',null,'Or 🪙'),' et tu le poses sur ',h('b',null,'1 à 3 cases'),' de ton plateau (le dernier terrain posé remplace les cases qu’il recouvre).'),
-    h('div',{style:'line-height:1.5;font-size:14.5px;margin-top:8px'},'Chaque créature a une ',h('b',null,'affinité'),' de 0 à 2 avec chaque jeu (les points à côté de ',AFG.map(g=>[gi(g),' ']),'sur sa carte). Sur un terrain de ce jeu, elle reçoit l’effet « affinité 1 » ou « affinité 2 » ; à 0, rien. Les terrains ',h('b',{style:'color:'+GAMES.bazar.c},'Bazar 🌀'),' sont neutres et profitent à toutes les créatures.')));
+    h('div',{style:'line-height:1.5;font-size:14.5px;margin-top:8px'},'Chaque créature a une ',h('b',null,'affinité'),' de 0 à 2 avec chaque jeu (les points à côté de ',AFG.map(g=>[gi(g),' ']),'sur sa carte). Sur un terrain de ce jeu, elle reçoit l’effet « affinité 1 » ou « affinité 2 » ; à 0, rien. WoW, Dofus, LoL et CS sont des terrains de jeu ; les terrains ',h('b',{style:'color:'+GAMES.bazar.c},'neutres 🌀'),' profitent à toutes les créatures.')));
   const grid=h('div',{class:'ggrid'});
   GK.forEach(g=>{
     const G=GAMES[g],ts=TDEF.filter(t=>t.g===g);
     const b2=BASEK.filter(b=>(BASES[b].sc[g]||0)>=2),b1=BASEK.filter(b=>(BASES[b].sc[g]||0)===1);
     grid.append(h('div',{class:'gcard',style:'--gc:'+G.c},
-      h('div',{class:'gh'},h('div',{class:'gi'},gi(g)),h('div',null,h('b',null,'Terrains '+G.n),h('small',null,ts.length+' terrains'+(g==='bazar'?' · neutres':' · '+b2.length+' personnages d’affinité 2, '+b1.length+' d’affinité 1')))),
-      h('div',{class:'tlist'},ts.map(t=>h('div',{class:'trow',style:'--gc:'+G.c},h('div',{style:'font-size:20px'},gi(g)),h('b',null,t.n),szEl(t.size),h('span',{class:'pr'},'🪙'+t.cost),
+      h('div',{class:'gh'},h('div',{class:'gi'},gi(g)),h('div',null,h('b',null,g==='bazar'?'Terrains neutres':'Terrains '+G.n),h('small',null,ts.length+' terrains'+(g==='bazar'?' · neutres':' · '+b2.length+' personnages d’affinité 2, '+b1.length+' d’affinité 1')))),
+      h('div',{class:'tlist'},ts.map(t=>h('div',{class:'trow',style:'--gc:'+G.c},h('div',{style:'font-size:20px'},gi(g)),h('b',null,t.n),szEl(t.size),h('span',{class:'pr'},t.uniq?'Kirua':'🪙'+t.cost),
         h('div',{class:'tx'},g==='bazar'?t.tn:[h('b',null,'Aff. 1 : '),t.t1,' ',h('b',null,'Aff. 2 : '),t.t2])))),
-      g==='bazar'?h('div',{class:'sm',style:'margin-top:8px;color:#ffd36b'},'Potatoll (rare, épique) déclenche ses effets du Bazar deux fois sur un terrain Bazar.'):
+      g==='bazar'?h('div',{class:'sm',style:'margin-top:8px;color:#ffd36b'},'Potatoll (fou du Bazar) déclenche ses effets du Bazar deux fois sur un terrain neutre.'):
       [h('div',{class:'sm',style:'margin:10px 0 2px;font-weight:700'},'Affinité 2 :'),h('div',{class:'members'},b2.length?b2.map(baseEl):h('span',{class:'mut sm'},'Personne.')),
        h('div',{class:'sm',style:'margin:8px 0 2px;font-weight:700'},'Affinité 1 :'),h('div',{class:'members'},b1.length?b1.map(baseEl):h('span',{class:'mut sm'},'Personne.')),
-       g==='lol'?h('div',{class:'sm',style:'margin-top:8px;color:#ffd36b'},'Gremlin : Lisdoon (rare, épique) gagne +3 ATK et +2 ou +3 PV sur un terrain LoL.'):null]))});
+       g==='lol'?h('div',{class:'sm',style:'margin-top:8px;color:#ffd36b'},'Sur un terrain LoL, Lisdoon (Roro) attaque deux fois par tour ; Elkatrix (doux comme un agneau) double les effets des terrains LoL de ton camp.'):null]))});
   v.append(grid)}
 function cFam(v){
   v.append(h('div',{class:'panel hl'},ph('🧬','Les familles'),
@@ -3217,7 +3382,7 @@ function cKw(v){
   v.append(h('div',{class:'panel hl'},ph('📖','Mots-clés'),h('div',{class:'kwrow'},
     Object.keys(KWI).map(k=>[h('b',null,h('span',{class:'kwi'},KWI[k][1]),KWI[k][0]),h('span',null,defOf(KWI[k][0])||'')]).flat())),
     h('div',{class:'panel'},ph('📜','Autres termes'),h('div',{class:'kwrow'},
-      ['Cri d’arrivée','Agonie','Reset','Gremlin','missile','effet du Bazar','Mute','Bloque','Banni','Kick','Cimetière','Défausser','Affinité','à l’étranger','Démoflux','Or','Terrain'].map(w=>[h('b',null,w==='Bloque'?'Bloquée':w==='Banni'?'Bannie':w==='missile'?'Missile':w==='à l’étranger'?'À l’étranger':w==='effet du Bazar'?'Effet du Bazar':w),h('span',null,defOf(w)||'')]).flat())))}
+      ['Cri d’arrivée','Agonie','Reset','missile','effet du Bazar','Mute','Bloque','Banni','Kick','Cimetière','Défausser','Affinité','à l’étranger','Démoflux','Or','Terrain','terrain de jeu','terrain neutre','Invincible'].map(w=>[h('b',null,w==='Bloque'?'Bloquée':w==='Banni'?'Bannie':w==='missile'?'Missile':w==='à l’étranger'?'À l’étranger':w==='effet du Bazar'?'Effet du Bazar':w[0].toUpperCase()+w.slice(1)),h('span',null,defOf(w)||'')]).flat())))}
 function cRules(v){v.append(h('div',{class:'panel hl'},ph('guide','Comment jouer'),...rulesNodes()))}
 
 // ---------- DECKS ----------
