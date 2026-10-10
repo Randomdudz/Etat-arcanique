@@ -1098,7 +1098,7 @@ const RCOL=['','#a8a196','#b3c3cf','#d4ad5a'];
 const RGEM=['','●','◆','★'];
 const LIMIT=r=>r==3?1:2;                                   // exemplaires max par deck
 const ECON={booster:75,pack:5,bulk:3,win:25,loss:10,first:25,cap:150,start:300,deck:30,decks:5,
-  odds:[0,70,24,6],codeH:'180b8b09b9392a003fe48bef32683cdd48a402919ee679a2029927c9f639fc98',codeGems:2000};
+  odds:[0,70,24,6],codeH:'180b8b09b9392a003fe48bef32683cdd48a402919ee679a2029927c9f639fc98',codeGems:2000,codeAll:'1ca55ef7da83c4d2eca12e1e02bf3fb4f00df3463c75b75322f2bb0f67404506'};
 
 // ----- familles : tiers = [nombre de membres, effet] -----
 const FAC={
@@ -2397,9 +2397,12 @@ function rewardDuel(win){
   const tot=g+bonus,gain=Math.min(tot,dailyLeft());
   S.daily.earned+=gain;S.gems+=gain;if(win)S.stats.w++;else S.stats.l++;saveS();
   return{gain,base:g,bonus,capped:gain<tot}}
+// toute la collection d'un coup (code de bêta-test) : chaque carte au maximum autorisé dans un deck (2, ou 1 pour une légendaire)
+function unlockAll(){let n=0;for(const k of POOL){const e=S.coll[k]||(S.coll[k]={n:0,p:0});const m=LIMIT(CARDS[k].r);if(e.n<m){n+=m-e.n;e.n=m}}saveS();return n}
 function redeemCode(txt){
-  const h=sha256(String(txt||'').trim());
+  const t=String(txt||'').trim(),h=sha256(t);
   if(h===ECON.codeH){S.gems+=ECON.codeGems;saveS();return{ok:true,n:ECON.codeGems}}
+  if(sha256(t.toLowerCase())===ECON.codeAll)return{ok:true,all:true,n:unlockAll()};
   return{ok:false}}
 
 // ----- decks -----
@@ -4214,9 +4217,9 @@ function tradeWindow(conn,peer){
 function vCode(v){
   const i=h('input',{placeholder:'Entre un code',style:'flex:1',autocapitalize:'off',autocomplete:'off',spellcheck:'false'}),out=h('div',{style:'margin-top:10px'});
   const go_=()=>{const r=redeemCode(i.value);i.value='';
-    out.innerHTML='';out.append(r.ok?h('div',{style:'color:#a4db99;font-weight:800'},'✔ Code valide : +'+r.n+' 💎 ajoutés !'):h('div',{style:'color:#bc8c94;font-weight:700'},'Code invalide.'));refreshTop()};
+    out.innerHTML='';out.append(r.ok?h('div',{style:'color:#a4db99;font-weight:800'},r.all?(r.n?'✔ Code valide : toute la collection est débloquée ('+r.n+' cartes ajoutées) !':'✔ Code valide : tu possèdes déjà toute la collection.'):'✔ Code valide : +'+r.n+' 💎 ajoutés !'):h('div',{style:'color:#bc8c94;font-weight:700'},'Code invalide.'));refreshTop()};
   i.addEventListener('keydown',e=>{if(e.key==='Enter')go_()});
-  v.append(h('div',{class:'panel hl',style:'max-width:620px'},ph('code','Code'),h('p',{class:'mut sm',style:'margin:0 0 10px'},'Entre un code pour recevoir des 💎 (réservé aux tests).'),
+  v.append(h('div',{class:'panel hl',style:'max-width:620px'},ph('code','Code'),h('p',{class:'mut sm',style:'margin:0 0 10px'},'Entre un code pour recevoir des 💎 ou débloquer toute la collection (réservé aux tests).'),
     h('div',{class:'row'},i,h('button',{class:'btn pri',onclick:go_},'Valider')),out))}
 
 // ---------- COMPTE : sauvegarde en ligne et transfert de la progression ----------
