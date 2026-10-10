@@ -716,8 +716,13 @@ input::placeholder{color:#6f8a96}
 .hpl .hbar i{position:absolute;left:0;top:0;bottom:0;background:#e5484d;border-radius:99px;transition:width .5s}
 .hero.low .hpl .hbar i{background:#ff2e3e;box-shadow:0 0 8px #ff2e3e}
 .hpn{font-size:17px;font-weight:900;white-space:nowrap;color:#fff;line-height:1}.hpn i{font-style:normal;color:#ff6b6b}.hpn small{font-size:12px;color:#8ea2ac;font-weight:700}
-.hst{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 12px;border-left:1px solid #ffffff1a;min-width:60px}
-.hst .hl{font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:#8ea2ac;font-weight:800;line-height:1.3}
+.hst{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 12px;border-left:1px solid #ffffff1a;min-width:60px;position:relative;cursor:default}
+/* le nom de chaque case (Démoflux, Or, Main...) n'apparaît qu'au survol */
+.hst .hl,.hpl .hl{position:absolute;left:50%;bottom:calc(100% + 7px);transform:translate(-50%,3px);background:#0b1013;border:1px solid #ffffff59;border-radius:8px;padding:3px 9px;
+  font-size:11.5px;letter-spacing:.03em;font-weight:800;color:#fff;white-space:nowrap;line-height:1.35;opacity:0;pointer-events:none;transition:opacity .12s,transform .12s;z-index:30;box-shadow:0 4px 14px #000b}
+.hero.opp .hst .hl,.hero.opp .hpl .hl{bottom:auto;top:calc(100% + 7px);transform:translate(-50%,-3px)}
+.hst:hover .hl,.hpl:hover .hl{opacity:1;transform:translate(-50%,0)}
+.hpl{position:relative}
 .hst b{font-size:17px;font-weight:900;white-space:nowrap;line-height:1.25;color:#fff}.hst b small{font-size:12px;color:#8ea2ac;font-weight:700}
 .hst b i{font-style:normal}.hst.mana b i{color:#5fd0ff}.hst.mvc b i{color:#8ec5ff}
 .hst.mvc{cursor:help}.hst.mvc.out{opacity:.5}
@@ -730,9 +735,10 @@ input::placeholder{color:#6f8a96}
 .fx.on{background:#0d1418;color:#fff;border-color:#ffffff5c;box-shadow:none}
 .fx.on .fi{background:var(--fc);color:#000;box-shadow:0 0 10px var(--fc)}
 .fx .tag{background:#ffffff1a;color:#fff}
-/* cartes posées : pas de familles, ATK et PV toujours des mêmes couleurs */
+/* cartes posées : pas de familles */
 .card.bd .fc{display:none}
-.card .st b.up,.card .st b.dn,.card .st b.hurt{color:#fff;box-shadow:0 .5cqw 1.5cqw #000a}
+/* ATK et PV : exactement la même pastille (même couleur), quel que soit l'état de la créature */
+.card .st .at,.card .st .hpv,.card .st b.up,.card .st b.dn,.card .st b.hurt{background:linear-gradient(180deg,#3b4a52,#151e23);color:#fff;border-color:#000c;box-shadow:inset 0 0 0 .5cqw #ffffff38,0 .5cqw 1.5cqw #000a}
 /* cases couvertes par un terrain : elles prennent sa couleur */
 .board .slot.ter{border:2px solid color-mix(in srgb,var(--tc) 85%,#fff 8%);background:color-mix(in srgb,var(--tc) 20%,transparent)}
 .board .slot.ter:not(.empty){box-shadow:0 0 0 2px var(--tc),0 0 12px color-mix(in srgb,var(--tc) 50%,transparent)}
@@ -763,14 +769,23 @@ input::placeholder{color:#6f8a96}
 .hc.incoming{visibility:hidden}
 .hc.drawn{animation:drawn .5s ease-out}
 @keyframes drawn{0%{transform:perspective(600px) rotateY(90deg) scale(1.1)}100%{transform:none}}
-/* deck face cachée */
-.deck{position:absolute;z-index:6;--dkw:clamp(34px,calc((100% - var(--zw))/2 - 26px),84px);width:var(--dkw);aspect-ratio:5/7.6;right:max(4px,calc((100% - var(--zw))/2 - var(--dkw) - 14px));cursor:help}
-.deck.me{bottom:18px}
-.deck.opp{top:12px}
+/* à droite : deck face cachée + cimetière face visible, empilés */
+.pile2{position:absolute;z-index:6;--dkw:clamp(34px,calc((100% - var(--zw))/2 - 26px),84px);width:var(--dkw);right:max(4px,calc((100% - var(--zw))/2 - var(--dkw) - 14px));display:flex;flex-direction:column;gap:22px}
+.pile2.me{bottom:18px}
+.pile2.opp{top:12px}
+.deck,.grave{position:relative;width:100%;aspect-ratio:5/7.6}
+.deck{cursor:help}
+.grave{cursor:pointer;container-type:inline-size}
+.grave .gvl{position:absolute;inset:0;transform:translate(calc(var(--j)*-2px),calc(var(--j)*-3px));background:#1b2429;border:1.5px solid #ffffff30;border-radius:7%/5%;box-shadow:0 2px 3px #000b}
+.grave .gvt{position:absolute;inset:0;filter:drop-shadow(0 2px 3px #000b)}
+.grave .gvt .card{width:100%;height:100%;filter:grayscale(.4) brightness(.85)}
+.grave:hover .gvt .card{filter:none}
+.grave .gve{position:absolute;inset:0;border:2px dashed #ffffff2e;border-radius:12%;display:grid;place-items:center;color:#ffffff33;font-size:34cqw;font-weight:900}
+.grave .dkn{z-index:3}
 .deck .dkc{position:absolute;inset:0;transform:translate(calc(var(--j)*-2px),calc(var(--j)*-3px));filter:drop-shadow(0 2px 3px #000b)}
 .deck .dkc .card{width:100%;height:100%}
 .deck .dkc.none{border:2px dashed #ffffff33;border-radius:12%}
-.deck .dkn{position:absolute;left:50%;bottom:-11px;transform:translateX(-50%);background:#0d1418;border:1.5px solid #ffffff44;border-radius:99px;padding:0 8px;font-size:12px;font-weight:900;z-index:3;white-space:nowrap}
+.deck .dkn,.grave .dkn{position:absolute;left:50%;bottom:-11px;transform:translateX(-50%);background:#0d1418;border:1.5px solid #ffffff44;border-radius:99px;padding:0 8px;font-size:12px;font-weight:900;z-index:3;white-space:nowrap}
 .flyc{position:fixed;z-index:85;transform-origin:0 0;pointer-events:none;filter:drop-shadow(0 10px 16px #000c)}
 .flyc .card{width:100%}
 /* petites hauteurs (portable avec barre des tâches) : tout est plus compact pour que la main reste visible */
@@ -780,12 +795,43 @@ input::placeholder{color:#6f8a96}
   .field{gap:4px;padding:6px 10px 4px}
   .zone{padding:4px 7px;gap:3px}.zmid{padding:4px 7px}.mid{min-height:0}
   .hero{padding:4px 8px}.hav{width:36px;height:36px;font-size:17px;margin-right:8px}
-  .hid{gap:3px}.hid .hrow .hn{font-size:13.5px}.hpn{font-size:15px}.hst{padding:0 9px;min-width:52px}.hst b{font-size:15px}.hst .hl{font-size:8.5px}
+  .hid{gap:3px}.hid .hrow .hn{font-size:13.5px}.hpn{font-size:15px}.hst{padding:0 9px;min-width:52px}.hst b{font-size:15px}
   .fxrow{height:22px}.fx{height:20px;font-size:11px}.fx .fi{width:16px;height:16px;font-size:9.5px}
   .tstrip{height:20px}.tcell{font-size:10.5px}
   .shT{padding:2px 7px}.shT .ef{display:none}
   .endb{min-width:110px;font-size:14px}.rollb{width:52px}.rollb .ri{font-size:19px}
 }
+/* mulligan : choix des cartes de départ à remplacer */
+#mullov{position:absolute;inset:0;z-index:70;background:#05090bd9;display:grid;place-items:center;padding:16px;backdrop-filter:blur(2px)}
+#mullov .mbox{background:#0d1418;border:1.5px solid #ffffff33;border-radius:18px;padding:22px 26px;box-shadow:0 18px 50px #000c;text-align:center;max-width:min(1100px,100%)}
+#mullov h2{margin:0 0 6px;font-size:26px}
+#mullov .mut{margin:0 auto 14px;max-width:640px;font-size:14px;line-height:1.4}
+#mullov .mrow{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin:6px 0 12px}
+#mullov .mc{position:relative;width:clamp(120px,14vw,200px);cursor:pointer;transition:transform .15s}
+#mullov .mc .card{width:100%}
+#mullov .mc:hover{transform:translateY(-6px)}
+#mullov .mc .mx{position:absolute;left:50%;top:42%;transform:translate(-50%,-50%) rotate(-8deg);background:#e5484d;color:#fff;font-weight:900;font-size:15px;padding:6px 12px;border-radius:10px;border:2px solid #fff;box-shadow:0 6px 18px #000c;opacity:0;pointer-events:none;white-space:nowrap}
+#mullov .mc.out .card{filter:grayscale(.85) brightness(.55)}
+#mullov .mc.out .mx{opacity:1}
+#mullov .mrow.done .mc{cursor:default}
+#mullov .mrow.done .mc:hover{transform:none}
+#mullov .mfirst{color:#ffd36b;font-weight:700;margin:4px 0 12px}
+#mullov .mgo{font-size:18px;padding:10px 26px}
+/* logos des jeux (WoW, Dofus, LoL, CS) : se dimensionnent comme un emoji */
+img.gico{width:1.2em;height:1.2em;vertical-align:-.25em;display:inline-block;flex:none;object-fit:contain;filter:drop-shadow(0 1px 1px #0008)}
+span.gico.ge{font-style:normal}
+.card .afr span img.gico{width:6.2cqw;height:6.2cqw}
+.card .tb img.gico{width:11cqw;height:11cqw}
+.gcard .gi img.gico{width:34px;height:34px}
+.tcard .tg img.gico{width:38px;height:38px}
+.mi u img.gico{border-radius:50%;background:none}
+.scores span img.gico,.pd .afi img.gico{margin-right:2px}
+.pd .afi{margin-right:10px;white-space:nowrap}
+/* filtre par affinité (collection, decks) */
+.achip{height:32px;padding:0 10px!important;font-size:15px;gap:6px;border-color:var(--fc)!important;background:color-mix(in srgb,var(--fc) 14%,#15222a)!important}
+.achip em{font-style:normal;font-size:12.5px;font-weight:800}
+.achip.on{background:color-mix(in srgb,var(--fc) 42%,#15222a)!important;box-shadow:0 0 12px color-mix(in srgb,var(--fc) 70%,transparent);color:#fff!important}
+.achip .afl{background:#fff;color:#111;border-radius:99px;padding:0 7px;font-size:12px;font-weight:900;line-height:18px}
 </style>
 <script defer src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
 </head>
@@ -796,6 +842,12 @@ input::placeholder{color:#6f8a96}
 const GAMES={
   wow:{n:'WoW',ic:'⚔️',c:'#e8b33a'},dofus:{n:'Dofus',ic:'🥚',c:'#3cc46b'},lol:{n:'LoL',ic:'🏆',c:'#3d8bff'},
   cs:{n:'CS',ic:'🎯',c:'#ff7a3d'},bazar:{n:'Bazar',ic:'🌀',c:'#ff4fa0'}};
+// logos des vrais jeux (LoL et CS : Simple Icons, CC0 ; WoW et Dofus : dessinés d'après leurs emblèmes)
+const GSVG={
+  wow:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><defs><radialGradient id="b" cx="50%" cy="36%" r="68%"><stop offset="0" stop-color="#3a6cc0"/><stop offset="1" stop-color="#0a1836"/></radialGradient><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff2bf"/><stop offset=".5" stop-color="#ebbd4e"/><stop offset="1" stop-color="#93600f"/></linearGradient></defs><circle cx="12" cy="12" r="11.1" fill="url(#b)" stroke="#d9b45c" stroke-width="1.3"/><path d="M3.5 6.1h4.9l-.6 1 1.8 6.3 1.8-4.8-.5-1.5h2.2l-.5 1.5 1.8 4.8 1.8-6.3-.6-1h4.9l-1.1 1.1-3.8 11.5h-2.1L12 14l-1.6 4.7H8.3L4.6 7.2z" fill="url(#g)" stroke="#2e1b04" stroke-width=".55" stroke-linejoin="round"/></svg>',
+  dofus:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><defs><radialGradient id="e" cx="38%" cy="30%" r="78%"><stop offset="0" stop-color="#e2ffa8"/><stop offset=".33" stop-color="#6ad65c"/><stop offset=".78" stop-color="#1e7a34"/><stop offset="1" stop-color="#0d441d"/></radialGradient></defs><circle cx="12" cy="12" r="11.1" fill="#2a1a0b" stroke="#cfa64e" stroke-width="1.3"/><path d="M12 3.3c-3.6 0-6 5.4-6 9.5 0 3.8 2.7 6.9 6 6.9s6-3.1 6-6.9c0-4.1-2.4-9.5-6-9.5z" fill="url(#e)" stroke="#06260f" stroke-width=".7"/><ellipse cx="9.9" cy="8.4" rx="1.25" ry="2.1" fill="#fff" opacity=".6" transform="rotate(-22 9.9 8.4)"/><circle cx="14.3" cy="13.6" r=".95" fill="#c4ff96" opacity=".55"/><circle cx="11.3" cy="16.4" r=".7" fill="#c4ff96" opacity=".5"/><circle cx="14.6" cy="9.6" r=".6" fill="#c4ff96" opacity=".45"/></svg>',
+  lol:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11.1" fill="#0a1428" stroke="#c8aa6e" stroke-width="1.3"/><g transform="translate(4.3 4.3) scale(.64)"><path fill="#c8aa6e" d="m1.912 0l1.212 2.474v19.053L1.912 24h14.73l1.337-4.682H8.33V0ZM12 1.516c-.913 0-1.798.112-2.648.312v1.74A9.7 9.7 0 0 1 12 3.2c5.267 0 9.536 4.184 9.536 9.348a9.2 9.2 0 0 1-2.3 6.086l-.273.954l-.602 2.112c2.952-1.993 4.89-5.335 4.89-9.122C23.25 6.468 18.213 1.516 12 1.516m0 2.673c-.924 0-1.814.148-2.648.414v13.713h8.817a8.25 8.25 0 0 0 2.36-5.768c0-4.617-3.818-8.359-8.529-8.359M2.104 7.312A10.86 10.86 0 0 0 .75 12.576c0 1.906.492 3.7 1.355 5.266z"/></g></svg>',
+  cs:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11.1" fill="#f3ab3d" stroke="#2a1a06" stroke-width="1.1"/><g transform="translate(3.6 3.7) scale(.69)"><path fill="#141414" d="M21.71 3.235a.02.02 0 0 1-.022-.022c.002-.081.004-.37.005-.424c0-.129-.143-.183-.212-.083l-.229.333a.02.02 0 0 1-.02.01h-6.55a.047.047 0 0 1-.048-.046l-.013-.177a.048.048 0 0 1 .056-.048l.335.032a.06.06 0 0 0 .063-.045l.244-.989a.05.05 0 0 0-.03-.054l-.227-.085a.04.04 0 0 1-.026-.03c-.041-.171-.377-1.323-1.993-1.58c-.787-.125-1.302.21-1.577.478a1.6 1.6 0 0 0-.302.41l-.097.212a2 2 0 0 0-.046.234l.051.982a.11.11 0 0 0 .043.085l.354.153l-.196.325a.055.055 0 0 1-.053.04s-.417.01-.622.02c-.386.015-1.245.485-1.878 1.838l-.724 1.55a.07.07 0 0 1-.068.04l-.578.001c-.035 0-.073.028-.088.06L6.364 9a.11.11 0 0 0 .017.108l.627.392a.06.06 0 0 1 .02.058l-.328.967a.2.2 0 0 1-.023.062l-.435.382a.1.1 0 0 0-.035.06l-.598 1.53a.06.06 0 0 1-.06.045l-.336.002a.163.163 0 0 0-.162.149l-.201 2.288l-.016.121l-.158.908a.13.13 0 0 1-.034.055l-.558.427a4.8 4.8 0 0 0-.767 1.001l-1.86 3.924a.8.8 0 0 0-.078.322l.132.235c.002.084-.032.456-.07.53l-.624 1.09a.1.1 0 0 0-.003.085l.03.07l.094.187L2.829 24c.118.011.247-.14.251-.3l.103-1.297l-.027-.195l3.606-4.232c.095-.114.222-.317.286-.45l1.719-3.79a.17.17 0 0 1 .1-.088l.109-.035a.17.17 0 0 1 .183.053c.15.181.504.781.676 1.032c.143.208.85 1.23 1.158 1.567c.086.093.349.198.466.27a.083.083 0 0 1 .03.112l-1.03 1.808l-.455 2.136a1 1 0 0 0-.036.152l-.412 1.483c.003.188-.14.286-.153.507l-.15 1.084a.06.06 0 0 0 .059.061l2.544.014q.142-.001.286-.006l.075-.007c.124-.016.563-.076.75-.15a.6.6 0 0 0 .227-.13c.185-.194.2-.278.203-.398a.3.3 0 0 0-.028-.105a.12.12 0 0 0-.06-.047l-1.18-.356a.37.37 0 0 1-.19-.134l-.317-.47a.09.09 0 0 1 .018-.097l.618-.609a.2.2 0 0 0 .048-.072l1.904-4.488c.089-.285.059-.605 0-.944c-.044-.25-.686-1.326-.854-1.624l-1.286-2.251c-.079-.138-.19-.133-.228-.276l-.073-1.118a.04.04 0 0 1 .036-.05l.33-.028a.1.1 0 0 0 .075-.048l1.147-2.155a.1.1 0 0 0-.002-.094l-.235-.29a.09.09 0 0 1-.001-.088l.352-.38a.054.054 0 0 1 .073-.02l.934.526a.4.4 0 0 0 .186.05c.26-.001.686-.154.908-.29a.4.4 0 0 0 .139-.148l.458-1.07c.006-.014.027-.012.03.003l.127.595a.064.064 0 0 0 .079.05l1.35-.3a.066.066 0 0 0 .05-.078l-.319-1.344a.07.07 0 0 1 .01-.054l.13-.203a.3.3 0 0 0 .037-.082l.159-.725a.04.04 0 0 1 .04-.032l3.732.005a.09.09 0 0 0 .093-.093v-.634a.02.02 0 0 1 .022-.021h1.439a.047.047 0 0 0 .046-.047V3.28a.047.047 0 0 0-.046-.047h-1.44z"/></g></svg>'};
 const GK=['wow','dofus','lol','cs','bazar'];
 const AFG=['wow','dofus','lol','cs'];                       // jeux avec une affinité (le Bazar est neutre)
 const CELLS=6;
@@ -824,12 +876,12 @@ const FAC={
   ravages:{n:'RAVAGÉS',ic:'🌀',c:'#ff8a1f',d:'Le chaos incarné.',
     sum:'Fin de ton tour : 1 missile par palier débloqué (2 Ravagés = 1 missile, 3 = 2 missiles, etc.). Un missile inflige 1 dégât à un ennemi au hasard.',
     tiers:[[2,'Fin de ton tour : 1 missile.'],[3,'2 missiles.'],[4,'3 missiles.'],[5,'4 missiles.'],[6,'5 missiles.']]},
-  neigar:{n:'NEIGAR',ic:'👽',c:'#ffd23f',d:'Venus d’ailleurs, de bien plus loin que l’Andorre.',
-    sum:'À son arrivée, un Neigar vole 1 Or à l’adversaire pour chaque autre Neigar sur ton plateau.',
+  alien:{n:'EXTRATERRESTRES',ic:'👽',c:'#ffd23f',d:'Venus d’ailleurs, de bien plus loin que l’Andorre.',
+    sum:'À son arrivée, un Extraterrestre vole 1 Or à l’adversaire pour chaque autre Extraterrestre sur ton plateau.',
     tiers:[[2,'Arrivée : vole 1 Or.'],[3,'Vole 2 Or.'],[4,'Vole 3 Or.'],[5,'Vole 4 Or.'],[6,'Vole 5 Or.']]},
   xeno:{n:'XÉNOPHOBES',ic:'🚧',c:'#e2483d',d:'Ils n’aiment pas trop les visiteurs venus d’ailleurs.',
-    sum:'Quand un Xénophobe attaque un Neigar, il gagne +1 ATK pour chaque autre Xénophobe sur ton plateau.',
-    tiers:[[2,'+1 ATK contre les Neigar.'],[3,'+2 ATK.'],[4,'+3 ATK.'],[5,'+4 ATK.'],[6,'+5 ATK.']]}};
+    sum:'Quand un Xénophobe attaque un Extraterrestre, il gagne +1 ATK pour chaque autre Xénophobe sur ton plateau.',
+    tiers:[[2,'+1 ATK contre les Extraterrestres.'],[3,'+2 ATK.'],[4,'+3 ATK.'],[5,'+4 ATK.'],[6,'+5 ATK.']]}};
 const FACK=Object.keys(FAC);
 function facTier(f,n){let t=null;for(const x of FAC[f].tiers)if(n>=x[0])t=x;return t}
 function exCost(n){return n>=5?2:n===4?3:n===3?4:5}
@@ -850,7 +902,7 @@ const GLOS=[
   [/Frénésie/,'Peut attaquer deux fois par tour.'],
   [/AFK/,'Ne peut pas être ciblée tant qu’elle n’a pas attaqué.'],
   [/Insolence/,'Ne peut pas être ciblée par les sorts et effets ennemis (elle peut être attaquée).'],
-  [/Tilt/,'Gagne +2 ATK chaque fois qu’elle subit des dégâts sans mourir.'],
+  [/Tilt/,'Chaque fois que la créature subit des dégâts et survit, son effet « Tilt : … » se déclenche (chaque carte a le sien).'],
   [/Respawn/,'Revient une fois avec 1 PV quand elle meurt.'],
   [/Reset/,'Après avoir détruit une créature en attaquant, peut attaquer à nouveau.'],
   [/Gremlin/,'Bonus de stats tant que la créature se trouve sur un terrain du jeu indiqué.'],
@@ -860,8 +912,8 @@ const GLOS=[
   [/Bloque[sr]?|Bloquée?s?/,'Bloquée : ne peut pas attaquer pendant son prochain tour.'],
   [/Banni[st]?|Bannie?s?|Bannit/,'Retirée de la partie : aucune Agonie, et la carte ne va pas au cimetière.'],
   [/Kick/,'La créature retourne dans la main de son propriétaire.'],
-  [/[Cc]imetière/,'Les créatures détruites y vont. Quand ton deck est vide, ton cimetière et ta défausse sont mélangés pour former un nouveau deck.'],
-  [/[Dd]éfausse/,'Les sorts joués et les cartes défaussées ou brûlées y vont. Elle est remélangée dans ton deck avec le cimetière quand le deck est vide.'],
+  [/[Cc]imetière/,'Les sorts joués, les créatures détruites et les cartes défaussées ou brûlées y vont. Quand ton deck est vide, ton cimetière est mélangé pour former un nouveau deck.'],
+  [/[Dd]éfausse/,'Défausser une carte : elle quitte la main et va au cimetière.'],
   [/Affinité/,'Score d’une créature sur un jeu (0, 1 ou 2). Les terrains de ce jeu donnent leur effet selon l’affinité ; 0 = aucun effet. Les terrains Bazar profitent à tout le monde.'],
   [/à l’étranger/,'Disparaître à l’étranger (Expats) : la créature est inciblable (ni attaques, ni sorts, ni effets ennemis) jusqu’au début de ton prochain tour.'],
   [/Démoflux/,'Ressource du duel : +1 maximum par tour. Tu la dépenses pour jouer tes cartes ; ce que tu ne dépenses pas est perdu à la fin du tour.'],
@@ -871,7 +923,7 @@ const GLOS=[
 // ----- personnages : 3 versions chacun (commune, rare, épique), même illustration -----
 // sc = affinité (0-2) sur chaque jeu ; cry = Cri d'arrivée, last = Agonie, sot/eot = début/fin de ton tour
 const BASES={
-mikalev:{n:'Mikalev',fac:['neigar'],sc:{wow:0,dofus:0,lol:1,cs:2},lore:'Vrai shinobi de CS : il entre et sort des smokes comme personne. Sait tout réparer, de la machine à laver au moteur de voiture, et prend la voix de Taz dès qu’on ne le regarde pas.',v:[
+mikalev:{n:'Mikalev',fac:['alien'],sc:{wow:0,dofus:0,lol:1,cs:2},lore:'Vrai shinobi de CS : il entre et sort des smokes comme personne. Sait tout réparer, de la machine à laver au moteur de voiture, et prend la voix de Taz dès qu’on ne le regarde pas.',v:[
   {st:'Shinobi des smokes',c:1,a:1,h:2,kw:['afk'],eot:[{t:'heal',n:1}],tx:'AFK. Fin de ton tour : soigne ton héros de 1 PV.'},
   {st:'Le Réparateur',c:3,a:1,h:3,kw:['afk'],eot:[{t:'heal',n:2},{t:'healA',n:2,rnd:1}],tx:'AFK. Fin de ton tour : soigne ton héros de 2 PV et une autre créature alliée blessée de 2 PV.'},
   {st:'Voix de Taz',c:5,a:3,h:4,kw:['afk'],eot:[{t:'heal',n:2},{t:'healA',n:2,all:1}],tx:'AFK. Fin de ton tour : soigne ton héros et toutes tes créatures de 2 PV.'}]},
@@ -887,7 +939,7 @@ losk:{n:'Losk',fac:['expats'],sc:{wow:1,dofus:1,lol:1,cs:1},lore:'Déménagé en
   {st:'Le Requin',c:2,a:2,h:3,sot:[{t:'or',n:1}],tx:'Début de ton tour : gagne 1 Or.'},
   {st:'Bitcoin Maxi',c:3,a:3,h:5,cry:[{t:'dblOr',max:5}],tx:'Cri d’arrivée : double ton Or (+5 max).'},
   {st:'Exilé fiscal',c:5,a:5,h:6,sot:[{t:'or',n:2}],tdisc:1,tx:'Début de ton tour : gagne 2 Or. Tes terrains coûtent 1 Or de moins.'}]},
-sadamie:{n:'Sadamie',fac:['ravages','neigar'],sc:{wow:1,dofus:1,lol:1,cs:1},lore:'Pour lui, le jeu n’est pas une compétition, c’est un amusement ;). Son activité préférée : invoquer Chanssus pour atteindre le combo le plus broken de l’histoire. Triche aux jeux de cartes… et perd quand même.',v:[
+sadamie:{n:'Sadamie',fac:['ravages','alien'],sc:{wow:1,dofus:1,lol:1,cs:1},lore:'Pour lui, le jeu n’est pas une compétition, c’est un amusement ;). Son activité préférée : invoquer Chanssus pour atteindre le combo le plus broken de l’histoire. Triche aux jeux de cartes… et perd quand même.',v:[
   {st:'Le Tricheur',c:2,a:2,h:2,cry:[{t:'add',k:'chanssus',n:1}],last:[{t:'drawOpp',n:1}],tx:'Cri d’arrivée : ajoute un Chanssus à ta main. Agonie : l’adversaire pioche 1 carte.'},
   {st:'Invocateur de Chanssus',c:3,a:3,h:3,cry:[{t:'add',k:'chanssus',n:2}],last:[{t:'drawOpp',n:1}],tx:'Cri d’arrivée : ajoute 2 Chanssus à ta main. Agonie : l’adversaire pioche 1 carte.'},
   {st:'Combo Broken',c:5,a:5,h:5,cry:[{t:'add',k:'chanssus0',n:2}],last:[{t:'drawOpp',n:1}],tx:'Cri d’arrivée : ajoute 2 Chanssus truqués (coût 0) à ta main. Agonie : l’adversaire pioche 1 carte.'}]},
@@ -899,11 +951,11 @@ osiris:{n:'Osiris',fac:['toxic'],sc:{wow:0,dofus:2,lol:1,cs:0},lore:'Capuche, lu
   {st:'La Capuche',c:2,a:2,h:2,kw:['venin'],tx:'Venin.'},
   {st:'Le Venimeux',c:3,a:3,h:4,kw:['venin'],cry:[{t:'buff',a:2,h:2,self:1,if:{has:'maki'}}],tx:'Venin. Cri d’arrivée : si Maki est sur ton plateau, gagne +2/+2.'},
   {st:'Lunettes noires',c:5,a:4,h:5,kw:['venin'],cry:[{t:'pzDbl'},{t:'buff',a:2,h:2,self:1,if:{has:'maki'}}],tx:'Venin. Cri d’arrivée : double le Venin de tous les ennemis. Si Maki est sur ton plateau, gagne +2/+2.'}]},
-maki:{n:'Maki',fac:['neigar'],sc:{wow:0,dofus:2,lol:2,cs:0},lore:'Représentante de la noblesse, nom à 14 particules. Son lait est réputé dans tout l’État Arcanique. Inséparable d’Osiris.',v:[
+maki:{n:'Maki',fac:['alien'],sc:{wow:0,dofus:2,lol:2,cs:0},lore:'Représentante de la noblesse, nom à 14 particules. Son lait est réputé dans tout l’État Arcanique. Inséparable d’Osiris.',v:[
   {st:'La Laitière',c:2,a:2,h:3,cry:[{t:'heal',n:3}],tx:'Cri d’arrivée : soigne ton héros de 3 PV.'},
   {st:'Noblesse oblige',c:3,a:2,h:3,cry:[{t:'heal',n:4},{t:'buff',a:2,h:2,self:1,if:{has:'osiris'}}],tx:'Cri d’arrivée : soigne ton héros de 4 PV. Si Osiris est sur ton plateau, gagne +2/+2.'},
   {st:'Quatorze particules',c:5,a:3,h:5,kw:['rempart'],cry:[{t:'heal',n:5},{t:'pairBuff',k:'osiris',a:2,h:2,if:{has:'osiris'}}],tx:'Rempart. Cri d’arrivée : soigne ton héros de 5 PV. Si Osiris est sur ton plateau, vous gagnez tous les deux +2/+2.'}]},
-randal:{n:'George Rendal',fac:['expats','neigar'],sc:{wow:2,dofus:2,lol:2,cs:2},lore:'Anglais. A déjà tout fait, partout, avec tout le monde, selon lui. Chaque récit est invérifiable, et personne n’ose vérifier.',v:[
+randal:{n:'George Rendal',fac:['expats','alien'],sc:{wow:2,dofus:2,lol:2,cs:2},lore:'Anglais. A déjà tout fait, partout, avec tout le monde, selon lui. Chaque récit est invérifiable, et personne n’ose vérifier.',v:[
   {st:'Le Conteur',c:2,a:2,h:2,cry:[{t:'rand',list:[[{t:'buff',a:1,h:1,self:1}],[{t:'dmgFace',n:2}],[{t:'draw',n:1}],[{t:'summon',k:'pleb',n:1}],[{t:'heal',n:3}]]}],tx:'Cri d’arrivée : petite histoire au hasard : +1/+1, 2 dégâts à l’adversaire, pioche 1, invoque 1 Pleb ou soigne 3.'},
   {st:'L’Anglais',c:3,a:3,h:3,cry:[{t:'rand',list:[[{t:'buff',a:2,h:2,self:1}],[{t:'dmgFace',n:4}],[{t:'draw',n:2}],[{t:'summon',k:'pleb',n:2}],[{t:'heal',n:5}]]}],tx:'Cri d’arrivée : raconte une histoire au hasard : +2/+2, 4 dégâts à l’adversaire, pioche 2, invoque 2 Plebs ou soigne 5.'},
   {st:'Il a tout fait',c:5,a:4,h:4,cry:[{t:'rand',times:2,list:[[{t:'buff',a:2,h:2,self:1}],[{t:'dmgFace',n:4}],[{t:'draw',n:2}],[{t:'summon',k:'pleb',n:2}],[{t:'heal',n:5}]]}],tx:'Cri d’arrivée : raconte 2 histoires au hasard (+2/+2, 4 dégâts à l’adversaire, pioche 2, 2 Plebs ou soin 5).'}]},
@@ -912,9 +964,9 @@ sada:{n:'Sada',fac:['expats'],sc:{wow:1,dofus:1,lol:1,cs:2},lore:'PAN PAN BOOM B
   {st:'BOOM BOOM',c:3,a:3,h:5,cry:[{t:'mute',tg:'ec'},{t:'blk'}],tx:'Cri d’arrivée : Mute et Bloque une créature ennemie.'},
   {st:'Docteur d’Australie',c:5,a:4,h:6,cry:[{t:'mute',tg:'ec'},{t:'blk'}],eot:[{t:'healA',n:2,all:1}],tx:'Cri d’arrivée : Mute et Bloque une créature ennemie. Fin de ton tour : soigne toutes tes créatures de 2 PV.'}]},
 laloutre:{n:'Laloutre',fac:['toxic','xeno'],sc:{wow:1,dofus:0,lol:1,cs:2},lore:'Poste des clips CS toute la journée en écoutant du classique. Pense que la micro est un cerveau, et ne le lui dis surtout pas. Adore se clasher avec Osiris et sa bande.',v:[
-  {st:'Le Clippeur',c:2,a:2,h:3,kw:['tilt'],cry:[{t:'rnd',n:1,times:1}],tx:'Tilt. Cri d’arrivée : lance 1 missile.'},
-  {st:'Le Provocateur',c:3,a:3,h:4,kw:['tilt'],cry:[{t:'clash',k:'osiris',n:3,n2:1}],tx:'Tilt. Cri d’arrivée : inflige 3 dégâts à un Osiris ennemi s’il y en a un, sinon 1 dégât à un ennemi au hasard.'},
-  {st:'Mélomane toxique',c:5,a:3,h:4,kw:['tilt','venin'],cry:[{t:'clashT',k:'osiris',n:3,tg:'ec'}],tx:'Tilt. Venin. Cri d’arrivée : inflige 3 dégâts à une créature ennemie (si c’est un Osiris, il est détruit).'}]},
+  {st:'Le Clippeur',c:2,a:2,h:3,kw:['tilt'],cry:[{t:'rnd',n:1,times:1}],tilt:[{t:'rnd',n:1,times:1}],tx:'Cri d’arrivée : lance 1 missile. Tilt : lance 1 missile.'},
+  {st:'Le Provocateur',c:3,a:3,h:4,kw:['tilt'],cry:[{t:'clash',k:'osiris',n:3,n2:1}],tilt:[{t:'taunt'}],tx:'Cri d’arrivée : 3 dégâts à un Osiris ennemi s’il y en a un, sinon 1 dégât à un ennemi au hasard. Tilt : gagne Rempart.'},
+  {st:'Mélomane toxique',c:5,a:3,h:4,kw:['tilt','venin'],cry:[{t:'clashT',k:'osiris',n:3,tg:'ec'}],tilt:[{t:'pzAll',n:1}],tx:'Venin. Cri d’arrivée : 3 dégâts à une créature ennemie (un Osiris est détruit). Tilt : 1 Venin à tous les ennemis.'}]},
 elkatrix:{n:'Elkatrix',fac:['toxic'],sc:{wow:2,dofus:2,lol:2,cs:1},lore:'Meilleur moine du monde, meilleur casino du monde ; sinon, à temps de jeu égal, il vous le fait payer. 25 comptes bannis sur LoL et il revient toujours. Vient de se faire opérer de l’appendicite.',v:[
   {st:'Compte n°25',c:2,a:2,h:2,kw:['respawn'],tx:'Respawn.'},
   {st:'Le Banni',c:4,a:3,h:3,kw:['venin','respawn'],tx:'Venin. Respawn.'},
@@ -946,16 +998,16 @@ homz:{n:'Homz',fac:['farmer','ravages'],sc:{wow:2,dofus:0,lol:1,cs:1},lore:'Fan 
 boku:{n:'Boku',fac:['weebos','xeno'],sc:{wow:0,dofus:0,lol:2,cs:1},lore:'GM et turbo weeb, OTP Katarina : chaque kill donne envie d’en refaire un. Ne s’est énervé que DEUX fois dans toute sa vie. Il en reste une.',v:[
   {st:'OTP Katarina',c:3,a:3,h:3,kw:['hate'],tx:'Hâte.'},
   {st:'Le GM',c:5,a:4,h:4,kw:['hate'],reset:1,tx:'Hâte. Reset : après avoir détruit une créature en attaquant, peut attaquer à nouveau.'},
-  {st:'La Troisième Colère',c:7,a:5,h:5,kw:['hate','tilt'],reset:1,tx:'Hâte. Tilt. Reset : après avoir détruit une créature en attaquant, peut attaquer à nouveau.'}]},
+  {st:'La Troisième Colère',c:7,a:5,h:4,kw:['hate','tilt'],reset:1,tilt:[{t:'dmgAll',n:1}],tx:'Hâte. Reset : après avoir détruit une créature en attaquant, peut attaquer à nouveau. Tilt : 1 dégât à toutes les créatures ennemies.'}]},
 haddmi:{n:'Haddmi',fac:['xeno'],sc:{wow:0,dofus:0,lol:1,cs:2},lore:'Meneur d’un discord rival : une armée à lui tout seul. Bosse chez Vitality, niveau 10 sur FACEIT. Se vexe au quart de tour, et ça le fait tilt.',v:[
-  {st:'Le Vexé',c:3,a:3,h:5,kw:['tilt'],cry:[{t:'summon',k:'pleb',n:1}],tx:'Tilt. Cri d’arrivée : invoque 1 Pleb (son armée).'},
-  {st:'Chef de guerre',c:5,a:4,h:6,kw:['tilt'],cry:[{t:'summon',k:'pleb',n:2}],tx:'Tilt. Cri d’arrivée : invoque 2 Plebs (son armée).'},
-  {st:'Niveau 10 FACEIT',c:8,a:5,h:8,kw:['frenesie','tilt'],tx:'Frénésie. Tilt.'}]},
+  {st:'Le Vexé',c:3,a:3,h:5,kw:['tilt'],cry:[{t:'summon',k:'pleb',n:1}],tilt:[{t:'summon',k:'pleb',n:1}],tx:'Cri d’arrivée : invoque 1 Pleb (son armée). Tilt : invoque 1 Pleb.'},
+  {st:'Chef de guerre',c:5,a:4,h:6,kw:['tilt'],cry:[{t:'summon',k:'pleb',n:2}],tilt:[{t:'buff',a:1,h:1,k:'pleb'}],tx:'Cri d’arrivée : invoque 2 Plebs (son armée). Tilt : tes Plebs gagnent +1/+1.'},
+  {st:'Niveau 10 FACEIT',c:8,a:5,h:8,kw:['frenesie','tilt'],tilt:[{t:'dmgFace',n:2}],tx:'Frénésie. Tilt : inflige 2 dégâts au héros adverse (headshot).'}]},
 potatoll:{n:'Potatoll',fac:['ravages'],sc:{wow:2,dofus:1,lol:2,cs:1},lore:'Plus gros troll du serveur, meneur de la bande et complètement ravagé. Quand il lance les dés, c’est tout l’État Arcanique qui tremble.',v:[
   {st:'Petit troll',c:3,a:2,h:3,cry:[{t:'chaos'}],tx:'Cri d’arrivée : déclenche un effet du Bazar au hasard.'},
   {st:'Le Ravagé',c:6,a:5,h:7,sot:[{t:'chaos'}],tx:'Début de ton tour : déclenche un effet du Bazar au hasard (deux fois sur un terrain Bazar).'},
   {st:'Maître du Bazar',c:7,a:6,h:8,sot:[{t:'chaos'}],eot:[{t:'chaos'}],tx:'Début et fin de ton tour : déclenche un effet du Bazar au hasard (deux fois sur un terrain Bazar).'}]},
-bambou:{n:'Golwyd Bambou',fac:['neigar'],sc:{wow:1,dofus:0,lol:1,cs:1},lore:'Créateur du serveur. N’y a pas mis les pieds depuis 20 ans (??). Il revient, regarde l’état du salon, et décide de tout reformater.',v:[
+bambou:{n:'Golwyd Bambou',fac:['alien'],sc:{wow:1,dofus:0,lol:1,cs:1},lore:'Créateur du serveur. N’y a pas mis les pieds depuis 20 ans (??). Il revient, regarde l’état du salon, et décide de tout reformater.',v:[
   {st:'Le Fantôme',c:3,a:3,h:3,kw:['afk'],tx:'AFK.'},
   {st:'Le Créateur',c:6,a:4,h:5,kw:['afk'],cry:[{t:'banTopE'}],tx:'AFK. Cri d’arrivée : Bannit la créature ennemie la plus coûteuse.'},
   {st:'Grand Reformatage',c:10,a:5,h:5,kw:['afk'],cry:[{t:'wipe'}],tx:'AFK. Cri d’arrivée : Bannit toutes les autres créatures.'}]}};
@@ -1026,7 +1078,7 @@ const TDEF=[
  {d:'forge',g:'dofus',n:'Atelier de forgemagie',size:1,cost:3,t1:'Arrivée : gagne Égide.',t2:'Arrivée : gagne Égide et +1 ATK.',f:x=>({arr:x>1?[{t:'egide'},{t:'buff',a:1,h:0,self:1}]:[{t:'egide'}]})},
  {d:'taverne',g:'wow',n:'Taverne de Comté-de-l’Or',size:1,cost:2,t1:'Fin de ton tour : soigne ton héros de 1 PV.',t2:'Fin de ton tour : soigne ton héros de 2 PV.',f:x=>({eot:[{t:'heal',n:x}]})},
  {d:'hdv',g:'wow',n:'Hôtel des ventes',size:2,cost:3,t1:'Début de ton tour : gagne 1 Or.',t2:'Début de ton tour : gagne 2 Or.',f:x=>({sot:[{t:'or',n:x}]})},
- {d:'arene',g:'wow',n:'Arène 2v2',size:2,cost:3,t1:'Tilt.',t2:'Tilt, +1 ATK.',f:x=>({kw:{tilt:1},a:x>1?1:0})},
+ {d:'arene',g:'wow',n:'Arène 2v2',size:2,cost:3,t1:'Tilt : se soigne de 2 PV.',t2:'Tilt : se soigne de 2 PV. +1 ATK.',f:x=>({tilt:[{t:'healSelf',n:2}],a:x>1?1:0})},
  {d:'raid40',g:'wow',n:'Raid 40 joueurs',size:3,cost:6,t1:'Siphon.',t2:'Siphon, +1 ATK.',f:x=>({kw:{siphon:1},a:x>1?1:0})},
  {d:'bazar',g:'bazar',n:'Le Grand Bazar',size:3,cost:6,tn:'+1 ATK. Potatoll y déclenche ses effets du Bazar deux fois.',f:()=>({a:1})},
  {d:'canape',g:'bazar',n:'Le canapé de Xulyes',size:1,cost:1,tn:'+0/+1. Personne ne s’en est jamais relevé.',f:()=>({h:1})},
@@ -1082,29 +1134,44 @@ function mkCard(G,k,p){return{k,id:++G.uid,p:p?1:0}}
 function newGame(cfg){
   const o=Object.assign({},OPTDEF,cfg.o||{});
   const G={o,rs:(cfg.seed>>>0)||1,uid:0,aid:0,turn:0,round:0,cur:0,first:0,over:null,lg:cfg.lg===false?0:1,hist:[],played:0,
-    rp:0,cs:null,p:[],shop:[],tdeck:[],tdis:[],nev:0};
+    rp:0,cs:null,tq:[],tf:0,p:[],shop:[],tdeck:[],tdis:[],nev:0};
   G.first=cfg.first!=null?cfg.first:(rnd(G)<.5?0:1);
   for(let s=0;s<2;s++){
     const P={nm:(cfg.names&&cfg.names[s])||('Joueur '+(s+1)),hp:o.hp,mhp:o.hp,pz:0,deck:[],hand:[],board:Array(CELLS).fill(null),
-      grave:[],disc:[],terrs:[],cells:Array(CELLS).fill(0),cap:0,eth:0,or:0,fat:0,rsh:0};
+      grave:[],terrs:[],cells:Array(CELLS).fill(0),cap:0,eth:0,or:0,fat:0,rsh:0};
     P.deck=cfg.decks[s].map(e=>{const p=e.endsWith('*');return mkCard(G,p?e.slice(0,-1):e,p)});
     shuf(G,P.deck);G.p.push(P)}
   if(o.ter){G.tdeck=shuf(G,TDEF.map(t=>({d:t.d})));G.shop=[G.tdeck.pop(),G.tdeck.pop()]}
   G.nev=ri(G,EVENTS.length);
   for(let s=0;s<2;s++){const n=s===G.first?3:4;const P=G.p[s];for(let j=0;j<n;j++){const c=P.deck.pop();if(c)P.hand.push(c)}}
-  const sec=G.p[1-G.first];sec.hand.push(mkCard(G,'piece'));
+  const sec=G.p[1-G.first];
   if(o.comp){sec.or+=1;sec.hp+=5;sec.mhp+=5}                      // compensation du second joueur
+  // mulligan : chaque joueur choisit d'abord les cartes de sa main de départ à remplacer (la Pièce arrive après)
+  if(cfg.mull){G.phase='mull';G.mull=[0,0];G.cur=G.first;return G}
+  sec.hand.push(mkCard(G,'piece'));
   startTurn(G,G.first);
   return G}
+// mulligan : les cartes choisies (indices dans la main) sont remplacées par les premières cartes du deck, à la même place,
+// puis remélangées dans le deck. Quand les deux joueurs ont choisi, le second reçoit la Pièce et la partie commence.
+function mullAct(G,s,a){
+  if(G.mull[s])return er('Tu as déjà choisi ta main.');
+  const P=G.p[s],idx=Array.isArray(a.idx)?a.idx:[];
+  if(idx.length>P.hand.length||new Set(idx).size!==idx.length||idx.some(i=>!Number.isInteger(i)||i<0||i>=P.hand.length))return er('Choix de cartes invalide.');
+  G.aid++;const old=[];
+  for(const i of idx.slice().sort((x,y)=>x-y)){if(!P.deck.length)break;old.push(P.hand[i]);P.hand[i]=P.deck.pop()}
+  if(old.length){P.deck.push(...old);shuf(G,P.deck)}
+  G.mull[s]=1;lg(G,{t:'mull',ts:s,n:old.length});
+  if(G.mull[0]&&G.mull[1]){G.phase=null;G.p[1-G.first].hand.push(mkCard(G,'piece'));startTurn(G,G.first)}
+  return{ok:true}}
 
 function mkC(G,k,p){const cd=CARDS[k];return{id:++G.uid,k,a:cd.a,h:cd.h,dm:0,mut:0,pz:0,eg:(cd.kw&&cd.kw.indexOf('egide')>=0)?1:0,sick:1,af:0,blk:0,aw:0,rs:0,ex:0,sm:0,p:p?1:0}}
 
 // ---------- copie rapide ----------
 function cloneG(G){
   const o=Object.assign({},G);o.hist=G.lg?G.hist.slice():[];
-  o.p=G.p.map(P=>{const q=Object.assign({},P);q.deck=P.deck.slice();q.hand=P.hand.slice();q.grave=P.grave.slice();q.disc=P.disc.slice();
+  o.p=G.p.map(P=>{const q=Object.assign({},P);q.deck=P.deck.slice();q.hand=P.hand.slice();q.grave=P.grave.slice();
     q.board=P.board.map(c=>c?Object.assign({},c):null);q.cells=P.cells.slice();q.terrs=P.terrs.slice();return q});
-  o.shop=G.shop.slice();o.tdeck=G.tdeck.slice();o.tdis=G.tdis.slice();return o}
+  o.shop=G.shop.slice();o.tdeck=G.tdeck.slice();o.tdis=G.tdis.slice();o.tq=G.tq?G.tq.slice():[];if(G.mull)o.mull=G.mull.slice();return o}
 
 // ---------- familles, terrains, statistiques ----------
 // fl : nombre de créatures de chaque famille sur le plateau
@@ -1113,7 +1180,9 @@ function terrOf(G,s,i){const P=G.p[s],id=P.cells[i];if(!id)return null;for(const
 function tfx(T,k){if(!T)return null;const t=TD[T.d];return t.e[affOf(k,t.g)]||null}
 function kwOf(G,s,c,L,TE){
   const cd=CARDS[c.k],r={};if(!c.mut&&cd.kw)for(const x of cd.kw)r[x]=1;
+  if(!c.mut&&c.tr)r.rempart=1;                                       // Rempart gagné en jeu (Tilt du Provocateur)
   if(TE&&TE.kw)for(const x in TE.kw)r[x]=1;
+  if(TE&&TE.tilt)r.tilt=1;
   let v=r.venin?1:0;if(cd.fac.indexOf('toxic')>=0&&(L.toxic||0)>=2)v+=L.toxic-1;
   if(v>0)r.venin=v;else delete r.venin;
   return r}
@@ -1126,11 +1195,11 @@ function eff(G,s,i,L){
   return{a:a<0?0:a,h,hp:h-c.dm,kw:kwOf(G,s,c,L,TE),T,TE}}
 // valeur approximative d'un effet de terrain (IA)
 function tval(TE){if(!TE)return 0;let v=(TE.a||0)*1.1+(TE.h||0)*.9;
-  if(TE.kw){if(TE.kw.hate)v+=.8;if(TE.kw.insolence)v+=1;if(TE.kw.rempart)v+=1;if(TE.kw.siphon)v+=1.4;if(TE.kw.tilt)v+=.8}
+  if(TE.kw){if(TE.kw.hate)v+=.8;if(TE.kw.insolence)v+=1;if(TE.kw.rempart)v+=1;if(TE.kw.siphon)v+=1.4}
   if(TE.vsC)v+=TE.vsC*.7;if(TE.aram)v+=TE.aram*.6;if(TE.noAtk)v-=2.5;
   const ops=l=>{let s=0;if(l)for(const o of l)s+=o.t==='heal'?o.n*.6:o.t==='or'?o.n*.6:o.t==='rnd'||o.t==='rndC'?o.n*(o.times||1)*.9:
     o.t==='grow'?(o.a+o.h)*1.1:o.t==='healSelf'?Math.min(o.n,4)*.4:o.t==='dmgFace'?o.n*.9:o.t==='draw'?1.5:o.t==='egide'?1.6:o.t==='buff'?(o.a+o.h):.5;return s};
-  return v+ops(TE.sot)*1.4+ops(TE.eot)*1.4+ops(TE.arr)+ops(TE.last)*.7}
+  return v+ops(TE.sot)*1.4+ops(TE.eot)*1.4+ops(TE.arr)+ops(TE.last)*.7+ops(TE.tilt)*.8}
 function slotBonus(G,s,i,k){const T=terrOf(G,s,i);if(!T)return 0;let b=tval(tfx(T,k));const cd=CARDS[k];
   if(cd.gr&&cd.gr.g===TD[T.d].g)b+=cd.gr.a+cd.gr.h;if(T.d==='bazar'&&cd.base==='potatoll'&&cd.r>1)b+=3;return b}
 function bestSlot(G,s,k){const B=G.p[s].board;let bi=-1,bv=-1e9;for(let i=0;i<CELLS;i++){if(B[i])continue;const v=slotBonus(G,s,i,k);if(v>bv){bv=v;bi=i}}return bi}
@@ -1187,23 +1256,39 @@ function heroHit(G,s,n,src,q,x){if(n<=0)return 0;G.p[s].hp-=n;if(!q)lg(G,{t:'dmg
 function dmgC(G,s,i,n,src,q,x){
   const c=G.p[s].board[i];if(!c||n<=0)return 0;
   if(c.eg){c.eg=0;lg(G,{t:'egide',ts:s,i,k:c.k});return 0}
-  c.dm+=n;const E=eff(G,s,i);if(E.hp>0&&E.kw.tilt){c.a+=2;lg(G,{t:'tilt',ts:s,i,k:c.k})}
-  if(!q)lg(G,{t:'dmg',ts:s,i,k:c.k,src,n,ss:x?x.ss:null,si:x?x.si:null});return n}
+  c.dm+=n;
+  if(!q)lg(G,{t:'dmg',ts:s,i,k:c.k,src,n,ss:x?x.ss:null,si:x?x.si:null});
+  if(eff(G,s,i).hp>0)tiltQ(G,s,i);return n}
+// Tilt : quand une créature subit des dégâts et survit, son effet « Tilt : … » se déclenche (celui de la carte,
+// puis celui du terrain sous elle). Les déclenchements sont mis en file et résolus après le coup en cours
+// (après les dégâts de riposte d'un combat, par exemple), au plus 40 par action pour éviter les boucles.
+function tiltQ(G,s,i){const c=G.p[s].board[i];if(!c)return;const TE=tfx(terrOf(G,s,i),c.k);
+  if((!c.mut&&CARDS[c.k].tilt)||(TE&&TE.tilt))G.tq.push({s,id:c.id})}
+function flushTilt(G){
+  if(G.tf||!G.tq||!G.tq.length)return;G.tf=1;
+  try{for(let n=0;n<40&&G.tq.length&&!G.over;n++){
+    const q=G.tq.shift(),P=G.p[q.s],i=P.board.findIndex(b=>b&&b.id===q.id);if(i<0)continue;
+    const c=P.board[i],cd=CARDS[c.k],T=terrOf(G,q.s,i),TE=tfx(T,c.k);if(eff(G,q.s,i).hp<=0)continue;
+    const L=[];if(!c.mut&&cd.tilt)L.push([cd.tilt,c.k]);if(TE&&TE.tilt)L.push([TE.tilt,'T:'+T.d]);if(!L.length)continue;
+    c.tc=(c.tc||0)+1;lg(G,{t:'tilt',ts:q.s,i,k:c.k});
+    for(const[l,src]of L){if(G.over)break;const j=slotOf(G,q.s,c);if(j<0)break;runFx(G,l,{s:q.s,src,self:c,tg:null,pc:0,sl:j,ss:q.s,si:j})}}
+  }finally{G.tf=0;G.tq.length=0}}
 function hit(G,s,i,n,src,x){return i<0?heroHit(G,s,n,src,false,x):dmgC(G,s,i,n,src,false,x)}
 function heal(G,s,n,src){const P=G.p[s],v=Math.min(n,P.mhp-P.hp);if(v>0){P.hp+=v;lg(G,{t:'heal',ts:s,n:v,src})}return v}
 function healC(G,s,i,n){const c=G.p[s].board[i];if(!c||c.dm<=0)return 0;const v=Math.min(n,c.dm);c.dm-=v;lg(G,{t:'hc',ts:s,i,k:c.k,n:v});return v}
 function addPz(G,s,i,n,x){if(n<=0)return;if(i<0)G.p[s].pz+=n;else{const c=G.p[s].board[i];if(!c)return;c.pz+=n}
   lg(G,{t:'pz',ts:s,i,k:i<0?null:G.p[s].board[i].k,n,src:x?x.src:undefined,ss:x?x.ss:null,si:x?x.si:null})}
 function gold(G,s,n,src,x){if(n<=0)return;G.p[s].or+=n;lg(G,{t:'gold',ts:s,n,src,ss:x?x.ss:null,si:x?x.si:null})}
-function toDisc(P,c){if(c&&!CARDS[c.k].tok)P.disc.push({k:c.k,id:c.id,p:c.p})}
-// deck vide : cimetière + défausse sont remélangés
-function refill(G,s){const P=G.p[s];if(P.deck.length)return true;const pool=P.grave.concat(P.disc);if(!pool.length)return false;
-  P.grave=[];P.disc=[];P.deck=shuf(G,pool.map(c=>({k:c.k,id:++G.uid,p:c.p})));P.rsh++;lg(G,{t:'reshuf',ts:s,n:P.deck.length});return true}
+// cimetière : sorts joués, créatures mortes, cartes défaussées ou brûlées (les jetons n'y vont pas)
+function toGrave(P,c){if(c&&!CARDS[c.k].tok)P.grave.push({k:c.k,id:c.id,p:c.p})}
+// deck vide : le cimetière est remélangé pour former un nouveau deck
+function refill(G,s){const P=G.p[s];if(P.deck.length)return true;if(!P.grave.length)return false;
+  P.deck=shuf(G,P.grave.map(c=>({k:c.k,id:++G.uid,p:c.p})));P.grave=[];P.rsh++;lg(G,{t:'reshuf',ts:s,n:P.deck.length});return true}
 function draw(G,s,n){const P=G.p[s];
   for(let j=0;j<n;j++){
     if(!refill(G,s)){P.fat++;lg(G,{t:'fat',ts:s,n:P.fat});heroHit(G,s,P.fat,'fat');continue}
     const c=P.deck.pop();
-    if(P.hand.length>=G.o.hand){toDisc(P,c);lg(G,{t:'burn',ts:s,k:c.k})}else{P.hand.push(c);lg(G,{t:'draw',ts:s,n:1})}}}
+    if(P.hand.length>=G.o.hand){toGrave(P,c);lg(G,{t:'burn',ts:s,k:c.k})}else{P.hand.push(c);lg(G,{t:'draw',ts:s,n:1})}}}
 function give(G,s,k,n){const P=G.p[s];for(let j=0;j<n;j++){
   if(P.hand.length>=G.o.hand){lg(G,{t:'burn',ts:s,k});continue}P.hand.push(mkCard(G,k));lg(G,{t:'add',ts:s,k,pv:s})}}
 // une créature arrive sur une case : effet « Arrivée » du terrain
@@ -1226,7 +1311,7 @@ function reap(G){
     outer:for(const s of [G.cur,1-G.cur]){const L=fl(G,s);for(let i=0;i<CELLS;i++){const c=G.p[s].board[i];if(c){const E=eff(G,s,i,L);if(E.hp<=0){d={s,i,c,E};break outer}}}}
     if(!d)break;
     const{s,i,c,E}=d,cd=CARDS[c.k],P=G.p[s];
-    removeC(G,s,i,false);if(!cd.tok&&!c.sm)P.grave.push({k:c.k,id:c.id,p:c.p});
+    removeC(G,s,i,false);if(!c.sm)toGrave(P,c);
     const x={s,src:c.k,self:c,tg:null,pc:G.played,sl:i,ss:s,si:i};
     if(!c.mut&&cd.last)runFx(G,cd.last,x);
     if(E.TE&&E.TE.last&&!G.over){lg(G,{t:'tfx',ts:s,i,d:E.T.d,k:c.k});runFx(G,E.TE.last,Object.assign({},x,{src:'T:'+E.T.d}))}
@@ -1236,7 +1321,7 @@ function reap(G){
       if(!cd.rsFull){const E2=eff(G,s,i);n.dm=Math.max(0,E2.h-1)}
       lg(G,{t:'sum',ts:s,i,k:c.k,rs:1})}
   }}finally{G.rp=0}
-  checkOver(G)}
+  checkOver(G);flushTilt(G)}
 
 // ---------- effets ----------
 function cond(G,c,x){
@@ -1267,9 +1352,10 @@ const OPS={
   healSelf(G,op,x){const i=selfI(G,x);if(i>=0)healC(G,x.s,i,op.n)},
   grow(G,op,x){const i=selfI(G,x);if(i<0)return;const c=G.p[x.s].board[i];c.a+=op.a;c.h+=op.h;lg(G,{t:'buff',ts:x.s,i,k:c.k,ba:op.a,bh:op.h})},
   egide(G,op,x){const i=selfI(G,x);if(i<0)return;const c=G.p[x.s].board[i];if(c.eg)return;c.eg=1;lg(G,{t:'kwg',ts:x.s,i,k:c.k,kw:'egide'})},
+  taunt(G,op,x){const i=selfI(G,x);if(i<0)return;const c=G.p[x.s].board[i];if(c.tr)return;c.tr=1;lg(G,{t:'kwg',ts:x.s,i,k:c.k,kw:'rempart'})},
   draw(G,op,x){for(const s of sides(op,x))draw(G,s,op.n)},
   drawOpp(G,op,x){draw(G,1-x.s,op.n)},
-  disc(G,op,x){for(const s of(op.both?[0,1]:[1-x.s])){const P=G.p[s];for(let j=0;j<op.n&&P.hand.length;j++){const c=P.hand.splice(ri(G,P.hand.length),1)[0];toDisc(P,c);lg(G,{t:'disc',ts:s,k:c.k})}}},
+  disc(G,op,x){for(const s of(op.both?[0,1]:[1-x.s])){const P=G.p[s];for(let j=0;j<op.n&&P.hand.length;j++){const c=P.hand.splice(ri(G,P.hand.length),1)[0];toGrave(P,c);lg(G,{t:'disc',ts:s,k:c.k})}}},
   add(G,op,x){give(G,x.s,op.k,op.n)},
   summon(G,op,x){for(let j=0;j<op.n;j++)summon(G,x.s,op.k,{sl:j===0?x.sl:null})},
   buff(G,op,x){
@@ -1277,6 +1363,7 @@ const OPS={
     if(op.self){const i=selfI(G,x);if(i>=0)ap(x.s,i);return}
     if(op.all||op.others){const me=selfI(G,x);G.p[x.s].board.forEach((c,i)=>{if(c&&!(op.others&&i===me))ap(x.s,i)});return}
     if(op.rnd){const cs=[];G.p[x.s].board.forEach((c,i)=>{if(c)cs.push(i)});if(cs.length)ap(x.s,pick(G,cs));return}
+    if(op.k){G.p[x.s].board.forEach((c,i)=>{if(c&&c.k===op.k)ap(x.s,i)});return}            // toutes tes créatures d'un type (ex. tes Plebs)
     if(tgC(G,x))ap(x.tg.s,x.tg.i)},
   pairBuff(G,op,x){OPS.buff(G,{a:op.a,h:op.h,self:1},x);const B=G.p[x.s].board;
     const i=B.findIndex(b=>b&&CARDS[b.k].base===op.k&&(!x.self||b.id!==x.self.id));if(i>=0){const c=B[i];c.a+=op.a;c.h+=op.h;lg(G,{t:'buff',ts:x.s,i,k:c.k,ba:op.a,bh:op.h})}},
@@ -1293,7 +1380,7 @@ const OPS={
   banTopE(G,op,x){const e=1-x.s;let bi=-1,bv=-1;G.p[e].board.forEach((c,i)=>{if(!c||c.ex)return;const v=CARDS[c.k].c*100+c.a;if(v>bv){bv=v;bi=i}});if(bi>=0)removeC(G,e,bi,true)},
   kick(G,op,x){const c=tgC(G,x);if(!c)return;const t=x.tg;
     removeC(G,t.s,t.i,true);lg(G,{t:'kick',ts:t.s,k:c.k});const P=G.p[t.s],card={k:c.k,id:++G.uid,p:c.p};
-    if(P.hand.length<G.o.hand)P.hand.push(card);else toDisc(P,card)},
+    if(P.hand.length<G.o.hand)P.hand.push(card);else toGrave(P,card)},
   mute(G,op,x){const c=tgC(G,x);if(!c)return;c.mut=1;lg(G,{t:'mute',ts:x.tg.s,i:x.tg.i,k:c.k})},
   blk(G,op,x){
     if(op.rnd){for(let j=0;j<(op.n||1);j++){const L=targets(G,x.s,'ec').filter(t=>!G.p[t.s].board[t.i].blk);if(!L.length)return;
@@ -1307,7 +1394,7 @@ const OPS={
   steal(G,op,x){const H=G.p[1-x.s].hand;if(!H.length)return;const c=pick(G,H);const P=G.p[x.s];
     if(P.hand.length<G.o.hand){P.hand.push({k:c.k,id:++G.uid,p:c.p});lg(G,{t:'steal',ts:x.s,k:c.k,pv:x.s})}},
   clone(G,op,x){const c=tgC(G,x);if(!c)return;summon(G,x.s,c.k,{a:c.a,h:c.h,p:c.p})},
-  rez(G,op,x){const P=G.p[x.s];if(!P.grave.length)return;const g=P.grave.pop();summon(G,x.s,g.k,{p:g.p,real:1})},
+  rez(G,op,x){const P=G.p[x.s];for(let j=P.grave.length-1;j>=0;j--)if(CARDS[P.grave[j].k].t==='c'){const g=P.grave.splice(j,1)[0];summon(G,x.s,g.k,{p:g.p,real:1});return}},   // la dernière CRÉATURE du cimetière
   rage(G,op,x){const c=tgC(G,x);if(!c)return;const n=eff(G,x.tg.s,x.tg.i).a;c.dm+=99999;heroHit(G,1-x.s,n,x.src,false,x)},
   rand(G,op,x){for(let j=0;j<(op.times||1);j++){if(G.over)return;const l=pick(G,op.list);lg(G,{t:'story',ts:x.s,n:op.list.indexOf(l)});runFx(G,l,x)}},
   chaos(G,op,x){const B=selfI(G,x);const T=B>=0?terrOf(G,x.s,B):null;const n=T&&TD[T.d].g==='bazar'?2:1;
@@ -1363,7 +1450,9 @@ function resolveTg(G,t){if(!t)return null;if(t.i<0)return{s:t.s,i:-1,id:0};const
 function inList(L,t){return !!t&&L.some(r=>r.s===t.s&&r.i===t.i)}
 function act(G,s,a){
   if(G.over)return er('La partie est terminée.');
+  if(!a||typeof a!=='object'||(s!==0&&s!==1))return er('Action invalide.');
   if(a.t==='resign'){G.aid++;G.cur=s;lg(G,{t:'res'});G.over={w:1-s,res:1};return{ok:true}}
+  if(G.phase==='mull')return a.t==='mull'?mullAct(G,s,a):er('Choisis d’abord les cartes de ta main de départ à remplacer.');
   if(G.cur!==s)return er('Ce n’est pas ton tour.');
   const P=G.p[s];G.aid++;
   switch(a.t){
@@ -1379,9 +1468,9 @@ function act(G,s,a){
       const pc=G.played;G.played++;
       lg(G,{t:'play',k:h.k,p:h.p,i:a.sl,c:cost,ts:s});
       arrive(G,s,a.sl);
-      if(cd.fac.indexOf('neigar')>=0&&P.board[a.sl]===c){const L=fl(G,s),nt=(L.neigar||0)-1,E=G.p[1-s];
-        if(nt>0){lg(G,{t:'fac',f:'neigar',ts:s,n:L.neigar});const n=Math.min(nt,E.or);
-          if(n>0){E.or-=n;P.or+=n;lg(G,{t:'gold',ts:s,n,from:1-s,src:'neigar',ss:1-s,si:-1})}}}
+      if(cd.fac.indexOf('alien')>=0&&P.board[a.sl]===c){const L=fl(G,s),nt=(L.alien||0)-1,E=G.p[1-s];
+        if(nt>0){lg(G,{t:'fac',f:'alien',ts:s,n:L.alien});const n=Math.min(nt,E.or);
+          if(n>0){E.or-=n;P.or+=n;lg(G,{t:'gold',ts:s,n,from:1-s,src:'alien',ss:1-s,si:-1})}}}
       if(cd.cry&&!G.over){
         const twice=P.board.some(b=>b&&b.id!==c.id&&!b.mut&&CARDS[b.k].dbl);
         const x={s,src:h.k,self:c,tg,pc,sl:a.sl,ss:s,si:a.sl};
@@ -1392,7 +1481,7 @@ function act(G,s,a){
       const pc=G.played;G.played++;
       lg(G,{t:'play',k:h.k,p:h.p,c:cost,ts:s,tg:tg?{s:tg.s,i:tg.i,k:(tg.i>=0&&G.p[tg.s].board[tg.i])?G.p[tg.s].board[tg.i].k:null}:null});
       runFx(G,cd.fx,{s,src:h.k,self:null,tg,pc,ss:s,si:-1});
-      toDisc(P,h)}
+      toGrave(P,h)}
     break}
   case 'atk':{
     if(!P.board[a.f]||!canAtk(G,s,a.f))return er('Cette créature ne peut pas attaquer.');
@@ -1471,7 +1560,7 @@ function attack(G,s,i,t){
   else{
     const D=G.p[e].board[t.i],LD=fl(G,e),ED=eff(G,e,t.i,LD),did=D.id;
     let pa=EA.a,xb=0;
-    if(hasF(A.k,'xeno')&&hasF(D.k,'neigar')&&(L.xeno||0)>=2){xb=L.xeno-1;pa+=xb}
+    if(hasF(A.k,'xeno')&&hasF(D.k,'alien')&&(L.xeno||0)>=2){xb=L.xeno-1;pa+=xb}
     if(EA.TE&&EA.TE.vsC)pa+=EA.TE.vsC;
     const rd=(LD.weebos||0)>=3&&hasF(D.k,'weebos')&&pa>0?1:0,ra=(L.weebos||0)>=3&&hasF(A.k,'weebos')&&ED.a>0?1:0;
     const d1=dmgC(G,e,t.i,pa-rd,A.k,true),d2=dmgC(G,s,i,ED.a-ra,D.k,true);
@@ -1575,13 +1664,17 @@ function aiTurn(G,s,W){
   if(!G.over&&G.cur===s)act(G,s,{t:'end'})}
 
 // ---------- decks : archétypes ----------
+// mulligan de l'IA : remplace les cartes chères (5+), et la plus chère des 4 si la main n'a rien à jouer avant le tour 3
+function aiMull(G,s){const H=G.p[s].hand,r=[];H.forEach((c,i)=>{if(CARDS[c.k].c>=5)r.push(i)});
+  if(!H.some(c=>CARDS[c.k].c<=2)){let bi=-1,bc=3;H.forEach((c,i)=>{const k=CARDS[c.k].c;if(r.indexOf(i)<0&&k>bc){bc=k;bi=i}});if(bi>=0)r.push(bi)}
+  return r}
 const ARCH={
   toxic:{n:'Toxic',ic:'☣️',c:'#8bd346',w:'bal',fam:['toxic'],pri:['flame','toxicite','sanction','ping','clutch','raid']},
   weebos:{n:'Weebos',ic:'🌸',c:'#ff6fae',w:'bal',fam:['weebos'],pri:['boost','premade','clutch','ping','nerf']},
   farmer:{n:'Farmers',ic:'🌾',c:'#d9a441',w:'ctrl',fam:['farmer'],pri:['giveaway','pizza','botspell','raid','clutch']},
   expats:{n:'Expats',ic:'✈️',c:'#3ec5ff',w:'bal',fam:['expats'],pri:['nitro','webhook','giveaway','boost','ping']},
   ravages:{n:'Ravagés',ic:'🌀',c:'#ff8a1f',w:'agro',fam:['ravages'],pri:['raid','ping','webhook','premade']},
-  neigar:{n:'Neigar',ic:'👽',c:'#ffd23f',w:'bal',fam:['neigar'],pri:['screenshot','kick','spam','pizza']},
+  alien:{n:'Extraterrestres',ic:'👽',c:'#ffd23f',w:'bal',fam:['alien'],pri:['screenshot','kick','spam','pizza']},
   xeno:{n:'Xénophobes',ic:'🚧',c:'#e2483d',w:'bal',fam:['xeno'],pri:['nerf','sanction','boost','ping']},
   rush:{n:'Rush',ic:'⚡',c:'#ff7a3d',w:'agro',fam:[],pri:['coco2','loractys1','coco1','boku1','mikalev1','lisdoon1','randal1','sada1','ping','webhook','boost','premade','loractys2','boku2','coco3','boku3','loractys3','haddmi1'],agro:1},
   ctrl:{n:'Contrôle',ic:'🛡️',c:'#3d8bff',w:'ctrl',fam:[],pri:['raid','clutch','sanction','pizza','everyone','ban','giveaway','dreos2','simon2','simon3','dreos3','maki3','sada3','bambou2','bambou3','mikalev3','minuit3'],ctrl:1}};
@@ -1709,18 +1802,22 @@ function deckCheck(d){
 function withPrism(list){const used={};return list.map(k=>{k=k.replace('*','');const e=S.coll[k]||{n:0,p:0};used[k]=(used[k]||0)+1;return used[k]<=e.p?k+'*':k})}
 
 // ============ HÔTE DE PARTIE (IA locale ou en ligne) + RÉSEAU PEERJS ============
-const APPV='3.0';
+const APPV='3.2';
 function peerId(code){return 'etat-arcanique-'+String(code).replace('ARCANE-','').toLowerCase()}
 function validCode(c){return /^ARCANE-[A-Z0-9]{6}$/.test(String(c||'').trim().toUpperCase())}
 
 // Le moteur vit chez l'hôte : il valide chaque action, gère le chrono et l'IA, puis envoie à chaque joueur sa propre vue.
+const MULLT=30;   // secondes pour choisir son mulligan (si le défi a un chrono)
 function HostGame(G,seats,onMe){
   const H={G,seats,sent:[0,0],dl:0,timer:null,aiT:null,stop:false};
   const lim=()=>G.o.tim|0;
-  H.view=side=>{const V=view(G,side,H.sent[side]);H.sent[side]=G.hist.length;V.tl=H.dl?Math.max(0,H.dl-Date.now()):0;V.tim=lim();return V};
+  H.view=side=>{const V=view(G,side,H.sent[side]);H.sent[side]=G.hist.length;V.tl=H.dl?Math.max(0,H.dl-Date.now()):0;V.tim=G.phase==='mull'?Math.min(lim(),MULLT):lim();return V};
   H.push=()=>{seats.forEach((s,i)=>{
     if(s.kind==='me'){try{onMe(H.view(i))}catch(e){console.error(e)}}else if(s.kind==='net'&&s.send)s.send({t:'st',v:H.view(i)})})};
   H.arm=()=>{clearTimeout(H.timer);H.dl=0;if(!lim()||G.over||H.stop)return;
+    // mulligan : à la fin du temps, ceux qui n'ont pas choisi gardent leur main
+    if(G.phase==='mull'){const mt=Math.min(lim(),MULLT);H.dl=Date.now()+mt*1000;
+      H.timer=setTimeout(()=>{if(G.over||G.phase!=='mull'||H.stop)return;for(const s of[0,1])if(G.phase==='mull'&&!G.mull[s])act(G,s,{t:'mull',idx:[]});H.after(300)},mt*1000+250);return}
     H.dl=Date.now()+lim()*1000;const c=G.cur,tn=G.turn;
     H.timer=setTimeout(()=>{if(G.over||G.cur!==c||G.turn!==tn||H.stop)return;act(G,c,{t:'end'});H.after(300)},lim()*1000+250)};
   H.after=(delay)=>{
@@ -1728,12 +1825,12 @@ function HostGame(G,seats,onMe){
     if(H.lastTurn!==G.turn){H.lastTurn=G.turn;H.arm()}
     H.push();
     if(G.over){clearTimeout(H.timer);clearTimeout(H.aiT);return}
-    if(seats[G.cur].kind==='ai'){clearTimeout(H.aiT);H.aiT=setTimeout(H.aiStep,delay==null?700:delay)}};
+    if(!G.phase&&seats[G.cur].kind==='ai'){clearTimeout(H.aiT);H.aiT=setTimeout(H.aiStep,delay==null?700:delay)}};
   // délai avant l'action suivante de l'IA : assez long pour laisser jouer les animations produites
   const pace=(n0,base)=>{let w=0;for(let i=n0;i<G.hist.length;i++){const t=G.hist[i].t;w+=t==='fac'||t==='play'&&G.hist[i].ts!==0?550:t==='dmg'||t==='pz'||t==='gold'?260:t==='atk'?480:t==='tfx'||t==='chaos'||t==='story'?280:t==='move'||t==='tmove'?420:80}
     return Math.min(4200,base+w)};
   H.aiStep=()=>{
-    if(H.stop||G.over)return;const s=G.cur;if(seats[s].kind!=='ai')return;
+    if(H.stop||G.over||G.phase)return;const s=G.cur;if(seats[s].kind!=='ai')return;
     const n0=G.hist.length,m=aiPick(G,s,seats[s].W);const r=act(G,s,m);if(!r.ok)act(G,s,{t:'end'});
     H.after(pace(n0,m.t==='end'?400:600))};
   H.act=(side,a)=>{
@@ -1743,7 +1840,10 @@ function HostGame(G,seats,onMe){
     H.after(pace(n0,a.t==='end'?700:500));return r};
   H.resign=side=>{if(!G.over){act(G,side,{t:'resign'});H.after(0)}};
   H.close=()=>{H.stop=true;clearTimeout(H.timer);clearTimeout(H.aiT)};
-  H.start=()=>{H.lastTurn=G.turn;H.arm();H.push();if(seats[G.cur].kind==='ai')H.aiT=setTimeout(H.aiStep,1200)};
+  H.start=()=>{H.lastTurn=G.turn;H.arm();H.push();
+    // mulligan de l'IA, après un petit temps de réflexion
+    if(G.phase==='mull'){seats.forEach((st,i)=>{if(st.kind==='ai')setTimeout(()=>{if(H.stop||G.phase!=='mull'||G.mull[i])return;act(G,i,{t:'mull',idx:aiMull(G,i)});H.after(500)},1800+Math.random()*1800)});return}
+    if(seats[G.cur].kind==='ai')H.aiT=setTimeout(H.aiStep,1200)};
   return H}
 
 // ---------- réseau ----------
@@ -1917,6 +2017,9 @@ function ico(n,cls){const e=document.createElement('span');e.className='icw'+(cl
 const EMBLEM='<svg viewBox="0 0 32 32"><defs><linearGradient id="lgE" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffd36b"/><stop offset=".55" stop-color="#ff7a3d"/><stop offset="1" stop-color="#ff4fa0"/></linearGradient></defs><path d="M16 2l11.5 6.5v13L16 28 4.5 21.5v-13z" fill="#123a40" stroke="url(#lgE)" stroke-width="2"/><path d="M16 8l2.2 5.2 5.3.4-4 3.6 1.2 5.3L16 19.6l-4.7 2.9 1.2-5.3-4-3.6 5.3-.4z" fill="url(#lgE)"/></svg>';
 
 // ----- terrains, familles, affinités : visuels -----
+// icône d'un jeu : le vrai logo (WoW, Dofus, LoL, CS), l'emoji pour le Bazar
+const GURI={};for(const g in GSVG)GURI[g]='data:image/svg+xml,'+encodeURIComponent(GSVG[g]);
+function gi(g){return GURI[g]?h('img',{class:'gico',src:GURI[g],alt:GAMES[g].n,draggable:'false'}):h('span',{class:'gico ge'},GAMES[g]?GAMES[g].ic:'?')}
 function pips(n,max){return h('b',null,Array.from({length:max||2},(_,j)=>h('i',{class:j<n?'f':''})))}
 function szEl(n){return h('span',{class:'tsz'},Array.from({length:n},()=>h('i')))}
 // effet d'un terrain pour une créature donnée (texte)
@@ -1925,18 +2028,18 @@ function terrFxEl(t){
   if(t.g==='bazar')return h('div',{class:'tiers',style:'--gc:'+GAMES.bazar.c},h('div',{class:'tier on'},h('span',{class:'tn'},'Tous'),h('span',null,t.tn)));
   const g=GAMES[t.g];
   return h('div',{class:'tiers',style:'--gc:'+g.c},
-    h('div',{class:'tier on'},h('span',{class:'tn'},g.ic+' 1'),h('span',null,t.t1)),
-    h('div',{class:'tier on'},h('span',{class:'tn'},g.ic+' 2'),h('span',null,t.t2)),
-    h('div',{class:'tier'},h('span',{class:'tn'},g.ic+' 0'),h('span',{class:'mut'},'Affinité 0 : aucun effet.')))}
+    h('div',{class:'tier on'},h('span',{class:'tn'},gi(t.g),' 1'),h('span',null,t.t1)),
+    h('div',{class:'tier on'},h('span',{class:'tn'},gi(t.g),' 2'),h('span',null,t.t2)),
+    h('div',{class:'tier'},h('span',{class:'tn'},gi(t.g),' 0'),h('span',{class:'mut'},'Affinité 0 : aucun effet.')))}
 function tcardEl(t,o){o=o||{};const td=TD[t.d],g=GAMES[td.g];
-  return h('div',{class:'tcard',style:'--gc:'+g.c},o.cost!=null?h('span',{class:'tp'},'🪙'+o.cost):null,h('span',{class:'tg'},g.ic),h('b',null,td.n),szEl(td.size))}
+  return h('div',{class:'tcard',style:'--gc:'+g.c},o.cost!=null?h('span',{class:'tp'},'🪙'+o.cost):null,h('span',{class:'tg'},gi(td.g)),h('b',null,td.n),szEl(td.size))}
 function miniAv(k){const cd=CARDS[k],a=artOf(k);return a?h('img',{src:a,alt:''}):h('u',{style:'background:'+(cd.col||'#2b404b')},cd.sym||'✦')}
 function memEl(k){return h('span',{class:'mem',style:'border-color:'+RCOL[CARDS[k].r],onclick:()=>showCard(k)},miniAv(k),CARDS[k].n)}
 function baseEl(b){const B=BASES[b];return h('span',{class:'mem',onclick:()=>showCard(b+'1')},miniAv(b+'1'),B.n,h('span',{class:'rd'},[1,2,3].map(r=>h('i',{style:'background:'+RCOL[r]}))))}
 function facTiers(f,n){const F=FAC[f];
   return h('div',{class:'tiers',style:'--gc:'+F.c},F.tiers.map(t=>h('div',{class:'tier'+(n>=t[0]?' on':'')},h('span',{class:'tn'},'×'+t[0]),h('span',null,t[1]))))}
 function facTag(f,n){if(n<2)return null;
-  return({toxic:'☠+'+(n-1),weebos:n>=3?'+1 PV 🛡':'+1 PV',farmer:'+'+n+'🪙',expats:'✈ '+exCost(n)+'🪙',ravages:'🚀×'+(n-1),neigar:'vol '+(n-1)+'🪙',xeno:'+'+(n-1)+' ATK'})[f]}
+  return({toxic:'☠+'+(n-1),weebos:n>=3?'+1 PV 🛡':'+1 PV',farmer:'+'+n+'🪙',expats:'✈ '+exCost(n)+'🪙',ravages:'🚀×'+(n-1),alien:'vol '+(n-1)+'🪙',xeno:'+'+(n-1)+' ATK'})[f]}
 
 // ----- texte des cartes avec mots-clés survolables -----
 const KWRE=new RegExp('(?<![\\p{L}])(?:'+GLOS.map(g=>g[0].source).join('|')+')(?![\\p{L}])','gu');
@@ -1967,7 +2070,7 @@ function sparks(k){let x=0;for(const ch of k)x=(x*31+ch.charCodeAt(0))>>>0;const
   return h('div',{class:'spk'},Array.from({length:7},(_,j)=>h('i',{style:'left:'+(8+r()*84).toFixed(1)+'%;top:'+(8+r()*80).toFixed(1)+'%;--z:'+(4+r()*5).toFixed(1)+'cqw;animation-delay:'+(j*.52+r()*.3).toFixed(2)+'s'})))}
 function backEl(){return h('div',{class:'card cardback'},h('div',{class:'ci'}))}
 function affRow(k){const cd=CARDS[k];return h('div',{class:'afr'},AFG.map(g=>{const a=(cd.sc&&cd.sc[g])||0;
-  return h('span',{class:a?'':'z',style:'--gc:'+GAMES[g].c,title:'Affinité '+GAMES[g].n+' : '+a},GAMES[g].ic,pips(a))}))}
+  return h('span',{class:a?'':'z',style:'--gc:'+GAMES[g].c,title:'Affinité '+GAMES[g].n+' : '+a},gi(g),pips(a))}))}
 // o : {p prismatique, bd plateau, cr créature, E stats effectives, L familles, big, cost, cls[]}
 function cardEl(k,o){
   o=o||{};if(!k||k==='?'||!CARDS[k])return backEl();
@@ -1976,7 +2079,7 @@ function cardEl(k,o){
   if(cr&&cr.eg)cls.push('eg');if(cr&&cr.mut)cls.push('mut-x');if(cr&&cr.ex)cls.push('exil');if(o.tilt)cls.push('tilt');if(o.cls)cls.push(...o.cls);
   // plateau : effets de combat visibles sur la carte (Rempart, AFK, Tilt, Venin, Bloquée...)
   if(o.bd&&cr&&E){if(E.kw.rempart)cls.push('rp');if(E.kw.afk&&!cr.aw)cls.push('afkx');if(E.TE&&E.TE.noAtk)cls.push('noatk');
-    if(E.kw.tilt)cls.push('tlt',cr.a>cd.a?'tlton':'tltoff');if(cr.pz>0)cls.push('pzn');if(cr.blk>0)cls.push('blkx')}
+    if(E.kw.tilt)cls.push('tlt',cr.tc>0?'tlton':'tltoff');if(cr.pz>0)cls.push('pzn');if(cr.blk>0)cls.push('blkx')}
   const tx=cd.tx||'',tc=tx.length>118?'ct xl':tx.length>76?'ct l':'ct';
   const kwset=E?E.kw:(()=>{const r={};(cd.kw||[]).forEach(x=>r[x]=1);return r})();
   const kws=KWORDER.filter(x=>kwset[x]||(x==='egide'&&cr&&cr.eg)).map(x=>x==='venin'?h('i',{class:'vn'},'☠'+(kwset.venin>1?kwset.venin:'')):h('i',null,KWI[x][1]));
@@ -1984,7 +2087,7 @@ function cardEl(k,o){
   if(isC&&E){a=E.a;hp=E.hp;ac=a>cd.a?'up':a<cd.a?'dn':'';hc=hp<E.h?'hurt':(E.h>cd.h?'up':'')}
   const bdg=[];if(cr){if(cr.pz>0)bdg.push(h('i',{class:'pz'},'☠'+cr.pz));if(cr.blk>0)bdg.push(h('i',{class:'blk'},'🔒'));if(cr.mut)bdg.push(h('i',null,'🔇'))}
   let tb=null;
-  if(o.bd&&E&&E.T){const td=TD[E.T.d],g=GAMES[td.g],af=affOf(k,td.g);tb=h('div',{class:'tb'+(af?'':' z'),style:'--gc:'+g.c,title:td.n+' : '+terrFor(k,E.T.d).tx},g.ic,td.g==='bazar'?null:pips(af))}
+  if(o.bd&&E&&E.T){const td=TD[E.T.d],g=GAMES[td.g],af=affOf(k,td.g);tb=h('div',{class:'tb'+(af?'':' z'),style:'--gc:'+g.c,title:td.n+' : '+terrFor(k,E.T.d).tx},gi(td.g),td.g==='bazar'?null:pips(af))}
   return h('div',{class:cls.join(' '),'data-k':k,'data-id':cr?cr.id:null},
     h('div',{class:'ci'},
       h('div',{class:'cn'},h('span',{class:'cc'},o.cost!=null?o.cost:cd.c),h('span',{class:'nm'},cd.n),o.p?h('span',{class:'pst',title:'Prismatique'},'✦'):null,h('span',{class:'rg',title:RAR[cd.r]},RGEM[cd.r])),
@@ -2049,15 +2152,15 @@ function showCard(k,opts){
         (cd.fac&&cd.fac.length)?cd.fac.map(f=>h('div',{style:'margin:8px 0'},h('span',{class:'chip',style:'cursor:default;border-color:'+FAC[f].c+';background:'+FAC[f].c+'33'},FAC[f].ic+' '+FAC[f].n),
           h('div',{class:'sm',style:'margin-top:4px'},FAC[f].sum),facTiers(f,0))):null,
         cd.t==='c'&&!cd.tok?h('div',null,h('div',{class:'sm mut',style:'margin-top:8px'},'Affinités (effet des terrains de chaque jeu ; les terrains Bazar profitent à tous) :'),
-          h('div',{class:'scores'},AFG.map(g=>h('span',{style:'border-color:'+GAMES[g].c},GAMES[g].ic+' '+GAMES[g].n+' : '+((cd.sc&&cd.sc[g])||0))))):null,
+          h('div',{class:'scores'},AFG.map(g=>h('span',{style:'border-color:'+GAMES[g].c},gi(g),' '+GAMES[g].n+' : '+((cd.sc&&cd.sc[g])||0))))):null,
         h('div',{class:'defs'},defs.map(d=>h('div',null,h('b',null,d[0]+' : '),d[1]))),
         cd.lore?h('div',{class:'lore'},'« '+cd.lore+' »'):null,
         opts.extra||null)));
   return modal(box)}
 function pileModal(s,key){
   const V=DUEL&&DUEL.V;if(!V)return;const P=V.p[s],L=P[key]||[];
-  modal(h('div',null,h('h2',null,(key==='grave'?'✝ Cimetière':'🗑 Défausse')+' de '+(s===V.me?'toi':P.nm)+' ('+L.length+')'),
-    h('p',{class:'mut sm'},'Quand un deck est vide, son cimetière et sa défausse sont mélangés pour former un nouveau deck.'),
+  modal(h('div',null,h('h2',null,'✝ Cimetière de '+(s===V.me?'toi':P.nm)+' ('+L.length+')'),
+    h('p',{class:'mut sm'},'Sorts joués, créatures détruites et cartes défaussées. Quand un deck est vide, son cimetière est mélangé pour former un nouveau deck. La dernière carte arrivée est en premier.'),
     L.length?h('div',{class:'pilegrid'},L.slice().reverse().map(c=>h('div',{class:'cc2',onclick:()=>showCard(c.k,{p:c.p})},cardEl(c.k,{p:c.p,tilt:1})))):h('p',{class:'mut'},'Vide.')))}
 
 // ============ UI : écran de duel ============
@@ -2072,7 +2175,7 @@ function startAIDuel(di){
   const d=S.decks[di],chk=deckCheck(d);if(!chk.ok){toast('Deck invalide : '+chk.err);return}
   const arch=pickArch(S.coll,Math.random()),o=Object.assign({},S.opt);
   const G=newGame({names:[S.name||'Moi',AINAMES[rint(0,AINAMES.length-1)]],
-    decks:[withPrism(d.cards),autoDeck(S.coll,arch,ECON.deck,rint(1,99999))],seed:(Math.random()*4294967296)>>>0,o});
+    decks:[withPrism(d.cards),autoDeck(S.coll,arch,ECON.deck,rint(1,99999))],seed:(Math.random()*4294967296)>>>0,o,mull:true});
   const Hh=HostGame(G,[{kind:'me'},{kind:'ai',W:WGT[ARCH[arch].w]}],v=>applyView(v));
   newDuelState({mode:'ai',deck:di,host:Hh,ctl:{act:a=>Hh.act(0,a),resign:()=>Hh.resign(0),close:()=>Hh.close()}});
   mountDuel();Hh.start()}
@@ -2083,7 +2186,7 @@ function startHostDuel(conn,m,di,opt){
   const lim={};const gd=(Array.isArray(m.deck)?m.deck:[]).filter(e=>{const k=String(e).replace('*','');if(!CARDS[k]||CARDS[k].tok)return false;
     lim[k]=(lim[k]||0)+1;return lim[k]<=LIMIT(CARDS[k].r)}).slice(0,ECON.deck);
   const G=newGame({names:[S.name||'Moi',String(m.name||'Ami').slice(0,18)],decks:[withPrism(d.cards),gd],
-    seed:(Math.random()*4294967296)>>>0,o:opt});
+    seed:(Math.random()*4294967296)>>>0,o:opt,mull:true});
   const Hh=HostGame(G,[{kind:'me'},{kind:'net',send:x=>{try{conn.send(x)}catch(e){}}}],v=>applyView(v));
   newDuelState({mode:'host',deck:di,host:Hh,conn,ctl:{act:a=>Hh.act(0,a),resign:()=>Hh.resign(0),close:()=>{Hh.close();try{conn.close()}catch(e){}}}});
   conn.on('data',x=>{if(!x)return;if(x.t==='act')Hh.act(1,x.a);else if(x.t==='resign')Hh.resign(1)});
@@ -2115,7 +2218,9 @@ function mountDuel(){
         h('section',{class:'zone zmid mid'},h('div',{class:'shopz',id:'shop'}),h('div',{class:'evb',id:'evb'}),
           h('button',{class:'endb',id:'endb',onclick:e=>{e.stopPropagation();endTurnClick()}},h('span',{id:'ebt'},'Fin du tour'),h('small',{id:'ebs'}),h('i',{class:'eb',id:'ebb'}))),
         h('section',{class:'zone zme'},h('div',{class:'board m',id:'bMe'}),h('div',{class:'tstrip',id:'tMe'}),h('div',{class:'fxrow',id:'fMe'}),h('div',{id:'hMe'})),
-        h('div',{class:'hand',id:'hand'}),h('div',{class:'deck opp',id:'dkOpp'}),h('div',{class:'deck me',id:'dkMe'})),
+        h('div',{class:'hand',id:'hand'}),
+        h('div',{class:'pile2 opp'},h('div',{class:'deck opp',id:'dkOpp'}),h('div',{class:'grave opp',id:'gvOpp'})),
+        h('div',{class:'pile2 me'},h('div',{class:'grave me',id:'gvMe'}),h('div',{class:'deck me',id:'dkMe'}))),
       h('aside',{id:'hist'})));
   const aim=h('div',{id:'aim'});aim.innerHTML='<svg width="100%" height="100%"><path class="ab"/><path class="al"/><polygon class="ah"/></svg>';el.append(aim);
   DUEL.onMove=e=>{const D=DUEL;if(!D)return;D.mx=e.clientX;D.my=e.clientY;if(!D.aimRaf)D.aimRaf=requestAnimationFrame(()=>{if(DUEL){DUEL.aimRaf=0;aimDraw()}})};
@@ -2133,10 +2238,10 @@ function duelMenu(){
   if(D.V.over){leaveDuel();return}
   ask('Quitter le duel ?','Si tu abandonnes, tu perds le duel.',[{t:'Continuer'},{t:'Abandonner',c:'danger',f:()=>{D.ctl.resign();if(D.mode==='guest'){setTimeout(()=>{if(DUEL===D&&!(D.V&&D.V.over))leaveDuel()},1500)}}}])}
 
-function mine(){const V=DUEL.V;return V.cur===V.me&&!V.over}
+function mine(){const V=DUEL.V;return V.cur===V.me&&!V.over&&!V.phase}
 function updTimer(){
   const D=DUEL;if(!D||!D.V)return;const el=$('#dtm');if(!el)return;const V=D.V,s=$('#dts'),bar=$('#tbar'),eb=$('#ebs'),ebb=$('#ebb');
-  const m=V.cur===V.me&&!V.over,fill=bar.firstChild;
+  const m=V.phase==='mull'?!(V.mull&&V.mull[V.me]):V.cur===V.me&&!V.over,fill=bar.firstChild;
   if(V.over){s.textContent='Fin';el.className='tm off';bar.className='';fill.style.width='0';if(eb)eb.textContent='';if(ebb)ebb.style.width='0';return}
   if(!V.tim){s.textContent='∞';el.className='tm '+(m?'':'opp');bar.className=m?'':'opp';fill.style.width='100%';if(eb)eb.textContent='';if(ebb)ebb.style.width='0';return}
   const ms=Math.max(0,D.tl0-(performance.now()-D.tlAt)),left=Math.ceil(ms/1000),pct=Math.min(100,ms/(V.tim*1000)*100);
@@ -2182,12 +2287,12 @@ function renderDuel(){
   fixSel();D.hl=computeHL();
   const m=mine();
   $('#duel').classList.toggle('myturn',m);$('#duel').classList.toggle('oppturn',!m&&!V.over);
-  $('#dtt').textContent=V.over?'Duel terminé':'Manche '+V.round+' · '+(m?'À toi de jouer':'Tour de '+V.p[op].nm);updTimer();
+  $('#dtt').textContent=V.over?'Duel terminé':V.phase==='mull'?'Mulligan · choisis ta main de départ':'Manche '+V.round+' · '+(m?'À toi de jouer':'Tour de '+V.p[op].nm);updTimer();
   $('#hOpp').replaceChildren(heroNode(op));$('#hMe').replaceChildren(heroNode(me));
   const ids=new Set();
   for(const s of [op,me]){const B=$(s===me?'#bMe':'#bOpp');B.replaceChildren(...boardNodes(s,ids))}
-  stripNode(op,$('#tOpp'));stripNode(me,$('#tMe'));fxNode(op,$('#fOpp'));fxNode(me,$('#fMe'));deckNode(op,$('#dkOpp'));deckNode(me,$('#dkMe'));
-  shopNode();evNode();endNode();showInfo();handNode();
+  stripNode(op,$('#tOpp'));stripNode(me,$('#tMe'));fxNode(op,$('#fOpp'));fxNode(me,$('#fMe'));deckNode(op,$('#dkOpp'));deckNode(me,$('#dkMe'));graveNode(op,$('#gvOpp'));graveNode(me,$('#gvMe'));
+  shopNode();evNode();endNode();showInfo();handNode();mullNode();
   D.prevIds=ids;
   // une créature déplacée glisse de son ancienne case vers la nouvelle
   $$('#duel .slot .card[data-id]').forEach(c=>{const r0=idr[c.dataset.id];if(!r0)return;const r=c.parentElement.getBoundingClientRect(),dx=r0.left-r.left,dy=r0.top-r.top;
@@ -2208,21 +2313,19 @@ function heroNode(s){
   const tot=Math.max(P.cap,P.eth),cr=[];for(let i=0;i<tot;i++)cr.push(h('i',{class:i<P.eth?(i>=P.cap?'x':'f'):''}));
   const pct=Math.max(0,Math.min(100,P.hp/P.mhp*100));
   const cls='hero '+(isMe?'me':'opp')+(V.cur===s&&!V.over?' act':'')+(D.hl&&D.hl[s+':-1']?(s===me?' tgo':' tg'):'')+(pct<=30?' low':'');
-  const pb=(ic,n,key,tt)=>h('button',{class:key?'':'dk',title:tt,onclick:key?e=>{e.stopPropagation();pileModal(s,key)}:null},ic+' '+n);
-  // une case par ressource : étiquette + valeur
-  const st=(cl,lab,val,tt,extra)=>h('div',{class:'hst '+cl,title:tt},h('span',{class:'hl'},lab),h('b',null,...val),extra||null);
+  // une case par ressource : l'icône et la valeur ; le nom n'apparaît qu'au survol (.hl)
+  const st=(cl,lab,val,extra)=>h('div',{class:'hst '+cl},h('span',{class:'hl'},lab),h('b',null,...val),extra||null);
   const ml=mvLeft(V,s),mm=mvMax(V);
   const el=h('div',{class:cls,'data-s':s,'data-i':-1},
     h('div',{class:'hav'},(P.nm||'?').trim().charAt(0).toUpperCase()),
     h('div',{class:'hid'},
-      h('div',{class:'hrow'},h('div',{class:'hn'},(isMe?'Toi · ':'')+P.nm),
-        h('span',{class:'piles'},pb('🂠',P.dn,null,'Cartes dans le deck'),pb('✝',P.grave.length,'grave','Cimetière'),pb('🗑',P.disc.length,'disc','Défausse'))),
-      h('div',{class:'hpl',title:'Points de vie : '+P.hp+' / '+P.mhp},h('div',{class:'hbar'},h('i',{style:'width:'+pct+'%'})),h('b',{class:'hpn'},h('i',null,'♥'),' '+P.hp,h('small',null,'/'+P.mhp)))),
+      h('div',{class:'hrow'},h('div',{class:'hn'},P.nm)),
+      h('div',{class:'hpl'},h('span',{class:'hl'},'Points de vie'),h('div',{class:'hbar'},h('i',{style:'width:'+pct+'%'})),h('b',{class:'hpn'},h('i',null,'♥'),' '+P.hp,h('small',null,'/'+P.mhp)))),
     P.pz>0?h('div',{class:'hpz'},'☠ '+P.pz):null,
-    st('mana','Démoflux',[h('i',null,'◆'),' '+P.eth,h('small',null,'/'+P.cap)],'Démoflux : '+P.eth+' sur '+P.cap,h('div',{class:'crys'},cr)),
-    V.o.ter?st('gold','Or',[h('i',null,'🪙'),' '+P.or],'Or : '+P.or):null,
-    st('handc','Main',[h('i',null,'✋'),' '+P.hand.length],'Cartes en main'),
-    isMe&&V.o.ter&&mm>0?st('mvc'+(ml?'':' out'),'Dépl.',[h('i',null,'↔'),' '+ml+'/'+mm],'Déplacements ce tour : '+ml+' restant'+(ml>1?'s':'')+' sur '+mm+'.\nProchain : '+mvCost(V,s)+' ◆ (créature) ou '+mvCost(V,s)+' 🪙 (terrain). Le n-ième déplacement du tour coûte n.'):null);
+    st('mana','Démoflux',[h('i',null,'◆'),' '+P.eth,h('small',null,'/'+P.cap)],h('div',{class:'crys'},cr)),
+    V.o.ter?st('gold','Or',[h('i',null,'🪙'),' '+P.or]):null,
+    st('handc','Cartes en main',[h('i',null,'✋'),' '+P.hand.length]),
+    isMe&&V.o.ter&&mm>0?st('mvc'+(ml?'':' out'),ml?'Déplacements · prochain : '+mvCost(V,s)+' ◆ ou '+mvCost(V,s)+' 🪙':'Déplacements épuisés ce tour',[h('i',null,'↔'),' '+ml+'/'+mm]):null);
   el._dz={t:'hero',s};
   el.addEventListener('click',e=>{e.stopPropagation();clickSlot(s,-1)});
   return el}
@@ -2271,13 +2374,13 @@ function stripNode(s,el){
   while(i<CELLS){const id=P.cells[i];
     if(!id){el.append(h('div',{class:'tcell none',style:'grid-column:'+(i+1),'data-c':i}));i++;continue}
     let j=i;while(j<CELLS&&P.cells[j]===id)j++;const T=P.terrs.find(t=>t.id===id),td=TD[T.d],g=GAMES[td.g],st=i,n=P.cells.filter(x=>x===id).length;
-    const c=h('div',{class:'tcell'+(own?' own':'')+(sel&&sel.t==='tm'&&sel.id===id?' sel':''),style:'--gc:'+g.c+';grid-column:'+(i+1)+' / span '+(j-i),title:td.n+' — '+tTxt(td)+(own?'\n(glisse-le pour le déplacer)':''),'data-c':i,'data-tid':id},h('span',{class:'tn'},g.ic+' '+td.n));
+    const c=h('div',{class:'tcell'+(own?' own':'')+(sel&&sel.t==='tm'&&sel.id===id?' sel':''),style:'--gc:'+g.c+';grid-column:'+(i+1)+' / span '+(j-i),title:td.n+' — '+tTxt(td)+(own?'\n(glisse-le pour le déplacer)':''),'data-c':i,'data-tid':id},h('span',{class:'tn'},gi(td.g),' '+td.n));
     c.addEventListener('click',e=>{const S=DUEL.sel;if(S&&S.t==='tm'&&own&&S.id===id){e.stopPropagation();DUEL.sel=null;renderDuel();return}
       if(S&&(S.t==='terr'||S.t==='tm')&&own)return;e.stopPropagation();
       if(own&&mine()){DUEL.info={terr:T,s};DUEL.sel=(S&&S.t==='tm'&&S.id===id)?null:{t:'tm',id,n,off:cellAt(e.clientX)-st};renderDuel()}else setInfo({terr:T,s})});
     if(own)makeDrag(c,e=>{if(!mine())return null;return{t:'tm',id,n,off:cellAt(e.clientX)-st,d:T.d}});
     el.append(c);i=j}
-  if(sel&&sel.t==='terr'&&own&&sel.at!=null){const t=V.shop[sel.n];if(t){const td=TD[t.d];el.append(h('div',{class:'tcell pv',style:'grid-row:1;grid-column:'+(sel.at+1)+' / span '+td.size+';z-index:3;--gc:'+GAMES[td.g].c},GAMES[td.g].ic+' '+td.n))}}
+  if(sel&&sel.t==='terr'&&own&&sel.at!=null){const t=V.shop[sel.n];if(t){const td=TD[t.d];el.append(h('div',{class:'tcell pv',style:'grid-row:1;grid-column:'+(sel.at+1)+' / span '+td.size+';z-index:3;--gc:'+GAMES[td.g].c},gi(td.g),' '+td.n))}}
   el.onclick=e=>{const S=DUEL.sel;if(!own||!S||!mine())return;e.stopPropagation();const x=cellAt(e.clientX);
     if(S.t==='terr')setTerrAt(x);else if(S.t==='tm')doAct({t:'tmove',id:S.id,at:Math.max(0,Math.min(x-S.off,CELLS-S.n))})};
   if(sel&&(sel.t==='terr'||sel.t==='tm')&&own){el._cellAt=cellAt;el._dz={t:'strip',s}}else el._dz=null}
@@ -2285,7 +2388,7 @@ function stripNode(s,el){
 function stripPreview(at,n,col,txt){const el=$('#tMe');if(!el)return;let p=el.querySelector('.tcell.pv.drag');
   if(at==null){if(p)p.remove();return}
   if(!p){p=h('div',{class:'tcell pv drag'});el.append(p)}
-  p.style.cssText='grid-row:1;grid-column:'+(at+1)+' / span '+n+';z-index:3;--gc:'+col;p.textContent=txt}
+  p.style.cssText='grid-row:1;grid-column:'+(at+1)+' / span '+n+';z-index:3;--gc:'+col;p.replaceChildren(...[].concat(txt))}
 
 function shopNode(){
   const D=DUEL,V=D.V,me=V.me,el=$('#shop');el.innerHTML='';el.append(h('div',{class:'lb'},'TERRAINS'));
@@ -2299,7 +2402,7 @@ function shopNode(){
     const td=TD[t.d],g=GAMES[td.g],cost=terrCost(V,me,t),can=mine()&&canBuy(V,me,n),old=n===0&&V.shop.length>1;
     const d=h('div',{'data-n':n,class:'shT'+(can?' can':' no')+(D.sel&&D.sel.t==='terr'&&D.sel.n===n?' sel':'')+(prev.indexOf(keys[n])<0?' fresh':''),style:'--gc:'+g.c,title:td.n+' — '+tTxt(td)},
       old?h('span',{class:'agetag'},'⏳ part bientôt'):null,
-      h('div',{class:'r1'},h('span',null,g.ic+' '+g.n),h('span',{class:'sz'},Array.from({length:td.size},()=>h('i'))),h('span',{class:'pr'},'🪙'+cost)),h('b',null,td.n),
+      h('div',{class:'r1'},h('span',null,gi(td.g),' '+g.n),h('span',{class:'sz'},Array.from({length:td.size},()=>h('i'))),h('span',{class:'pr'},'🪙'+cost)),h('b',null,td.n),
       h('div',{class:'ef'},td.g==='bazar'?td.tn:'1 : '+td.t1+' · 2 : '+td.t2));
     d.addEventListener('click',e=>{e.stopPropagation();clickShop(n)});
     makeDrag(d,()=>{const V2=DUEL.V;if(!mine()||!canBuy(V2,V2.me,n))return null;return{t:'terr',n}});
@@ -2335,6 +2438,33 @@ window.addEventListener('resize',()=>{if(DUEL&&DUEL.V)fitHand()});
 function deckNode(s,el){if(!el)return;const P=DUEL.V.p[s],n=P.dn||0,k=Math.min(4,Math.ceil(n/8));
   el.replaceChildren(...Array.from({length:Math.max(1,k)},(_,j)=>h('div',{class:'dkc'+(n?'':' none'),style:'--j:'+j},n?backEl():null)),
     h('b',{class:'dkn',title:'Cartes dans le deck'},String(n)));el.title=(s===DUEL.V.me?'Ton deck':'Deck adverse')+' : '+n+' carte'+(n>1?'s':'')}
+// mulligan : avant le premier tour, chaque joueur choisit les cartes de sa main de départ à remplacer
+function mullNode(){
+  const D=DUEL,V=D.V,old=$('#mullov');
+  if(!V||V.phase!=='mull'||V.over){if(old)old.remove();D.mullSel=null;D.mullSent=0;return}
+  const me=V.me,op=1-me,P=V.p[me],done=!!(V.mull&&V.mull[me])||!!D.mullSent;if(!D.mullSel)D.mullSel=new Set();const sel=D.mullSel;
+  const sig=(done?'d':'c')+P.hand.map(c=>c.id).join(',');if(old&&old.dataset.sig===sig)return;   // rien n'a changé : la sélection se met à jour sur place
+  const lab=()=>sel.size?'Remplacer '+sel.size+' carte'+(sel.size>1?'s':''):'Garder ma main';
+  const go=done?null:h('button',{class:'btn green mgo',onclick:()=>{const idx=[...sel].sort((x,y)=>x-y);D.mullSel=new Set();D.mullSent=1;
+    const r=doAct({t:'mull',idx});if(r&&r.ok===false){D.mullSent=0;mullNode();return}mullNode();
+    setTimeout(()=>{if(DUEL===D&&D.mullSent&&D.V&&D.V.phase==='mull'&&!(D.V.mull&&D.V.mull[me])){D.mullSent=0;mullNode()}},4000)}},lab());
+  const cards=P.hand.map((c,i)=>{const el=h('div',{class:'mc'+(!done&&sel.has(i)?' out':''),oncontextmenu:e=>{e.preventDefault();showCard(c.k,{p:c.p})}},
+      cardEl(c.k,{p:c.p,big:true}),h('div',{class:'mx'},'♻ Remplacer'));
+    el.onclick=()=>{if(done)return;if(sel.has(i))sel.delete(i);else sel.add(i);el.classList.toggle('out',sel.has(i));if(go)go.textContent=lab()};return el});
+  const ov=h('div',{id:'mullov','data-sig':sig},h('div',{class:'mbox'},
+    h('h2',null,done?'Main validée':'Ta main de départ'),
+    h('p',{class:'mut'},done?'En attente de '+V.p[op].nm+'…':'Clique sur les cartes que tu veux remplacer, puis valide : elles retournent dans ton deck et tu en pioches autant de nouvelles. Clic droit : voir une carte en détail.'),
+    h('div',{class:'mrow'+(done?' done':'')},cards),
+    h('p',{class:'sm mfirst'},V.first===me?'Tu joues en premier.':'Tu joues en second : tu recevras la Pièce (+1 ◆ pendant un tour) après le mulligan.'),go));
+  if(old)old.replaceWith(ov);else $('#duel').append(ov)}
+// cimetière : pile face visible (la dernière carte arrivée dessus), à côté du deck ; clic = tout le cimetière
+function graveNode(s,el){if(!el)return;const V=DUEL.V,P=V.p[s],L=P.grave||[],n=L.length,top=n?L[n-1]:null,k=n?Math.min(3,Math.ceil(n/6)):0;
+  el.replaceChildren(...Array.from({length:Math.max(0,k-1)},(_,j)=>h('div',{class:'gvl',style:'--j:'+(k-1-j)})),
+    top?h('div',{class:'gvt'},cardEl(top.k,{p:top.p})):h('div',{class:'gve'},'✝'),
+    h('b',{class:'dkn'},'✝ '+n));
+  el.classList.toggle('none',!n);
+  el.title=(s===V.me?'Ton cimetière':'Cimetière adverse')+' : '+n+' carte'+(n>1?'s':'')+(n?' (clique pour le voir)':'');
+  el.onclick=e=>{e.stopPropagation();pileModal(s,'grave')}}
 // animation de pioche : un dos de carte part du deck vers la main
 function drawFly(s,idx,delay){
   setTimeout(()=>{const D=DUEL;if(!D||!D.V)return;const me=D.V.me,from=$(s===me?'#dkMe':'#dkOpp');if(!from)return;
@@ -2358,7 +2488,7 @@ function terrCtx(){
   return null}
 function terrDetail(ctx){
   const V=DUEL.V,me=V.me,t=ctx.t,td=TD[t.d],g=GAMES[td.g],P=V.p[ctx.s],out=[];
-  out.push(...[h('h4',null,g.ic+' '+td.n),
+  out.push(...[h('h4',null,gi(td.g),' '+td.n),
     h('div',{class:'mut sm'},'Terrain '+g.n+' · '+td.size+' case'+(td.size>1?'s':'')+(ctx.cost!=null?' · 🪙 '+ctx.cost:'')+(ctx.placed?' · posé sur '+(ctx.s===me?'ton':'son')+' plateau':'')),
     terrFxEl(td),
     td.g==='lol'?h('div',{class:'sm',style:'color:#ffd36b'},'Lisdoon (rare, épique) y gagne aussi son bonus Gremlin.'):null,
@@ -2483,7 +2613,8 @@ function doAct(a){
   const D=DUEL;D.sel=null;D.endArm=0;
   const r=D.ctl.act(a);
   if(r&&r.ok===false){toast(r.err);renderDuel()}
-  else if(D.mode==='guest')renderDuel()}
+  else if(D.mode==='guest')renderDuel();
+  return r}
 function endTurnClick(){
   const D=DUEL,V=D.V;if(!mine())return;
   const me=V.me;let idle=true;for(let i=0;i<V.p[me].hand.length;i++)if(playable(V,me,i)){idle=false;break}
@@ -2511,7 +2642,7 @@ function makeDrag(el,getPayload){
         ghost=h('div',{class:'ghost'+(p.t==='terr'||p.t==='tm'?' terr':'')+(p.t==='atk'?' cr':'')});
         if(p.t==='hand')ghost.append(cardEl(p.k,{p:p.p}));
         else if(p.t==='atk')ghost.append(cardEl(p.k,{bd:true}));
-        else{const td=TD[p.t==='tm'?p.d:DUEL.V.shop[p.n].d];ghost.append(h('div',{class:'shT',style:'--gc:'+GAMES[td.g].c+';min-width:130px'},h('b',null,GAMES[td.g].ic+' '+td.n)))}
+        else{const td=TD[p.t==='tm'?p.d:DUEL.V.shop[p.n].d];ghost.append(h('div',{class:'shT',style:'--gc:'+GAMES[td.g].c+';min-width:130px'},h('b',null,gi(td.g),' '+td.n)))}
         document.body.append(ghost);
         D.info=p.t==='hand'?{k:p.k,p:p.p,hand:p.i}:p.t==='atk'?D.info:p.t==='tm'?D.info:{shop:p.n};
         D.sel=p.t==='hand'?{t:'hand',i:p.i,k:p.k}:p.t==='atk'?(p.atk?{t:'atk',f:p.f}:{t:'mv',f:p.f}):p.t==='tm'?{t:'tm',id:p.id,n:p.n,off:p.off}:{t:'terr',n:p.n,at:null};
@@ -2520,7 +2651,7 @@ function makeDrag(el,getPayload){
       $$('.hov').forEach(x=>x.classList.remove('hov'));const dz=hitTest(ev.clientX,ev.clientY);
       if(dz){const t=dz.t==='slot'?$('.slot[data-s="'+dz.s+'"][data-i="'+dz.i+'"]'):dz.t==='hero'?$('.hero[data-s="'+dz.s+'"]'):null;if(t)t.classList.add('hov')}
       if(p.t==='terr'||p.t==='tm'){const V=DUEL.V,td=TD[p.t==='tm'?p.d:V.shop[p.n].d],n=p.t==='tm'?p.n:td.size;
-        if(dz&&dz.t==='slot'&&dz.s===V.me)stripPreview(Math.max(0,Math.min(dz.i-(p.off||0),CELLS-n)),n,GAMES[td.g].c,GAMES[td.g].ic+' '+td.n);else stripPreview(null)}};
+        if(dz&&dz.t==='slot'&&dz.s===V.me)stripPreview(Math.max(0,Math.min(dz.i-(p.off||0),CELLS-n)),n,GAMES[td.g].c,[gi(td.g),' '+td.n]);else stripPreview(null)}};
     const up=ev=>{
       if(ev.pointerId!==pid)return;const was=started,dz=was?hitTest(ev.clientX,ev.clientY):null;clean();
       if(was){D.dragT=Date.now();dropOn(p,dz,ev)}};
@@ -2592,7 +2723,7 @@ function cardNodes(I){
     h('div',{class:'pd txt'},txNodes(cd.tx||'')),
     ...out,
     (cd.fac||[]).length?h('div',{class:'pd'},cd.fac.map(f=>h('div',null,h('b',{style:'color:'+FAC[f].c},FAC[f].ic+' '+FAC[f].n+' : '),FAC[f].sum))):null,
-    cd.t==='c'&&!cd.tok?h('div',{class:'pd'},h('b',null,'Affinités : '),AFG.map(g=>GAMES[g].ic+' '+((cd.sc&&cd.sc[g])||0)).join('  ')):null,
+    cd.t==='c'&&!cd.tok?h('div',{class:'pd'},h('b',null,'Affinités : '),AFG.map(g=>h('span',{class:'afi'},gi(g),' '+((cd.sc&&cd.sc[g])||0)))):null,
     ...defs.map(d=>h('div',{class:'pd'},h('b',null,d[0]+' : '),d[1])),
     cd.lore?h('div',{class:'lore'},'« '+cd.lore+' »'):null].filter(Boolean)}
 function ctxInfo(t){
@@ -2697,12 +2828,12 @@ function animate(es){
     case 'gold':{if(e.from!=null){proj(elAt(e.from,-1),elAt(e.ts,-1),'#ffc145','🪙',t,FL*1.2);popAt(e.ts,-1,'+'+e.n+' 🪙','gold',t+FL*1.2);popAt(e.from,-1,'−'+e.n+' 🪙','gold',t);t+=300}
       else{const se=srcEl(e);if(se&&e.si!==-1){proj(se,elAt(e.ts,-1),'#ffc145','🪙',t,FL);popAt(e.ts,-1,'+'+e.n+' 🪙','gold',t+FL);t+=220}else{popAt(e.ts,-1,'+'+e.n+' 🪙','gold',t);t+=150}}
       break}
-    case 'fac':{const F=FAC[e.f],n=e.n;famBurst(e.ts,e.f,e.f==='ravages'?(n-1)+' missile'+(n>2?'s':'')+' !':e.f==='farmer'?'+'+n+' Or':e.f==='neigar'?'Vol de '+(n-1)+' Or':'×'+n,t);t+=550;break}
-    case 'tfx':{const td=TD[e.d];if(!td)break;flashSlot(e.ts,e.i,GAMES[td.g].c,t);popAt(e.ts,e.i,GAMES[td.g].ic+' '+td.n,'txt',t);t+=260;break}
+    case 'fac':{const F=FAC[e.f],n=e.n;famBurst(e.ts,e.f,e.f==='ravages'?(n-1)+' missile'+(n>2?'s':'')+' !':e.f==='farmer'?'+'+n+' Or':e.f==='alien'?'Vol de '+(n-1)+' Or':'×'+n,t);t+=550;break}
+    case 'tfx':{const td=TD[e.d];if(!td)break;flashSlot(e.ts,e.i,GAMES[td.g].c,t);popAt(e.ts,e.i,[gi(td.g),' '+td.n],'txt',t);t+=260;break}
     case 'buff':popAt(e.ts,e.i,sg(e.ba)+'/'+sg(e.bh),'buf',t);t+=110;break;
-    case 'tilt':popAt(e.ts,e.i,'😡 +2 ATK','buf',t+200);break;
+    case 'tilt':flashSlot(e.ts,e.i,'#ff2b2b',t+120);popAt(e.ts,e.i,'😡 Tilt !','txt',t+120);t+=320;break;
     case 'egide':popAt(e.ts,e.i,'✧ Égide !','txt',t);t+=100;break;
-    case 'kwg':popAt(e.ts,e.i,'✧ Égide','buf',t);t+=100;break;
+    case 'kwg':popAt(e.ts,e.i,e.kw==='rempart'?'⛊ Rempart':'✧ Égide','buf',t);t+=100;break;
     case 'die':ghostDie(e.ts,e.i,e.ban,t);if(e.ban)popAt(e.ts,e.i,'⛔ Banni','txt',t);t+=90;break;
     case 'sum':if(e.rs)popAt(e.ts,e.i,'↺ Respawn','buf',t);break;
     case 'mute':popAt(e.ts,e.i,'🔇 Mute','txt',t);t+=100;break;
@@ -2710,15 +2841,15 @@ function animate(es){
     case 'exil':popAt(e.ts,e.i,'✈️ À l’étranger !','txt',t);famBurst(e.ts,'expats','Voyage : −'+e.n+' Or',t);t+=500;break;
     case 'back':popAt(e.ts,e.i,'🏠 De retour','txt',t);t+=100;break;
     case 'tmove':{const td=TD[e.d];if(td){const P=V.p[e.ts];for(let j=0;j<CELLS;j++)if(P.cells[j]===e.id)flashSlot(e.ts,j,GAMES[td.g].c,t)}t+=150;break}
-    case 'reshuf':banner('♻ '+(e.ts===me?'Ton':'Son')+' cimetière et '+(e.ts===me?'ta':'sa')+' défausse sont remélangés','#8bd346');t+=400;break;
+    case 'reshuf':banner('♻ '+(e.ts===me?'Ton':'Son')+' cimetière est remélangé dans '+(e.ts===me?'ton':'son')+' deck','#8bd346');t+=400;break;
     case 'echo':popAt(e.ts,e.i,'×2 Cri d’arrivée','buf',t);t+=200;break;
     case 'story':popAt(e.ts,-1,'📖 '+STORY[e.n],'txt',t);t+=250;break;
     case 'chaos':if(e.i>=0){flashSlot(e.ts,e.i,GAMES.bazar.c,t);popAt(e.ts,e.i,'🌀 '+CHAOSN[e.n],'txt',t)}else popAt(e.ts,-1,'🌀 '+CHAOSN[e.n],'txt',t);t+=300;break;
     case 'ev':banner('🌀 '+e.n,'#ff4fa0');t+=400;break;
-    case 'buy':{const td=TD[e.d];if(td){popAt(e.ts,-1,GAMES[td.g].ic+' '+td.n,'txt',t);for(let j=e.at;j<e.at+td.size;j++)flashSlot(e.ts,j,GAMES[td.g].c,t)}t+=200;break}
+    case 'buy':{const td=TD[e.d];if(td){popAt(e.ts,-1,[gi(td.g),' '+td.n],'txt',t);for(let j=e.at;j<e.at+td.size;j++)flashSlot(e.ts,j,GAMES[td.g].c,t)}t+=200;break}
     case 'tcyc':{const td=TD[e.nd];if(td)popEl($('#shop'),'🔄 '+td.n,'txt',t);break}
     case 'steal':popAt(e.ts,-1,'📸 copie','txt',t);break;
-    case 'disc':popAt(e.ts,-1,'🗑 défausse','txt',t);t+=100;break;
+    case 'disc':popAt(e.ts,-1,'✝ défausse','txt',t);t+=100;break;
     case 'burn':popAt(e.ts,-1,'🔥 main pleine','txt',t);break;
     case 'fat':popAt(e.ts,-1,'🥵 Fatigue −'+e.n,'dmg',t);t+=200;break}}}
 
@@ -2733,7 +2864,7 @@ function mini(k){const cd=CARDS[k];if(!cd)return h('span',{class:'mi'},'?');
   return h('span',{class:'mi','data-k':k,title:cd.n+(cd.st?' — '+cd.st:'')+' · clic droit : fiche',style:'--mc:'+RCOL[cd.r]},miniAv(k),cd.n)}
 function heroChip(s){const V=DUEL.V,P=V.p[s];return h('span',{class:'mi hch'+(s===V.me?' me':' op')},h('u',null,(P.nm||'?').charAt(0).toUpperCase()),s===V.me?'Toi':P.nm)}
 function tgChip(s,i,k){return i<0?heroChip(s):mini(k)}
-function terrChip(d){const t=TD[d];if(!t)return h('span',{class:'mut'},'terrain');const g=GAMES[t.g];return chip(g.ic,t.n,g.c,'Terrain '+g.n+' — '+t.n)}
+function terrChip(d){const t=TD[d];if(!t)return h('span',{class:'mut'},'terrain');const g=GAMES[t.g];return chip(gi(t.g),t.n,g.c,'Terrain '+g.n+' — '+t.n)}
 function facChip(f){const F=FAC[f];return F?chip(F.ic,F.n,F.c,'Famille '+F.n):null}
 // d'où vient un effet : une carte, un terrain (« T:xxx »), une famille, le Venin, la Fatigue ou un événement
 function srcChip(src){
@@ -2767,10 +2898,11 @@ function histNodes(e){
   case 'draw':return['card',[by(e),h('span',{class:'vb'},'🂠'),who(e),'pioche']];
   case 'burn':return['card',[h('span',{class:'vb'},'🔥'),who(e),e.k?mini(e.k):'une carte','brûlée (main pleine)',by(e)]];
   case 'add':return['card',[by(e),h('span',{class:'vb'},'🂱 +'),who(e),e.k?mini(e.k):'une carte']];
-  case 'disc':return['card',[h('span',{class:'vb'},'🗑'),who(e),mini(e.k),'défaussée',by(e)]];
+  case 'mull':return['card',[h('span',{class:'vb'},'♻'),heroChip(e.ts),e.n?'remplace '+e.n+' carte'+(e.n>1?'s':'')+' (mulligan)':'garde sa main (mulligan)']];
+  case 'disc':return['card',[h('span',{class:'vb'},'✝'),who(e),mini(e.k),'défaussée (cimetière)',by(e)]];
   case 'buff':return['buff',[by(e),h('span',{class:'vb'},'⬆'),mini(e.k),h('span',{class:'bf'},sg(e.ba)+'/'+sg(e.bh))]];
-  case 'tilt':return['buff',[h('span',{class:'vb'},'😡'),mini(e.k),h('span',{class:'bf'},'+2 ATK')]];
-  case 'kwg':return['buff',[by(e),h('span',{class:'vb'},'✧'),mini(e.k),'gagne Égide']];
+  case 'tilt':return['buff',[h('span',{class:'vb'},'😡'),mini(e.k),'est tilt : son effet Tilt se déclenche']];
+  case 'kwg':return['buff',[by(e),h('span',{class:'vb'},e.kw==='rempart'?'⛊':'✧'),mini(e.k),'gagne '+(e.kw==='rempart'?'Rempart':'Égide')]];
   case 'mute':return['ctl',[by(e),h('span',{class:'vb'},'🔇'),mini(e.k),'réduit au silence']];
   case 'blk':return['ctl',[by(e),h('span',{class:'vb'},'🔒'),mini(e.k),'bloquée']];
   case 'kick':return['ctl',[by(e),h('span',{class:'vb'},'⤴'),mini(e.k),'renvoyée en main']];
@@ -2780,7 +2912,7 @@ function histNodes(e){
   case 'move':return['move',[h('span',{class:'vb'},'↔'),mini(e.k),e.k2?['⇄',mini(e.k2)]:'déplacé(e)',costTag(e)]];
   case 'tmove':return['move',[h('span',{class:'vb'},'↔'),terrChip(e.d),'déplacé',costTag(e)]];
   case 'back':return['move',[h('span',{class:'vb'},'🏠'),mini(e.k),'est de retour']];
-  case 'reshuf':return['card',[h('span',{class:'vb'},'♻'),'Deck reformé ('+e.n+' cartes)']];
+  case 'reshuf':return['card',[h('span',{class:'vb'},'♻'),'Cimetière remélangé : deck reformé ('+e.n+' cartes)']];
   case 'echo':return['play',[h('span',{class:'vb'},'×2'),mini(e.k)]];
   case 'story':return['sys',[by(e),h('span',{class:'vb'},'📖'),STORY[e.n]]];
   case 'chaos':return['sys',[by(e),h('span',{class:'vb'},'🌀'),CHAOSN[e.n]]];
@@ -2824,7 +2956,7 @@ function showResult(){
 
 // ============ UI : menus (jouer, boutique, collection, decks, amis, code) ============
 var CUR='play';let DECKI=null,FR_T=0,CT='cards',SETOPEN=false;
-const CF={q:'',t:0,r:0,fac:'',cost:0,own:false,dup:false},DF={q:'',t:0,r:0,fac:'',cost:0,own:true,dup:false};
+const CF={q:'',t:0,r:0,fac:'',cost:0,aff:'',afl:0,own:false,dup:false},DF={q:'',t:0,r:0,fac:'',cost:0,aff:'',afl:0,own:true,dup:false};
 const TABS=[['play','Jouer','play'],['shop','Boutique','shop'],['coll','Collection','coll'],['decks','Decks','decks'],['friends','Amis','friends'],['code','Code','code']];
 const THUE={play:['#ff7a3d','#2a1000'],shop:['#2ec4b6','#032521'],coll:['#3d8bff','#001a3d'],decks:['#ffc145','#2e2000'],friends:['#ff4fa0','#3a0020'],code:['#8bd346','#152800']};
 function refreshTop(){const g=$('#gemn');if(g)g.textContent=S.gems;const n=$('#pname');if(n)n.textContent=S.name||''}
@@ -2881,13 +3013,15 @@ function rulesNodes(){
   return[
     li('But :','réduis les PV du héros adverse à 0.'),
     li('Decks :',ECON.deck+' cartes, 2 exemplaires maximum par carte (1 seul pour les épiques). Chaque personnage existe en 3 versions : commune, rare et épique.'),
+    li('Mulligan :','au début du duel, tu vois ta main de départ : clique sur les cartes que tu veux remplacer, puis valide. Elles retournent dans ton deck et tu en pioches autant de nouvelles. Le second joueur reçoit la Pièce juste après.'),
     li('Démoflux ◆ :','ta ressource. +1 maximum à chaque tour (jusqu’à '+OPTDEF.cap+'). Ce que tu ne dépenses pas est perdu à la fin du tour.'),
     li('Jouer :','glisse une carte de ta main sur un emplacement libre de ton plateau (6 emplacements). Glisse une de tes créatures sur un ennemi pour attaquer (ou clique, puis clique sur la cible). Espace / Entrée : fin du tour.'),
     li('Déplacements :','pendant ton tour, glisse une de tes créatures sur une autre case de ton plateau (ou sur une autre de tes créatures pour les échanger), et glisse tes terrains le long de leur bande. Ça coûte : 1 ◆ (Démoflux) pour une créature, 1 🪙 (Or) pour un terrain, et le 2e déplacement du tour coûte 2, le 3e coûte 3. Par défaut, 2 déplacements maximum par tour (réglable dans les options du défi). Une créature déplacée garde son état : elle n’attaque pas plus et ne déclenche aucun effet d’arrivée.'),
-    li('Cimetière et défausse :','les créatures détruites vont au cimetière ✝, les sorts joués et les cartes défaussées ou brûlées vont à la défausse 🗑. Quand ton deck est vide, les deux sont mélangés pour former un nouveau deck. Les cartes Bannies et les jetons disparaissent.'),
+    li('Cimetière ✝ :','les sorts joués, les créatures détruites et les cartes défaussées ou brûlées (main pleine) vont toutes au cimetière, affiché à côté de ton deck (clique dessus pour le voir). Quand ton deck est vide, ton cimetière est mélangé pour former un nouveau deck. Les cartes Bannies et les jetons disparaissent.'),
     li('Familles :','chaque créature appartient à une ou deux familles. Leurs bonus s’activent dès 2 créatures de la même famille sur ton plateau, et la plupart grandissent avec chaque membre en plus. La barre au-dessus de ton héros montre les familles en jeu.'),
     li('Terrains 🏟 :','la zone du milieu propose 2 terrains, renouvelés à chaque tour. Achète-les avec ton Or 🪙 (+'+OPTDEF.inc+' par tour), autant que tu peux en payer, et pose-les sur 1 à 3 de tes cases. Le bouton 🎲 à gauche des terrains relance la boutique (2 nouveaux terrains) pour 2 Or. Chaque créature posée dessus profite de son effet selon son affinité avec le jeu (les points ⚔️ 🥚 🏆 🎯 sur la carte : 0, 1 ou 2). Les terrains Bazar 🌀 profitent à tout le monde.'),
-    li('Second joueur :','commence avec une carte de plus, la Pièce (+1 Démoflux), 1 Or et 5 PV de plus (45 au lieu de 40 par défaut).'),
+    li('Second joueur :','commence avec une carte de plus, la Pièce (+1 Démoflux, donnée après le mulligan), 1 Or et 5 PV de plus (45 au lieu de 40 par défaut).'),
+    li('Tilt 😡 :','quand une créature avec Tilt subit des dégâts et survit, son effet « Tilt : … » se déclenche. Chaque carte a le sien : missile, Rempart, Venin sur tous les ennemis, Plebs, dégâts au héros… (l’Arène 2v2 donne aussi un Tilt : soin de 2 PV).'),
     li('Fiche détaillée :','clic droit sur n’importe quelle carte, créature, terrain ou famille pour afficher sa fiche complète, épinglée tant que tu ne la fermes pas.'),
     li('Effets en combat :','sur le plateau, les états importants se voient sur la carte : Égide = reflet de verre, Rempart = cadre de bouclier, Tilt = brume rouge (plus forte une fois déclenché), AFK = carte grisée (inciblable tant qu’elle n’a pas attaqué), Venin subi = teinte verte, Bloquée = givre. Une case couverte par un terrain prend la couleur de ce terrain.'),
     li('Historique :','chaque ligne montre qui a fait quoi : la carte, le terrain ou la famille qui a causé l’effet, puis la cible. Survole une pastille pour voir la fiche, clic droit pour l’épingler.'),
@@ -2989,11 +3123,12 @@ function cardFilter(F){const q=norm(F.q).trim();
     if(F.t&&c.t!==F.t)return false;if(F.r&&c.r!==F.r)return false;
     if(F.fac&&(c.fac||[]).indexOf(F.fac)<0)return false;
     if(F.cost&&(F.cost>=7?c.c<7:c.c!==F.cost))return false;
+    if(F.aff&&!(c.t==='c'&&!c.tok&&((c.sc&&c.sc[F.aff])||0)>=(F.afl||1)))return false;   // affinité : 1 ou plus, ou 2 seulement
     if(F.own&&ownedN(k)<=0)return false;if(F.dup&&!canRecycle(k))return false;
     if(q&&norm(c.n+' '+(c.st||'')+' '+c.tx+' '+(c.fac||[]).map(f=>FAC[f].n).join(' ')).indexOf(q)<0)return false;
     return true}}
-function filterCount(F){return ['t','r','fac','cost','q'].filter(k=>F[k]).length+(F.dup?1:0)}
-function resetF(F,own){F.q='';F.t=0;F.r=0;F.fac='';F.cost=0;F.dup=false;F.own=own}
+function filterCount(F){return ['t','r','fac','cost','aff','q'].filter(k=>F[k]).length+(F.dup?1:0)}
+function resetF(F,own){F.q='';F.t=0;F.r=0;F.fac='';F.cost=0;F.aff='';F.afl=0;F.dup=false;F.own=own}
 function mkFilters(F,opt,onChange){
   const box=h('div',{class:'fbar'});
   const q=h('input',{placeholder:'Rechercher un nom, un titre ou un effet…',value:F.q||'',autocomplete:'off'});
@@ -3010,6 +3145,11 @@ function mkFilters(F,opt,onChange){
       row('Rareté',[1,2,3].map(r=>h('span',{class:'chip'+(F.r===r?' on':''),style:F.r===r?'':'color:'+RCOL[r],onclick:()=>set('r',r)},RAR[r]))),
       row('Famille',FACK.map(f=>h('span',{class:'chip fchip'+(F.fac===f?' on':''),style:'--fc:'+FAC[f].c,title:FAC[f].n,onclick:()=>set('fac',f)},FAC[f].ic,h('em',null,FAC[f].n)))),
       row('Coût',[1,2,3,4,5,6,7].map(c=>h('span',{class:'chip cchip'+(F.cost===c?' on':''),onclick:()=>set('cost',c)},c===7?'7+':String(c)))),
+      // affinité avec un jeu : un clic = affinité 1 ou plus, deux clics = affinité 2 seulement, trois clics = plus de filtre
+      row('Affinité',AFG.map(g=>{const on=F.aff===g;return h('span',{class:'chip achip'+(on?' on':''),style:'--fc:'+GAMES[g].c,
+        title:'Créatures avec une affinité '+GAMES[g].n+(on?(F.afl===2?' de 2 (clique pour retirer le filtre)':' de 1 ou plus (clique pour n’avoir que l’affinité 2)'):' (clique : 1 ou plus, puis 2)'),
+        onclick:()=>{if(!on){F.aff=g;F.afl=1}else if(F.afl!==2)F.afl=2;else{F.aff='';F.afl=0}draw();onChange()}},
+        gi(g),h('em',null,GAMES[g].n),on?h('b',{class:'afl'},F.afl===2?'2':'1+'):null)})),
       ...(extra.length?[row('',extra)]:[]))};
   draw();return box}
 
@@ -3048,14 +3188,14 @@ function cTerr(v){
   v.append(h('div',{class:'panel hl'},ph('🏟','Les terrains'),
     h('div',{style:'line-height:1.5;font-size:14.5px'},
       'Pendant un duel, la zone du milieu propose ',h('b',null,'2 terrains'),'. ',h('b',{style:'color:#ffd0a0'},'À chaque tour, le plus ancien est remplacé'),' par un nouveau tiré dans la pioche commune ; si tu en achètes un, il est aussi remplacé tout de suite. Tu l’achètes avec ton ',h('b',null,'Or 🪙'),' et tu le poses sur ',h('b',null,'1 à 3 cases'),' de ton plateau (le dernier terrain posé remplace les cases qu’il recouvre).'),
-    h('div',{style:'line-height:1.5;font-size:14.5px;margin-top:8px'},'Chaque créature a une ',h('b',null,'affinité'),' de 0 à 2 avec chaque jeu (les points ⚔️ 🥚 🏆 🎯 sur sa carte). Sur un terrain de ce jeu, elle reçoit l’effet « affinité 1 » ou « affinité 2 » ; à 0, rien. Les terrains ',h('b',{style:'color:'+GAMES.bazar.c},'Bazar 🌀'),' sont neutres et profitent à toutes les créatures.')));
+    h('div',{style:'line-height:1.5;font-size:14.5px;margin-top:8px'},'Chaque créature a une ',h('b',null,'affinité'),' de 0 à 2 avec chaque jeu (les points à côté de ',AFG.map(g=>[gi(g),' ']),'sur sa carte). Sur un terrain de ce jeu, elle reçoit l’effet « affinité 1 » ou « affinité 2 » ; à 0, rien. Les terrains ',h('b',{style:'color:'+GAMES.bazar.c},'Bazar 🌀'),' sont neutres et profitent à toutes les créatures.')));
   const grid=h('div',{class:'ggrid'});
   GK.forEach(g=>{
     const G=GAMES[g],ts=TDEF.filter(t=>t.g===g);
     const b2=BASEK.filter(b=>(BASES[b].sc[g]||0)>=2),b1=BASEK.filter(b=>(BASES[b].sc[g]||0)===1);
     grid.append(h('div',{class:'gcard',style:'--gc:'+G.c},
-      h('div',{class:'gh'},h('div',{class:'gi'},G.ic),h('div',null,h('b',null,'Terrains '+G.n),h('small',null,ts.length+' terrains'+(g==='bazar'?' · neutres':' · '+b2.length+' personnages d’affinité 2, '+b1.length+' d’affinité 1')))),
-      h('div',{class:'tlist'},ts.map(t=>h('div',{class:'trow',style:'--gc:'+G.c},h('div',{style:'font-size:20px'},G.ic),h('b',null,t.n),szEl(t.size),h('span',{class:'pr'},'🪙'+t.cost),
+      h('div',{class:'gh'},h('div',{class:'gi'},gi(g)),h('div',null,h('b',null,'Terrains '+G.n),h('small',null,ts.length+' terrains'+(g==='bazar'?' · neutres':' · '+b2.length+' personnages d’affinité 2, '+b1.length+' d’affinité 1')))),
+      h('div',{class:'tlist'},ts.map(t=>h('div',{class:'trow',style:'--gc:'+G.c},h('div',{style:'font-size:20px'},gi(g)),h('b',null,t.n),szEl(t.size),h('span',{class:'pr'},'🪙'+t.cost),
         h('div',{class:'tx'},g==='bazar'?t.tn:[h('b',null,'Aff. 1 : '),t.t1,' ',h('b',null,'Aff. 2 : '),t.t2])))),
       g==='bazar'?h('div',{class:'sm',style:'margin-top:8px;color:#ffd36b'},'Potatoll (rare, épique) déclenche ses effets du Bazar deux fois sur un terrain Bazar.'):
       [h('div',{class:'sm',style:'margin:10px 0 2px;font-weight:700'},'Affinité 2 :'),h('div',{class:'members'},b2.length?b2.map(baseEl):h('span',{class:'mut sm'},'Personne.')),
@@ -3077,7 +3217,7 @@ function cKw(v){
   v.append(h('div',{class:'panel hl'},ph('📖','Mots-clés'),h('div',{class:'kwrow'},
     Object.keys(KWI).map(k=>[h('b',null,h('span',{class:'kwi'},KWI[k][1]),KWI[k][0]),h('span',null,defOf(KWI[k][0])||'')]).flat())),
     h('div',{class:'panel'},ph('📜','Autres termes'),h('div',{class:'kwrow'},
-      ['Cri d’arrivée','Agonie','Reset','Gremlin','missile','effet du Bazar','Mute','Bloque','Banni','Kick','Cimetière','Défausse','Affinité','à l’étranger','Démoflux','Or','Terrain'].map(w=>[h('b',null,w==='Bloque'?'Bloquée':w==='Banni'?'Bannie':w==='missile'?'Missile':w==='à l’étranger'?'À l’étranger':w==='effet du Bazar'?'Effet du Bazar':w),h('span',null,defOf(w)||'')]).flat())))}
+      ['Cri d’arrivée','Agonie','Reset','Gremlin','missile','effet du Bazar','Mute','Bloque','Banni','Kick','Cimetière','Défausser','Affinité','à l’étranger','Démoflux','Or','Terrain'].map(w=>[h('b',null,w==='Bloque'?'Bloquée':w==='Banni'?'Bannie':w==='missile'?'Missile':w==='à l’étranger'?'À l’étranger':w==='effet du Bazar'?'Effet du Bazar':w),h('span',null,defOf(w)||'')]).flat())))}
 function cRules(v){v.append(h('div',{class:'panel hl'},ph('guide','Comment jouer'),...rulesNodes()))}
 
 // ---------- DECKS ----------
@@ -3129,8 +3269,8 @@ function curve(d){
   return h('div',{style:'display:flex;gap:4px;align-items:flex-end;height:66px;margin-top:6px'},c.map((n,i)=>
     h('div',{style:'flex:1;text-align:center;font-size:11px;font-weight:700;color:#cfdde3'},h('div',{style:'height:'+(n/m*38)+'px;background:linear-gradient(180deg,#bff1ff,#14a8e6);border-radius:3px;min-height:'+(n?3:0)+'px'}),n||'',h('div',{style:'color:#7f97a2'},i===10?'10':i))))}
 const ARCHD={toxic:'Empile le Venin : chaque Toxic renforce les autres.',weebos:'Des créatures rapides et solides, protégées en groupe.',farmer:'Accumule l’Or et achète les meilleurs terrains.',
-  expats:'Or, contrôle et voyages à l’étranger pour protéger tes pièces clés.',ravages:'Chaos, missiles aléatoires et effets du Bazar.',neigar:'Soins, vol d’Or et gros bannissements.',
-  xeno:'Créatures Tilt robustes qui punissent les Neigar.',rush:'Cartes bon marché, Hâte et dégâts directs : finir vite.',ctrl:'Retire les menaces, soigne, puis gagne avec les gros monstres.'};
+  expats:'Or, contrôle et voyages à l’étranger pour protéger tes pièces clés.',ravages:'Chaos, missiles aléatoires et effets du Bazar.',alien:'Soins, vol d’Or et gros bannissements.',
+  xeno:'Créatures Tilt robustes qui punissent les Extraterrestres.',rush:'Cartes bon marché, Hâte et dégâts directs : finir vite.',ctrl:'Retire les menaces, soigne, puis gagne avec les gros monstres.'};
 function autoModal(di){
   const d=S.decks[di];
   modal(h('div',null,h('h2',null,'Construire automatiquement'),h('p',{class:'mut sm'},'Choisis un style : le deck est composé avec ce que tu possèdes.'),
