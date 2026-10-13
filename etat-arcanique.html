@@ -441,7 +441,7 @@ input::placeholder{color:#8d8378}
 .mi[data-k]{cursor:help}.mi[data-k]:hover{background:#000;box-shadow:0 0 0 2px var(--mc)}
 .mi img,.mi u{width:22px;height:22px;border-radius:50%;object-fit:cover;display:grid;place-items:center;text-decoration:none;font-size:12px;background:#423c34;flex:none}
 .mi .hsnap{display:inline-flex;gap:1px;margin-left:2px;padding:0 5px;border-radius:7px;background:#ffffff14;border:1px solid #ffffff22;font-size:11px;line-height:15px}
-.mi .hsnap b{color:#e8c56a}.mi .hsnap b::after{content:'/';color:#a69d91;font-weight:400;margin-left:1px}.mi .hsnap i{font-style:normal;color:#9fd39a}.mi .hsnap i.hu{color:#f07a6e}
+.mi .hsnap b{color:#efe4cc}.mi .hsnap b::after{content:'/';color:#a69d91;font-weight:400;margin-left:1px}.mi .hsnap i{font-style:normal;color:#efe4cc}.mi .hsnap .up{color:#8fe27c}.mi .hsnap .dn{color:#ff7c6c}
 .mi.hch.me{--mc:#73b0ad}.mi.hch.me u{background:#598582}.mi.hch.op{--mc:#c45f5b}.mi.hch.op u{background:#9e4a46}
 .hr .vb{font-size:14px;line-height:1}.hr .by{opacity:.7;font-size:11px;font-style:italic}
 .hr .dm{color:#c07772;font-weight:900}.hr .rc{color:#dab682;font-weight:900}.hr .hl{color:#a9db9d;font-weight:900}.hr .pzc{color:#bfda82;font-weight:900}.hr .gd{color:#dcc38d;font-weight:900}.hr .bf{color:#99b8d8;font-weight:900}
@@ -526,7 +526,7 @@ input::placeholder{color:#8d8378}
 .cpop .cpr{max-height:min(74vh,620px);overflow:auto;padding-right:4px}
 .cpop .pn{font-family:var(--disp);font-size:22px;margin:0 0 2px}
 .cpop .pe{color:#dcc38d;font-style:italic;font-weight:700;font-size:13px;margin-bottom:4px}
-.cpop .pd{font-size:13px;color:#e9e2da;margin:5px 0;line-height:1.45}.cpop .pd b{color:#dcc38d}
+.cpop .pd{font-size:13px;color:#e9e2da;margin:5px 0;line-height:1.45}.cpop .pd b{color:#dcc38d}.cpop .pd .sv{font-weight:800}.cpop .pd .sv.up{color:#8fe27c}.cpop .pd .sv.dn{color:#ff7c6c}
 .cpop .pd.txt{font-size:14px;color:#f8f1e9;background:#17110baa;border-radius:10px;padding:6px 9px}
 .cpop .pd .kw,.cpop .kw{color:#dcc38d;font-weight:800;border-bottom:1px dotted #dcc38d99;cursor:help}
 .cpop .lore{font-size:12.5px}
@@ -815,6 +815,10 @@ span.gico.ge{font-style:normal}
 #duel:not(.shopside) .shopL{display:none}
 #duel.shopside .zmid .shopz{display:none}
 #duel.shopside .zmid{justify-content:center}
+/* v21 : boutique + plateau + piles centrés ensemble dans la zone de jeu (décalage --zx calculé par shopNode) */
+#duel .field>.zone,#duel .field>.hand{left:var(--zx,0px)}
+#duel .pile2{right:max(4px,calc((100% - var(--zw))/2 - var(--dkw) - 14px - var(--zx,0px)))}
+#duel .dtop .tt,#duel .dtop.hashint .info{position:relative;left:var(--zx,0px)}
 .shT.side{position:absolute;padding:0;flex-direction:column;justify-content:flex-start;overflow:hidden;border:2.5px solid var(--gc);border-radius:12px;
   background:#140e08;box-shadow:0 4px 14px #000a,inset 0 0 0 1px #0008}
 .shT.side.can{box-shadow:0 0 0 2px #dab77a,0 0 14px #dab77a88}
@@ -978,7 +982,7 @@ h1,h2,h3{font-weight:700;letter-spacing:.03em}
 .card .st b,.card .st .at,.card .st .hpv,.card .st b.up,.card .st b.dn,.card .st b.hurt{min-width:0;width:14.6cqw;height:14.6cqw;padding:0 0 .4cqw;border:0;border-radius:50%;display:grid;place-items:center;
   font-family:var(--serif);font-variant-numeric:lining-nums;font-size:10cqw;font-weight:800;line-height:1;color:#fbf3df;text-shadow:0 .3cqw .5cqw #000;
   background:radial-gradient(circle at 36% 28%,#77644d,#433628 52%,#241c14);
-  box-shadow:0 0 0 .7cqw #c9a55c,0 0 0 1.2cqw #3d2b14,0 .7cqw 1.5cqw #000b,inset 0 .5cqw .8cqw #ffffff26,inset 0 -.8cqw 1.2cqw #0008}
+  box-shadow:0 0 0 .7cqw var(--sr,#c9a55c),0 0 0 1.2cqw #3d2b14,0 .7cqw 1.5cqw #000b,inset 0 .5cqw .8cqw #ffffff26,inset 0 -.8cqw 1.2cqw #0008}
 /* ornements de rareté */
 .card .orn{position:absolute;inset:1.6cqw;z-index:5;pointer-events:none;border:.35cqw solid var(--orn);border-radius:3.8cqw;box-shadow:0 0 0 .25cqw var(--orn2),inset 0 0 0 .2cqw var(--orn2);opacity:.9}
 .card.r1 .orn{opacity:.55}
@@ -1005,7 +1009,10 @@ h1,h2,h3{font-weight:700;letter-spacing:.03em}
 .card.bd .orn i:nth-child(1),.card.bd .orn i:nth-child(2){top:-1.6cqw}.card.bd .orn i:nth-child(3),.card.bd .orn i:nth-child(4){bottom:-1.6cqw}
 .card.bd .st{padding:0 2.6cqw 2.6cqw}
 .card.bd .st b,.card.bd .st .at,.card.bd .st .hpv,.card.bd .st b.up,.card.bd .st b.dn,.card.bd .st b.hurt{width:23cqw;height:23cqw;font-size:15.5cqw;padding-bottom:.8cqw;
-  box-shadow:0 0 0 1cqw #c9a55c,0 0 0 1.8cqw #3d2b14,0 1cqw 2cqw #000b,inset 0 .8cqw 1.2cqw #ffffff26,inset 0 -1.2cqw 1.8cqw #0008}
+  box-shadow:0 0 0 1cqw var(--sr,#c9a55c),0 0 0 1.8cqw #3d2b14,0 1cqw 2cqw #000b,inset 0 .8cqw 1.2cqw #ffffff26,inset 0 -1.2cqw 1.8cqw #0008}
+/* ATK et PV : vert quand la valeur dépasse celle imprimée sur la carte, rouge quand elle est inférieure */
+.card .st b.up{--sr:#9be37f;color:#fff;background:radial-gradient(circle at 36% 28%,#5fae4c,#2f7a26 55%,#1a4a15)}
+.card .st b.dn{--sr:#ff8a78;color:#fff;background:radial-gradient(circle at 36% 28%,#d0584a,#a02a1f 55%,#5e140e)}
 .card .bnm::before{background:linear-gradient(180deg,#1c150ff2,#1c150fbf 62%,#1c150f00)!important}
 .card.bd .bnm{font-family:var(--serif);font-weight:700;font-size:11cqw;color:#f3e8d0;letter-spacing:.01em;padding:1.6cqw 3cqw 3cqw}
 .card.bd .bnm.ful small{font-family:'Inter',sans-serif;font-size:7cqw;font-weight:600;color:#e3d4b4}
@@ -1139,7 +1146,7 @@ h1,h2,h3{font-weight:700;letter-spacing:.03em}
 /* --- aperçu des dégâts pendant qu'on vise une cible --- */
 .atkpv{position:fixed;z-index:81;transform:translate(-50%,-100%);display:flex;flex-direction:column;align-items:center;gap:1px;padding:4px 9px;border-radius:10px;background:#140e08f2;border:2px solid #dcc38d;pointer-events:none;box-shadow:0 6px 16px #000b;font-size:12px;white-space:nowrap}
 .atkpv .pd{color:#f08e86;font-size:17px;font-weight:900}.atkpv .pr{color:#dab682;font-size:13px}.atkpv small{color:#cdbfa8;font-size:11px}
-.card .st .at.pvw{outline:.8cqw solid #f1d18a;outline-offset:.4cqw}.card .st .at.pvw.up{color:#c8f2a8}
+.card .st .at.pvw{outline:.8cqw solid #f1d18a;outline-offset:.4cqw}
 /* --- laser géant de Natinganz --- */
 .laser{position:fixed;z-index:77;pointer-events:none;border-radius:40px;background:linear-gradient(90deg,#ff2d5500,#ff5a7acc 22%,#fff 50%,#ff5a7acc 78%,#ff2d5500);
   box-shadow:0 0 30px 10px #ff3d6caa,0 0 80px 20px #ff3d6c55;animation:laser 1.1s ease-out forwards;transform-origin:50% 0}
@@ -1156,7 +1163,7 @@ h1,h2,h3{font-weight:700;letter-spacing:.03em}
 .chip.legc{display:inline-flex;align-items:center;gap:6px;color:#e9d9b4;border-color:#c99a4a88}.chip.legc i{width:8px;height:8px;border-radius:50%}.chip.legc.full{color:#f3c76b;border-color:#f3c76b}
 #hcard .hx{margin-top:6px}#hcard .hx .kw{color:#dcc38d;font-weight:800}
 #hcard .hsn{margin-top:6px;padding:4px 8px;border-radius:8px;background:#ffffff10;border:1px solid #dcc38d44;font-size:12px}#hcard .hct .hsn b{font-family:inherit;font-size:12px}
-#hcard .hsn .a{color:#e8c56a}#hcard .hsn .h{color:#9fd39a}#hcard .hsn .hu{color:#f07a6e}
+#hcard .hsn .a,#hcard .hsn .h{color:#efe4cc}#hcard .hsn .up{color:#8fe27c}#hcard .hsn .dn{color:#ff7c6c}
 /* --- historique plus lisible --- */
 .hact{gap:1px;padding:5px 7px 6px 5px}
 .hact .hwho{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:900;color:#8fc6c2;padding:0 4px 1px}
@@ -1289,7 +1296,7 @@ h1,h2,h3{font-weight:700;letter-spacing:.03em}
   background:radial-gradient(circle at 34% 28%,color-mix(in srgb,var(--fc) 52%,#fff 32%),var(--fc) 46%,color-mix(in srgb,var(--fc) 58%,#000 46%))}
 .fm svg{width:68%;height:68%;fill:currentColor;filter:drop-shadow(0 1px 1px #000a)}
 .card .tl .fms{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;gap:1.4cqw;z-index:4}
-.card .tl i.fm{flex:none;width:11.8cqw;height:11.8cqw;letter-spacing:0;font-size:0;color:#fff8ea;
+.card .tl i.fm{flex:none;display:inline-grid;place-items:center;gap:0;width:11.8cqw;height:11.8cqw;letter-spacing:0;font-size:0;color:#fff8ea;
   box-shadow:0 0 0 .38cqw #120c07,0 0 0 .78cqw #d8b874,0 0 0 1.1cqw #120c07,0 .6cqw 1.4cqw #000c}
 .card .tl i.fm svg{width:70%;height:70%;filter:drop-shadow(0 .3cqw .35cqw #000c)}
 .card .tl i.fm::before{content:none!important}
@@ -1868,7 +1875,7 @@ losk:{n:'Losk',fac:['xeno','expats'],sc:{wow:2,dofus:2,lol:1,cs:0},lore:'Démén
 sadamie:{n:'Sadamie',fac:['ravages','alien'],sc:{wow:0,dofus:1,lol:1,cs:0},lore:'Pour lui, le jeu n’est pas une compétition, c’est un amusement ;). Son activité préférée : invoquer Chanssus pour atteindre le combo le plus broken de l’histoire. Triche aux jeux de cartes… et perd quand même.',v:[
   {st:'Adorateur de Chanssus',c:2,a:2,h:2,cry:[{t:'add',k:'chanssus',n:1}],last:[{t:'drawOpp',n:1}],tx:'Cri d’arrivée : ajoute un Chanssus à ta main (0/0, Hâte, +1/+1 par autre carte jouée ce tour). Agonie : l’adversaire pioche 1 carte.'},
   {st:'Agent du chaos',c:3,a:3,h:3,cry:[{t:'deckSummon'}],tx:'Cri d’arrivée : chaque joueur invoque une créature au hasard de son deck.'},
-  {st:'Highroller ultime',c:9,a:1,h:1,cry:[{t:'highroll',n:4,k:4,min:4}],tx:'Cri d’arrivée : inflige 4 dégâts à toutes les créatures ennemies. Si 4 créatures ennemies ou plus meurent ainsi, invoque 2 créatures au hasard de ton deck qui coûtent 4 ou plus.'}]},
+  {st:'Highroller ultime',c:7,a:1,h:1,cry:[{t:'highroll',n:5,k:4,min:7,allG:1}],tx:'Cri d’arrivée : si tu possèdes un terrain de chaque jeu (WoW, Dofus, LoL, CS), inflige 5 dégâts à toutes les créatures ennemies. Puis, si 4 créatures ennemies ou plus sont mortes ainsi, invoque 2 créatures au hasard de ton deck qui coûtent 7 ou plus.'}]},
 lasorius:{n:'Lasorius',fac:['weebos','farmer'],sc:{wow:2,dofus:1,lol:0,cs:0},lore:'A honte de sa voix de fillette de 8 ans : mute 90 % du temps, pas de micro depuis 7 ans. Mille heures par mois sur WoW. Prêt à se couper le bras pour que son pire ennemi perde sa main.',v:[
   {st:'Mets une pierre',c:2,a:2,h:2,cry:[{t:'respawnT',tg:'ac'}],tx:'Cri d’arrivée : une de tes créatures gagne Respawn.'},
   {st:'Avatar de la rancune',c:3,a:3,h:3,cry:[{t:'hurtMe',n:3},{t:'dmg',n:3,tg:'ec'}],tx:'Cri d’arrivée : ton héros subit 3 dégâts, puis inflige 3 dégâts à une créature ennemie.'},
@@ -1977,26 +1984,10 @@ miichi:{n:'Miichi',fac:['weebos','alien'],sc:{wow:1,dofus:0,lol:2,cs:0},sym:'�
   {r:1,st:'Cosplayeuse express',c:2,a:2,h:1,cry:[{t:'summon',k:'weeb',n:1}],tx:'Cri d’arrivée : invoque une Weeb 1/1 (Weebos).'},
   {r:2,st:'Speedrunneuse d’anime',c:3,a:3,h:2,kw:['hate'],aura:{fac:'weebos',a:1,others:1},tx:'Hâte. Tes autres Weebos ont +1 ATK.'},
   {r:3,st:'Waifu intergalactique',c:5,a:4,h:3,kw:['hate'],cry:[{t:'stealOr',n:2}],kwAura:{fac:'weebos',kw:'hate',others:1},tx:'Hâte. Cri d’arrivée : vole 2 Or à l’adversaire. Tes autres Weebos ont Hâte.'}]}};
-// v20 : affinités équilibrées version par version, [WoW, Dofus, LoL, CS] : budget selon la rareté (commune 3, rare et légendaire 4),
-// le coût (+1 à 6 ◆ ou plus, −1 à 1 ◆) et la puissance mesurée en simulation (−1/−2 pour les plus fortes, +1/+2 pour les plus faibles) ;
-// 2 dans le jeu principal du personnage (lore, ou réparti pour que chaque jeu ait autant d'affinités 2), puis 1 dans les suivants. B.sc = le maximum de ses versions.
-const SCV={bambou1:[1,0,0,2],bambou2:[1,1,1,2],bambou3:[1,0,0,2],boku1:[0,0,2,1],boku2:[1,0,2,1],boku3:[0,0,2,1],coco1:[1,0,2,1],coco2:[1,0,2,1],coco3:[1,1,2,2],
-  dreos1:[1,2,1,0],dreos2:[1,2,1,1],dreos3:[2,2,1,1],elkatrix1:[1,0,2,0],elkatrix2:[1,1,2,0],elkatrix3:[1,1,2,0],gobi1:[2,1,1,1],gobi2:[2,1,0,1],
-  gobi3:[2,1,1,1],haddmi1:[0,0,0,2],haddmi2:[0,0,1,2],haddmi3:[1,1,1,2],homz1:[2,0,1,0],homz2:[2,0,1,1],homz3:[2,0,1,1],kirua1:[0,2,0,1],
-  kirua2:[0,2,0,1],kirua3:[0,2,0,1],korock1:[0,0,2,0],korock2:[1,0,2,1],korock3:[1,0,2,1],laloutre1:[0,0,1,2],laloutre2:[1,0,1,2],laloutre3:[1,0,1,2],
-  lanfear1:[1,2,0,0],lanfear2:[1,2,1,0],lanfear3:[1,2,1,0],lasorius1:[2,1,0,0],lasorius2:[2,1,0,0],lasorius3:[2,2,1,1],lisdoon1:[1,0,2,1],
-  lisdoon2:[1,1,2,1],lisdoon3:[1,1,2,1],loractys1:[1,2,1,0],loractys2:[1,2,2,1],loractys3:[1,2,1,0],losk1:[1,2,1,0],losk2:[1,2,1,0],losk3:[1,2,1,0],
-  maki1:[1,1,2,0],maki2:[1,1,2,0],maki3:[1,1,2,1],miichi1:[1,0,2,0],miichi2:[1,1,2,0],miichi3:[1,1,2,0],mikalev1:[0,0,0,2],mikalev2:[1,1,1,2],
-  mikalev3:[1,0,1,2],minuit1:[2,0,1,0],minuit2:[2,1,1,1],minuit3:[2,1,1,1],natingaz1:[2,0,1,0],natingaz2:[2,1,1,1],natingaz3:[2,1,1,0],osiris1:[0,2,1,1],
-  osiris2:[1,2,1,1],osiris3:[0,2,1,1],potatoll1:[2,0,1,0],potatoll2:[2,1,1,0],potatoll3:[2,1,1,1],randal1:[1,0,0,2],randal2:[1,1,0,2],randal3:[1,1,0,2],
-  rasta1:[0,2,0,1],rasta2:[0,2,0,1],rasta3:[1,2,1,1],sada1:[1,1,0,2],sada2:[1,1,0,2],sada3:[1,1,0,2],sadamie1:[0,2,1,0],sadamie2:[1,2,1,1],
-  sadamie3:[0,2,1,1],saja2:[2,1,2,1],saja3:[2,1,2,1],simon1:[0,0,2,0],simon2:[1,0,2,1],simon3:[1,0,2,1],snoux1:[1,0,0,2],snoux2:[1,1,0,2],
-  snoux3:[1,1,1,2],takk1:[2,0,1,0],takk2:[2,1,2,1],takk3:[2,1,1,1],xulyes1:[2,0,1,0],xulyes2:[2,1,1,1],xulyes3:[2,1,1,1]};
 const BASEK=Object.keys(BASES);
 
 const CARDS={};
-BASEK.forEach(b=>{const B=BASES[b];B.v.forEach((v,j)=>{const r=v.r||j+1,q=SCV[b+r];CARDS[b+r]=Object.assign({t:'c',n:B.n,base:b,art:b,r,fac:B.fac,sc:q?{wow:q[0],dofus:q[1],lol:q[2],cs:q[3]}:B.sc,lore:B.lore,sym:B.sym,col:B.col,withKw:B.withKw},v)})});
-BASEK.forEach(b=>{const B=BASES[b],m={wow:0,dofus:0,lol:0,cs:0};B.v.forEach((v,j)=>{const c=CARDS[b+(v.r||j+1)];for(const g in m)m[g]=Math.max(m[g],c.sc[g]||0)});B.sc=m});   // affinité d'un personnage = la meilleure de ses versions
+BASEK.forEach(b=>{const B=BASES[b];B.v.forEach((v,j)=>{const r=v.r||j+1;CARDS[b+r]=Object.assign({t:'c',n:B.n,base:b,art:b,r,fac:B.fac,sc:B.sc,lore:B.lore,sym:B.sym,col:B.col,withKw:B.withKw},v)})});
 Object.assign(CARDS,{
 // ----- jetons -----
 pleb:{t:'c',n:'Pleb',r:1,c:1,a:1,h:1,fac:[],sc:{},tok:1,tx:'Jeton. Aucun effet.',sym:'·',col:'#81654c',lore:'Le rôle de base de chaque membre.'},
@@ -2256,6 +2247,8 @@ function cOn(G,id){for(const P of G.p)for(const b of P.board)if(b&&b.id===id)ret
 // terrain sans effet : désactivé par une Kirua (crasheur) en jeu et pas Mute, ou lié à une créature (Blizzard, Grand Bazaar) qui est Mute
 function tOff(G,T){if(!T)return false;if(T.off){const k=cOn(G,T.off);if(k&&!k.mut)return true}
   const o=T.lk||T.by;if(o){const c=cOn(G,o);if(c&&c.mut)return true}return false}
+// jeux (WoW, Dofus, LoL, CS) dont le joueur a un terrain actif : ni désactivé ni entièrement recouvert (Sadamie, highroller ultime)
+function hrGames(G,s){const P=G.p[s],gs={};P.terrs.forEach(T=>{if(!tOff(G,T)&&P.cells.indexOf(T.id)>=0)gs[TD[T.d].g]=1});return AFG.filter(g=>gs[g])}
 function terrOf(G,s,i){const P=G.p[s],id=P.cells[i];if(!id)return null;for(const t of P.terrs)if(t.id===id)return tOff(G,t)?null:t;return null}
 function tfx(T,k){if(!T)return null;const t=TD[T.d];return t.e[affOf(k,t.g)]||null}
 // terrain de jeu = WoW, Dofus, LoL ou CS ; les autres terrains sont neutres
@@ -2693,8 +2686,10 @@ const OPS={
   setHp1(G,op,x){const c=tgC(G,x);if(!c)return;const E=eff(G,x.tg.s,x.tg.i);if(E.hp<=1)return;c.dm+=E.hp-1;lg(G,{t:'hp1',ts:x.tg.s,i:x.tg.i,k:c.k,n:E.hp-1})},   // Saja (presque world first)
   healE(G,op,x){if(!vt(G,x.tg))return;const t=x.tg,v=t.i<0?heal(G,t.s,op.n,x.src):healC(G,t.s,t.i,op.n);if(v>0)gold(G,x.s,v,x.src,x)},   // Xulyes (serveur charmant)
   heal2(G,op,x){const t=x.tg2;if(!t||!vt(G,t))return;if(t.i<0)heal(G,t.s,op.n,x.src);else healC(G,t.s,t.i,op.n)},   // Clutch : soigne la 2e cible
-  // Sadamie (highroller ultime) : N dégâts à toutes les créatures ennemies ; si K meurent ou plus, 2 créatures du deck qui coûtent MIN ou plus
-  highroll(G,op,x){const P=G.p[x.s],e=1-x.s,before=G.p[e].board.filter(Boolean).map(c=>c.id);
+  // Sadamie (highroller ultime) : avec allG, seulement s'il a un terrain actif de chaque jeu ; N dégâts à toutes les créatures ennemies ;
+  // si K meurent ou plus, 2 créatures au hasard du deck qui coûtent MIN ou plus
+  highroll(G,op,x){const P=G.p[x.s],e=1-x.s;if(op.allG&&hrGames(G,x.s).length<AFG.length){lg(G,{t:'hr',ts:x.s,n:-1});return}
+    const before=G.p[e].board.filter(Boolean).map(c=>c.id);
     G.p[e].board.forEach((c,i)=>{if(c)dmgC(G,e,i,op.n||4,x.src,false,x)});reap(G);
     const n=before.filter(id=>!G.p[e].board.some(b=>b&&b.id===id)).length;lg(G,{t:'hr',ts:x.s,n});if(n<(op.k||4)||G.over)return;
     for(let j=0;j<2;j++){const ix=[];P.deck.forEach((c,q)=>{if(CARDS[c.k].t==='c'&&CARDS[c.k].c>=(op.min||4))ix.push(q)});if(!ix.length||!P.board.some(b=>!b))break;
@@ -3749,9 +3744,7 @@ function miniAv(k){const cd=CARDS[k],a=artOf(k);return a?h('img',{src:a,alt:''})
 function memEl(k){return h('span',{class:'mem',style:'border-color:'+RCOL[CARDS[k].r],onclick:()=>showCard(k)},miniAv(k),fullName(k))}
 // versions existantes d'un personnage (les nouveaux n'ont pas encore leurs 3 raretés)
 function versOf(b){return[1,2,3].filter(r=>CARDS[b+r])}
-function baseEl(b,g,lv){const B=BASES[b],vs=versOf(b),ok=r=>g==null||((CARDS[b+r].sc&&CARDS[b+r].sc[g])||0)===lv,k0=b+(vs.find(ok)||vs[0]);
-  return h('span',{class:'mem',onclick:()=>showCard(k0),title:g==null?null:B.n+' : affinité '+lv+' pour '+vs.filter(ok).map(r=>RAR[r].toLowerCase()).join(', ')},miniAv(k0),B.n,
-    h('span',{class:'rd'},vs.map(r=>h('i',{style:'background:'+RCOL[r]+(ok(r)?'':';opacity:.18')}))))}
+function baseEl(b){const B=BASES[b],k0=b+versOf(b)[0];return h('span',{class:'mem',onclick:()=>showCard(k0)},miniAv(k0),B.n,h('span',{class:'rd'},versOf(b).map(r=>h('i',{style:'background:'+RCOL[r]}))))}
 function facTiers(f,n){const F=FAC[f];
   return h('div',{class:'tiers',style:'--gc:'+F.c},F.tiers.map(t=>h('div',{class:'tier'+(n>=t[0]?' on':'')},h('span',{class:'tn'},'×'+t[0]),h('span',null,t[1]))))}
 function facTag(f,n){if(n<2)return null;
@@ -3825,6 +3818,8 @@ function typeLine(cd){
   if(isC&&!cd.tok&&!fams.length){it.push(h('b',{class:'ty'},'Créature'));len+=8}
   // familles : médaillons centrés sur le bandeau, sans leur nom
   return h('div',{class:'tl'+(len>27?' n3':len>21?' n2':len>16?' n1':'')},h('span',{class:'tlx'},it),fams.length?h('span',{class:'fms'},fams.map(f=>famBadge(f))):null,h('i',{class:'rg',title:RAR[cd.r]}))}
+// ATK et PV comparées à la valeur imprimée sur la carte : 'up' au-dessus (vert), 'dn' en dessous (rouge)
+function stc(v,o){return v>o?'up':v<o?'dn':''}
 function cardEl(k,o){
   o=o||{};if(!k||k==='?'||!CARDS[k])return backEl();
   const cd=CARDS[k],isC=cd.t==='c',E=o.E,cr=o.cr;
@@ -3841,7 +3836,7 @@ function cardEl(k,o){
       x==='cleave'?h('i',{class:'kw','data-t':'Cleave '+kwset.cleave,'data-d':d},'🪓'+kwset.cleave):h('i',{class:'kw','data-t':nm,'data-d':d},KWI[x][1])});
   const vip=!!kwset.vip;
   let a=cd.a,hp=cd.h,ac='',hc='';
-  if(isC&&E){a=E.a;hp=E.hp;ac=a>cd.a?'up':a<cd.a?'dn':'';hc=hp<E.h?'hurt':(E.h>cd.h?'up':'')}
+  if(isC&&E){a=E.a;hp=E.hp;ac=stc(a,cd.a);hc=stc(hp,cd.h)}
   const bdg=[];if(cr){if(cr.pz>0)bdg.push(h('i',{class:'pz kw','data-t':'Venin subi : '+cr.pz,'data-d':'Début de son tour : '+cr.pz+' dégât(s), puis le Venin baisse de 1.'},'☠'+cr.pz));
     if(cr.blk>0)bdg.push(h('i',{class:'blk kw','data-t':'Bloquée','data-d':defOf('Bloquée')},'🔒'));
     if(o.rps)bdg.push(h('i',{class:'rpsg kw','data-t':'Pierre, feuille, ciseaux','data-d':o.rps==='?'?'Osiris a choisi son signe en secret. Au début de ton tour, tu as 15 s pour choisir le tien : si tu perds, il vole tout ton Or et son camp pioche 3 cartes.':'Ton signe secret : '+RPSN[o.rps]+'. Si ton adversaire perd, Osiris vole tout son Or et tu pioches 3 cartes.'},o.rps==='?'?'❔':RPSI[o.rps]));
@@ -4227,11 +4222,17 @@ function stripPreview(at,n,col,txt){const el=$('#tMe');if(!el)return;let p=el.qu
 function cycSoon(V){return(V.turn+1)%2===0}
 // boutique de terrains : dans la marge gauche du plateau quand il y a la place (un terrain à la hauteur de chaque plateau,
 // la relance entre les deux), sinon dans la zone du milieu ; chaque terrain ne montre que son coût, sa taille et son effet
-function shopSideRoom(){const f=$('#field'),z=$('#field .zopp');if(!f||!z)return 0;return z.getBoundingClientRect().left-f.getBoundingClientRect().left}
+// v21 : boutique, plateau et piles (deck, cimetière, artefacts) forment un bloc centré dans la zone de jeu :
+// le plateau, la main et le titre du tour sont décalés de --zx (vers la droite quand la boutique est à gauche)
+function shopLayout(){const f=$('#field'),z=$('#field .zopp'),pl=$('#field .pile2');if(!f||!z)return null;
+  const W=f.getBoundingClientRect().width,Z=z.getBoundingClientRect().width,P=pl?pl.getBoundingClientRect().width:0,GS=16,GP=14,M=8;
+  return{R:(W-Z)/2,P,GS,GP,M,ws:Math.min(230,Math.floor(W-2*M-GS-Z-GP-P))}}   // R : marge de chaque côté du plateau centré ; ws : largeur possible de la boutique
 function shopNode(){
-  const D=DUEL,V=D.V,me=V.me,room=V.o.ter?shopSideRoom():0,side=room>=124;
+  const D=DUEL,V=D.V,me=V.me,L=shopLayout(),side=!!(L&&V.o.ter&&L.ws>=98);
+  const zx=!L?0:side?Math.round((L.ws+L.GS-L.GP-L.P)/2):-Math.round(Math.min((L.GP+L.P)/2,Math.max(0,L.R-L.M)));
+  $('#duel').style.setProperty('--zx',zx+'px');
   $('#duel').classList.toggle('shopside',side);
-  if(side){shopSide(room);$('#shop').innerHTML='';return}
+  if(side){shopSide(L,zx);$('#shop').innerHTML='';return}
   $('#shopL').innerHTML='';
   const el=$('#shop');el.innerHTML='';el.append(h('div',{class:'lb'},'TERRAINS'));
   if(!V.o.ter){el.append(h('div',{class:'mut sm',style:'align-self:center'},'Terrains désactivés'));return}
@@ -4263,7 +4264,7 @@ function shopTile(n,prev,keys){
   d.addEventListener('click',e=>{e.stopPropagation();clickShop(n)});
   makeDrag(d,()=>{const V2=DUEL.V;if(!mine()||!canBuy(V2,V2.me,n))return null;return{t:'terr',n}});
   return d}
-function shopSide(room){
+function shopSide(L,zx){
   const D=DUEL,V=D.V,me=V.me,el=$('#shopL'),f=$('#field');if(!el||!f)return;
   const keys=V.shop.map(t=>t?t.d:''),prev=D.prevShop||keys;
   const rc=mine()&&canRoll(V,me);
@@ -4273,7 +4274,7 @@ function shopSide(room){
     h('div',{class:'tdkc'},n?backEl():null),h('div',{class:'tdkt'},h('b',null,'Terrains'),h('span',null,n+' en pioche')));
   const t0=shopTile(0,prev,keys),t1=shopTile(1,prev,keys);el.replaceChildren(tdk,t0,roll,t1);
   // positions : à la hauteur du plateau adverse, de la zone du milieu et de ton plateau
-  const fr=f.getBoundingClientRect(),st=f.scrollTop,w=Math.min(room-26,230),x=Math.max(4,(room-w)/2);
+  const fr=f.getBoundingClientRect(),st=f.scrollTop,w=L.ws,x=Math.max(L.M,L.R+zx-L.GS-w);   // collée au plateau, à gauche
   const at=(node,ref,hgt)=>{const r=ref.getBoundingClientRect();node.style.left=x+'px';node.style.width=w+'px';node.style.top=(r.top-fr.top+st+(r.height-hgt)/2)+'px';node.style.height=hgt+'px'};
   const bo=$('#bOpp'),bm=$('#bMe'),zm=$('#field .zmid');
   if(bo&&bm){const hb=Math.min(bo.getBoundingClientRect().height,w*1.25);at(t0,bo,hb);at(t1,bm,hb)}
@@ -4318,6 +4319,7 @@ function liveX(V,s,k){const cd=CARDS[k];if(!cd)return null;const L=fl(V,s),P=V.p
     case 'goldDmg':return pl(Math.min(P.or,op.max||99),'dégât');
     case 'dmgEx':{let n=op.n||0;P.board.forEach(c=>{if(c&&c.ex&&!c.fum)n+=op.per||0});return pl(n,'dégât')}
     case 'stealOr':return pl(Math.min(E.or,(op.n||0)+(op.f?(L[op.f]||0):0)),'Or volé','Or volés');
+    case 'highroll':{if(!op.allG)return null;const n=hrGames(V,s).length;return n+'/4 jeux de terrain'+(n>=4?' ✔':'')}
     case 'alt':{const ok=cond(V,op.c,{s}),o=(ok?op.a:op.b)[0];return o.t==='kill'?'détruit la cible':o.t==='dmg'?pl(o.n,'dégât'):null}}}
   return null}
 // survol (ou glisser) d'une carte de la main : les créatures de la même famille et les compteurs de famille au-dessus de tes PV s'allument,
@@ -4641,10 +4643,10 @@ function aimDraw(){
 // pendant qu'on vise une cible : stats de l'attaquant mises à jour avec les bonus de cette attaque (Xénophobe, Jungle…), dégâts infligés et riposte
 function atkPreview(t){
   const D=DUEL,key=t?t.f+'>'+t.s+':'+t.i:'';if(D._apk===key)return;D._apk=key;
-  $$('.atkpv').forEach(x=>x.remove());$$('.card .st .at.pvw').forEach(x=>{x.textContent=x.dataset.v;x.classList.remove('pvw','up')});
+  $$('.atkpv').forEach(x=>x.remove());$$('.card .st .at.pvw').forEach(x=>{x.textContent=x.dataset.v;x.className=x.dataset.c});
   if(!t||!D.V||t.s===D.V.me)return;const V=D.V,me=V.me,A=V.p[me].board[t.f];if(!A)return;
   const K=atkCalc(V,me,t.f,t),E0=eff(V,me,t.f),tr=trainOk(V,me,t.f,t)?1:0,pa=K.pa+tr,base=E0.a;
-  const show=(el)=>{const at=el&&el.querySelector('.st .at');if(!at)return;if(!at.classList.contains('pvw'))at.dataset.v=at.textContent;at.textContent=pa;at.classList.add('pvw');if(pa>base)at.classList.add('up')};
+  const o0=CARDS[A.k].a,show=(el)=>{const at=el&&el.querySelector('.st .at');if(!at)return;if(!at.classList.contains('pvw')){at.dataset.v=at.textContent;at.dataset.c=at.className}at.textContent=pa;at.className='at pvw '+stc(pa,o0)};
   show(elAt(me,t.f));const g=$('.ghost');if(g)show(g);
   const te=elAt(t.s,t.i);if(!te)return;const r=te.getBoundingClientRect();
   const bits=[h('b',{class:'pd'},'⚔ −'+pa)];if(K.xb)bits.push(h('small',null,'🚧 Xénophobe +'+K.xb));if(K.vs)bits.push(h('small',null,'🏟 terrain +'+K.vs));if(tr)bits.push(h('small',null,'💪 +1/+1'));
@@ -4655,7 +4657,7 @@ function closePop(){$$('.cpop').forEach(x=>x.remove());hideTip();hideHoverCard()
 function cardNodes(I){
   const D=DUEL,cd=CARDS[I.k],out=[];
   if(I.cr&&D&&D.V){const V=D.V,c=V.p[I.s].board[I.i];if(c&&c.id===I.cr.id){const E=eff(V,I.s,I.i);
-    out.push(h('div',{class:'pd'},h('b',null,'En jeu : '),'ATK '+E.a+' · PV '+E.hp+' / '+E.h+(c.pz?' · ☠ '+c.pz+' Venin subi':'')+(c.blk?' · bloquée':'')+(c.mut?' · mute':'')+(c.sick&&!E.kw.hate?' · vient d’arriver':'')));
+    out.push(h('div',{class:'pd'},h('b',null,'En jeu : '),'ATK ',h('span',{class:'sv '+stc(E.a,cd.a)},E.a),' · PV ',h('span',{class:'sv '+stc(E.hp,cd.h)},E.hp),' / '+E.h+(c.pz?' · ☠ '+c.pz+' Venin subi':'')+(c.blk?' · bloquée':'')+(c.mut?' · mute':'')+(c.sick&&!E.kw.hate?' · vient d’arriver':'')));
     if(E.T){const r=terrFor(c.k,E.T.d);out.push(h('div',{class:'pd'},h('b',null,'Terrain '+TD[E.T.d].n+' : '),r.tx))}
     if(c.ex)out.push(h('div',{class:'pd'},h('b',null,'✈️ À l’étranger : '),'inciblable jusqu’au prochain tour de son propriétaire.'));
     if(E.kw.venin)out.push(h('div',{class:'pd'},h('b',null,'Venin '+E.kw.venin),' (avec les bonus Toxic).'))}}
@@ -4876,7 +4878,7 @@ function hoverCard(el){const k=el.getAttribute('data-hk'),cd=CARDS[k];if(!cd)ret
   const hs=(el.getAttribute('data-hs')||'').split(',').map(Number),st=cd.t==='c'&&hs.length===3&&!hs.some(isNaN)?hs:null;
   const E=st?{a:st[0],hp:st[1],h:st[2],kw:(()=>{const r={};(cd.kw||[]).forEach(x=>r[x]=1);if(cd.cleave)r.cleave=cd.cleave;return r})()}:null;
   p.replaceChildren(h('div',{class:'hcc'},cardEl(k,E?{E}:null)),h('div',{class:'hct'},h('b',null,fullName(cd)),h('div',{class:'mut sm'},(cd.t==='c'?'Créature':'Sort')+' · '+RAR[cd.r]+' · coût '+cd.c+(cd.t==='c'?' · '+cd.a+'/'+cd.h:'')),
-    st?h('div',{class:'hsn'},'Au moment de l’action : ',h('b',{class:'a'},st[0]+' ATK'),' · ',h('b',{class:st[1]<st[2]?'hu':'h'},st[1]+(st[1]<st[2]?' / '+st[2]:'')+' PV')):null,
+    st?h('div',{class:'hsn'},'Au moment de l’action : ',h('b',{class:'a '+stc(st[0],cd.a)},st[0]+' ATK'),' · ',h('b',{class:'h '+stc(st[1],cd.h)},st[1]+(st[1]<st[2]?' / '+st[2]:'')+' PV')):null,
     h('div',{class:'hx'},txNodes(cd.tx||''))));
   p.style.display='flex';const r=el.getBoundingClientRect(),pr=p.getBoundingClientRect();let x=r.left-pr.width-12;if(x<8)x=Math.min(innerWidth-pr.width-8,r.right+12);
   const y=Math.min(Math.max(8,r.top+r.height/2-pr.height/2),innerHeight-pr.height-8);p.style.left=x+'px';p.style.top=y+'px'}
@@ -4895,7 +4897,7 @@ function sg(n){n=n||0;return(n>0?'+':'')+n}
 function costTag(e){return e.c?h('span',{class:'cst'},'−'+e.c+(e.r==='or'?' 🪙':' ◆')):null}
 function mini(k,st){const cd=CARDS[k];if(!cd)return h('span',{class:'mi'},'?');st=cd.t==='c'&&Array.isArray(st)&&st.length===3?st:null;
   return h('span',{class:'mi','data-k':k,'data-hk':k,'data-hs':st?st.join(','):null,style:'--mc:'+RCOL[cd.r]},miniAv(k),fullName(cd),
-    st?h('span',{class:'hsnap',title:'État au moment de l’action : '+st[0]+' ATK, '+st[1]+' PV'+(st[1]<st[2]?' sur '+st[2]:'')},h('b',null,st[0]),h('i',{class:st[1]<st[2]?'hu':null},st[1])):null)}
+    st?h('span',{class:'hsnap',title:'État au moment de l’action : '+st[0]+' ATK, '+st[1]+' PV'+(st[1]<st[2]?' sur '+st[2]:'')},h('b',{class:stc(st[0],cd.a)||null},st[0]),h('i',{class:stc(st[1],cd.h)||null},st[1])):null)}
 function heroChip(s){const V=DUEL.V,P=V.p[s];return h('span',{class:'mi hch'+(s===V.me?' me':' op')},h('u',null,(P.nm||'?').charAt(0).toUpperCase()),s===V.me?'Toi':P.nm)}
 function tgChip(s,i,k,st){return i<0?heroChip(s):mini(k,st)}
 function terrChip(d){const t=TD[d];if(!t)return h('span',{class:'mut'},'terrain');const g=GAMES[t.g];return chip(gi(t.g),t.n,g.c,'Terrain '+g.n+' — '+t.n)}
@@ -5305,14 +5307,14 @@ function cTerr(v){
   const grid=h('div',{class:'ggrid'});
   GK.forEach(g=>{
     const G=GAMES[g],ts=TDEF.filter(t=>t.g===g);
-    const has=(b,lv)=>versOf(b).some(r=>((CARDS[b+r].sc&&CARDS[b+r].sc[g])||0)===lv),b2=BASEK.filter(b=>has(b,2)),b1=BASEK.filter(b=>has(b,1));   // v20 : l'affinité dépend de la version
+    const b2=BASEK.filter(b=>(BASES[b].sc[g]||0)>=2),b1=BASEK.filter(b=>(BASES[b].sc[g]||0)===1);
     grid.append(h('div',{class:'gcard',style:'--gc:'+G.c},
-      h('div',{class:'gh'},h('div',{class:'gi'},gi(g)),h('div',null,h('b',null,g==='bazar'?'Terrains neutres':'Terrains '+G.n),h('small',null,ts.length+' terrains'+(g==='bazar'?' · neutres':' · '+b2.length+' personnages d’affinité 2, '+b1.length+' d’affinité 1 (selon la version)')))),
+      h('div',{class:'gh'},h('div',{class:'gi'},gi(g)),h('div',null,h('b',null,g==='bazar'?'Terrains neutres':'Terrains '+G.n),h('small',null,ts.length+' terrains'+(g==='bazar'?' · neutres':' · '+b2.length+' personnages d’affinité 2, '+b1.length+' d’affinité 1')))),
       h('div',{class:'tlist'},ts.map(t=>h('div',{class:'trow',style:'--gc:'+G.c},h('div',{class:'tic'},t.img?h('img',{class:'tthumb',src:t.img,alt:'',draggable:'false'}):gi(g)),h('b',null,t.n),szEl(t.size),h('span',{class:'pr'},t.uniq?({blizzard:'Kirua',gbazar:'Potatoll',eco:'Coco'}[t.d]||'unique'):'🪙'+t.cost),
         h('div',{class:'tx'},g==='bazar'?t.tn:[h('b',null,'Aff. 1 : '),t.t1,' ',h('b',null,'Aff. 2 : '),t.t2])))),
       g==='bazar'?h('div',{class:'sm',style:'margin-top:8px;color:#dcc38d'},'Terrains uniques : le Blizzard (Kirua, reine des neiges), Le Grand Bazaar (Potatoll, fou du Bazar) et l’Éco village (Coco, communauté autosuffisante) ne sont pas en boutique : la carte les pose elle-même.'):
-      [h('div',{class:'sm',style:'margin:10px 0 2px;font-weight:700'},'Affinité 2 :'),h('div',{class:'members'},b2.length?b2.map(b=>baseEl(b,g,2)):h('span',{class:'mut sm'},'Personne.')),
-       h('div',{class:'sm',style:'margin:8px 0 2px;font-weight:700'},'Affinité 1 :'),h('div',{class:'members'},b1.length?b1.map(b=>baseEl(b,g,1)):h('span',{class:'mut sm'},'Personne.')),
+      [h('div',{class:'sm',style:'margin:10px 0 2px;font-weight:700'},'Affinité 2 :'),h('div',{class:'members'},b2.length?b2.map(b=>baseEl(b)):h('span',{class:'mut sm'},'Personne.')),
+       h('div',{class:'sm',style:'margin:8px 0 2px;font-weight:700'},'Affinité 1 :'),h('div',{class:'members'},b1.length?b1.map(b=>baseEl(b)):h('span',{class:'mut sm'},'Personne.')),
        g==='lol'?h('div',{class:'sm',style:'margin-top:8px;color:#dcc38d'},'Sur un terrain LoL, Lisdoon (Roro) attaque deux fois par tour ; Elkatrix (doux comme un agneau) double les effets des terrains LoL de ton camp.'):null,
        POOL.some(k=>CARDS[k].gam===g)?h('div',{class:'sm',style:'margin-top:8px'},h('b',null,'Sorts d’affinité : '),POOL.filter(k=>CARDS[k].gam===g).map(k=>memEl(k))):null]))});
   v.append(grid)}
