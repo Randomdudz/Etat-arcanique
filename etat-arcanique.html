@@ -1269,6 +1269,9 @@ h1,h2,h3{font-weight:700;letter-spacing:.03em}
 .tcell.lk{box-shadow:inset 0 0 0 2px #9cc8e8}
 .shT .agetag.later{background:#6b5a48;opacity:.85}
 .cc2 .rcy{position:absolute;left:8px;bottom:-9px;z-index:8;background:#2c4a28;border:2px solid #8fb27a;color:#e9f6d9;border-radius:99px;padding:0 7px;font-size:11px;font-weight:900}
+/* --- v17 : textes longs jamais cachés sous les pastilles ATK/PV (la bande des pastilles est réservée, police plus petite au-delà de 160 caractères) --- */
+.card.c .ct{padding-bottom:12.6cqw}
+.card .ct.xxl{font-size:3.95cqw;line-height:1.12}
 </style>
 <script defer src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
 <script src="cloud-config.js"></script>
@@ -1397,7 +1400,7 @@ lasorius:{n:'Lasorius',fac:['weebos','farmer'],sc:{wow:2,dofus:1,lol:0,cs:0},lor
 osiris:{n:'Osiris',fac:['toxic','expats'],sc:{wow:0,dofus:2,lol:1,cs:1},lore:'Capuche, lunettes noires, jamais un mot de trop. Son venin parle pour lui. Dreos le traite de débile, Laloutre le provoque ; il n’oublie rien. Il devient redoutable quand Maki est dans les parages.',v:[
   {st:'Joueur retraité',c:2,a:0,h:4,eot:[{t:'draw',n:1,if:{ter:'lol'}},{t:'or',n:2,if:{ter:'dofus'}}],tx:'Fin de ton tour : sur un terrain LoL, pioche 1 carte ; sur un terrain Dofus, gagne 2 Or.'},
   {st:'Jak',stl:'Jak',c:3,a:2,h:3,last:[{t:'summon',k:'mmejack',n:1}],tx:'Agonie : invoque Mme Jak, une vache 2/1.'},
-  {st:'Expert bluffeur',c:5,a:4,h:5,eot:[{t:'bet'}],lore:'« Haha, je savais que t’allais 3 barrel preflop sur la turn :\'D, tellement évident ! »',tx:'Fin de ton tour : parie en secret sur la première action de l’adversaire (jouer une créature, acheter un terrain ou attaquer). S’il a raison, il vole tout l’Or adverse et tu pioches 2 cartes.'}]},
+  {st:'Expert bluffeur',c:5,a:4,h:5,eot:[{t:'bet'}],credit:'Photo © Caroline Darcourt / Winamax',lore:'« Haha, je savais que t’allais 3 barrel preflop sur la turn :\'D, tellement évident ! »',tx:'Fin de ton tour : parie en secret sur la première action de l’adversaire (jouer une créature, acheter un terrain ou attaquer). S’il a raison, il vole tout l’Or adverse et tu pioches 2 cartes.'}]},
 maki:{n:'Maki',fac:[],sc:{wow:0,dofus:2,lol:2,cs:0},withKw:{b:'osiris',kw:['siphon']},lore:'Représentante de la noblesse, nom à 14 particules. Son lait est réputé dans tout l’État Arcanique. Inséparable d’Osiris.',v:[
   {st:'Fan d’Osiris',c:2,a:2,h:3,cry:[{t:'tutor',b:'osiris'}],tx:'Siphon tant que tu contrôles un Osiris. Cri d’arrivée : pioche un Osiris au hasard dans ton deck.'},
   {st:'Chef coach de crêpe au sucre',c:2,a:2,h:3,sot:[{t:'affUpR',g:'lol'}],tx:'Siphon tant que tu contrôles un Osiris. Début de ton tour : une de tes créatures au hasard (en priorité sur un terrain LoL) gagne +1 d’affinité LoL (2 maximum).'},
@@ -3222,7 +3225,7 @@ function cardEl(k,o){
   // plateau : effets de combat visibles sur la carte (Rempart, AFK, Tilt, Venin, Bloquée...)
   if(o.bd&&cr&&E){if(E.kw.rempart)cls.push('rp');if(E.kw.afk&&!cr.aw)cls.push('afkx');if(E.TE&&E.TE.noAtk)cls.push('noatk');
     if(E.kw.tilt)cls.push('tlt',cr.tc>0?'tlton':'tltoff');if(cr.pz>0)cls.push('pzn');if(cr.blk>0)cls.push('blkx');if(E.kw.deso)cls.push('desox');if(cr.inv)cls.push('invx')}
-  const tx=cd.tx||'',tc=tx.length>118?'ct xl':tx.length>76?'ct l':'ct';
+  const tx=cd.tx||'',tc=tx.length>160?'ct xl xxl':tx.length>118?'ct xl':tx.length>76?'ct l':'ct';
   const kwset=E?E.kw:(()=>{const r={};(cd.kw||[]).forEach(x=>r[x]=1);if(cd.cleave)r.cleave=cd.cleave;return r})();
   // icônes des mots-clés : leur définition s'affiche au survol, partout (collection, boosters, défis, duel)
   const kws=KWORDER.filter(x=>kwset[x]||(x==='egide'&&cr&&cr.eg)).map(x=>{const nm=KWI[x][0],d=defOf(nm);
@@ -3320,6 +3323,7 @@ function showCard(k,opts){
         tagRow(cd),
         cd.t==='c'&&!cd.tok?h('div',{class:'scores kw','data-t':'Affinités','data-d':defOf('Affinité')},AFG.map(g=>h('span',{style:'border-color:'+GAMES[g].c},gi(g),' '+GAMES[g].n+' : '+((cd.sc&&cd.sc[g])||0)))):null,
         cd.lore?h('div',{class:'lore'},cd.lore):null,
+        cd.credit?h('div',{class:'sm mut',style:'margin-top:6px'},'📷 '+cd.credit):null,
         opts.extra||null)));
   return modal(box)}
 function pileModal(s,key){
@@ -4029,7 +4033,8 @@ function cardNodes(I){
     ...out,
     tagRow(cd),
     cd.t==='c'&&!cd.tok?h('div',{class:'pd kw','data-t':'Affinités','data-d':defOf('Affinité')},AFG.map(g=>h('span',{class:'afi'},gi(g),' '+((cd.sc&&cd.sc[g])||0)))):null,
-    cd.lore?h('div',{class:'lore'},cd.lore):null].filter(Boolean)}
+    cd.lore?h('div',{class:'lore'},cd.lore):null,
+    cd.credit?h('div',{class:'pd sm mut'},'📷 '+cd.credit):null].filter(Boolean)}
 function ctxInfo(t){
   const D=DUEL;if(!D||!D.V)return null;const V=D.V;
   const sl=t.closest('.slot[data-s]');if(sl){const s=+sl.dataset.s,i=+sl.dataset.i,c=V.p[s].board[i];return c?{k:c.k,cr:c,s,i}:null}
