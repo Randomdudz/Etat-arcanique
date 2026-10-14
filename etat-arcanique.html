@@ -1879,7 +1879,7 @@ sadamie:{n:'Sadamie',fac:['ravages','alien'],sc:{wow:0,dofus:1,lol:1,cs:0},lore:
   {st:'Highroller ultime',c:8,a:1,h:1,cry:[{t:'highroll',n:4,k:4,min:5,onG:['dofus','lol']}],tx:'Cri d’arrivée : s’il arrive sur un terrain Dofus ou LoL, inflige 4 dégâts à toutes les créatures ennemies. Puis, si 4 créatures ennemies ou plus sont mortes ainsi, invoque 2 créatures au hasard de ton deck qui coûtent 5 ou plus.'}]},
 lasorius:{n:'Lasorius',fac:['weebos','farmer'],sc:{wow:2,dofus:1,lol:0,cs:0},lore:'A honte de sa voix de fillette de 8 ans : mute 90 % du temps, pas de micro depuis 7 ans. Mille heures par mois sur WoW. Prêt à se couper le bras pour que son pire ennemi perde sa main.',v:[
   {st:'Mets une pierre',c:2,a:2,h:2,cry:[{t:'respawnT',tg:'ac'}],tx:'Cri d’arrivée : une de tes créatures gagne Respawn.'},
-  {st:'Avatar de la rancune',c:3,a:3,h:3,cry:[{t:'hurtMe',n:3},{t:'dmg',n:3,tg:'ec'}],tx:'Cri d’arrivée : ton héros subit 3 dégâts, puis inflige 3 dégâts à une créature ennemie.'},
+  {st:'Avatar de la rancune',c:3,a:1,h:1,cry:[{t:'hurtMe',n:3},{t:'dmg',n:3,tg:'ec'}],tx:'Cri d’arrivée : ton héros subit 3 dégâts, puis inflige 3 dégâts à une créature ennemie.'},
   {st:'Instigateur sournois',c:6,a:3,h:3,cry:[{t:'swap',tg:'ec'}],tx:'Cri d’arrivée : Lasorius s’échange contre une créature ennemie : chacun passe dans l’autre camp.'}]},
 osiris:{n:'Osiris',fac:['toxic','expats'],sc:{wow:0,dofus:2,lol:1,cs:1},lore:'Capuche, lunettes noires, jamais un mot de trop. Son venin parle pour lui. Dreos le traite de débile, Laloutre le provoque ; il n’oublie rien. Il devient redoutable quand Maki est dans les parages.',v:[
   {st:'Joueur retraité',c:2,a:0,h:4,kw:['rempart'],eot:[{t:'draw',n:1,if:{ter:'lol'}},{t:'or',n:2,if:{ter:'dofus'}}],tx:'Rempart. Fin de ton tour : sur un terrain LoL, pioche 1 carte ; sur un terrain Dofus, gagne 2 Or.'},
@@ -1892,7 +1892,7 @@ maki:{n:'Maki',fac:[],sc:{wow:0,dofus:2,lol:2,cs:0},withKw:{b:'osiris',kw:['siph
 randal:{n:'George Randall',fac:['expats','ravages'],sc:{wow:2,dofus:2,lol:2,cs:2},lore:'Anglais. A déjà tout fait, partout, avec tout le monde, selon lui. Chaque récit est invérifiable, et personne n’ose vérifier.',v:[
   {st:'Pornstar',c:2,a:2,h:3,cry:[{t:'blk',tg:'ec'}],tx:'Cri d’arrivée : Bloque une créature ennemie.'},
   {st:'The storyteller',c:3,a:3,h:2,cry:[{t:'rand',list:[[{t:'buff',a:1,h:1,self:1}],[{t:'dmgFace',n:4}],[{t:'draw',n:2}],[{t:'summon',k:'pleb',n:1}],[{t:'heal',n:5}]]}],tx:'Cri d’arrivée : raconte une histoire au hasard : +1/+1, 4 dégâts à l’adversaire, pioche 2, invoque 1 Pleb ou soigne 5.'},
-  {st:'Rank 1 every game',c:5,a:3,h:5,dblGT:1,lore:'« I think I’m the best overall player in the world. »',tx:'Les effets de tes terrains de jeu s’appliquent deux fois (quand c’est possible : pas les mots-clés comme Siphon ou Hâte).'}]},
+  {st:'Rank 1 every game',c:5,a:5,h:5,dblGT:1,lore:'« I think I’m the best overall player in the world. »',tx:'Les effets de tes terrains de jeu s’appliquent deux fois (quand c’est possible : pas les mots-clés comme Siphon ou Hâte).'}]},
 sada:{n:'Sadagod',fac:['alien'],sc:{wow:1,dofus:1,lol:1,cs:2},lore:'PAN PAN BOOM BOOM. Mémoire de poisson rouge, cœur d’or, poils partout. Instamute + block rien qu’à la voix. Docteur du serveur : il règle vos soucis informatiques depuis l’Australie, où il vient de s’installer.',v:[
   {st:'Instamuter',c:3,a:2,h:3,cry:[{t:'mute',tg:'c'}],tx:'Cri d’arrivée : Mute une créature.'},
   {st:'Poisson rouge',c:1,a:1,h:2,cry:[{t:'discSelf',n:1}],last:[{t:'draw',n:1}],tx:'Cri d’arrivée : défausse 1 carte au hasard. Agonie : pioche 1 carte.'},
@@ -2101,7 +2101,7 @@ const TDEF=[
  {d:'nashor',g:'lol',n:'Buff du Nashor',size:3,cost:7,t1:'+1 ATK.',t2:'+2/+1.',f:x=>({a:x,h:x>1?1:0})},
  {d:'jungle',g:'lol',n:'Jungle et Smite',size:2,cost:2,t1:'+1 ATK quand elle attaque une créature.',t2:'+2 ATK quand elle attaque une créature.',f:x=>({vsC:x})},
  {d:'zaap',g:'dofus',n:'Zaap d’Astrub',size:1,cost:3,t1:'Arrivée : pioche 1 carte, puis défausse 1 carte de ton choix.',t2:'Arrivée : pioche 1 carte.',f:x=>({arr:x>1?[{t:'draw',n:1}]:[{t:'draw',n:1},{t:'discPick',n:1}]})},
- {d:'bonta',g:'dofus',n:'Milice de Bonta',size:2,cost:6,t1:'Rempart.',t2:'Rempart, +1 PV.',f:x=>({kw:{rempart:1},h:x>1?1:0})},
+ {d:'bonta',g:'dofus',n:'Milice de Bonta',size:1,cost:6,t1:'Rempart.',t2:'Rempart, +1 PV.',f:x=>({kw:{rempart:1},h:x>1?1:0})},
  {d:'bouftou',g:'dofus',n:'Donjon Bouftou',size:3,cost:6,t1:'Fin de ton tour : +0/+1.',t2:'Fin de ton tour : +1/+1.',f:x=>({eot:[{t:'grow',a:x>1?1:0,h:1}]})},
  {d:'forge',g:'dofus',n:'Atelier de forgemagie',size:1,cost:5,t1:'Créature qui arrive dessus : gagne Égide.',t2:'Créature qui arrive dessus : gagne Égide et +1 ATK.',f:x=>({arr:x>1?[{t:'egide'},{t:'buff',a:1,h:0,self:1}]:[{t:'egide'}]})},
  {d:'sram',g:'dofus',n:'Temple Sram',size:1,cost:2,t1:'Arrivée : devient invisible (inciblable jusqu’à ton prochain tour).',t2:'Arrivée : devient invisible et gagne +1 ATK.',f:x=>({arr:x>1?[{t:'invis'},{t:'buff',a:1,h:0,self:1}]:[{t:'invis'}]})},
