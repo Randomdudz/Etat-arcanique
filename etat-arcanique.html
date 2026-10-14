@@ -1964,7 +1964,7 @@ natingaz:{n:'Natinganz',fac:['weebos'],sc:{wow:2,dofus:1,lol:1,cs:0},sym:'⌨',c
   {r:3,st:'J’ai dl le boss',c:5,a:2,h:6,laser:6,tx:'Au début de chaque tour (adverse compris), se déplace d’une case vers la droite : un LASER géant inflige 6 dégâts à la case qu’il quitte et à la créature en face. S’il ne peut pas bouger, c’est lui qui prend le laser.'}]},
 gobi:{n:'Gobi',fac:['farmer','ravages'],sc:{wow:2,dofus:2,lol:0,cs:0},sym:'⚔',col:'#9f5b49',lore:'Il a vaincu Sludgefist. Il mène sa troupe de gogoles au combat, sans trop savoir dans quelle direction.',v:[
   {r:1,st:'Chef des gogoles',c:2,a:2,h:2,kw:['deso'],cry:[{t:'hurtSelf',n:1},{t:'summon',k:'gogole',n:1}],tx:'Désorienté. Cri d’arrivée : subit 1 dégât et invoque 1 Gogole 1/1 Désorienté.'},
-  {r:2,st:'Slayer of Sludgefist',c:4,a:4,h:3,respawnT,tx:'Respawn : quand il meurt, il revient sur le plateau avec 1 PV.'},
+  {r:2,st:'Slayer of Sludgefist',c:4,a:4,h:3,save1:1,tx:'La première fois qu’il devrait mourir, il reste à 1 PV et devient invincible jusqu’au début de ton prochain tour.'},
   {r:3,st:'Collectionneur de Dofus',c:6,a:5,h:5,cry:[{t:'dofus'}],tx:'Cri d’arrivée : obtiens un Dofus légendaire au hasard (artefact) : Pourpre, Ocre, Émeraude, Vulbis, Turquoise ou Cawotte.'}]},
 lanfear:{n:'Lanfear',fac:['toxic','vestige'],sc:{wow:1,dofus:1,lol:1,cs:0},sym:'🎙',col:'#a288d2',lore:'Son micro grésille tellement que plus personne ne sait où il en est.',v:[
   {r:1,st:'Vapoteuse insoutenable',c:2,a:1,h:3,eot:[{t:'pzRnd',n:1,k:1}],tx:'Fin de ton tour : 1 Venin à une créature ennemie au hasard.'},
@@ -2112,8 +2112,8 @@ const TDEF=[
  {d:'esprit',g:'wow',n:'Esprit guérisseur',size:1,cost:5,t1:'Agonie : ton héros récupère 3 PV.',t2:'Respawn : elle revient une fois, sans redéclencher ses effets.',f:x=>(x>1?{kw:{respawn:1},rsq:1}:{last:[{t:'heal',n:3}]})},
  {d:'canape',g:'bazar',n:'Le canapé de Xulyes',size:1,cost:1,tn:'+0/+1. Personne ne s’en est jamais relevé.',f:()=>({h:1})},
  {d:'kebab',g:'bazar',n:'Kebab de 4 h du mat’',size:1,cost:1,tn:'Agonie : soigne ton héros de 2 PV.',f:()=>({last:[{t:'heal',n:2}]})},
- {d:'vocal',g:'bazar',n:'Salon vocal AFK',size:1,cost:3,tn:'Rempart et +0/+2, mais ne peut pas attaquer (elle est AFK).',f:()=>({h:2,noAtk:1,kw:{rempart:1}})},
- {d:'andorre',g:'bazar',n:'Afterwork en Andorre',size:1,cost:1,tn:'Début de ton tour : gagne 1 Or.',f:()=>({sot:[{t:'or',n:1}]})},
+ {d:'vocal',g:'bazar',n:'Salon vocal AFK',size:1,cost:3,tn:'Rempart et +0/+2, mais ne peut pas attaquer.',f:()=>({noAtk:1,kw:{rempart:1}})},
+ {d:'andorre',g:'bazar',n:'Afterwork en Andorre',size:1,cost:2,tn:'Début de ton tour : gagne 1 Or.',f:()=>({sot:[{t:'or',n:1}]})},
  {d:'blizzard',g:'bazar',n:'Blizzard',size:2,cost:0,uniq:1,tn:'Terrain de Kirua, la reine des neiges : les créatures dessus ne peuvent pas attaquer. Il ne peut être ni détruit ni recouvert, disparaît quand elle meurt et dort tant qu’elle est Mute.',f:()=>({noAtk:1})},
  {d:'cave',g:'bazar',n:'La cave de Homz',size:2,cost:5,tn:'Fin de ton tour : lance 1 missile.',f:()=>({eot:[{t:'rnd',n:1,times:1}]})},
  {d:'minecraft',g:'bazar',n:'Serveur Minecraft',size:2,cost:4,tn:'Fin de ton tour : un Pleb 1/1 apparaît sur une case libre de ce terrain.',teot:'spawn',spawn:'pleb',f:()=>({})},
