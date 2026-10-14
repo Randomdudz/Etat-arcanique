@@ -1864,11 +1864,11 @@ mikalev:{n:'Mikalev',fac:[],sc:{wow:0,dofus:0,lol:1,cs:2},lore:'Vrai shinobi de 
 coco:{n:'Coco',fac:['alien','ravages'],sc:{wow:1,dofus:0,lol:1,cs:1},lore:'« Si j’avais lancé mon E avant mon A, ça se passait bien ! » Flash en 1v4, meurt, et trouve toujours une explication absurde. A vécu en communauté autosuffisante avec des zadistes mangeurs de potiron.',v:[
   {st:'Esprit tourmenté',c:2,a:0,h:4,kw:['tilt'],tilt:[{t:'pick3',n:3}],tx:'Tilt : pioche 3 cartes, garde celle de ton choix et défausse les 2 autres.'},
   {st:'Flashin 1v4',c:2,a:2,h:2,last:[{t:'draw',n:1}],tx:'Agonie : pioche 1 carte.'},
-  {st:'Communauté autosuffisante',c:7,a:3,h:4,cry:[{t:'eco'}],tx:'Cri d’arrivée : pose le terrain unique Éco village sur tout ton plateau. Fin de ton tour : une Graine 0/1 pousse sur chaque case libre de l’Éco village ; début de ton tour : chaque Graine dessus gagne +1/+1.'}]},
+  {st:'Communauté autosuffisante',c:6,a:3,h:4,cry:[{t:'eco'}],tx:'Cri d’arrivée : pose le terrain unique Éco village sur tout ton plateau. Fin de ton tour : une Graine 0/1 pousse sur chaque case libre de l’Éco village ; début de ton tour : chaque Graine dessus gagne +1/+1.'}]},
 xulyes:{n:'Xulyes',fac:['alien','farmer'],sc:{wow:2,dofus:0,lol:1,cs:1},lore:'Tourelle de commandement du serveur : il distribue des directives, et gare à toi si tu ne les suis pas, il casse son clavier. 90 heures par semaine dans son resto, et toujours un ARAM Mayhem à lancer.',v:[
   {st:'Briseur d’écrans',c:2,a:2,h:2,last:[{t:'rnd2',n:1}],tx:'Agonie : 1 dégât à deux ennemis différents au hasard.'},
   {st:'Serveur charmant',c:3,a:3,h:3,cry:[{t:'healE',n:3,tg:'e',tgf:'hurt'}],tx:'Cri d’arrivée : rend jusqu’à 3 PV à un ennemi blessé (héros compris) et gagne 1 Or par PV rendu (3 max).'},
-  {st:'Commandant des armées',c:6,a:5,h:5,kw:['vip'],aura:{others:1,a:1,h:1},tx:'VIP. Tes autres créatures ont +1/+1.'}]},
+  {st:'Commandant des armées',c:4,a:3,h:3,kw:['vip'],aura:{others:1,a:1,h:1},tx:'VIP. Tes autres créatures ont +1/+1.'}]},
 losk:{n:'Losk',fac:['xeno','expats'],sc:{wow:2,dofus:2,lol:1,cs:0},lore:'Déménagé en Andorre pour la fiscalité. Ne parle plus que de bitcoin. Sous son déguisement de requin, il optimise tout, surtout ta trésorerie.',v:[
   {st:'Dévoreur de chapeau',c:2,a:4,h:3,cry:[{t:'bounceOwn',tg:'ac'}],tx:'Cri d’arrivée : Kick une de tes autres créatures (elle retourne dans ta main ; s’il est seul, c’est lui qui y retourne).'},
   {st:'Officier tyrannique',c:4,a:3,h:5,kw:['rempart','tilt'],tilt:[{t:'banOn',g:['wow','dofus']}],tx:'Rempart. Tilt : Bannit une créature ennemie au hasard posée sur un terrain WoW ou Dofus.'},
@@ -1916,7 +1916,7 @@ minuit:{n:'Minuit',fac:['xeno','weebos'],sc:{wow:2,dofus:0,lol:1,cs:0},lore:'Chi
 lisdoon:{n:'Lisdoon',fac:['xeno'],sc:{wow:1,dofus:0,lol:2,cs:0},lore:'Tout doux d’habitude, ancien gros reconverti en séducteur. Lance une partie de LoL et le gremlin se réveille, sans pitié. Va bientôt être père, et ses commentaires ressemblent à ceux d’une IA de boomer.',v:[
   {st:'Gomuscu',c:2,a:2,h:3,onGT:{kw:['croissance']},tx:'Croissance tant qu’il est sur un terrain de jeu.'},
   {st:'Patriarche',c:3,a:3,h:2,last:[{t:'summon',k:'heritier',n:1}],tx:'Agonie : invoque un Héritier (Croissance).'},
-  {st:'Roro',stl:'Roro',c:6,a:5,h:6,onT:{g:'lol',kw:['frenesie']},tx:'Rage de Roro : sur un terrain LoL, peut attaquer deux fois par tour.'}]},
+  {st:'Roro',stl:'Roro',c:6,a:6,h:5,onT:{g:'lol',kw:['frenesie']},tx:'Rage de Roro : sur un terrain LoL, peut attaquer deux fois par tour.'}]},
 loractys:{n:'Loractys',fac:['alien','weebos'],sc:{wow:1,dofus:2,lol:1,cs:1},lore:'Parle à toute vitesse, toujours depuis la Chine. Sigma player à l’esprit tordu : il trouve le bug que personne n’avait vu, sur tous les jeux. Goat fast learner. Se marie bientôt.',v:[
   {st:'Fast thinker',c:2,a:1,h:2,last:[{t:'cap',n:1}],tx:'Agonie : gagne 1 Démoflux maximum (10 au plus).'},
   {st:'De retour de Chine',c:3,a:2,h:3,fac:['alien','expats'],onBack:[{t:'draw',n:2}],tx:'À chaque retour de voyage : pioche 2 cartes.'},
@@ -1936,20 +1936,20 @@ boku:{n:'Boku',fac:['weebos'],sc:{wow:0,dofus:0,lol:2,cs:1},lore:'GM et turbo we
 haddmi:{n:'Haddmi',fac:['xeno'],sc:{wow:0,dofus:0,lol:1,cs:2},lore:'Meneur d’un discord rival : une armée à lui tout seul. Bosse chez Vitality, niveau 10 sur FACEIT. Se vexe au quart de tour, et ça le fait tilt.',v:[
   {st:'Chouineur professionnel',c:1,a:0,h:3,kw:['rempart','tilt'],tilt:[{t:'grow',a:1,h:0}],lore:'« Je peux plus jouer la lane, go next. »',tx:'Rempart. Tilt : gagne +1 ATK.'},
   {st:'Chef dissident',c:5,a:3,h:2,cry:[{t:'ctl',tg:'ec',tgf:'cm3'}],tx:'Cri d’arrivée : prend le contrôle d’une créature ennemie qui coûte 3 ou moins.'},
-  {st:'Sniper d’élite',c:6,a:4,h:5,noRet:1,eot:[{t:'snipe',n:4}],tx:'Ne subit pas de dégâts quand il attaque. Fin de ton tour : inflige 4 dégâts à la créature ennemie la plus éloignée de lui (au hasard en cas d’égalité).'}]},
+  {st:'Sniper d’élite',c:6,a:5,h:4,noRet:1,eot:[{t:'snipe',n:4}],tx:'Ne subit pas de dégâts quand il attaque. Fin de ton tour : inflige 4 dégâts à la créature ennemie la plus éloignée de lui (au hasard en cas d’égalité).'}]},
 potatoll:{n:'Potatoll',fac:['alien','ravages'],sc:{wow:2,dofus:1,lol:2,cs:1},lore:'Plus gros troll du serveur, meneur de la bande et complètement ravagé. Quand il lance les dés, c’est tout l’État Arcanique qui tremble.',v:[
   {st:'Serviteur de Kiwi',c:2,a:2,h:1,cry:[{t:'summon',k:'kiwi',n:1}],tx:'Cri d’arrivée : invoque Kiwi, un chat 1/1 avec Hâte.'},
   {st:'Désinstallation sauvage',c:3,a:3,h:3,last:[{t:'tdestroy'}],lore:'« Putain de jeu de merde, vas-y, je le réinstalle plus jamais de ma vie entière. »',tx:'Agonie : détruit un terrain adverse au hasard.'},
   {st:'Fou du Bazar',c:8,a:6,h:6,bazNoPz:1,cry:[{t:'gbazar'}],tx:'Il ne subit pas le Venin de son Bazaar. Cri d’arrivée : pose le terrain unique Le Grand Bazaar sur tout ton plateau. Fin de ton tour : chaque créature dessus déclenche un effet du Bazar au hasard. Le Bazaar disparaît quand Potatoll quitte le plateau, et dort s’il est Mute.'}]},
 bambou:{n:'Gollwyd Bambou',fac:['vestige'],sc:{wow:1,dofus:0,lol:1,cs:1},lore:'Créateur du serveur. N’y a pas mis les pieds depuis 20 ans (??). Il revient, regarde l’état du salon, et décide de tout reformater.',v:[
-  {st:'Kickeur compulsif',c:3,a:2,h:2,kw:['afk'],cry:[{t:'kick',tg:'ec',tgf:'cm5'}],tx:'AFK. Cri d’arrivée : Kick une créature ennemie qui coûte 5 ou moins (elle retourne dans la main de son propriétaire).'},
+  {st:'Kickeur compulsif',c:3,a:2,h:2,cry:[{t:'kick',tg:'ec',tgf:'cm5'}],tx:'AFK. Cri d’arrivée : Kick une créature ennemie qui coûte 5 ou moins (elle retourne dans la main de son propriétaire).'},
   {st:'Nostalgique de la vieille époque',c:4,a:3,h:5,muteAll:1,tx:'Tant qu’il est sur le plateau, toutes les autres créatures sont Mute.'},
   {st:'Grand Reformatage',stl:'grand reformatage',c:10,a:5,h:5,cry:[{t:'wipe'}],tx:'Cri d’arrivée : détruit toutes les autres créatures.'}]},
 // nouveaux personnages : r = rareté de chaque version (toutes ne sont pas encore créées) ; sym/col = illustration en attendant une photo
 takk:{n:'Takk',fac:['weebos','expats'],sc:{wow:2,dofus:1,lol:1,cs:0},sym:'✈',col:'#bc779a',lore:'Toujours entre deux voyages, et toujours avec une nouvelle waifu à son retour.',v:[
   {r:1,st:'TN Lacoste',stl:'TN Lacoste',c:2,a:2,h:2,kw:['hate'],cry:[{t:'stealOr',n:1}],tx:'Hâte. Cri d’arrivée : vole 1 Or à l’adversaire.'},
   {r:2,st:'Enchaîneur de waifus',c:3,a:1,h:3,cry:[{t:'summon',k:'waifu',n:1}],onBack:[{t:'summon',k:'waifu',n:1}],tx:'Cri d’arrivée, et à chaque retour de voyage : invoque une Waifu 1/1 (Weebos).'},
-  {r:3,st:'Pourquoi il est mort ?',c:6,a:4,h:5,kw:['frenesie'],last:[{t:'buffAffN',g:'wow',a:3,h:3}],tx:'Frénésie. Agonie : tes créatures qui ont une affinité WoW gagnent +3/+3.'}]},
+  {r:3,st:'Pourquoi il est mort ?',c:5,a:4,h:5,kw:['frenesie'],last:[{t:'buffAffN',g:'wow',a:3,h:3}],tx:'Frénésie. Agonie : tes créatures qui ont une affinité WoW gagnent +3/+3.'}]},
 kirua:{n:'Kirua',fac:['alien','vestige'],sc:{wow:0,dofus:2,lol:0,cs:2},sym:'❄',col:'#8fb8d7',lore:'Panthère sur le terrain, reine des neiges en dehors, et le serveur plante dès que Kirua se connecte.',v:[
   {r:1,st:'Crasheur de serveur',c:2,a:2,h:3,cry:[{t:'tOff',tg:'terr'}],tx:'Cri d’arrivée : désactive un terrain (un des tiens ou un de l’adversaire) tant que Kirua, crasheur de serveur est en jeu. S’il est Mute, le terrain refonctionne.'},
   {r:2,st:'La panthère',c:4,a:3,h:4,kw:['hate','tilt'],tilt:[{t:'dmgFace',n:2}],tx:'Hâte. Tilt : inflige 2 dégâts au héros adverse.'},
@@ -1999,7 +1999,7 @@ heritier:{t:'c',n:'Héritier',r:1,c:1,a:1,h:1,fac:[],sc:{},tok:1,kw:['croissance
 weeb:{t:'c',n:'Weeb',r:1,c:1,a:1,h:1,fac:['weebos'],sc:{},tok:1,tx:'Jeton (Weebos).',sym:'🌸',col:'#ca7f9f',lore:'Venu de la Japan Expo, il n’en est jamais reparti.'},
 kiwi:{t:'c',n:'Kiwi',r:1,c:1,a:1,h:1,fac:[],sc:{},tok:1,kw:['hate'],tx:'Jeton. Hâte.',sym:'🐈',col:'#b49e80',lore:'Le chat de Potatoll. Il griffe d’abord, il réfléchit ensuite.'},
 waifu:{t:'c',n:'Waifu',r:1,c:1,a:1,h:1,fac:['weebos'],sc:{},tok:1,tx:'Jeton (Weebos).',sym:'💕',col:'#ca8aa9',lore:'Encore une, ramenée de voyage par Takk.'},
-mmejack:{t:'c',n:'Mme Jak',r:1,c:2,a:3,h:4,fac:[],sc:{},tok:1,kw:['rempart'],tx:'Jeton. Une vache.',sym:'🐄',col:'#dbd1c5',lore:'La vache de Jak. Elle ne bouge pas beaucoup, mais elle a du caractère.'},
+mmejack:{t:'c',n:'Mme Jak',r:1,c:2,a:3,h:4,fac:[],sc:{},tok:1,kw:['rempart'],tx:'Jeton. Une vache avec rempart?.',sym:'🐄',col:'#dbd1c5',lore:'La vache de Jak. Elle ne bouge pas beaucoup, mais elle a du caractère.'},
 piccolo:{t:'c',n:'Piccolo',r:1,c:3,a:2,h:3,fac:['alien'],sc:{},tok:1,kw:['siphon'],tx:'Jeton (Extraterritorial). Siphon.',sym:'👽',col:'#8aab6b',lore:'Venu de Namek. Il a suivi Rasta dehors.'},
 gogole:{t:'c',n:'Gogole',r:1,c:1,a:1,h:1,fac:[],sc:{},tok:1,kw:['deso'],tx:'Jeton. Désorienté.',sym:'?',col:'#ada398',lore:'« Aïe, il m’a mordu la main ce gogole ! »'},
 bot:{t:'c',n:'Bot de modération',r:1,c:3,a:2,h:5,fac:[],sc:{},tok:1,kw:['rempart'],tx:'Jeton. Rempart.',sym:'⚙',col:'#5e8987',lore:'Il applique le règlement, sans état d’âme.'},
@@ -2056,7 +2056,7 @@ videur:{t:'s',n:'Réémigration prioritaire',r:2,c:1,fam:'xeno',tg:'ec',tgf:'cf:
 mieuxavant:{t:'s',n:'C’était mieux avant',r:2,c:2,fam:'vestige',needSlot:1,fx:[{t:'rezFam',f:'vestige'}],tx:'Invoque le dernier Vestige de ton cimetière.',sym:'📼',col:'#b6aa93',lore:'« À l’époque, on jouait sans patch, et on était contents. »'},
 nostalgie:{t:'s',n:'Nostalgie',r:1,c:2,fam:'vestige',fx:[{t:'drawFam',f:'vestige',n:1,max:3}],tx:'Pioche 1 carte, +1 par Vestige que tu contrôles (3 max).',sym:'🕰',col:'#9d927b',lore:'Il ressort les screenshots de 2009. Tout le monde a l’air si jeune.'},
 // ----- sorts d'affinité : ils comptent l'affinité de tes créatures ou les terrains du jeu (gam = jeu concerné) -----
-rois:{t:'s',n:'Bénédiction des rois',r:2,c:4,gam:'wow',fx:[{t:'buffAff',g:'wow'}],tx:'Tes créatures gagnent +1/+1 par point d’affinité WoW.',sym:'👑',col:'#c9ac71',lore:'Un buff de 30 minutes. Il dure toute la partie, c’est un bug.'},
+rois:{t:'s',n:'Bénédiction des rois',r:2,c:3,gam:'wow',fx:[{t:'buffAff',g:'wow'}],tx:'Tes créatures gagnent +1/+1 par point d’affinité WoW.',sym:'👑',col:'#c9ac71',lore:'Un buff de 30 minutes. Il dure toute la partie, c’est un bug.'},
 drain:{t:'s',n:'Drain de vie',r:1,c:3,gam:'wow',tg:'ec',fx:[{t:'drainAff',g:'wow',max:5}],tx:'Inflige à une créature 1 dégât par point d’affinité WoW de tes créatures (5 max) et soigne ton héros d’autant.',sym:'🩸',col:'#8b60aa',lore:'Le démoniste ne s’arrête jamais de canaliser.'},
 parchemin:{t:'s',n:'Parchemin de sagesse',r:1,c:1,gam:'dofus',fx:[{t:'drawAff',g:'dofus',lv:1,max:2}],tx:'Pioche 1 carte pour chaque créature que tu contrôles qui a une affinité Dofus (2 max).',sym:'📜',col:'#7faf72',lore:'+101 en Sagesse. Ça ne rend pas plus sage, mais ça aide.'},
 feca:{t:'s',n:'Bouclier Féca',r:1,c:2,gam:'dofus',fx:[{t:'egideA',g:'dofus'}],tx:'Tes créatures qui ont une affinité Dofus gagnent Égide.',sym:'🛡',col:'#6b9363',lore:'Le Féca ne tape pas fort, mais personne ne le tape tout court.'},
@@ -2105,8 +2105,8 @@ const TDEF=[
  {d:'bouftou',g:'dofus',n:'Donjon Bouftou',size:3,cost:6,t1:'Fin de ton tour : +0/+1.',t2:'Fin de ton tour : +1/+1.',f:x=>({eot:[{t:'grow',a:x>1?1:0,h:1}]})},
  {d:'forge',g:'dofus',n:'Atelier de forgemagie',size:1,cost:5,t1:'Créature qui arrive dessus : gagne Égide.',t2:'Créature qui arrive dessus : gagne Égide et +1 ATK.',f:x=>({arr:x>1?[{t:'egide'},{t:'buff',a:1,h:0,self:1}]:[{t:'egide'}]})},
  {d:'sram',g:'dofus',n:'Temple Sram',size:1,cost:2,t1:'Arrivée : devient invisible (inciblable jusqu’à ton prochain tour).',t2:'Arrivée : devient invisible et gagne +1 ATK.',f:x=>({arr:x>1?[{t:'invis'},{t:'buff',a:1,h:0,self:1}]:[{t:'invis'}]})},
- {d:'taverne',g:'wow',n:'Taverne de Comté-de-l’Or',size:1,cost:3,t1:'Fin de ton tour : soigne ton héros de 2 PV.',t2:'Fin de ton tour : soigne ton héros de 3 PV.',f:x=>({eot:[{t:'heal',n:x+1}]})},
- {d:'hdv',g:'wow',n:'Hôtel des ventes',size:2,cost:2,t1:'Début de ton tour : gagne 1 Or.',t2:'Début de ton tour : gagne 2 Or.',f:x=>({sot:[{t:'or',n:x}]})},
+ {d:'taverne',g:'wow',n:'Taverne de Comté-de-l’Or',size:1,cost:5,t1:'Fin de ton tour : soigne ton héros de 2 PV.',t2:'Fin de ton tour : soigne ton héros de 3 PV.',f:x=>({eot:[{t:'heal',n:x+1}]})},
+ {d:'hdv',g:'wow',n:'Hôtel des ventes',size:2,cost:4,t1:'Début de ton tour : gagne 1 Or.',t2:'Début de ton tour : gagne 2 Or.',f:x=>({sot:[{t:'or',n:x}]})},
  {d:'arene',g:'wow',n:'Arène 2v2',size:2,cost:4,t1:'+1 ATK si une autre de tes créatures est aussi sur l’arène.',t2:'+2 ATK si une autre de tes créatures est aussi sur l’arène.',f:x=>({duo:{a:x}})},
  {d:'raid40',g:'wow',n:'Raid 40 joueurs',size:3,cost:6,t1:'Siphon.',t2:'Siphon, +1 ATK.',f:x=>({kw:{siphon:1},a:x>1?1:0})},
  {d:'esprit',g:'wow',n:'Esprit guérisseur',size:1,cost:5,t1:'Agonie : ton héros récupère 3 PV.',t2:'Respawn : elle revient une fois, sans redéclencher ses effets.',f:x=>(x>1?{kw:{respawn:1},rsq:1}:{last:[{t:'heal',n:3}]})},
