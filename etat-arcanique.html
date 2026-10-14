@@ -2430,9 +2430,26 @@ function heal(G,s,n,src){const P=G.p[s],v=Math.min(n,P.mhp-P.hp);if(v>0){P.hp+=v
 function healC(G,s,i,n){const c=G.p[s].board[i];if(!c||c.dm<=0)return 0;const v=Math.min(n,c.dm);c.dm-=v;lg(G,{t:'hc',ts:s,i,k:c.k,n:v});
   if(!c.mut&&CARDS[c.k].healGrow){c.a+=1;lg(G,{t:'buff',ts:s,i,k:c.k,ba:1,bh:0})}       // Minuit (golem Pfizer) : +1 ATK à chaque soin
   return v}
-function addPz(G,s,i,n,x){if(n<=0)return;const sid=x&&(x.sid||(x.self&&x.self.id));
-  if(i<0){G.p[s].pz+=n;if(sid)G.p[s].pzBy=sid}else{const c=G.p[s].board[i];if(!c||(!c.mut&&(CARDS[c.k].noPz||(CARDS[c.k].bazNoPz&&x&&x.baz))))return;c.pz+=n;if(sid)c.pzBy=sid}
-  lg(G,{t:'pz',ts:s,i,k:i<0?null:G.p[s].board[i].k,n,src:x?x.src:undefined,ss:x?x.ss:null,si:x?x.si:null})}
+function addPz(G,s,i,n,x){
+  if(n<=0)return;
+  const sid=x&&(x.sid||(x.self&&x.self.id));
+
+  if(i<0){
+    const old=G.p[s].pz;
+    G.p[s].pz=Math.min(4,old+n);
+    const added=G.p[s].pz-old;
+    if(added<=0)return;
+    if(sid)G.p[s].pzBy=sid;
+    n=added;
+  }else{
+    const c=G.p[s].board[i];
+    if(!c||(!c.mut&&(CARDS[c.k].noPz||(CARDS[c.k].bazNoPz&&x&&x.baz))))return;
+    c.pz+=n;
+    if(sid)c.pzBy=sid;
+  }
+
+  lg(G,{t:'pz',ts:s,i,k:i<0?null:G.p[s].board[i].k,n,src:x?x.src:undefined,ss:x?x.ss:null,si:x?x.si:null})
+}
 function gold(G,s,n,src,x){if(n<=0)return;G.p[s].or+=n;lg(G,{t:'gold',ts:s,n,src,ss:x?x.ss:null,si:x?x.si:null})}
 // cimetière : sorts joués, créatures mortes, cartes défaussées ou brûlées (les jetons n'y vont pas)
 function toGrave(P,c){if(c&&!CARDS[c.k].tok)P.grave.push({k:c.k,id:c.id})}
@@ -2976,7 +2993,7 @@ function attack(G,s,i,t){
   if(t.i<0){
     const n=EA.a,hp0=G.p[e].hp;heroHit(G,e,n,A.k,true);lg(G,{t:'atk',k:A.k,i,ts:e,ti:-1,to:'hero',n,r:0,as,hp0});
     if(EA.kw.siphon)heal(G,s,n,A.k);
-    if(EA.kw.venin&&n>0)addPz(G,e,-1,Math.min(EA.kw.venin,Math.max(0,4-G.p[e].pz)),xa);       // 2 Venin max par attaque sur un héros (s'il l'a blessé)
+    if(EA.kw.venin&&n>0)addPz(G,e,-1,EA.kw.venin,xa);       // 2 Venin max par attaque sur un héros (s'il l'a blessé)
     if(!G.over&&!A.mut&&CARDS[A.k].faceHit)runFx(G,CARDS[A.k].faceHit,{s,src:A.k,self:A,tg:null,pc:G.played,sl:i,ss:s,si:i})}   // Korock, Snoux : quand il attaque le héros
   else{
     const D=G.p[e].board[t.i],ED=eff(G,e,t.i),did=D.id,K=atkCalc(G,s,i,t),ds=snap(G,e,t.i);
