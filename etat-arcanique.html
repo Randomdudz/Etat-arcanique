@@ -1868,7 +1868,7 @@ coco:{n:'Coco',fac:['alien','ravages'],sc:{wow:1,dofus:0,lol:1,cs:1},lore:'« Si
 xulyes:{n:'Xulyes',fac:['alien','farmer'],sc:{wow:2,dofus:0,lol:1,cs:1},lore:'Tourelle de commandement du serveur : il distribue des directives, et gare à toi si tu ne les suis pas, il casse son clavier. 90 heures par semaine dans son resto, et toujours un ARAM Mayhem à lancer.',v:[
   {st:'Briseur d’écrans',c:2,a:2,h:2,last:[{t:'rnd2',n:1}],tx:'Agonie : 1 dégât à deux ennemis différents au hasard.'},
   {st:'Serveur charmant',c:3,a:3,h:3,cry:[{t:'healE',n:3,tg:'e',tgf:'hurt'}],tx:'Cri d’arrivée : rend jusqu’à 3 PV à un ennemi blessé (héros compris) et gagne 1 Or par PV rendu (3 max).'},
-  {st:'Commandant des armées',c:4,a:3,h:3,kw:['vip'],aura:{others:1,a:1,h:1},tx:'VIP. Tes autres créatures ont +1/+1.'}]},
+  {st:'Commandant des armées',c:4,a:4,h:4,kw:['vip'],aura:{others:1,a:1,h:1},tx:'VIP. Tes autres créatures ont +1/+1.'}]},
 losk:{n:'Losk',fac:['xeno','expats'],sc:{wow:2,dofus:2,lol:1,cs:0},lore:'Déménagé en Andorre pour la fiscalité. Ne parle plus que de bitcoin. Sous son déguisement de requin, il optimise tout, surtout ta trésorerie.',v:[
   {st:'Dévoreur de chapeau',c:2,a:4,h:3,cry:[{t:'bounceOwn',tg:'ac'}],tx:'Cri d’arrivée : Kick une de tes autres créatures (elle retourne dans ta main ; s’il est seul, c’est lui qui y retourne).'},
   {st:'Officier tyrannique',c:4,a:3,h:5,kw:['rempart','tilt'],tilt:[{t:'banOn',g:['wow','dofus']}],tx:'Rempart. Tilt : Bannit une créature ennemie au hasard posée sur un terrain WoW ou Dofus.'},
@@ -2030,7 +2030,7 @@ premade:{t:'s',n:'Premade',r:2,c:3,fx:[{t:'buff',a:1,h:1,all:1}],tx:'Tes créatu
 sanction:{t:'s',n:'Sanction',r:2,c:2,tg:'ec',tgf:'hurt',fx:[{t:'kill'}],tx:'Détruit une créature blessée.',sym:'⚖',col:'#5e8987',lore:'Un coup de marteau : la créature est bannie… enfin presque.'},
 raid:{t:'s',n:'Raid',r:2,c:4,fx:[{t:'dmgAll',n:2,side:'e'},{t:'dmgFace',n:2}],tx:'Inflige 2 dégâts à tous les ennemis (héros compris).',sym:'✹',col:'#a34c49',lore:'Un raid de trolls déferle dans le salon général.'},
 clutch:{t:'s',n:'Clutch',r:2,c:3,tg:'e',tg2:'any',fx:[{t:'dmg',n:3},{t:'heal2',n:3}],tx:'Inflige 3 dégâts à une cible, puis soigne une autre cible de 3 PV (héros compris).',sym:'♥',col:'#6c925d',lore:'1v4, 1 PV restant, et il le fait quand même.'},
-slowmode:{t:'s',n:'Slowmode',r:2,c:4,fx:[{t:'blkAll'},{t:'draw',n:1}],tx:'Bloque toutes les créatures ennemies. Pioche 1 carte.',sym:'⏳',col:'#638ecf',lore:'Un message toutes les 6 heures. Le salon dort.'},
+slowmode:{t:'s',n:'Slowmode',r:2,c:5,fx:[{t:'blkAll'},{t:'draw',n:1}],tx:'Bloque toutes les créatures ennemies. Pioche 1 carte.',sym:'⏳',col:'#638ecf',lore:'Un message toutes les 6 heures. Le salon dort.'},
 ragequit:{t:'s',n:'Ragequit',r:2,c:1,tg:'ac',fx:[{t:'rage'}],tx:'Détruit une de tes créatures : inflige son ATK à l’adversaire.',sym:'💢',col:'#af524f',lore:'Il claque sa souris et sa rage part dans la tronche de l’autre.'},
 nitro:{t:'s',n:'Nitro',r:3,c:0,fx:[{t:'eth',n:2}],tx:'Gagne 2 Démoflux ce tour-ci.',sym:'⚡',col:'#ca7999',lore:'Merci pour le Nitro, génial donateur anonyme.'},
 ban:{t:'s',n:'Ban',r:3,c:4,tg:'c',fx:[{t:'ban'}],tx:'Bannit une créature : aucune Agonie ne se déclenche.',sym:'⛔',col:'#5e8987',lore:'Le marteau tombe. Plus personne n’entendra parler d’elle.'},
