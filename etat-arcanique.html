@@ -2976,7 +2976,7 @@ function attack(G,s,i,t){
   if(t.i<0){
     const n=EA.a,hp0=G.p[e].hp;heroHit(G,e,n,A.k,true);lg(G,{t:'atk',k:A.k,i,ts:e,ti:-1,to:'hero',n,r:0,as,hp0});
     if(EA.kw.siphon)heal(G,s,n,A.k);
-    if(EA.kw.venin&&n>0)addPz(G,e,-1,EA.kw.venin,xa);       // 2 Venin max par attaque sur un héros (s'il l'a blessé)
+    if(EA.kw.venin&&n>0)addPz(G,e,-1,Math.min(EA.kw.venin,Math.max(0,4-G.p[e].pz)),xa);       // 2 Venin max par attaque sur un héros (s'il l'a blessé)
     if(!G.over&&!A.mut&&CARDS[A.k].faceHit)runFx(G,CARDS[A.k].faceHit,{s,src:A.k,self:A,tg:null,pc:G.played,sl:i,ss:s,si:i})}   // Korock, Snoux : quand il attaque le héros
   else{
     const D=G.p[e].board[t.i],ED=eff(G,e,t.i),did=D.id,K=atkCalc(G,s,i,t),ds=snap(G,e,t.i);
