@@ -2301,11 +2301,7 @@ function kwOf(G,s,c,L,TE,T){
 // Laloutre (démon de la custom) : sur un terrain de jeu, les autres créatures posées sur un terrain du même jeu ont 1 ATK et 1 PV de base
 function custOn(G,s,i,c){const g=tgOf(G,s,i);if(!g||g==='bazar')return false;
   for(const t of[0,1]){const B=G.p[t].board;for(let j=0;j<CELLS;j++){const b=B[j];if(b&&b!==c&&!b.mut&&CARDS[b.k].custom&&tgOf(G,t,j)===g)return true}}return false}
-function eff(G,s,i,L){
-  const P=G.p[s],c=P.board[i],cd=CARDS[c.k];L=L||fl(G,s);
-  const cu=custOn(G,s,i,c);let a=(cu?1:c.a)+(c.ta||0),h=cu?1:c.h;
-  const T=terrOf(G,s,i),TE=tfxC(T,c);
-  if(TE){const m=tMul(G,s,T);a+=(TE.a||0)*m;h+=(TE.h||0)*m;
+if(!c.mut&&cd.allFamActive&&P.board){const fams=new Set();P.board.forEach(b=>{if(b&&CARDS[b.k]&&CARDS[b.k].fac&&Array.isArray(CARDS[b.k].fac))CARDS[b.k].fac.forEach(f=>{if(f)fams.add(f)})});a+=fams.size;h+=fams.size}
     if(TE.duo&&P.board.some((b,j)=>b&&j!==i&&P.cells[j]===P.cells[i]))a+=(TE.duo.a||0)*m}   // Arène 2v2 : une autre de tes créatures sur l'arène
   if(T&&!c.mut&&cd.gr&&cd.gr.g===TD[T.d].g){a+=cd.gr.a;h+=cd.gr.h}
   if(T&&P.arts&&P.arts.length&&TD[T.d].g==='dofus'){if(hasArt(P,'pourpre'))a+=2;if(hasArt(P,'emeraude'))h+=2}   // Dofus Pourpre et Émeraude
