@@ -1987,7 +1987,7 @@ miichi:{n:'Miichi',fac:['weebos','alien'],sc:{wow:1,dofus:0,lol:2,cs:0},sym:'�
   {r:3,st:'Waifu intergalactique',c:5,a:4,h:3,kw:['hate'],cry:[{t:'stealOr',n:2}],kwAura:{fac:'weebos',kw:'hate',others:1},tx:'Hâte. Cri d’arrivée : vole 2 Or à l’adversaire. Tes autres Weebos ont Hâte.'}]}};
 // v22 : nouvelle légendaire
 BASES.coach={n:'Le Coach',fac:['ravages'],sc:{wow:0,dofus:0,lol:1,cs:2},sym:'📣',col:'#c9773a',lore:'« Go go go ! » Il ne connaît qu’une stratégie : tout le monde fonce.',v:[
-  {r:3,st:'Capitaine du rush',c:3,a:3,h:3,kw:['insolence'],atkLow:{max:3,n:2},tx:'Insolence. Chaque fois que tu attaques avec une créature qui coûte 3 ou moins, le héros adverse subit 2 dégâts.'}]};
+  {r:3,st:'Capitaine du rush',c:3,a:3,h:3,kw:['insolence'],atkLow:{max:4,n:2},tx:'Insolence. Chaque fois que tu attaques avec une créature qui coûte 4 ou moins, le héros adverse subit 2 dégâts.'}]};
 const BASEK=Object.keys(BASES);
 
 const CARDS={};
@@ -2989,7 +2989,7 @@ function attack(G,s,i,t){
   if(trainOk(G,s,i,t)){A.a+=1;A.h+=1;lg(G,{t:'buff',ts:s,i,k:A.k,ba:1,bh:1})}
   const L=fl(G,s),EA=eff(G,s,i,L),xa={ss:s,si:i,src:A.k,sid:A.id};
   const as=snap(G,s,i);
-  if(CARDS[A.k].c<=3){G.p[s].board.forEach((b,j)=>{const bd=b&&CARDS[b.k];if(bd&&bd.atkLow&&!b.mut&&!G.over)heroHit(G,e,bd.atkLow.n,b.k,false,{ss:s,si:j,src:b.k})});if(G.over)return}   // Le Coach : 2 dégâts au héros adverse
+  if(CARDS[A.k].c<=4){G.p[s].board.forEach((b,j)=>{const bd=b&&CARDS[b.k];if(bd&&bd.atkLow&&!b.mut&&!G.over)heroHit(G,e,bd.atkLow.n,b.k,false,{ss:s,si:j,src:b.k})});if(G.over)return}   // Le Coach : 2 dégâts au héros adverse
   if(t.i<0){
     const n=EA.a,hp0=G.p[e].hp;heroHit(G,e,n,A.k,true);lg(G,{t:'atk',k:A.k,i,ts:e,ti:-1,to:'hero',n,r:0,as,hp0});
     if(EA.kw.siphon)heal(G,s,n,A.k);
