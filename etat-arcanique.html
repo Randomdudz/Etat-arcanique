@@ -4227,8 +4227,8 @@ function cellHover(s,i,tg,on){
   if(!on)return;
   const V=DUEL.V,P=V.p[s];
   let L=[];
-  // Seule l'action/carte Blizzard active l'overlay multi-cases
-const isBliz = (tg==='ecell' && V.sp && (V.sp.t==='blizzard' || V.sp.st==='La reine des neiges' || V.sp.k==='reine_des_neiges'));
+  // Tout ce qui est en 'ecell' fait un Blizzard/multi-cases, SAUF si c'est Rasta
+const isBliz = (tg === 'ecell' && (!V.sp || (V.sp.k !== 'rasta' && V.sp.src !== 'rasta' && (!V.sp.cry || !V.sp.cry.some(eff => eff.k === 'poutch')))));
   if(isBliz){
     const n=TD.blizzard.size,st=Math.max(0,Math.min(i,CELLS-n));
     for(let j=st;j<st+n;j++)L.push(j);
