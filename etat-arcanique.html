@@ -1955,7 +1955,7 @@ kirua:{n:'Kirua',fac:['alien','vestige'],sc:{wow:0,dofus:2,lol:0,cs:2},sym:'❄'
   {r:2,st:'La panthère',c:4,a:3,h:4,kw:['hate','tilt'],tilt:[{t:'dmgFace',n:2}],tx:'Hâte. Tilt : inflige 2 dégâts au héros adverse.'},
   {r:3,st:'La reine des neiges',c:5,a:3,h:4,cry:[{t:'blizzard',tg:'ecell'}],tx:'Cri d’arrivée : pose le terrain Blizzard (2 cases) où tu veux sur le plateau adverse : les créatures dessus ne peuvent pas attaquer. Il ne peut être ni détruit ni recouvert, disparaît quand elle meurt et dort tant qu’elle est Mute.'}]},
 rasta:{n:'Rasta',fac:['ravages','vestige'],sc:{wow:0,dofus:2,lol:0,cs:1},sym:'☁',col:'#91ab64',lore:'On le sent arriver avant de le voir. Quand on lui dit « viens dehors », il le prend au pied de la lettre.',v:[
-  {r:1,st:'Fardeau pour l’équipe',c:2,a:2,h:3,cry:[{t:'sumE',k:'poutch',tg:'ecell'}],tx:'Cri d’arrivée : invoque un Poutch 0/4 sur la case adverse de ton choix.'},
+  {r:1,st:'Fardeau pour l’équipe',c:2,a:2,h:3,cry:[{t:'sumE',k:'poutch'}],tx:'Cri d’arrivée : invoque un Poutch 0/4 sur le plateau adverse.'},
   {r:2,st:'Viens dehors',c:3,a:3,h:3,cry:[{t:'summon',k:'piccolo',n:1,if:{gt:1}},{t:'tdestroy',self:1,here:1,if:{gt:1}}],tx:'Cri d’arrivée : s’il est posé sur un terrain de jeu, détruit ce terrain et invoque Piccolo (Extraterritorial 2/3, Siphon).'},
   {r:3,st:'Aura nauséabonde',c:6,a:4,h:5,noPz:1,cry:[{t:'pzEvery',n:2}],sot:[{t:'pzAll',n:1}],tx:'Insensible au Venin. Cri d’arrivée : 2 Venin à toutes les autres créatures. Début de ton tour : 1 Venin à tous les ennemis.'}]},
 natingaz:{n:'Natinganz',fac:['weebos'],sc:{wow:2,dofus:1,lol:1,cs:0},sym:'⌨',col:'#ada398',lore:'Privé d’ordinateur : chaque fois qu’il s’approche d’un jeu, ça fait mal, mais il en tire toujours quelque chose.',v:[
@@ -2306,13 +2306,13 @@ function eff(G,s,i,L){
   const cu=custOn(G,s,i,c);let a=(cu?1:c.a)+(c.ta||0),h=cu?1:c.h;
   const T=terrOf(G,s,i),TE=tfxC(T,c);
   if(TE){const m=tMul(G,s,T);a+=(TE.a||0)*m;h+=(TE.h||0)*m;
-    if(TE.duo&&P.board.some((b,j)=>b&&j!==i&&P.cells[j]===P.cells[i]))a+=(TE.duo.a||0)*m}   // Arène 2v2
+    if(TE.duo&&P.board.some((b,j)=>b&&j!==i&&P.cells[j]===P.cells[i]))a+=(TE.duo.a||0)*m}   // Arène 2v2 : une autre de tes créatures sur l'arène
   if(T&&!c.mut&&cd.gr&&cd.gr.g===TD[T.d].g){a+=cd.gr.a;h+=cd.gr.h}
-  if(T&&P.arts&&P.arts.length&&TD[T.d].g==='dofus'){if(hasArt(P,'pourpre'))a+=2;if(hasArt(P,'emeraude'))h+=2}   // Dofus
+  if(T&&P.arts&&P.arts.length&&TD[T.d].g==='dofus'){if(hasArt(P,'pourpre'))a+=2;if(hasArt(P,'emeraude'))h+=2}   // Dofus Pourpre et Émeraude
   if(hasFC(c,'weebos')&&(L.weebos||0)>=2)h+=1;
-  if(hasFC(c,'vestige')&&(L.vestige||0)>=2)h+=Math.floor(L.vestige/2);   // Vestiges
-  if(!c.mut&&cd.withB&&P.board.some(b=>b&&b!==c&&CARDS[b.k].base===cd.withB.b)){a+=cd.withB.a;h+=cd.withB.h}   // Maki
-  if(!c.mut&&cd.allFamActive&&P.board){const fams=new Set();P.board.forEach(b=>{if(b&&CARDS[b.k]&&CARDS[b.k].fac&&Array.isArray(CARDS[b.k].fac))CARDS[b.k].fac.forEach(f=>{if(f)fams.add(f)})});a+=fams.size;h+=fams.size}
+  if(hasFC(c,'vestige')&&(L.vestige||0)>=2)h+=Math.floor(L.vestige/2);   // Vestiges : +1 PV par paire de Vestiges
+  if(!c.mut&&cd.withB&&P.board.some(b=>b&&b!==c&&CARDS[b.k].base===cd.withB.b)){a+=cd.withB.a;h+=cd.withB.h}   // Maki : +1/+2 avec un Osiris
+  if(!c.mut&&cd.allFamActive){const fams=new Set();P.board.forEach(b=>{if(b&&CARDS[b.k].fac)CARDS[b.k].fac.forEach(f=>fams.add(f))});a+=fams.size;h+=fams.size}
   const au=auraOf(G,s,i,c);a+=au.a;h+=au.h;
   return{a:a<0?0:a,h,hp:h-c.dm,kw:kwOf(G,s,c,L,TE,T),T,TE,cu}}
 // valeur approximative d'un effet de terrain (IA)
@@ -2581,7 +2581,7 @@ const OPS={
   disc(G,op,x){for(const s of(op.both?[0,1]:[1-x.s])){const P=G.p[s];for(let j=0;j<op.n&&P.hand.length;j++){const c=P.hand.splice(ri(G,P.hand.length),1)[0];toGrave(P,c);lg(G,{t:'disc',ts:s,k:c.k})}}},
   add(G,op,x){give(G,x.s,op.k,op.n)},
   summon(G,op,x){const n=srcSlot(G,x);for(let j=0;j<op.n;j++)summon(G,x.s,op.k,{near:n})},
-  sumE(G,op,x){const i=x.tg&&x.tg.s===1-x.s?x.tg.i:null;summon(G,1-x.s,op.k,{at:i,near:i,o:1-x.s})},                                                        // Rasta : un Poutch sur le plateau adverse
+  sumE(G,op,x){summon(G,1-x.s,op.k,{o:1-x.s})},                                                        // Rasta : un Poutch sur le plateau adverse
   buff(G,op,x){
     const ap=(s,i)=>{const c=G.p[s].board[i];if(!c)return;c.a=Math.max(0,c.a+op.a);c.h+=op.h;lg(G,{t:'buff',ts:s,i,k:c.k,ba:op.a,bh:op.h})};
     if(op.self){const i=selfI(G,x);if(i>=0)ap(x.s,i);return}
