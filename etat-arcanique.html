@@ -1964,7 +1964,7 @@ natingaz:{n:'Natinganz',fac:['weebos'],sc:{wow:2,dofus:1,lol:1,cs:0},sym:'⌨',c
   {r:3,st:'J’ai dl le boss',c:5,a:2,h:6,laser:6,tx:'Au début de chaque tour (adverse compris), se déplace d’une case vers la droite : un LASER géant inflige 6 dégâts à la case qu’il quitte et à la créature en face. S’il ne peut pas bouger, c’est lui qui prend le laser.'}]},
 gobi:{n:'Gobi',fac:['farmer','ravages'],sc:{wow:2,dofus:2,lol:0,cs:0},sym:'⚔',col:'#9f5b49',lore:'Il a vaincu Sludgefist. Il mène sa troupe de gogoles au combat, sans trop savoir dans quelle direction.',v:[
   {r:1,st:'Chef des gogoles',c:2,a:2,h:2,kw:['deso'],cry:[{t:'hurtSelf',n:1},{t:'summon',k:'gogole',n:2}],tx:'Désorienté. Cri d’arrivée : subit 1 dégât et invoque 2 Gogoles 1/1 Désorientés.'},
-  {r:2,st:'Slayer of Sludgefist',c:4,a:4,h:3,save1:1,tx:'La première fois qu’il devrait mourir, il reste à 1 PV et devient invincible jusqu’au début de ton prochain tour.'},
+  {r:2,st:'Slayer of Sludgefist',c:4,a:4,h:3,kw:['respawn'],tx:'Respawn (La première fois qu’il meurt, il réapparaît).'},
   {r:3,st:'Collectionneur de Dofus',c:6,a:5,h:5,cry:[{t:'dofus'}],tx:'Cri d’arrivée : obtiens un Dofus légendaire au hasard (artefact) : Pourpre, Ocre, Émeraude, Vulbis, Turquoise ou Cawotte.'}]},
 lanfear:{n:'Lanfear',fac:['toxic','vestige'],sc:{wow:1,dofus:1,lol:1,cs:0},sym:'🎙',col:'#a288d2',lore:'Son micro grésille tellement que plus personne ne sait où il en est.',v:[
   {r:1,st:'Vapoteuse insoutenable',c:2,a:1,h:3,eot:[{t:'pzRnd',n:1,k:1}],tx:'Fin de ton tour : 1 Venin à une créature ennemie au hasard.'},
@@ -2522,8 +2522,8 @@ function reap(G){
     outer:for(const s of [G.cur,1-G.cur]){const L=fl(G,s);for(let i=0;i<CELLS;i++){const c=G.p[s].board[i];if(c&&!c.pd){const E=eff(G,s,i,L);if(E.hp<=0){d={s,i,c,E};break outer}}}}
     if(!d)break;
     const{s,i,c,E}=d,cd=CARDS[c.k],P=G.p[s];
-    if(E.h>0&&(c.inv||(!c.mut&&cd.save1&&!c.sv))){                             // Gobi : la première fois, il reste à 1 PV et devient invincible
-      if(!c.inv){c.sv=1;c.inv=1;lg(G,{t:'save',ts:s,i,k:c.k})}c.dm=Math.max(0,E.h-1);continue}
+    if(E.h>0&&(c.inv||c.rsp)){                             
+      if(!c.inv){c.inv=1;}c.dm=Math.max(0,E.h-1);continue}
     const OP=G.p[c.o!=null?c.o:s];removeC(G,s,i,false);if(!c.sm)toGrave(OP,c);syncMute(G);lockSweep(G);   // au cimetière de son propriétaire
     const oppT=G.cur!==s;
     P.board.forEach((b,j)=>{if(!b||b.mut)return;const bd=CARDS[b.k];
@@ -3039,7 +3039,7 @@ function cval(G,s,i,W,L){
   if(k.rempart)v+=1+hp*.15;if(k.venin)v+=.6+k.venin*.5+E.a*.2;if(k.siphon)v+=E.a*.35;if(k.hate)v+=.3;
   if(c.eg)v+=1.8;if(k.croissance)v+=2.2;if(k.frenesie)v+=E.a*.9;if(k.tilt)v+=.8;if(k.afk&&!c.aw)v+=.8;
   if(k.insolence)v+=1.2;if(k.respawn&&(c.rsp||!c.rs))v+=1.6;if(k.vip)v+=1.2;if(k.deso)v-=.5;if(c.inv)v+=3;if(k.cleave)v+=k.cleave*.7;
-  if(!c.mut){if(cd.aura)v+=2;if(cd.tax)v+=.8;if(cd.noRet)v+=E.a*.3;if(cd.save1&&!c.sv)v+=2;if(cd.xatk)v+=.6;if(cd.dblLol)v+=1;if(cd.killGrow||cd.allyDieAff)v+=.8;if(cd.noTaunt)v+=.4+E.a*.25;if(cd.noTauntAll)v+=2.5;if(cd.faceHit)v+=1;if(cd.kwAura)v+=1.5;if(cd.killLoot)v+=1.2;if(cd.healGrow)v+=.4;if(cd.pzBack)v+=.6}
+  if(!c.mut){if(cd.aura)v+=2;if(cd.tax)v+=.8;if(cd.noRet)v+=E.a*.3;if(cd.xatk)v+=.6;if(cd.dblLol)v+=1;if(cd.killGrow||cd.allyDieAff)v+=.8;if(cd.noTaunt)v+=.4+E.a*.25;if(cd.noTauntAll)v+=2.5;if(cd.faceHit)v+=1;if(cd.kwAura)v+=1.5;if(cd.killLoot)v+=1.2;if(cd.healGrow)v+=.4;if(cd.pzBack)v+=.6}
   if(c.xat)v+=E.a*.8*c.xat;
   if(c.ta)v-=c.ta*W.atk*.75;
   if(!c.mut&&cd.last&&cd.last.some(o=>o.t==='lose')){let th=0;for(const b of G.p[1-s].board)if(b&&!b.blk&&!b.mut)th+=Math.max(0,b.a);v-=th>=hp?28:40/(hp+1)}           // Dreos (surrender to madness) : s'il meurt, son camp perd ; plus il est blessé, plus c'est risqué                                   // ATK temporaire (Gatekeeping, Flash) : seulement pour ce tour
