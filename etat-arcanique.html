@@ -2267,17 +2267,19 @@ function runT(G,s,T,l,x){const n=tMul(G,s,T);for(let j=0;j<n&&!G.over;j++)runFx(
 // auras des créatures en jeu (Xulyes, Minuit, Homz, Saja) : bonus reçu par la créature c en (s,i)
 function auraOf(G,s,i,c){let a=0,h=0;
   for(const t of[0,1]){const B=G.p[t].board;for(let j=0;j<CELLS;j++){const b=B[j];if(!b||b.mut)continue;const au=CARDS[b.k].aura;if(!au)continue;
-    if(au.pos){if(t===s&&j===i)continue;if(i<j){a-=au.pos;h-=au.pos}else if(i>j){a+=au.pos;h+=au.pos}continue}   // Saja : à sa gauche -2/-2, à sa droite +2/+2, sur les deux plateaux
+    if(au.pos){if(t===s&&j===i)continue;if(i<j){a-=au.pos;h-=au.pos}else if(i>j){a+=au.pos;h+=au.pos}continue}
     if(t!==s||(au.others&&j===i))continue;
     if(au.g){
-  if(tgOf(G,s,i)!==au.g)continue;
-  // Si la carte définit un bonus dépendant de l'affinité du terrain
-  const affLvl = affC(c, au.g) || 1; // récupère le niveau d'affinité
-  const mult = au.scale ? affLvl : 1;
-  a += (au.a || 0) * mult;
-  h += (au.h || 0) * mult;
-  continue;
-}
+      if(tgOf(G,s,i)!==au.g)continue;
+      const affLvl = affC(c, au.g) || 1;
+      const mult = au.scale ? affLvl : 1;
+      a += (au.a || 0) * mult;
+      h += (au.h || 0) * mult;
+      continue;
+    }
+    if(au.fac&&!hasF(c.k,au.fac))continue;
+    a+=au.a||0;h+=au.h||0}}
+  return{a,h}}
 // une aura qui disparaît ne tue pas : les PV qu'elle donnait sont retirés des dégâts subis d'abord
 function auraOff(G,s,i){const src=G.p[s].board[i];if(!src||src.mut||!CARDS[src.k].aura)return;
   const before=[[],[]];for(const t of[0,1])G.p[t].board.forEach((c,j)=>{before[t][j]=c?auraOf(G,t,j,c).h:0});
