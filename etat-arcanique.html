@@ -4227,7 +4227,7 @@ function cellHover(s,i,tg,on){
   if(!on)return;
   const V=DUEL.V,P=V.p[s];
   let L=[];
-  const isBliz = (tg==='ecell' && V.sp && V.sp.k !== 'rasta');
+  const isBliz = (tg==='ecell' && (!V.sp || V.sp.t !== 'sumE'));
   if(isBliz){
     const n=TD.blizzard.size,st=Math.max(0,Math.min(i,CELLS-n));
     for(let j=st;j<st+n;j++)L.push(j);
