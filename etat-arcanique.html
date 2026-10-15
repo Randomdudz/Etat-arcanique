@@ -4103,7 +4103,9 @@ function hintText(){
     if(cd.t==='c')return bigTerrOf(cd.k)?'Choisis sa case : '+bigTerrOf(cd.k).n+' recouvrira tout ton plateau':'Clique sur un emplacement libre (ou glisse la carte)';
     return cryTg(cd)?'Choisis une cible':'Clique à nouveau sur la carte pour la jouer'}
   if(s.t==='sp2')return 'Choisis la cible à soigner de 3 PV : un héros ou une créature (pas la cible des dégâts)';
-  if(s.t==='cry'&&s.sp.tg==='ecell')return 'Choisis où poser le Blizzard sur le plateau adverse : survole une case pour voir les 2 cases couvertes';
+  if(s.t==='cry'&&s.sp.tg==='ecell'){
+  if(s.sp.t==='blizzard') return 'Choisis où poser le Blizzard sur le plateau adverse : survole une case pour voir les 2 cases couvertes';
+  return 'Choisis un emplacement sur le plateau adverse';}
   if(s.t==='cry'&&s.sp.tg==='eterr')return 'Choisis le terrain adverse à désactiver';
   if(s.t==='cry'&&s.sp.tg==='terr')return 'Choisis le terrain à désactiver : un des tiens ou un de l’adversaire';
   if(s.t==='cry')return s.t1?'Choisis ta créature à échanger (ou sa propre case pour l’échanger lui-même)':s.sp.tg2?'Choisis la créature ennemie à prendre':'Choisis la cible du Cri d’arrivée';
@@ -4219,12 +4221,32 @@ function boardNodes(s,ids){
   return out}
 
 // cible « case » : aperçu des cases que le Blizzard couvrirait, ou du terrain qui serait désactivé
-function cellHover(s,i,tg,on){$$('#duel .slot.cellh').forEach(x=>x.classList.remove('cellh'));$$('#duel .tcell.pv.cpv').forEach(x=>x.remove());if(!on)return;const V=DUEL.V,P=V.p[s];let L=[];
-  if(tg==='ecell'){const n=TD.blizzard.size,st=Math.max(0,Math.min(i,CELLS-n));for(let j=st;j<st+n;j++)L.push(j)}else{const id=P.cells[i];P.cells.forEach((x,j)=>{if(id&&x===id)L.push(j)})}
-  for(const j of L){const e=$('#duel .slot[data-s="'+s+'"][data-i="'+j+'"]');if(e)e.classList.add('cellh')}
-  // aperçu exact sur la bande des terrains : le Blizzard couvrira ces cases-là
-  const st=$(s===V.me?'#tMe':'#tOpp');if(st&&L.length){const td=tg==='ecell'?TD.blizzard:null;
-    st.append(h('div',{class:'tcell pv cpv',style:'grid-row:1;grid-column:'+(L[0]+1)+' / span '+L.length+';z-index:4;--gc:'+(td?'#9cc8e8':'#c15c58')},td?'❄ Blizzard : cases '+(L[0]+1)+'–'+(L[L.length-1]+1):'⛔ Désactiver ce terrain'))}}
+function cellHover(s,i,tg,on){
+  $$('#duel .slot.cellh').forEach(x=>x.classList.remove('cellh'));
+  $$('#duel .tcell.pv.cpv').forEach(x=>x.remove());
+  if(!on)return;
+  const V=DUEL.V,P=V.p[s];
+  let L=[];
+  const isBliz = (tg==='ecell' && V.sp && V.sp.t==='blizzard');
+  if(isBliz){
+    const n=TD.blizzard.size,st=Math.max(0,Math.min(i,CELLS-n));
+    for(let j=st;j<st+n;j++)L.push(j);
+  }else if(tg==='ecell'){
+    L.push(i);
+  }else{
+    const id=P.cells[i];
+    P.cells.forEach((x,j)=>{if(id&&x===id)L.push(j)});
+  }
+  for(const j of L){
+    const e=$('#duel .slot[data-s="'+s+'"][data-i="'+j+'"]');
+    if(e)e.classList.add('cellh');
+  }
+  const st=$(s===V.me?'#tMe':'#tOpp');
+  if(st&&L.length&&isBliz){
+    const td=TD.blizzard;
+    st.append(h('div',{class:'tcell pv cpv',style:'grid-row:1;grid-column:'+(L[0]+1)+' / span '+L.length+';z-index:4;--gc:#9cc8e8'},'❄ Blizzard : cases '+(L[0]+1)+'–'+(L[L.length-1]+1)));
+  }
+}
 // une carte qui pose un terrain sur tout ton plateau (Le Grand Bazaar, Éco village) : aperçu pendant qu'on choisit sa case
 function bigTerrOf(k){const cd=CARDS[k];if(!cd||!cd.cry)return null;for(const o of cd.cry)if(o.t==='gbazar'||o.t==='eco')return TD[o.t];return null}
 function bigTerrPreview(k,on){$$('#tMe .tcell.pv.bigpv').forEach(x=>x.remove());const td=on&&bigTerrOf(k),st=$('#tMe');if(!td||!st)return;
