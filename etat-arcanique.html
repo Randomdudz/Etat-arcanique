@@ -2301,14 +2301,18 @@ function kwOf(G,s,c,L,TE,T){
 // Laloutre (démon de la custom) : sur un terrain de jeu, les autres créatures posées sur un terrain du même jeu ont 1 ATK et 1 PV de base
 function custOn(G,s,i,c){const g=tgOf(G,s,i);if(!g||g==='bazar')return false;
   for(const t of[0,1]){const B=G.p[t].board;for(let j=0;j<CELLS;j++){const b=B[j];if(b&&b!==c&&!b.mut&&CARDS[b.k].custom&&tgOf(G,t,j)===g)return true}}return false}
-if(!c.mut&&cd.allFamActive&&P.board){const fams=new Set();P.board.forEach(b=>{if(b&&CARDS[b.k]&&CARDS[b.k].fac&&Array.isArray(CARDS[b.k].fac))CARDS[b.k].fac.forEach(f=>{if(f)fams.add(f)})});a+=fams.size;h+=fams.size}
-    if(TE.duo&&P.board.some((b,j)=>b&&j!==i&&P.cells[j]===P.cells[i]))a+=(TE.duo.a||0)*m}   // Arène 2v2 : une autre de tes créatures sur l'arène
+function eff(G,s,i,L){
+  const P=G.p[s],c=P.board[i],cd=CARDS[c.k];L=L||fl(G,s);
+  const cu=custOn(G,s,i,c);let a=(cu?1:c.a)+(c.ta||0),h=cu?1:c.h;
+  const T=terrOf(G,s,i),TE=tfxC(T,c);
+  if(TE){const m=tMul(G,s,T);a+=(TE.a||0)*m;h+=(TE.h||0)*m;
+    if(TE.duo&&P.board.some((b,j)=>b&&j!==i&&P.cells[j]===P.cells[i]))a+=(TE.duo.a||0)*m}   // Arène 2v2
   if(T&&!c.mut&&cd.gr&&cd.gr.g===TD[T.d].g){a+=cd.gr.a;h+=cd.gr.h}
-  if(T&&P.arts&&P.arts.length&&TD[T.d].g==='dofus'){if(hasArt(P,'pourpre'))a+=2;if(hasArt(P,'emeraude'))h+=2}   // Dofus Pourpre et Émeraude
+  if(T&&P.arts&&P.arts.length&&TD[T.d].g==='dofus'){if(hasArt(P,'pourpre'))a+=2;if(hasArt(P,'emeraude'))h+=2}   // Dofus
   if(hasFC(c,'weebos')&&(L.weebos||0)>=2)h+=1;
-  if(hasFC(c,'vestige')&&(L.vestige||0)>=2)h+=Math.floor(L.vestige/2);   // Vestiges : +1 PV par paire de Vestiges
-  if(!c.mut&&cd.withB&&P.board.some(b=>b&&b!==c&&CARDS[b.k].base===cd.withB.b)){a+=cd.withB.a;h+=cd.withB.h}   // Maki : +1/+2 avec un Osiris
-  if(!c.mut&&cd.allFamActive){const fams=new Set();P.board.forEach(b=>{if(b&&CARDS[b.k].fac)CARDS[b.k].fac.forEach(f=>fams.add(f))});a+=fams.size;h+=fams.size}
+  if(hasFC(c,'vestige')&&(L.vestige||0)>=2)h+=Math.floor(L.vestige/2);   // Vestiges
+  if(!c.mut&&cd.withB&&P.board.some(b=>b&&b!==c&&CARDS[b.k].base===cd.withB.b)){a+=cd.withB.a;h+=cd.withB.h}   // Maki
+  if(!c.mut&&cd.allFamActive&&P.board){const fams=new Set();P.board.forEach(b=>{if(b&&CARDS[b.k]&&CARDS[b.k].fac&&Array.isArray(CARDS[b.k].fac))CARDS[b.k].fac.forEach(f=>{if(f)fams.add(f)})});a+=fams.size;h+=fams.size}
   const au=auraOf(G,s,i,c);a+=au.a;h+=au.h;
   return{a:a<0?0:a,h,hp:h-c.dm,kw:kwOf(G,s,c,L,TE,T),T,TE,cu}}
 // valeur approximative d'un effet de terrain (IA)
