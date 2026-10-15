@@ -2628,6 +2628,7 @@ const OPS={
   combo(G,op,x){const i=selfI(G,x);if(i<0)return;const n=Math.min(x.pc||0,op.max||99);if(n<=0)return;
     const c=G.p[x.s].board[i];c.a+=op.a*n;c.h+=op.h*n;lg(G,{t:'buff',ts:x.s,i,k:c.k,ba:op.a*n,bh:op.h*n})},
   wipe(G,op,x){for(const s of[0,1])G.p[s].board.forEach(c=>{if(c&&!(x.self&&c.id===x.self.id))c.dm+=99999})},   // détruit toutes les autres créatures (leurs Agonies se déclenchent)
+  exil(G,op,x){const i=op.tg==='right'?x.i+1:(op.tg==='left'?x.i-1:x.i),B=G.p[x.s].board;if(B[i]&&!B[i].ex){B[i].ex=1;lg(G,{t:'exil',ts:x.s,i,k:B[i].k,n:0})}},
   // ----- effets ajoutés avec les nouvelles cartes -----
   taunt(G,op,x){const i=selfI(G,x);if(i<0)return;const c=G.p[x.s].board[i];if(c.tr)return;c.tr=1;lg(G,{t:'kwg',ts:x.s,i,k:c.k,kw:'rempart'})},
   healT(G,op,x){G.p[x.s].board.forEach((c,i)=>{if(c&&tgOf(G,x.s,i)===op.g)healC(G,x.s,i,op.n)})},                  // tes créatures sur un terrain du jeu op.g
