@@ -1,20 +1,45 @@
-# Notes de mise à jour 3.9
+# L’État Arcanique — Mise à jour 3.9
 
-## Arène
+## Une Arène repensée
 
-- La course d’Arène va jusqu’à 9 victoires, avec des récompenses progressives.
-- Tu peux affronter l’IA, défier un ami ou chercher un adversaire humain dans la file.
-- La recherche d’un match humain est visible, peut être annulée et expire après 5 minutes ; tu peux ensuite la relancer.
-- Après une défaite non éliminatoire, tu conserves ton deck : tu choisis d’abord 5 nouvelles cartes, puis les 5 cartes qu’elles remplaceront.
-- Les cartes remplacées gardent leur place dans le deck.
-- Les decks adverses de l’IA gagnent en rareté aux paliers 4 et 7.
+Lance-toi dans une course pouvant aller jusqu’à **9 victoires** avant **3 défaites**. Tu peux jouer contre l’IA, défier un ami ou chercher un autre joueur humain.
 
-## Améliorations de cartes et de boutique
+### Rédraft après une défaite
 
-- Kiwi ne possède plus Hâte.
-- Le Coach Capitaine du Rush cible de nouveau les créatures qui coûtent 3 ou moins.
-- Un terrain déjà présent sur un plateau ne peut pas réapparaître dans la boutique.
+Après une défaite qui ne met pas fin à ta course, tu gardes ton deck. Tu choisis d’abord **5 nouvelles cartes**, une parmi trois propositions à chaque choix, puis tu sélectionnes les **5 cartes de ton deck** qu’elles vont remplacer. Les cartes remplacées gardent leur position dans le deck.
 
-## Interface
+### Des adversaires et des récompenses qui montent en puissance
 
-- Les actions principales de l’Arène reprennent le fond de la tuile Arène du menu, sans pictogrammes devant leur texte.
+- Les decks de l’IA s’enrichissent en raretés aux paliers **4** et **7**.
+- Les récompenses augmentent avec tes victoires :
+
+| Victoires | Récompense |
+|---:|---:|
+| 0 | 40 💎 |
+| 1 | 65 💎 |
+| 2 | 95 💎 |
+| 3 | 135 💎 |
+| 4 | 185 💎 |
+| 5 | 250 💎 |
+| 6 | 335 💎 |
+| 7 | 445 💎 |
+| 8 | 580 💎 |
+| 9 | 750 💎 |
+
+### File de matchmaking humain
+
+- Lance une recherche pour être associé à un autre joueur en attente.
+- Un statut visible indique que tu es dans la file ; tu peux annuler la recherche.
+- Chaque recherche dure au maximum **5 minutes**. Si aucun match n’est trouvé, tu peux la relancer.
+- La file nécessite un compte Firebase en ligne et la configuration Firestore du jeu.
+
+## Ajustements de cartes et de boutique
+
+- **Kiwi** n’a plus **Hâte**.
+- **Coach Capitaine du Rush** retrouve sa condition : il concerne les créatures qui coûtent **3 ou moins**.
+- Un terrain déjà présent sur un plateau ne peut plus réapparaître dans la boutique.
+
+## Finition de l’interface
+
+- Les boutons principaux de l’Arène reprennent le fond de la tuile Arène du menu.
+- Les pictogrammes ont été retirés de ces boutons pour laisser les libellés bien lisibles.
