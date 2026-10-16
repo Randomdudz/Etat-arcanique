@@ -1,8 +1,64 @@
-// ============ ARÈNE : draft de 30 cartes (1 parmi 3), duels contre amis ou IA ============
+// ============ ARÈNE : draft de 30 cartes (1 parmi 3), duels contre l’IA ou matchmaking ============
 // Entrée : 100 💎. Chaque choix propose 3 cartes de la même rareté, tirées avec les mêmes chances pour tout le monde
 // (indépendamment de la collection) ; la graine est fixée à l'entrée : recharger la page ne relance pas les choix.
 // Les limites d'exemplaires ne comptent pas. À chaque défaite non éliminatoire, cinq cartes du deck peuvent être remplacées.
 const ARENA={cost:100,picks:30,redraft:5,maxW:9,maxL:3,rw:[40,65,95,135,185,250,335,445,580,750],odds:[0,69.5,24,6.5]};
+const ARENA_LB={week:'',rows:null,at:0,loading:false,error:''};
+function arenaWeekKey(now=new Date()){const d=new Date(Date.UTC(now.getUTCFullYear(),now.getUTCMonth(),now.getUTCDate()));d.setUTCDate(d.getUTCDate()-(d.getUTCDay()+6)%7);return d.toISOString().slice(0,10)}
+function arenaWeekLabel(key){const start=new Date(key+'T00:00:00Z'),end=new Date(start);end.setUTCDate(end.getUTCDate()+6);
+  const fmt=new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'short',timeZone:'UTC'});return fmt.format(start)+' – '+fmt.format(end)}
+function arenaLeaderboardUrl(week){return'https://firestore.googleapis.com/v1/projects/'+encodeURIComponent(CLOUD.projectId)+'/databases/(default)/documents/arenaWeeks/'+encodeURIComponent(week)}
+function arenaLeaderboardDoc(row){const f=row.document.fields||{},v=k=>f[k]&&(f[k].stringValue||f[k].integerValue)||'';
+  const ai=+v('winsAI')||0,human=+v('winsHuman')||0;return{uid:String(v('uid')),pseudo:String(v('pseudo')||'Joueur').slice(0,18),ai,human,total:(+v('total')||ai+human)}}
+function arenaLeaderboardRender(){
+  const el=$('#arenaLeaderboard');if(!el)return;
+  const title='Classement · '+arenaWeekLabel(ARENA_LB.week),refresh=h('button',{class:'btn sm',onclick:()=>arenaLeaderboardLoad(true)},'Actualiser');
+  const rows=ARENA_LB.rows;
+  el.replaceChildren(h('div',{class:'albh'},h('h3',null,title),refresh),
+    ARENA_LB.loading?h('p',{class:'sm mut'},'Chargement du classement…'):
+    ARENA_LB.error?h('div',{class:'sm'},h('p',{class:'lb-error'},'Classement indisponible : '+ARENA_LB.error),h('button',{class:'btn sm',onclick:()=>arenaLeaderboardLoad(true)},'Réessayer')):
+    !rows||!rows.length?h('p',{class:'sm mut'},'Aucune victoire enregistrée cette semaine. Connecte-toi à un compte pour inscrire tes victoires.'):
+    h('div',{class:'alblist'},rows.map((r,i)=>h('div',{class:'alborrow'},
+      h('b',{class:'albrank'},String(i+1)),h('b',{class:'albpseudo'},r.pseudo),h('b',{class:'albtot'},r.total+' V'),
+      h('span',{class:'albsplit'},'IA '+r.ai+' · Joueurs '+r.human)))));
+}
+async function arenaLeaderboardLoad(force){
+  const week=arenaWeekKey();
+  if(ARENA_LB.week!==week){Object.assign(ARENA_LB,{week,rows:null,at:0,error:''})}
+  if(!cloudOn()){ARENA_LB.error='Le classement nécessite la configuration Firebase.';arenaLeaderboardRender();return}
+  if(ARENA_LB.loading)return;
+  if(!force&&ARENA_LB.rows&&Date.now()-ARENA_LB.at<60000){arenaLeaderboardRender();return}
+  ARENA_LB.loading=true;ARENA_LB.error='';arenaLeaderboardRender();
+  try{
+    const headers={'Content-Type':'application/json'};if(ACC)headers.Authorization='Bearer '+await accTok();
+    const url=arenaLeaderboardUrl(week)+':runQuery?key='+encodeURIComponent(CLOUD.apiKey),rows=await accFetch(url,{method:'POST',headers,
+      body:JSON.stringify({structuredQuery:{from:[{collectionId:'players'}],orderBy:[{field:{fieldPath:'total'},direction:'DESCENDING'}],limit:10}})});
+    if(ARENA_LB.week!==week)return;
+    ARENA_LB.rows=rows.filter(x=>x.document).map(arenaLeaderboardDoc).filter(x=>x.total>0)
+      .sort((a,b)=>b.total-a.total||b.human-a.human||a.pseudo.localeCompare(b.pseudo)).slice(0,10);
+    ARENA_LB.at=Date.now();
+  }catch(e){console.error(e);if(ARENA_LB.week===week)ARENA_LB.error=e.message==='Serveur injoignable (connexion internet ?).'
+    ?'Impossible de joindre Firestore depuis cette page. Vérifie les règles du classement et teste depuis GitHub Pages, pas depuis un fichier local.'
+    :e.message}
+  finally{ARENA_LB.loading=false;if(ARENA_LB.week===week)arenaLeaderboardRender()}
+}
+function arenaLeaderboardPanel(){const panel=h('div',{class:'panel arena-lb',id:'arenaLeaderboard'});
+  Promise.resolve().then(()=>arenaLeaderboardLoad(false));return panel}
+async function arenaWeeklyRecord(mode){
+  if(!ACC||!cloudOn()){toast('Victoire non inscrite au classement : connecte-toi à un compte en ligne.');return}
+  try{
+    const week=arenaWeekKey(),uid=ACC.uid,pseudo=String(S.name||ACC.id||'Joueur').trim().slice(0,18)||'Joueur',tok=await accTok(),
+      docName=arenaLeaderboardUrl(week)+'/players/'+encodeURIComponent(uid),
+      url='https://firestore.googleapis.com/v1/projects/'+encodeURIComponent(CLOUD.projectId)+'/databases/(default)/documents:commit?key='+encodeURIComponent(CLOUD.apiKey),
+      transforms=[{fieldPath:'total',increment:{integerValue:'1'}},
+        {fieldPath:mode==='ai'?'winsAI':'winsHuman',increment:{integerValue:'1'}}];
+    await accFetch(url,{method:'POST',headers:{Authorization:'Bearer '+tok,'Content-Type':'application/json'},
+      body:JSON.stringify({writes:[{update:{name:docName,fields:{uid:{stringValue:uid},pseudo:{stringValue:pseudo}}},
+        updateMask:{fieldPaths:['uid','pseudo']},updateTransforms:transforms}]})});
+    ARENA_LB.week=week;ARENA_LB.rows=null;ARENA_LB.at=0;
+    if($('#arenaLeaderboard'))arenaLeaderboardLoad(true);
+  }catch(e){console.error(e);toast('Victoire non inscrite au classement hebdomadaire : '+e.message)}
+}
 function arenaRng(seed){let t=seed>>>0;return()=>{t=(t+0x6D2B79F5)|0;let r=Math.imul(t^t>>>15,t|1);r^=r+Math.imul(r^r>>>7,r|61);return((r^r>>>14)>>>0)/4294967296}}
 function arenaSeed(){const b=new Uint32Array(1);try{crypto.getRandomValues(b)}catch(e){b[0]=(Math.random()*4294967296)>>>0}return b[0]>>>0}
 // choix n° n (0 à 29) d'une course : {r: rareté, c: [3 cartes différentes]} ; le 1er choix est toujours un choix de légendaires
@@ -33,7 +89,7 @@ function arenaFix(a){a=a&&typeof a==='object'?a:{};const r=a.run;let run=null;
       }}
     run={seed:(+r.seed)>>>0,picks,swap,
       w:Math.min(ARENA.maxW,Math.max(0,r.w|0)),l:Math.min(ARENA.maxL,Math.max(0,r.l|0)),t:+r.t||Date.now(),log:(Array.isArray(r.log)?r.log:[]).slice(-20),
-      cur:r.cur&&typeof r.cur==='object'?{o:String(r.cur.o||'').slice(0,18),t:+r.cur.t||0}:null}}
+      cur:r.cur&&typeof r.cur==='object'?{o:String(r.cur.o||'').slice(0,18),t:+r.cur.t||0,mode:r.cur.mode==='ai'?'ai':'human'}:null}}
   return{run,runs:Math.max(0,a.runs|0),best:Math.max(0,a.best|0),last:a.last&&typeof a.last==='object'?{w:a.last.w|0,l:a.last.l|0,g:a.last.g|0,t:+a.last.t||0}:null}}
 function arenaReady(){const r=S.arena&&S.arena.run;return!!(r&&!r.swap&&r.picks.length>=ARENA.picks)}
 function arenaEnter(){if(S.arena.run)return'Tu as déjà une course en cours.';if(S.gems<ARENA.cost)return'Il te faut '+ARENA.cost+' 💎 pour entrer.';
@@ -52,10 +108,10 @@ function arenaApplyRemoval(){
   const r=S.arena.run;if(!r||!r.swap||r.swap.stage!=='remove'||r.swap.removed.length!==ARENA.redraft||r.swap.replacements.length!==ARENA.redraft)return false;
   const replacements=r.swap.replacements,removed=r.swap.removed.slice().sort((a,b)=>a-b);let next=0;
   r.picks=r.picks.map((k,i)=>i===removed[next]?replacements[next++]:k);r.swap=null;saveS();return true}
-function arenaStart(opp){const r=S.arena.run;if(!r)return;r.cur={o:String(opp||'').slice(0,18),t:Date.now()};saveS()}
+function arenaStart(opp,mode){const r=S.arena.run;if(!r)return;r.cur={o:String(opp||'').slice(0,18),t:Date.now(),mode:mode==='ai'?'ai':'human'};saveS()}
 // résultat d'une partie : 1 victoire, 0 défaite, -1 égalité (ne compte pas)
-function arenaRecord(res,opp){const r=S.arena.run;if(!r)return null;r.cur=null;
-  if(res>=0){if(res)r.w++;else r.l++;r.log.push({o:String(opp||'?').slice(0,18),w:res?1:0,t:Date.now()})}
+function arenaRecord(res,opp){const r=S.arena.run;if(!r)return null;const mode=r.cur&&r.cur.mode==='ai'?'ai':'human';r.cur=null;
+  if(res>=0){if(res){r.w++;arenaWeeklyRecord(mode)}else r.l++;r.log.push({o:String(opp||'?').slice(0,18),w:res?1:0,t:Date.now(),mode})}
   const out={w:r.w,l:r.l,over:false,g:0,redraft:false};
   if(r.w>=ARENA.maxW||r.l>=ARENA.maxL)return Object.assign(out,arenaFinish());
   if(res===0){r.seed=arenaSeed();r.swap={stage:'draft',drafted:0,replacements:[]};out.redraft=true}
@@ -168,14 +224,14 @@ function arenaQueueConnect(peer){
     arenaQueueRender()},
     accepted:(c,m)=>{
       if(!AQ.active||!m.arenaQueue||m.arenaQueueId!==peer.qid||m.arenaOpponentQueueId!==AQ.qid){try{c.send({t:'dec'})}catch(e){}try{c.close()}catch(e){}AQ.started=false;return}
-      arenaQueueClearTimers();arenaStart(peer.pseudo);
+      arenaQueueClearTimers();arenaStart(peer.pseudo,'human');
       AQ.state='playing';arenaQueueRender();arenaQueueWrite('playing',peer).catch(e=>{console.error(e);toast('Le duel démarre, mais le statut de file n’a pas pu être actualisé : '+e.message)});
       startHostDuel(c,m,null,opt)}})}
 function onArenaQueueChallenge(c,m,nm,close){
   const r=AQ.peer,valid=AQ.active&&r&&AQ.qid===m.o.arenaOpponentQueueId&&r.qid===m.o.arenaQueueId&&r.code===m.code;
   if(!valid||!arenaReady()||DUEL){try{c.send({t:'dec',why:'arena'})}catch(e){}close();setTimeout(()=>{try{c.close()}catch(e){}},300);return}
   close();arenaQueueClearTimers();c.on('data',x=>{if(x&&x.t==='st'&&!DUEL){closeModal();beginGuestDuel(c,x.v)}});
-  arenaStart(nm);AQ.state='playing';arenaQueueRender();
+  arenaStart(nm,'human');AQ.state='playing';arenaQueueRender();
   arenaQueueWrite('playing',r).catch(e=>{console.error(e);toast('Le duel démarre, mais le statut de file n’a pas pu être actualisé : '+e.message)});
   c.send({t:'acc',name:S.name,deck:S.arena.run.picks.slice(),arena:1,arenaQueue:1,arenaQueueId:AQ.qid,arenaOpponentQueueId:r.qid,ver:APPV});
   modal(h('div',{style:'text-align:center'},h('h2',null,'Match d’Arène trouvé'),h('p',{class:'mut'},'Le duel contre '+nm+' démarre…')),{sticky:true})}
@@ -194,7 +250,7 @@ function startArenaAIDuel(){
   const r=S.arena.run,tier=Math.min(ARENA.maxW,r.w+1),opp='IA du palier '+tier,
     ai=arenaAIDeck(tier,r.seed^Math.imul(r.w+1,0x9E3779B1)),o=arenaOpt();
   if(ai.deck.length!==ARENA.picks){toast('Impossible de préparer le deck de l’IA pour ce palier. Réessaie.');return}
-  arenaStart(opp);
+  arenaStart(opp,'ai');
   const G=newGame({names:[S.name||'Moi',opp],decks:[r.picks.slice(),ai.deck],seed:arenaSeed(),o,mull:true});
   const Hh=HostGame(G,[{kind:'me'},{kind:'ai',W:WGT[ARCH[ai.arch].w]}],v=>applyView(v));
   newDuelState({mode:'arena-ai',host:Hh,ctl:{act:a=>Hh.act(0,a),resign:()=>Hh.resign(0),close:()=>Hh.close()}});
@@ -216,7 +272,7 @@ function vArena(v){
   arenaCheckStale();const A=S.arena,r=A.run;
   const rules=h('div',{class:'sm mut',style:'line-height:1.55'},
     'Entrée : ',h('b',null,ARENA.cost+' 💎'),'. Tu construis un deck de ',h('b',null,'30 cartes'),' en ',h('b',null,'30 choix'),' : à chaque fois, garde 1 carte parmi 3 de la même rareté. ',
-    'Les limites d’exemplaires ne comptent pas. Ensuite, affronte un ami ou l’IA : ses decks gagnent en rareté aux paliers 4 et 7. La course s’arrête à ',h('b',null,ARENA.maxW+' victoires'),' ou ',h('b',null,ARENA.maxL+' défaites'),'. Après une défaite non éliminatoire, garde ton deck : choisis d’abord ',h('b',null,ARENA.redraft+' remplaçantes'),' (1 parmi 3 pour chacune), puis sélectionne les cartes qu’elles remplaceront.',
+    'Les limites d’exemplaires ne comptent pas. Ensuite, affronte l’IA ou cherche un joueur avec le matchmaking : les decks de l’IA gagnent en rareté aux paliers 4 et 7. La course s’arrête à ',h('b',null,ARENA.maxW+' victoires'),' ou ',h('b',null,ARENA.maxL+' défaites'),'. Après une défaite non éliminatoire, garde ton deck : choisis d’abord ',h('b',null,ARENA.redraft+' remplaçantes'),' (1 parmi 3 pour chacune), puis sélectionne les cartes qu’elles remplaceront.',
     h('br'),'Mêmes chances pour tout le monde : commune '+ARENA.odds[1]+' %, rare '+ARENA.odds[2]+' %, légendaire '+ARENA.odds[3]+' % par choix (le 1er choix est toujours un choix de légendaires), sans tenir compte de ta collection. Les choix sont fixés dès l’entrée : recharger la page ne les change pas. Une partie quittée avant la fin compte comme une défaite.');
   const head=h('div',{class:'panel hl v-arena'},ph('play','Arène',r?r.w+' V · '+r.l+' D':(A.best?'Record : '+A.best+' V':'')),rules);
   if(!r){
@@ -224,14 +280,15 @@ function vArena(v){
       h('button',{class:'btn gold big',id:'arenaGo',disabled:S.gems<ARENA.cost,onclick:()=>{const e=arenaEnter();if(e){toast(e);return}refreshTop();go('arena')}},'Entrer dans l’Arène ('+ARENA.cost+' 💎)')),
       S.gems<ARENA.cost?h('p',{class:'sm',style:'color:#f2a7a2;margin:8px 0 0'},'Il te manque '+(ARENA.cost-S.gems)+' 💎.'):null,
       A.last?h('p',{class:'sm mut',style:'margin:10px 0 0'},'Dernière course : '+A.last.w+' V – '+A.last.l+' D, +'+A.last.g+' 💎.'+(A.runs>1?' Courses jouées : '+A.runs+'.':'')):null);
-    v.append(head,h('div',{class:'panel'},ph('💎','Récompenses'),h('p',{class:'sm mut',style:'margin:0 0 8px'},'Selon le nombre de victoires à la fin de la course :'),arenaRewards(-1)));return}
+    v.append(head,h('div',{class:'cols arena-cols'},arenaLeaderboardPanel(),
+      h('div',{class:'panel'},ph('💎','Récompenses'),h('p',{class:'sm mut',style:'margin:0 0 8px'},'Selon le nombre de victoires à la fin de la course :'),arenaRewards(-1))));return}
   if(r.swap&&r.swap.stage==='remove'){
     const removed=r.swap.removed,toggle=i=>{arenaToggleRemoval(i);go('arena')};
     v.append(h('div',{class:'cols arena-cols'},
       h('div',null,h('div',{class:'panel hl v-arena'},ph('play','Remplacer des cartes',removed.length+' / '+ARENA.redraft),
         h('p',{class:'mut sm'},'Tes '+ARENA.redraft+' nouvelles cartes sont prêtes. Sélectionne maintenant les '+ARENA.redraft+' cartes de ton deck qu’elles vont remplacer.'),
         h('button',{class:'btn gold',disabled:removed.length!==ARENA.redraft,onclick:()=>{if(arenaApplyRemoval())go('arena')}},'Remplacer les '+ARENA.redraft+' cartes sélectionnées'))),
-      h('div',null,h('div',{class:'panel'},ph('decks','Ton deck · sélectionne '+ARENA.redraft+' cartes'),arenaDeckList(r.picks,removed,toggle)))));return}
+      h('div',null,h('div',{class:'panel'},ph('decks','Ton deck · sélectionne '+ARENA.redraft+' cartes'),arenaDeckList(r.picks,removed,toggle)),arenaLeaderboardPanel())));return}
   if((r.swap&&(r.swap.stage==='draft'||r.swap.stage==='legacyPick'))||r.picks.length<ARENA.picks){
     const replacing=!!r.swap,n=replacing?r.swap.drafted:r.picks.length,total=replacing?ARENA.redraft:ARENA.picks,
       offerN=replacing?n+1:n,o=arenaOffer(r.seed,offerN);let busy=false;
@@ -242,53 +299,20 @@ function vArena(v){
         h('p',{class:'apr'},h('span',{class:'arar r'+o.r},RGEM[o.r]+' Choix de '+RAR[o.r].toLowerCase()+'s'),' Clique sur la carte à garder · clic droit : fiche détaillée'),
         h('div',{class:'apick'},o.c.map((k,i)=>h('div',{class:'apc',onclick:()=>pick(i),oncontextmenu:e=>{e.preventDefault();showCard(k)}},cardEl(k,{big:true,tilt:1}),h('span',{class:'apx'},'✔ Garder')))),
         h('div',{class:'bar',style:'margin-top:16px'},h('i',{style:'width:'+(n/total*100)+'%'})))),
-      h('div',null,h('div',{class:'panel'},ph('decks','Ton deck d’Arène',r.picks.length+' / '+ARENA.picks),r.picks.length?curve({cards:r.picks}):h('p',{class:'sm mut'},'Tes cartes apparaîtront ici.'),r.picks.length?arenaDeckList(r.picks):null))));return}
+      h('div',null,h('div',{class:'panel'},ph('decks','Ton deck d’Arène',r.picks.length+' / '+ARENA.picks),r.picks.length?curve({cards:r.picks}):h('p',{class:'sm mut'},'Tes cartes apparaîtront ici.'),r.picks.length?arenaDeckList(r.picks):null),arenaLeaderboardPanel())));return}
   apn(head,arenaPips(r.w,r.l),
     h('div',{class:'row',style:'margin-top:14px;gap:10px;flex-wrap:wrap'},
       h('button',{class:'btn gold big arena-action',onclick:startArenaAIDuel},'Défier l’IA · palier '+Math.min(ARENA.maxW,r.w+1)),
       h('button',{class:'btn big arena-action',id:'arenaQueueJoin',disabled:AQ.active,onclick:arenaQueueStart},AQ.active?'Recherche en cours…':AQ.state==='expired'||AQ.state==='error'?'Relancer la recherche':'Chercher un joueur humain'),
       h('button',{class:'btn',id:'arenaQueueCancel',hidden:!AQ.active,onclick:arenaQueueCancel},'Annuler la recherche'),
-      h('button',{class:'btn gold big arena-action',id:'arenaDuel',onclick:arenaFriendPicker},'Défier un ami en Arène'),
       h('button',{class:'btn',onclick:()=>{const g=ARENA.rw[Math.min(r.w,ARENA.maxW)];ask('Abandonner la course ?','Tu touches tout de suite la récompense de '+r.w+' victoire'+(r.w>1?'s':'')+' : '+g+' 💎. Ton deck d’Arène est perdu.',
         [{t:'Continuer'},{t:'Abandonner (+'+g+' 💎)',c:'danger',f:()=>{const x=arenaFinish();refreshTop();toast('Course terminée : +'+x.g+' 💎');go('arena')}}])}},'Abandonner la course')),
     h('div',{id:'arenaQueueStatus',class:'arena-qstatus',hidden:true}),
     r.log.length?h('div',{class:'alog'},r.log.slice(-8).map(e=>h('span',{class:e.w?'w':'l'},(e.w?'⚔ Victoire':'✕ Défaite')+' contre '+e.o))):null);
-  v.append(h('div',{class:'cols arena-cols'},h('div',null,head,h('div',{class:'panel'},ph('💎','Récompenses'),arenaRewards(r.w))),
+  v.append(h('div',{class:'cols arena-cols'},h('div',null,head,arenaLeaderboardPanel(),h('div',{class:'panel'},ph('💎','Récompenses'),arenaRewards(r.w))),
     h('div',null,h('div',{class:'panel'},ph('decks','Ton deck d’Arène',ARENA.picks+' cartes'),curve({cards:r.picks}),arenaDeckList(r.picks)))));
   arenaQueueRender()}
-// choix de l'ami à défier (il doit avoir lui aussi un deck d'Arène prêt)
-function arenaFriendPicker(){
-  if(AQ.active){toast('Annule la recherche de joueur avant de défier un ami.');return}
-  if(!arenaReady()){toast('Termine d’abord ton draft.');return}
-  if(!S.friends.length){toast('Ajoute d’abord un ami dans l’onglet Amis.');return}
-  const st=f=>{const p=PRES[f.code];return p?(p.on?(p.busy?' · en duel':' · en ligne'):' · hors ligne'):''};
-  modal(h('div',null,h('h2',null,'Défier un ami en Arène'),h('p',{class:'mut sm',style:'margin:0 0 10px'},'Ton ami doit avoir le jeu ouvert et un deck d’Arène prêt. Règles standard, sans récompense de duel : seule la course compte.'),
-    h('div',{class:'afl'},S.friends.map(f=>h('div',{class:'row frow'},h('span',{class:'fav'},String(f.name||'?').trim().charAt(0).toUpperCase()||'?'),
-      h('div',{style:'flex:1;min-width:0'},h('b',null,f.name),h('div',{class:'sm mut'},f.code+st(f))),
-      h('button',{class:'btn sm pri',onclick:()=>{closeModal();arenaChallenge(f)}},'Défier')))),
-    h('div',{class:'row',style:'justify-content:flex-end;margin-top:12px'},h('button',{class:'btn',onclick:closeModal},'Annuler'))))}
 function arenaOpt(){return Object.assign({},OPTDEF,{rw:0,arena:1})}
-function arenaChallenge(f){
-  if(!arenaReady()){toast('Termine d’abord ton draft.');return}
-  const opt=arenaOpt();let h1=null;
-  modal(h('div',{style:'text-align:center'},h('h2',null,'Défi d’Arène envoyé à '+f.name),h('p',{class:'mut'},'En attente de sa réponse…'),
-    h('div',{class:'row',style:'justify-content:center;margin-top:14px'},h('button',{class:'btn',onclick:()=>{h1&&h1.cancel();closeModal()}},'Annuler'))),{sticky:true});
-  h1=sendChallenge(f,null,opt,{fail:m=>{closeModal();toast(m)},
-    accepted:(c,m)=>{closeModal();if(!m.arena||!Array.isArray(m.deck)){toast(f.name+' n’a pas de deck d’Arène prêt.');try{c.close()}catch(e){}return}
-      if(m.ver!==APPV)toast('Versions différentes du jeu : des bugs sont possibles.');arenaStart(m.name||f.name);startHostDuel(c,m,null,opt)}})}
-// défi d'Arène reçu : on joue avec son deck d'Arène, sans choisir de deck
-function onArenaChallenge(c,m,nm,known,close){
-  if(!arenaReady()){try{c.send({t:'dec',why:'arena'})}catch(e){}close();setTimeout(()=>{try{c.close()}catch(e){}},300);
-    toast(nm+' t’a défié en Arène, mais ton deck d’Arène n’est pas prêt.');return}
-  const r=S.arena.run;
-  modal(h('div',null,h('h2',null,'⚔ '+nm+' te défie en Arène !'),h('p',{class:'mut'},'Ta course : '+r.w+' V – '+r.l+' D. Le duel se joue avec ton deck d’Arène, règles standard. Une partie quittée avant la fin compte comme une défaite.'),
-    h('div',{class:'row',style:'justify-content:flex-end;margin-top:14px'},
-      known?null:h('button',{class:'btn sm',onclick:()=>{S.friends.push({code:m.code,name:nm});saveS();toast(nm+' ajouté(e) aux amis.')}},'+ Ami'),
-      h('button',{class:'btn danger',onclick:()=>{try{c.send({t:'dec'})}catch(e){}close();closeModal();setTimeout(()=>{try{c.close()}catch(e){}},300)}},'Refuser'),
-      h('button',{class:'btn pri',onclick:()=>{if(!arenaReady()){toast('Ton deck d’Arène n’est plus prêt.');return}
-        c.on('data',x=>{if(x&&x.t==='st'&&!DUEL){close();closeModal();beginGuestDuel(c,x.v)}});arenaStart(nm);
-        c.send({t:'acc',name:S.name,deck:S.arena.run.picks.slice(),arena:1,ver:APPV});
-        modal(h('div',{style:'text-align:center'},h('h2',null,'Défi accepté'),h('p',{class:'mut'},'Le duel d’Arène démarre…')),{sticky:true})}},'Accepter'))),{sticky:true})}
 // fin d'un duel d'Arène : on note le résultat de la course (une seule fois)
 function arenaAfterDuel(V,D){if(!V.o.arena||D.arenaDone||!S.arena.run)return null;D.arenaDone=true;const me=V.me,w=V.over.w,res=arenaRecord(w<0?-1:w===me?1:0,V.p[1-me].nm);
   if(V.o.arenaQueue)arenaQueueFinished();return res}

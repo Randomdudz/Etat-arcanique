@@ -53,3 +53,8 @@ Après une défaite qui ne met pas fin à ta course, tu gardes ton deck. Tu choi
 
 - Le bonus de **+1 PV** s’active désormais à **3 Weebos** au lieu de 2.
 - La réduction de **1 dégât de combat** s’active désormais à **5 Weebos** au lieu de 4.
+
+## Classement hebdomadaire de l’Arène
+
+- Un classement visible dans l’Arène affiche les 10 joueurs ayant remporté le plus de duels cette semaine, avec leur pseudo et le détail des victoires contre l’IA et contre des joueurs.
+- Les victoires sont enregistrées pour les comptes en ligne. Les défis directs entre amis sont remplacés par le matchmaking.

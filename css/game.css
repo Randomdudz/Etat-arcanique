@@ -1597,6 +1597,16 @@ body{background:#060c17}
 #app .alog{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
 #app .alog span{font-size:12.5px;font-weight:700;padding:3px 10px;border-radius:999px;border:1px solid}
 #app .alog .w{color:#f1c96a;border-color:#c9a35a88}#app .alog .l{color:#f2a7a2;border-color:#d0605a88}
+#app .arena-lb{margin:0 0 12px}
+#app .albh{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+#app .albh h3{margin:0;color:#f3e7cc;font-family:var(--disp);font-size:18px}
+#app .alblist{display:grid;gap:6px}
+#app .alborrow{display:grid;grid-template-columns:30px minmax(70px,1fr) auto;align-items:center;gap:6px 10px;padding:8px 10px;border:1px solid #c9a35a44;border-radius:10px;background:#070f1dcc}
+#app .albrank{color:#f1c96a;text-align:center;font-family:var(--disp);font-size:16px}
+#app .albpseudo{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#f3e7cc}
+#app .albtot{color:#f1c96a;white-space:nowrap}
+#app .albsplit{grid-column:2/4;color:var(--vmut);font-size:12px}
+#app .lb-error{color:#f2a7a2}
 #modal .afl{display:grid;gap:6px;max-height:50vh;overflow:auto}
 #modal .frow{display:flex;align-items:center;gap:10px;padding:8px 10px;border:1px solid #c9a35a55;border-radius:12px;background:#0a1628b3}
 #modal .frow .fav{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;flex:none;font-family:var(--disp);font-size:18px;font-weight:700;color:#f3e7cc;border:2px solid #d8b56c;background:radial-gradient(circle at 50% 30%,#5a2a7a,#1d0d30 70%)}

@@ -8,17 +8,31 @@
 //     remplacer tout le texte par les règles ci-dessous, puis « Publier ».
 //  4. ⚙ Paramètres du projet → « Vos applications » → icône </> (Web) → donner un nom → copier ici apiKey et projectId.
 //
-// Règles Firestore (chaque joueur ne peut lire et écrire que sa propre sauvegarde) :
+// Règles Firestore : sauvegardes privées, file de matchmaking, classement hebdomadaire public en lecture.
 //   rules_version = '2';
 //   service cloud.firestore {
 //     match /databases/{database}/documents {
 //       match /saves/{uid} {
 //         allow read, write: if request.auth != null && request.auth.uid == uid;
 //       }
-//     match /arenaQueue/{uid} {
-//       allow read: if request.auth != null;
-//       allow create, update, delete: if request.auth != null && request.auth.uid == uid;
+//       match /arenaQueue/{uid} {
+//         allow read: if request.auth != null;
+//         allow create, update, delete: if request.auth != null && request.auth.uid == uid;
+//       }
+//       match /arenaWeeks/{week}/players/{uid} {
+//         allow read: if true;
+//         allow create: if request.auth != null && request.auth.uid == uid
+//           && request.resource.data.uid == uid && request.resource.data.total == 1
+//           && request.resource.data.winsAI + request.resource.data.winsHuman == 1;
+//         allow update: if request.auth != null && request.auth.uid == uid
+//           && request.resource.data.uid == uid
+//           && request.resource.data.total == resource.data.total + 1
+//           && ((request.resource.data.winsAI == resource.data.winsAI + 1
+//             && request.resource.data.winsHuman == resource.data.winsHuman)
+//             || (request.resource.data.winsHuman == resource.data.winsHuman + 1
+//             && request.resource.data.winsAI == resource.data.winsAI));
+//       }
 //     }
 //   }
-//   }
+// }
 window.EA_CLOUD={apiKey:'AIzaSyCTnxKnzBGxTs2DM5uodP4VOadaLQWHQIg',projectId:'etat-arcanique'};

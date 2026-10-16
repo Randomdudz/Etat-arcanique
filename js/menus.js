@@ -66,11 +66,11 @@ function vPlay(v){
       h('div',{class:'panel v-gain'},ph('💎','Gains du jour',S.daily.earned+' / '+ECON.cap),
         h('div',{class:'bar',style:'margin:2px 0 10px'},h('i',{style:'width:'+Math.min(100,S.daily.earned/ECON.cap*100)+'%'})),
         h('div',{class:'row',style:'justify-content:space-between'},h('span',{class:'sm mut'},'💎 Victoire +'+ECON.win+' · Défaite +'+ECON.loss+' · 1re victoire du jour +'+ECON.first),h('b',{class:'sm vstat',title:'Victoires et défaites'},S.stats.w+' V · '+S.stats.l+' D'))))))}
-// Arène : draft, remplacements partiels et duels contre amis ou IA
+// Arène : draft, remplacements partiels, duels contre l'IA et matchmaking
 function arenaPanel(){const r=S.arena&&S.arena.run;
   return h('div',{class:'panel v-arenap'},ph('arena','Arène',r?r.w+' V · '+r.l+' D':h('span',{class:'arena-cost'},ARENA.cost,h('img',{class:'arena-gem',src:'png/diamond.png',alt:'diamants'}))),
-    h('p',{class:'mut sm',style:'margin:0 0 12px'},r?(r.swap?(r.swap.stage==='remove'?'Choisis les '+ARENA.redraft+' cartes à remplacer.':'Choisis '+ARENA.redraft+' remplaçantes avant de sélectionner les cartes à remplacer.'):r.picks.length<ARENA.picks?'Ton draft initial : '+r.picks.length+' / '+ARENA.picks+' cartes choisies.':'Ton deck d’Arène est prêt : défie l’IA au palier '+Math.min(ARENA.maxW,r.w+1)+' ou tes amis.'):
-      'Draft de 30 cartes, puis affronte l’IA ou tes amis. 9 paliers, jusqu’à '+ARENA.rw[ARENA.maxW]+' 💎 à gagner.'),
+    h('p',{class:'mut sm',style:'margin:0 0 12px'},r?(r.swap?(r.swap.stage==='remove'?'Choisis les '+ARENA.redraft+' cartes à remplacer.':'Choisis '+ARENA.redraft+' remplaçantes avant de sélectionner les cartes à remplacer.'):r.picks.length<ARENA.picks?'Ton draft initial : '+r.picks.length+' / '+ARENA.picks+' cartes choisies.':'Ton deck d’Arène est prêt : défie l’IA au palier '+Math.min(ARENA.maxW,r.w+1)+' ou cherche un joueur.'):
+      'Draft de 30 cartes, puis affronte l’IA ou cherche un joueur avec le matchmaking. 9 paliers, jusqu’à '+ARENA.rw[ARENA.maxW]+' 💎 à gagner.'),
     h('button',{class:'btn gold'+(!r?' art-button':''),onclick:()=>go('arena')},r?(r.swap||r.picks.length<ARENA.picks?'Continuer':'Ouvrir l’Arène'):h('img',{class:'button-art',src:'png/arena-button.png',alt:"Découvrir l’Arène"})))}
 function rulesNodes(){
   const li=(t,d)=>h('div',{style:'margin:10px 0;line-height:1.45'},h('b',{class:'gold'},t+' '),d);
@@ -99,7 +99,7 @@ function rulesNodes(){
     li('Échanges :','dans l’onglet Amis, « ⇄ Échanger » propose un échange à un ami connecté. Chacun choisit UNE carte à donner ; vous voyez tous les deux les deux cartes avant de valider, et l’échange n’a lieu que si les deux valident la même paire. Changer de carte annule les validations.'),
     li('Chrono :','tu as '+OPTDEF.tim+' secondes par tour (réglable). À la fin du temps, ton tour passe tout seul.'),
     li('Boosters :','gagne des 💎 en duel, ouvre des boosters de '+ECON.pack+' cartes en boutique.'),
-    li('Arène ⚔ :','entrée '+ARENA.cost+' 💎. Draft de '+ARENA.picks+' cartes (1 parmi 3 à chaque choix, mêmes chances pour tout le monde, sans limite d’exemplaires), puis défie tes amis, l’IA ou cherche un humain dans la file (5 minutes max). La file nécessite un compte Firebase en ligne et les règles Firestore indiquées dans cloud-config.js. L’IA gagne en rareté aux paliers 4 et 7. La course s’arrête à '+ARENA.maxW+' victoires ou '+ARENA.maxL+' défaites ; après une défaite non éliminatoire, choisis d’abord '+ARENA.redraft+' nouvelles cartes, puis les cartes de ton deck qu’elles remplaceront. Récompense : de '+ARENA.rw[0]+' à '+ARENA.rw[ARENA.maxW]+' 💎 selon tes victoires. Une partie quittée avant la fin compte comme une défaite.')] }
+    li('Arène ⚔ :','entrée '+ARENA.cost+' 💎. Draft de '+ARENA.picks+' cartes (1 parmi 3 à chaque choix, mêmes chances pour tout le monde, sans limite d’exemplaires), puis affronte l’IA ou cherche un humain avec le matchmaking (5 minutes max). La file nécessite un compte Firebase en ligne et les règles Firestore indiquées dans cloud-config.js. Le classement hebdomadaire affiche les meilleurs joueurs et leurs victoires contre l’IA et contre des humains ; un compte en ligne est nécessaire pour y figurer. L’IA gagne en rareté aux paliers 4 et 7. La course s’arrête à '+ARENA.maxW+' victoires ou '+ARENA.maxL+' défaites ; après une défaite non éliminatoire, choisis d’abord '+ARENA.redraft+' nouvelles cartes, puis les cartes de ton deck qu’elles remplaceront. Récompense : de '+ARENA.rw[0]+' à '+ARENA.rw[ARENA.maxW]+' 💎 selon tes victoires. Une partie quittée avant la fin compte comme une défaite.')] }
 function howto(){
   modal(h('div',null,h('h2',null,'Comment jouer'),...rulesNodes(),
     h('div',{class:'row',style:'justify-content:flex-end;margin-top:12px'},h('button',{class:'btn pri',style:'--h:#73b0ad;--ht:#241e17',onclick:closeModal},'Compris'))))}
@@ -547,7 +547,8 @@ function onChallenge(c,m){
   const close=()=>{CHALLENGE_UI=null};
   c.on('close',()=>{if(CHALLENGE_UI&&!DUEL){close();closeModal();toast('Le défi a été annulé.')}});
   if(m.o&&m.o.arenaQueue)return onArenaQueueChallenge(c,m,nm,close);
-  if(m.o&&m.o.arena)return onArenaChallenge(c,m,nm,known,close);                       // défi d'Arène : chacun joue avec son deck d'Arène
+  if(m.o&&m.o.arena){try{c.send({t:'dec',why:'arena'})}catch(e){}close();setTimeout(()=>{try{c.close()}catch(e){}},300);
+    toast('Les défis directs d’Arène ne sont plus disponibles : utilise le matchmaking.');return}
   const accept=di=>{
     const d=S.decks[di];if(!deckCheck(d).ok){toast('Choisis un deck valide.');return}
     c.on('data',x=>{if(x&&x.t==='st'&&!DUEL){close();closeModal();beginGuestDuel(c,x.v)}});
