@@ -37,6 +37,7 @@ svg.ic{width:1em;height:1em;fill:currentColor;stroke:none;display:block;flex:non
 #nav button.on{background:linear-gradient(180deg,color-mix(in srgb,var(--h) 34%,#1c1610),color-mix(in srgb,var(--h) 14%,#1c1610));border-color:var(--h);color:#f8f1e9;box-shadow:0 0 18px color-mix(in srgb,var(--h) 45%,transparent)}
 #nav button.on .ni{background:var(--h);color:var(--ht)}
 #top #pname{font-weight:700;color:#ede6de;font-size:14px;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#appver{flex:none;color:#dcc38d;background:#f8f1e90a;border:1px solid #c9a35a66;border-radius:999px;padding:4px 9px;font-size:11px;font-weight:800;letter-spacing:.06em;white-space:nowrap}
 .gems{display:flex;align-items:center;gap:7px;background:linear-gradient(180deg,#3a332c,#28221b);border:2px solid #75b5d6;border-radius:999px;padding:5px 16px 5px 10px;font-weight:800;font-size:17px;box-shadow:0 0 14px #75b5d644}
 .gems .gi{width:22px;height:22px;display:grid;place-items:center;font-size:18px}
 #view{flex:1;overflow:auto;padding:22px 26px 40px}
@@ -315,7 +316,7 @@ input::placeholder{color:#8d8378}
 
 /* ================= DUEL ================= */
 #duel{position:fixed;inset:0;z-index:30;background:radial-gradient(1000px 600px at 50% 0,#a34c4926,transparent 70%),radial-gradient(900px 500px at 50% 100%,#73b0ad22,transparent 70%),linear-gradient(180deg,#151009,#19140d);display:flex;flex-direction:column;user-select:none;-webkit-user-select:none;--sw:clamp(64px,min(calc((100vh - 530px)/3.74),calc((100vw - 640px)/6.25)),150px);--hw:max(96px,calc(var(--sw)*.82))}
-@media(max-height:820px){#duel{--sw:clamp(64px,min(calc((100vh - 470px)/3.74),calc((100vw - 640px)/6.25)),150px)}.info{min-height:0;padding:3px 10px}.info .irow{display:none}.info:not(:has(.hintline)){display:none}}
+@media(max-height:820px){#duel{--sw:clamp(64px,min(calc((100vh - 470px)/3.74),calc((100vw - 640px)/6.25)),150px)}.info{min-height:0;padding:3px 10px}.info .irow{display:none}.info:not(:has(.hintline,.effect-preview)){display:none}}
 .dtop{display:flex;align-items:center;gap:10px;padding:6px 12px;flex:none;background:linear-gradient(180deg,#262019,#1c1710);border-bottom:1px solid #423c34}
 .dtop .tt{flex:1;text-align:center;font-weight:800;font-size:15px;letter-spacing:.02em;min-width:0;line-height:1.15}
 .dtop .tm{display:flex;align-items:center;gap:6px;font-variant-numeric:tabular-nums;font-weight:900;font-size:22px;min-width:100px;justify-content:center;border-radius:14px;padding:2px 12px;background:#17110b;border:2.5px solid #93c489;color:#93c489;box-shadow:0 0 14px #93c48955;line-height:1.25}
@@ -412,6 +413,10 @@ input::placeholder{color:#8d8378}
 .info .ib .txt{color:#f8f1e9;margin-top:1px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .info .ib .kw{color:#dcc38d;font-weight:800;border-bottom:1px dotted #dcc38d99;cursor:help}
 .info .ib .dfs{color:#e3d9cc;font-size:12px;margin-top:2px}.info .ib .dfs b{color:#dcc38d}
+.effect-preview{border-top:1px solid #dcc38d55;padding-top:4px;color:#e3d9cc}
+.effect-preview b{color:#dcc38d}
+.effect-preview .previewtext{margin-top:2px}
+.effect-preview .previewtargets{color:#f8f1e9}
 .info .play{flex:none;align-self:center}
 .hand{display:flex;align-items:flex-start;justify-content:center;gap:8px;overflow:visible;padding:12px 4px 0;height:calc(var(--sw)*1.25 + 14px);margin-top:auto;position:relative;z-index:5}
 .hc{flex:0 0 auto;width:var(--hw);aspect-ratio:5/7.6;cursor:grab;transition:transform .15s;position:relative}
@@ -505,6 +510,10 @@ input::placeholder{color:#8d8378}
 .slot.mvd:hover,.slot.mvd.hov{background:#93c4893a;border-color:#93c489;border-style:solid}
 .slot.swp>.card .ci{outline:.9cqw dashed #93c48988;outline-offset:-1.8cqw}
 .slot.swp:hover>.card .ci,.slot.swp.hov>.card .ci{outline-color:#93c489}
+.slot.preview{outline:2px solid #e9cd86;outline-offset:2px;filter:drop-shadow(0 0 7px #e9cd8688)}
+.preview-box{margin-top:8px;padding:8px 10px;border:1px solid #e9cd8666;border-radius:10px;background:#e9cd8610;font-size:12px;line-height:1.4}
+.preview-box b{display:block;color:#e9cd86;margin-bottom:3px}
+.preview-box .pvline+.pvline{margin-top:3px}
 .tcell.own{cursor:grab}.tcell.own:active{cursor:grabbing}
 .tcell.sel{box-shadow:0 0 0 2px #f8f1e9,0 0 12px var(--gc)}
 .ghost.cr{width:84px;opacity:.8}
@@ -1628,6 +1637,9 @@ body{background:#060c17}
 #duel .dtop .tm.opp{border-color:var(--op);color:#f1b1aa;box-shadow:0 0 10px #cf6a6233}
 #duel .dtop .tm.off{border-color:#c9a35a55;color:#aeb8ca;box-shadow:none}
 #duel .dtop .info .hintline{color:#f1d58e;font-family:var(--disp);letter-spacing:.03em}
+#duel .dtop .effect-preview{position:fixed;z-index:70;top:58px;left:50%;transform:translateX(-50%);width:min(560px,calc(100vw - 24px));
+  max-height:35vh;overflow:auto;padding:8px 12px;background:linear-gradient(180deg,#10203af5,#0a1628f5);border:1px solid #c9a35a;
+  border-radius:10px;box-shadow:0 8px 24px #000c,inset 0 0 18px #1f3d6a2e;pointer-events:none}
 #duel #tbar{height:3px;background:#060c17}
 #duel #tbar i{background:linear-gradient(90deg,#8c6a32,#e9cd86)}#duel #tbar.mid i{background:linear-gradient(90deg,#c58a3a,#f2c46a)}
 #duel #tbar.lo i{background:linear-gradient(90deg,#9e3532,#e0675f)}#duel #tbar.opp i{background:linear-gradient(90deg,#7c2f2b,var(--op))}
@@ -1932,7 +1944,7 @@ homz:{n:'Homz',fac:['alien','farmer'],sc:{wow:2,dofus:0,lol:1,cs:1},lore:'Fan d�
 boku:{n:'Boku',fac:['weebos'],sc:{wow:0,dofus:0,lol:2,cs:1},lore:'GM et turbo weeb, OTP Katarina : chaque kill donne envie d’en refaire un. Ne s’est énervé que DEUX fois dans toute sa vie. Il en reste une.',v:[
   {st:'Présence apaisante',c:2,a:2,h:3,eot:[{t:'healAdj',n:1}],tx:'Fin de ton tour : soigne de 1 PV les créatures à côté de lui.'},
   {st:'Japan Expo enjoyer',stl:'Japan Expo enjoyer',c:4,a:2,h:2,cry:[{t:'summon',k:'weeb',n:2}],tx:'Cri d’arrivée : invoque 2 Weebs 1/1 (Weebos).'},
-  {st:'Maître KATARINA',last:[{t:'dmgAll',n:1}],c:8,a:5,h:6,kw:['hate','tilt'],reset:1,tilt:[{t:'dmgAll',n:1}],tx:'Hâte. Reset : après avoir détruit une créature en attaquant, peut attaquer à nouveau. Tilt : 1 dégât à toutes les créatures ennemies. Agonie : inflige 1 dégât à toutes les créatures ennemies.'}]},
+  {st:'Maître KATARINA',last:[{t:'dmgAll',n:1}],c:8,a:6,h:6,kw:['hate','tilt'],reset:1,killAtk:[{t:'dmgAll',n:1}],tilt:[{t:'dmgAll',n:1}],tx:'Hâte. Après avoir tué une créature en attaquant, inflige 1 dégât à toutes les créatures ennemies et peut attaquer à nouveau. Tilt et Agonie : inflige 1 dégât à toutes les créatures ennemies.'}]},
 haddmi:{n:'Haddmi',fac:['xeno'],sc:{wow:0,dofus:0,lol:1,cs:2},lore:'Meneur d’un discord rival : une armée à lui tout seul. Bosse chez Vitality, niveau 10 sur FACEIT. Se vexe au quart de tour, et ça le fait tilt.',v:[
   {st:'Chouineur professionnel',c:1,a:0,h:3,kw:['rempart','tilt'],tilt:[{t:'grow',a:1,h:0}],lore:'« Je peux plus jouer la lane, go next. »',tx:'Rempart. Tilt : gagne +1 ATK.'},
   {st:'Chef dissident',c:5,a:3,h:2,cry:[{t:'ctl',tg:'ec',tgf:'cm3'}],tx:'Cri d’arrivée : prend le contrôle d’une créature ennemie qui coûte 3 ou moins.'},
@@ -1952,8 +1964,8 @@ takk:{n:'Takk',fac:['weebos','expats'],sc:{wow:2,dofus:1,lol:1,cs:0},sym:'✈',c
   {r:3,st:'Pourquoi il est mort ?',c:5,a:4,h:5,kw:['frenesie'],last:[{t:'buffAffN',g:'wow',a:3,h:3}],tx:'Frénésie. Agonie : tes créatures qui ont une affinité WoW gagnent +3/+3.'}]},
 kirua:{n:'Kirua',fac:['alien','vestige'],sc:{wow:0,dofus:2,lol:0,cs:2},sym:'❄',col:'#8fb8d7',lore:'Panthère sur le terrain, reine des neiges en dehors, et le serveur plante dès que Kirua se connecte.',v:[
   {r:1,st:'Crasheur de serveur',c:2,a:2,h:3,cry:[{t:'tOff',tg:'terr'}],tx:'Cri d’arrivée : désactive un terrain (un des tiens ou un de l’adversaire) tant que Kirua, crasheur de serveur est en jeu. S’il est Mute, le terrain refonctionne.'},
-  {r:2,st:'La panthère',c:4,a:3,h:4,kw:['hate','tilt'],tilt:[{t:'dmgFace',n:2}],tx:'Hâte. Tilt : inflige 2 dégâts au héros adverse.'},
-  {r:3,st:'La reine des neiges',c:5,a:3,h:4,cry:[{t:'blizzard',tg:'ecell'}],tx:'Cri d’arrivée : pose le terrain Blizzard (2 cases) où tu veux sur le plateau adverse : les créatures dessus ne peuvent pas attaquer. Il ne peut être ni détruit ni recouvert, disparaît quand elle meurt et dort tant qu’elle est Mute.'}]},
+  {r:2,st:'La panthère',c:4,a:4,h:2,kw:['hate','tilt'],tilt:[{t:'dmgFace',n:2}],jumpAttacked:1,tx:'Hâte. La première fois qu’elle est attaquée à chaque tour, saute sur une case libre aléatoire de ton plateau. Tilt : inflige 2 dégâts au héros adverse.'},
+  {r:3,st:'La reine des neiges',c:5,a:5,h:5,cry:[{t:'blizzard',tg:'ecell'}],tx:'Cri d’arrivée : pose le terrain Blizzard (2 cases) où tu veux sur le plateau adverse : les créatures dessus ne peuvent pas attaquer. Il ne peut pas être détruit, peut être recouvert, disparaît quand elle meurt et dort tant qu’elle est Mute.'}]},
 rasta:{n:'Rasta',fac:['ravages','vestige'],sc:{wow:0,dofus:2,lol:0,cs:1},sym:'☁',col:'#91ab64',lore:'On le sent arriver avant de le voir. Quand on lui dit « viens dehors », il le prend au pied de la lettre.',v:[
   {r:1,st:'Fardeau pour l’équipe',c:2,a:2,h:3,cry:[{t:'sumE',k:'poutch',tg:'eslot'}],tx:'Cri d’arrivée : choisis une case libre du plateau adverse où invoquer un Poutch 0/4.'},
   {r:2,st:'Viens dehors',c:3,a:3,h:3,cry:[{t:'summon',k:'piccolo',n:1,if:{gt:1}},{t:'tdestroy',self:1,here:1,if:{gt:1}}],tx:'Cri d’arrivée : s’il est posé sur un terrain de jeu, détruit ce terrain et invoque Piccolo (Extraterritorial 2/3, Siphon).'},
@@ -1962,8 +1974,8 @@ natingaz:{n:'Natinganz',fac:['weebos'],sc:{wow:2,dofus:1,lol:1,cs:0},sym:'⌨',c
   {r:1,st:'Privé d’ordinateur',c:2,a:1,h:3,kw:['tilt'],cry:[{t:'hurtSelf',n:2,if:{gt:1}}],tilt:[{t:'draw',n:1}],tx:'Cri d’arrivée : s’il est posé sur un terrain de jeu, subit 2 dégâts. Tilt : pioche 1 carte.'},
   {r:2,st:'Puits de connaissance',c:2,a:1,h:3,sot:[{t:'draw',n:1,if:{terIn:['wow','bazar']}}],tx:'Début de ton tour : s’il est sur un terrain WoW ou neutre, pioche 1 carte.'},
   {r:3,st:'J’ai dl le boss',c:5,a:2,h:6,laser:6,tx:'Au début de chaque tour (adverse compris), se déplace d’une case vers la droite : un LASER géant inflige 6 dégâts à la case qu’il quitte et à la créature en face. S’il ne peut pas bouger, c’est lui qui prend le laser.'}]},
-gobi:{n:'Gobi',fac:['farmer','ravages'],sc:{wow:2,dofus:2,lol:0,cs:0},sym:'⚔',col:'#9f5b49',lore:'Il a vaincu Sludgefist. Il mène sa troupe de gogoles au combat, sans trop savoir dans quelle direction.',v:[
-  {r:1,st:'Chef des gogoles',c:2,a:2,h:2,kw:['deso'],cry:[{t:'hurtSelf',n:1},{t:'summon',k:'gogole',n:2}],tx:'Désorienté. Cri d’arrivée : subit 1 dégât et invoque 2 Gogoles 1/1 Désorientés.'},
+gobi:{n:'Gobi',fac:['farmer','ravages'],sc:{wow:2,dofus:2,lol:0,cs:0},sym:'⚔',col:'#9f5b49',lore:'Il a vaincu Sludgefist. Il mène sa troupe de baveux au combat, sans trop savoir dans quelle direction.',v:[
+  {r:1,st:'Chef des baveux',c:2,a:2,h:2,kw:['deso'],cry:[{t:'hurtSelf',n:1},{t:'summon',k:'baveux',n:2}],tx:'Désorienté. Cri d’arrivée : subit 1 dégât et invoque 2 Baveux 1/1 Désorientés.'},
   {r:2,st:'Slayer of Sludgefist',c:4,a:4,h:3,kw:['respawn'],tx:'Respawn (La première fois qu’il meurt, il réapparaît).'},
   {r:3,st:'Collectionneur de Dofus',c:6,a:5,h:5,cry:[{t:'dofus'}],tx:'Cri d’arrivée : obtiens un Dofus légendaire au hasard (artefact) : Pourpre, Ocre, Émeraude, Vulbis, Turquoise ou Cawotte.'}]},
 lanfear:{n:'Lanfear',fac:['toxic','vestige'],sc:{wow:1,dofus:1,lol:1,cs:0},sym:'🎙',col:'#a288d2',lore:'Son micro grésille tellement que plus personne ne sait où il en est.',v:[
@@ -1975,10 +1987,10 @@ saja:{n:'Saja',fac:['xeno'],sc:{wow:2,dofus:0,lol:1,cs:0},sym:'⚖',col:'#978d82
   {r:3,st:'Fascisme incarné',c:6,a:4,h:5,aura:{pos:2},tx:'Les créatures à sa gauche ont -2/-2, celles à sa droite +2/+2 (sur les deux plateaux).'}]},
 korock:{n:'Korock',fac:['toxic','ravages'],sc:{wow:0,dofus:0,lol:2,cs:1},sym:'🤬',col:'#c4524e',lore:'Il insulte avant même de dire bonjour. Report, mute, ban : il a tout eu, et il revient toujours.',v:[
   {r:1,st:'Insulteur de lobby',c:1,a:2,h:1,cry:[{t:'dmgFace',n:2}],tx:'Cri d’arrivée : inflige 2 dégâts au héros adverse.'},
-  {r:2,st:'Flammeur de chat',c:3,a:3,h:3,faceHit:[{t:'disc',n:1}],tx:'Quand il attaque le héros adverse, l’adversaire défausse une carte au hasard.'},
+  {r:2,st:'Écraseur de main',c:3,a:3,h:2,cry:[{t:'setAtk0',tg:'ec'}],tx:'Cri d’arrivée : passe l’ATK d’une créature ennemie à 0.'},
   {r:3,st:'Ban à vie',c:5,a:4,h:4,kw:['hate'],cry:[{t:'dmgHand'}],tx:'Hâte. Cri d’arrivée : inflige 1 dégât au héros adverse par carte dans sa main.'}]},
 snoux:{n:'Snoux',fac:['xeno','farmer'],sc:{wow:1,dofus:0,lol:0,cs:2},sym:'🎯',col:'#d98a3a',lore:'Le Rempart ? Il ne l’a jamais vu. Lui, il va tout droit dans la tête, quoi qu’il arrive.',v:[
-  {r:1,st:'Facecheck',c:2,a:3,h:2,noTaunt:1,tx:'Ignore les Remparts.'},
+  {r:1,st:'Facecheck',c:3,a:3,h:3,faceHit:[{t:'disc',n:1}],tx:'Quand il attaque le héros adverse, l’adversaire défausse une carte au hasard.'},
   {r:2,st:'Tête la première',c:3,a:3,h:3,noTaunt:1,faceHit:[{t:'buff',a:1,h:0,self:1}],tx:'Ignore les Remparts. Chaque fois qu’il attaque le héros adverse, gagne +1 ATK.'},
   {r:3,st:'Le face, c’est la place',stl:'le face, c’est la place',c:4,a:4,h:4,kw:['hate'],noTaunt:1,noTauntAll:1,tx:'Hâte. Ignore les Remparts. Tes autres créatures ignorent aussi les Remparts.'}]},
 miichi:{n:'Miichi',fac:['weebos','alien'],sc:{wow:1,dofus:0,lol:2,cs:0},sym:'🌸',col:'#d47fc0',lore:'Weeb venue d’ailleurs : elle a vu tous les animes, fini tous les jeux, et elle rush quand même.',v:[
@@ -1988,6 +2000,8 @@ miichi:{n:'Miichi',fac:['weebos','alien'],sc:{wow:1,dofus:0,lol:2,cs:0},sym:'�
 // v22 : nouvelle légendaire
 BASES.coach={n:'Le Coach',fac:['ravages'],sc:{wow:0,dofus:0,lol:1,cs:2},sym:'📣',col:'#c9773a',lore:'« Go go go ! » Il ne connaît qu’une stratégie : tout le monde fonce.',v:[
   {r:3,st:'Capitaine du rush',c:3,a:3,h:3,kw:['insolence'],atkLow:{max:4,n:2},tx:'Insolence. Chaque fois que tu attaques avec une créature qui coûte 4 ou moins, le héros adverse subit 2 dégâts.'}]};
+BASES.losk={n:'Losk',fac:['farmer','expats'],sc:{wow:0,dofus:1,lol:0,cs:1},sym:'🪙',col:'#d3b970',lore:'Il revient de voyage avec un portefeuille plein… ou vide.',v:[
+  {r:1,st:'Crypto farmer',c:3,a:3,h:3,travelGoldGuard:1,sot:[{t:'rndOr',min:-2,max:6}],tx:'Tant qu’il est en voyage, ton Or ne peut pas être volé. Début de ton tour : gagne aléatoirement entre −2 et 6 Or.'}]};
 const BASEK=Object.keys(BASES);
 
 const CARDS={};
@@ -2001,7 +2015,8 @@ kiwi:{t:'c',n:'Kiwi',r:1,c:1,a:1,h:1,fac:[],sc:{},tok:1,kw:['hate'],tx:'Jeton. H
 waifu:{t:'c',n:'Waifu',r:1,c:1,a:1,h:1,fac:['weebos'],sc:{},tok:1,tx:'Jeton (Weebos).',sym:'💕',col:'#ca8aa9',lore:'Encore une, ramenée de voyage par Takk.'},
 mmejack:{t:'c',n:'Mme Jak',r:1,c:2,a:3,h:4,fac:[],sc:{},tok:1,kw:['rempart'],tx:'Jeton. Une vache avec rempart?.',sym:'🐄',col:'#dbd1c5',lore:'La vache de Jak. Elle ne bouge pas beaucoup, mais elle a du caractère.'},
 piccolo:{t:'c',n:'Piccolo',r:1,c:3,a:2,h:3,fac:['alien'],sc:{},tok:1,kw:['siphon'],tx:'Jeton (Extraterritorial). Siphon.',sym:'👽',col:'#8aab6b',lore:'Venu de Namek. Il a suivi Rasta dehors.'},
-gogole:{t:'c',n:'Gogole',r:1,c:1,a:1,h:1,fac:[],sc:{},tok:1,kw:['deso'],tx:'Jeton. Désorienté.',sym:'?',col:'#ada398',lore:'« Aïe, il m’a mordu la main ce gogole ! »'},
+baveux:{t:'c',n:'Baveux',r:1,c:1,a:1,h:1,fac:[],sc:{},tok:1,kw:['deso'],tx:'Jeton. Désorienté.',sym:'?',col:'#ada398',lore:'Invoqué par Gobi, chef des baveux.'},
+duck:{t:'c',n:'Canard',r:1,c:1,a:0,h:3,fac:[],sc:{},tok:1,tx:'Jeton. Aucun effet.',sym:'🦆',col:'#d0b44f',lore:'Coin coin. Il prend toute la place.'},
 bot:{t:'c',n:'Bot de modération',r:1,c:3,a:2,h:5,fac:[],sc:{},tok:1,kw:['rempart'],tx:'Jeton. Rempart.',sym:'⚙',col:'#5e8987',lore:'Il applique le règlement, sans état d’âme.'},
 chanssus:{t:'c',n:'Chanssus',r:1,c:1,a:0,h:0,fac:[],sc:{},tok:1,kw:['hate'],cry:[{t:'combo',a:1,h:1}],
   tx:'Jeton. Hâte. Cri d’arrivée : gagne +1/+1 pour chaque autre carte jouée ce tour.',sym:'✺',col:'#b3544b',lore:'Invoqué par Sadamie pour le combo le plus broken du monde.'},
@@ -2012,6 +2027,7 @@ robot:{t:'c',n:'Robot explosif',r:1,c:1,a:1,h:1,fac:[],sc:{},tok:1,last:[{t:'rnd
 graine:{t:'c',n:'Graine',r:1,c:1,a:0,h:1,fac:[],sc:{},tok:1,tx:'Jeton. Sur l’Éco village : gagne +1/+1 au début de ton tour.',sym:'🌱',col:'#6f9a52',lore:'Cultivée sans pesticide, arrosée à l’eau de pluie.'},
 wagon:{t:'c',n:'Wagon',r:1,c:1,a:1,h:1,fac:[],sc:{},tok:1,kw:['rempart'],tx:'Jeton. Rempart.',sym:'🚃',col:'#7d7466',lore:'Tout le monde à bord : le chef ne repassera pas.'},
 // ----- sorts -----
+ducksmuck:{t:'s',n:'Ducks in a muck',r:1,c:3,fx:[{t:'fillDucks'}],tx:'Remplit les deux plateaux avec des Canards 0/3, jusqu’à ce que chaque plateau soit plein.',sym:'🦆',col:'#d0b44f',lore:'Coin coin, du sol au plafond.'},
 ping:{t:'s',n:'Ping',r:1,c:1,tg:'any',fx:[{t:'dmg',n:2}],tx:'Inflige 2 dégâts à une cible.',sym:'◎',col:'#af524f',lore:'@quelqu’un : une notification qui fait mal.'},
 webhook:{t:'s',n:'Webhook',r:1,c:1,tg:'e',fx:[{t:'dmg',n:1},{t:'draw',n:1}],tx:'Inflige 1 dégât au héros adverse ou à une créature, et pioche 1 carte.',sym:'⇢',col:'#638ecf',lore:'Un petit message automatique, mais qui en déclenche d’autres.'},
 boost:{t:'s',n:'Boost',r:1,c:2,tg:'ac',fx:[{t:'buff',a:2,h:1}],tx:'Une créature alliée gagne +2/+1.',sym:'⬆',col:'#ca7999',lore:'Merci pour le boost du serveur !'},
@@ -2100,7 +2116,7 @@ const TDEF=[
  {d:'fontaine',g:'lol',n:'Fontaine',size:1,cost:1,t1:'Début de ton tour : récupère 3 PV.',t2:'Début de ton tour : récupère tous ses PV.',f:x=>({sot:[{t:'healSelf',n:x>1?99:3}]})},
  {d:'nashor',g:'lol',n:'Buff du Nashor',size:3,cost:7,t1:'+1 ATK.',t2:'+2/+1.',f:x=>({a:x,h:x>1?1:0})},
  {d:'jungle',g:'lol',n:'Jungle et Smite',size:2,cost:2,t1:'+1 ATK quand elle attaque une créature.',t2:'+2 ATK quand elle attaque une créature.',f:x=>({vsC:x})},
- {d:'zaap',g:'dofus',n:'Zaap d’Astrub',size:1,cost:3,t1:'Arrivée : pioche 1 carte, puis défausse 1 carte de ton choix.',t2:'Arrivée : pioche 1 carte.',f:x=>({arr:x>1?[{t:'draw',n:1}]:[{t:'draw',n:1},{t:'discPick',n:1}]})},
+ {d:'zaap',g:'dofus',n:'Zaap d’Astrub',size:1,cost:3,t1:'Arrivée : pioche 1 carte, puis défausse 1 carte de ton choix.',t2:'Arrivée : pioche 1 carte, puis défausse 1 carte de ton choix.',f:()=>({arr:[{t:'draw',n:1},{t:'discPick',n:1}]})},
  {d:'bonta',g:'dofus',n:'Milice de Bonta',size:1,cost:6,t1:'Rempart.',t2:'Rempart, +1 PV.',f:x=>({kw:{rempart:1},h:x>1?1:0})},
  {d:'bouftou',g:'dofus',n:'Donjon Bouftou',size:3,cost:6,t1:'Fin de ton tour : +0/+1.',t2:'Fin de ton tour : +1/+1.',f:x=>({eot:[{t:'grow',a:x>1?1:0,h:1}]})},
  {d:'forge',g:'dofus',n:'Atelier de forgemagie',size:1,cost:5,t1:'Créature qui arrive dessus : gagne Égide.',t2:'Créature qui arrive dessus : gagne Égide et +1 ATK.',f:x=>({arr:x>1?[{t:'egide'},{t:'buff',a:1,h:0,self:1}]:[{t:'egide'}]})},
@@ -2114,7 +2130,7 @@ const TDEF=[
  {d:'kebab',g:'bazar',n:'Kebab de 4 h du mat’',size:1,cost:1,tn:'Agonie : soigne ton héros de 2 PV.',f:()=>({last:[{t:'heal',n:2}]})},
  {d:'vocal',g:'bazar',n:'Salon vocal AFK',size:1,cost:3,tn:'Rempart mais ne peut pas attaquer.',f:()=>({noAtk:1,kw:{rempart:1}})},
  {d:'andorre',g:'bazar',n:'Afterwork en Andorre',size:1,cost:2,tn:'Début de ton tour : gagne 1 Or.',f:()=>({eot:[{t:'or',n:1}]})},
- {d:'blizzard',g:'bazar',n:'Blizzard',size:2,cost:0,uniq:1,tn:'Terrain de Kirua, la reine des neiges : les créatures dessus ne peuvent pas attaquer. Il ne peut être ni détruit ni recouvert, disparaît quand elle meurt et dort tant qu’elle est Mute.',f:()=>({noAtk:1})},
+ {d:'blizzard',g:'bazar',n:'Blizzard',size:2,cost:0,uniq:1,tn:'Terrain de Kirua, la reine des neiges : les créatures dessus ne peuvent pas attaquer. Il ne peut pas être détruit, peut être recouvert, disparaît quand elle meurt et dort tant qu’elle est Mute.',f:()=>({noAtk:1})},
  {d:'cave',g:'bazar',n:'La cave de Homz',size:2,cost:5,tn:'Fin de ton tour : lance 1 missile.',f:()=>({eot:[{t:'rnd',n:1,times:1}]})},
  {d:'minecraft',g:'bazar',n:'Serveur Minecraft',size:2,cost:4,tn:'Fin de ton tour : un Pleb 1/1 apparaît sur une case libre de ce terrain.',teot:'spawn',spawn:'pleb',f:()=>({})},
  {d:'gbazar',g:'bazar',n:'Le Grand Bazaar',size:7,cost:0,uniq:1,tn:'Terrain de Potatoll. Fin de ton tour : chaque créature dessus déclenche un effet du Bazar au hasard. Il disparaît quand Potatoll quitte le plateau, et dort tant qu’il est Mute.',f:()=>({eot:[{t:'bazaar'}]})},
@@ -2462,6 +2478,7 @@ function addPz(G,s,i,n,x){
   lg(G,{t:'pz',ts:s,i,k:i<0?null:G.p[s].board[i].k,n,src:x?x.src:undefined,ss:x?x.ss:null,si:x?x.si:null})
 }
 function gold(G,s,n,src,x){if(n<=0)return;G.p[s].or+=n;lg(G,{t:'gold',ts:s,n,src,ss:x?x.ss:null,si:x?x.si:null})}
+function goldStealBlocked(G,s){return G.p[s].board.some(c=>c&&!c.mut&&c.ex&&CARDS[c.k].travelGoldGuard)}
 // cimetière : sorts joués, créatures mortes, cartes défaussées ou brûlées (les jetons n'y vont pas)
 function toGrave(P,c){if(c&&!CARDS[c.k].tok)P.grave.push({k:c.k,id:c.id})}
 // deck vide : le cimetière est remélangé pour former un nouveau deck
@@ -2686,8 +2703,11 @@ const OPS={
   exilT(G,op,x){const c=tgC(G,x);if(!c||c.ex)return;c.ex=1;lg(G,{t:'exil',ts:x.tg.s,i:x.tg.i,k:c.k,n:0})},             // Vol low-cost : part à l'étranger gratuitement
   dmgEx(G,op,x){if(!vt(G,x.tg))return;let n=op.n||0;G.p[x.s].board.forEach(c=>{if(c&&c.ex&&!c.fum)n+=op.per||0});hit(G,x.tg.s,x.tg.i,n,x.src,x)},   // Coup de valise
   rndFam(G,op,x){OPS.rnd(G,{n:1,times:(op.n||0)+(fl(G,x.s)[op.f]||0)},x)},                                          // Soirée ravagée : missiles
-  stealOr(G,op,x){const E=G.p[1-x.s],n=Math.min(E.or,op.n==='N-1'?Math.max(0,(op.f?(fl(G,x.s)[op.f]||0):0)-1):(op.n||0)+(op.f?(fl(G,x.s)[op.f]||0):0));if(n<=0)return; // vole de l'Or
+  stealOr(G,op,x){const E=G.p[1-x.s];if(goldStealBlocked(G,1-x.s))return;const n=Math.min(E.or,op.n==='N-1'?Math.max(0,(op.f?(fl(G,x.s)[op.f]||0):0)-1):(op.n||0)+(op.f?(fl(G,x.s)[op.f]||0):0));if(n<=0)return; // vole de l'Or
     E.or-=n;G.p[x.s].or+=n;lg(G,{t:'gold',ts:x.s,n,from:1-x.s,src:x.src,ss:1-x.s,si:-1})},
+  rndOr(G,op,x){const P=G.p[x.s],roll=ri(G,op.max-op.min+1)+op.min,n=roll<0?-Math.min(P.or,-roll):roll;P.or+=n;lg(G,{t:'orRoll',ts:x.s,n,roll,k:x.src,ss:x.ss,si:x.si})},
+  setAtk0(G,op,x){const c=tgC(G,x);if(!c)return;c.a=0;c.ta=0;lg(G,{t:'atk0',ts:x.tg.s,i:x.tg.i,k:c.k})},
+  fillDucks(G,op,x){for(const s of[0,1])for(let i=0;i<CELLS;i++)if(!G.p[s].board[i])summon(G,s,'duck',{sl:i})},
   tempFam(G,op,x){G.p[x.s].board.forEach((c,i)=>{if(c&&hasFC(c,op.f)){c.ta=(c.ta||0)+op.a;lg(G,{t:'buff',ts:x.s,i,k:c.k,ba:op.a,bh:0,tmp:1})}})},   // +ATK pendant ce tour
   rezFam(G,op,x){const P=G.p[x.s];if(!P.board.some(b=>!b))return;                                                   // C'était mieux avant : dernier membre de la famille au cimetière
     for(let j=P.grave.length-1;j>=0;j--){const k=P.grave[j].k;if(CARDS[k].t==='c'&&hasF(k,op.f)){const g=P.grave.splice(j,1)[0];summon(G,x.s,g.k,{real:1});return}}},
@@ -2712,7 +2732,7 @@ const OPS={
     if(at<0)for(let st=0;st+n<=CELLS;st++){if(!freeSpan(P,st,n))continue;let v=0;for(let j=st;j<st+n;j++)if(P.board[j])v+=1+eff(G,e,j).a*.1;if(v>bv){bv=v;at=st}}
     if(at<0)return;                                                                                                // plus de place : un autre Blizzard verrouillé occupe tout
     lg(G,{t:'tgift',d:'blizzard',at,ts:e});const T=buyTerr(G,e,{d:'blizzard'},at);
-    if(T&&x.self&&P.terrs.indexOf(T)>=0)T.lk=x.self.id;                                                            // verrouillé : ni détruit ni recouvert, il fond quand cette Kirua quitte le plateau
+    if(T&&x.self&&P.terrs.indexOf(T)>=0)T.lk=x.self.id;                                                            // ne peut pas être détruit, peut être recouvert, fond quand cette Kirua quitte le plateau
     keepAlive(G,e);lockSweep(G)},
   // ----- v14 -----
   respawnT(G,op,x){const c=tgC(G,x);if(!c||c.rsp)return;c.rsp=1;lg(G,{t:'kwg',ts:x.tg.s,i:x.tg.i,k:c.k,kw:'respawn'})},          // Lasorius : donne Respawn
@@ -2785,10 +2805,10 @@ function pickDo(G,s,q,i){if(q.m==='tg'){const c=G.p[s].board.find(b=>b&&b.id===q
 function keepPick(G,s,g,i){const P=G.p[s],c=g[i];
   if(P.hand.length>=G.o.hand){toGrave(P,c);lg(G,{t:'burn',ts:s,k:c.k})}else{P.hand.push(c);lg(G,{t:'pickd',ts:s,k:c.k,pv:s})}
   g.forEach((o,j)=>{if(j!==i){toGrave(P,o);lg(G,{t:'disc',ts:s,k:o.k})}})}
-// Blizzard verrouillé (Kirua, la reine des neiges) : ses cases ne peuvent être ni détruites ni recouvertes ; il fond quand sa Kirua quitte le plateau
+// Blizzard lié à Kirua : il ne peut pas être détruit, peut être recouvert et fond quand Kirua quitte le plateau
 function lockedId(P,id){const T=P.terrs.find(q=>q.id===id);return!!(T&&T.lk)}
 function lockedAt(P,j){return!!P.cells[j]&&lockedId(P,P.cells[j])}
-function freeSpan(P,at,n){for(let j=at;j<at+n;j++)if(lockedAt(P,j))return false;return true}
+function freeSpan(P,at,n){return at>=0&&at+n<=CELLS}
 function blzAt(P,i){const n=TD.blizzard.size,at=Math.max(0,Math.min(i,CELLS-n));return freeSpan(P,at,n)?at:-1}   // case visée -> 1re case couverte (-1 : bloqué)
 // terrains liés à une créature : le Blizzard verrouillé de Kirua (T.lk) et Le Grand Bazaar de Potatoll (T.by) disparaissent quand elle quitte le plateau
 function lockSweep(G){for(const s of[0,1]){const P=G.p[s],gone=P.terrs.filter(T=>{const o=T.lk||T.by;return o&&!G.p.some(Q=>Q.board.some(b=>b&&b.id===o))});if(!gone.length)continue;
@@ -2813,7 +2833,7 @@ function rpsAct(G,s,a){
   G.aid++;const L=G.rps||[];G.rps=[];G.phase=null;G.rpsTo=null;
   for(const r of L){const O=G.p[r.s],i=O.board.findIndex(b=>b&&b.id===r.id),c=i>=0?O.board[i]:null,res=rpsWin(r.v,a.v);
     lg(G,{t:'rpsr',ts:r.s,i,k:r.k,v:r.v,o:a.v,r:res,ok:res===1&&c&&!c.mut?1:0});
-    if(res===1&&c&&!c.mut){const n=G.p[s].or;if(n>0){G.p[s].or=0;O.or+=n;lg(G,{t:'gold',ts:r.s,n,from:s,src:r.k,ss:s,si:-1})}draw(G,r.s,3);if(G.over)return{ok:true}}}
+    if(res===1&&c&&!c.mut){const n=G.p[s].or;if(n>0&&!goldStealBlocked(G,s)){G.p[s].or=0;O.or+=n;lg(G,{t:'gold',ts:r.s,n,from:s,src:r.k,ss:s,si:-1})}draw(G,r.s,3);if(G.over)return{ok:true}}}
   startTurn(G,s);return{ok:true}}
 // Natinganz (j'ai dl le boss) : au début de chaque tour, il avance d'une case vers la droite et un laser frappe la colonne qu'il quitte
 function lasers(G){for(const t of[G.cur,1-G.cur]){const B=G.p[t].board,ids=B.filter(b=>b&&!b.mut&&CARDS[b.k].laser).map(b=>b.id);
@@ -2861,7 +2881,7 @@ function startTurn(G,s){
   for(let i=0;i<CELLS;i++){const c=P.board[i];if(c&&eff(G,s,i).kw.croissance){c.a++;c.h++;lg(G,{t:'buff',ts:s,i,k:c.k,ba:1,bh:1})}}   // Croissance : au début de ton tour
   const L=fl(G,s);
   if((L.farmer||0)>=2){const n=Math.min(4,L.farmer-1);lg(G,{t:'fac',f:'farmer',ts:s,n:L.farmer,or:n});gold(G,s,n,'farmer',{ss:s,si:-2})}   // Farmers : N−1 Or, 4 au maximum
-  if((L.alien||0)>=2){const E=G.p[1-s],n=Math.min(L.alien-1,E.or);lg(G,{t:'fac',f:'alien',ts:s,n:L.alien});if(n>0){E.or-=n;P.or+=n;lg(G,{t:'gold',ts:s,n,from:1-s,src:'alien',ss:1-s,si:-1})}}   // Extraterritoriaux : volent N−1 Or
+  if((L.alien||0)>=2){const E=G.p[1-s],n=Math.min(L.alien-1,E.or);lg(G,{t:'fac',f:'alien',ts:s,n:L.alien});if(n>0&&!goldStealBlocked(G,1-s)){E.or-=n;P.or+=n;lg(G,{t:'gold',ts:s,n,from:1-s,src:'alien',ss:1-s,si:-1})}}   // Extraterritoriaux : volent N−1 Or
   boardHooks(G,s,'sot')}
 function endTurn(G,s){
   const P=G.p[s];
@@ -2955,7 +2975,7 @@ function act(G,s,a){
     if(!G.o.ter)return er('Terrains désactivés.');const t=G.shop[a.n];if(!t)return er('Terrain indisponible.');
     const cost=terrCost(G,s,t);if(P.or<cost)return er('Pas assez d’Or.');const sz=TD[t.d].size;
     if(!(isCell(a.at)&&a.at+sz<=CELLS))return er('Emplacement invalide.');
-    if(!freeSpan(P,a.at,sz))return er('Le Blizzard de Kirua ne peut pas être recouvert.');
+    if(!freeSpan(P,a.at,sz))return er('Emplacement invalide.');
     P.or-=cost;G.shop.splice(a.n,1);G.tdis.push(t);const nt=drawTerr(G);if(nt)G.shop.push(nt);
     lg(G,{t:'buy',d:t.d,at:a.at,ts:s,c:cost});
     buyTerr(G,s,t,a.at);keepAlive(G,s);break}
@@ -2983,7 +3003,7 @@ function cycleShop(G){
   if(nt){G.shop.push(nt);lg(G,{t:'tcyc',d:old.d,nd:nt.d})}else G.shop.unshift(old)}
 function buyTerr(G,s,t,at){
   const P=G.p[s],sz=TD[t.d].size;const T={id:++G.uid,d:t.d};P.terrs.push(T);
-  const cs=[];for(let j=at;j<at+sz;j++)if(!lockedAt(P,j)){P.cells[j]=T.id;cs.push(j)}             // un Blizzard verrouillé n'est jamais recouvert
+  for(let j=at;j<at+sz;j++)P.cells[j]=T.id;
   P.terrs=P.terrs.filter(q=>P.cells.indexOf(q.id)>=0);
   return T}   // v20 : un terrain posé ne déclenche pas son effet « Arrivée » sur les créatures déjà là : seulement quand une créature arrive dessus
 // un bonus de PV perdu (créature ou terrain déplacé, terrain recouvert) ne tue jamais : il reste au moins 1 PV
@@ -3040,13 +3060,18 @@ function attack(G,s,i,t){
     if(EA.kw.siphon&&d1>0)heal(G,s,d1,A.k);if(ED.kw.siphon&&d2>0)heal(G,e,d2,D.k);
     const aT=EA.T,dT=ED.T;
     reap(G);
-    const nd=G.p[e].board[t.i],aAlive=G.p[s].board[i]&&G.p[s].board[i].id===A.id;
-    if(!G.over&&(!nd||nd.id!==did)&&!A.mut&&CARDS[A.k].killLoot)loot(G,s,A.k);
-    if(!G.over&&(!nd||nd.id!==did)&&!A.mut&&CARDS[A.k].reset&&aAlive)A.af=Math.max(0,A.af-1);
+    const nd=G.p[e].board[t.i],killed=!nd||nd.id!==did;
+    if(!G.over&&killed&&!A.mut&&CARDS[A.k].killLoot)loot(G,s,A.k);
+    if(!G.over&&killed&&!A.mut&&CARDS[A.k].killAtk)runFx(G,CARDS[A.k].killAtk,{s,src:A.k,self:A,tg:null,pc:G.played,sl:i,ss:s,si:i});
+    const attackerAlive=G.p[s].board[i]&&G.p[s].board[i].id===A.id;
+    if(!G.over&&killed&&!A.mut&&CARDS[A.k].reset&&attackerAlive)A.af=Math.max(0,A.af-1);
     // Homz (R14) : chaque créature tuée en combat sur un terrain WoW lui donne +1/+1
     const kg=(C,cs,ci,T)=>{const g=!C.mut&&CARDS[C.k].killGrow;if(g&&T&&TD[T.d].g===g.g){C.a+=g.a;C.h+=g.h;lg(G,{t:'buff',ts:cs,i:ci,k:C.k,ba:g.a,bh:g.h})}};
-    if(!G.over&&aAlive&&(!nd||nd.id!==did))kg(A,s,i,aT);
-    if(!G.over&&nd&&nd.id===did&&!aAlive)kg(D,e,t.i,dT)}
+    if(!G.over&&attackerAlive&&killed)kg(A,s,i,aT);
+    if(!G.over&&nd&&nd.id===did&&!attackerAlive)kg(D,e,t.i,dT);
+    const defenderSlot=slotOf(G,e,D);
+    if(defenderSlot>=0&&!D.mut&&CARDS[D.k].jumpAttacked&&D.jt!==G.turn){D.jt=G.turn;const free=[];G.p[e].board.forEach((c,j)=>{if(!c)free.push(j)});
+      if(free.length){const to=pick(G,free);auraOff(G,e,defenderSlot);G.p[e].board[defenderSlot]=null;G.p[e].board[to]=D;lg(G,{t:'jump',ts:e,i:defenderSlot,to,k:D.k});keepAlive(G,e)}}}
 }
 
 // ---------- vue d'un joueur (main adverse et pioches masquées) ; hist = nouveautés depuis `from` ----------
@@ -3532,7 +3557,7 @@ function deckCheck(d){
 function deckKeys(list){return list.map(k=>String(k).replace('*',''))}
 
 // ============ HÔTE DE PARTIE (IA locale ou en ligne) + RÉSEAU PEERJS ============
-const APPV='3.7';
+const APPV='3.8';
 const ANIM=1.6;                                             // vitesse des animations du duel (1 = ancienne vitesse ; plus grand = plus lent)
 function peerId(code){return 'etat-arcanique-'+String(code).replace('ARCANE-','').toLowerCase()}
 function validCode(c){return /^ARCANE-[A-Z0-9]{6}$/.test(String(c||'').trim().toUpperCase())}
@@ -4120,10 +4145,54 @@ function fixSel(){
   else if(s.t==='mv'){if(!V.p[me].board[s.f])D.sel=null}
   else if(s.t==='tm'){if(!V.p[me].terrs.some(t=>t.id===s.id))D.sel=null}
   else if(s.t==='terr'){if(!V.shop[s.n]||!canBuy(V,me,s.n))D.sel=null}}
+function effectPreview(V,s,k){
+  const cd=CARDS[k],highlight={},lines=[],P=V.p[s],enemy=1-s,ops=cd.t==='c'?(cd.cry||[]):(cd.fx||[]);
+  const label=(side,i)=>i<0?(side===s?'ton héros':'le héros adverse'):(V.p[side].board[i]&&fullName(CARDS[V.p[side].board[i].k])+' ('+eff(V,side,i).hp+' PV)');
+  const report=(text,list)=>{lines.push(text);if(list.length)lines.push(list.map(t=>'• '+label(t.s,t.i)).join('  '));};
+  for(const op of ops){
+    if(op.t==='dmgFac'){
+      const list=[];for(const side of[0,1])V.p[side].board.forEach((c,i)=>{if(c&&hasFC(c,op.f)){highlight[side+':'+i]=1;list.push({s:side,i})}});
+      report((op.n||0)+' dégâts à tous les '+FAC[op.f].n+' ('+list.length+') :',list);continue}
+    if(op.t==='dmgAll'||op.t==='killAll'){
+      const sides=op.t==='killAll'||op.side==='both'?[0,1]:[enemy],list=[];
+      sides.forEach(side=>V.p[side].board.forEach((c,i)=>{if(c){highlight[side+':'+i]=1;list.push({s:side,i})}}));
+      report(op.t==='killAll'?'Détruit toutes les créatures :':'Inflige '+op.n+' dégât(s) à toutes les créatures ennemies ('+list.length+') :',list);continue}
+    if(op.t==='pzBurst'){
+      const list=[];V.p[enemy].board.forEach((c,i)=>{if(c&&c.pz>0){highlight[enemy+':'+i]=1;list.push({s:enemy,i})}});
+      report('Dégâts égaux au Venin actuel sur ('+list.length+') :',list);continue}
+    if(op.t==='rnd'||op.t==='rnd2'||op.t==='rndC'){
+      const list=targetsForPreview(V,s,op.t==='rndC'?'ec':'e');list.forEach(t=>{if(t.i>=0)highlight[t.s+':'+t.i]=1});
+      const text=op.t==='rnd2'?(op.n||1)+' dégât(s) à 2 ennemis différents au hasard parmi :':
+        op.t==='rndC'?(op.n||0)+' dégât(s) à une créature ennemie au hasard parmi :':
+        (op.n||0)+' dégât(s) à '+(op.times||1)+' cible(s) ennemie(s) au hasard parmi :';
+      report(text,list);continue}
+    if(op.t==='blk'&&op.rnd){
+      const list=targets(V,s,'ec',null,null,true).filter(t=>!V.p[t.s].board[t.i].blk);
+      list.forEach(t=>highlight[t.s+':'+t.i]=1);report('Bloque '+(op.n||1)+' créature(s) ennemie(s) au hasard parmi :',list);continue}
+    if(op.t==='ban'&&op.rnd){
+      const list=targets(V,s,op.rnd,null,null,true);list.forEach(t=>{if(t.i>=0)highlight[t.s+':'+t.i]=1});
+      report('Bannit une cible au hasard parmi :',list);continue}
+    if(op.t==='dmg'&&op.rnd){
+      const sides=op.both?[0,1]:[enemy],list=[];sides.forEach(side=>V.p[side].board.forEach((c,i)=>{if(c){highlight[side+':'+i]=1;list.push({s:side,i})}}));
+      report(op.n+' dégâts à une créature au hasard '+(op.both?'de chaque camp':'parmi les créatures ennemies')+' parmi :',list);continue}
+    if(op.t==='buff'&&op.rnd){
+      const list=[];P.board.forEach((c,i)=>{if(c){highlight[s+':'+i]=1;list.push({s,i})}});
+      report('Renforce une de tes créatures au hasard parmi :',list);continue}
+    if(op.t==='setAtk0'){
+      const list=targets(V,s,op.tg||'ec',op.tgf);list.forEach(t=>{if(t.i>=0)highlight[t.s+':'+t.i]=1});
+      report('Passe l’ATK à 0 sur la créature choisie.',list);continue}
+    if(op.t==='fillDucks'){
+      const n0=P.board.filter(c=>!c).length,n1=V.p[enemy].board.filter(c=>!c).length;
+      lines.push('Invoque '+n0+' Canard'+(n0===1?'':'s')+' chez toi et '+n1+' chez l’adversaire.');continue}
+    if(op.t==='summon'){const n=Math.min(op.n||1,P.board.filter(c=>!c).length),name=CARDS[op.k]?CARDS[op.k].n:'créature';lines.push('Invoque '+n+' '+name+(n===1?'':'s')+', selon les cases libres.');continue}
+  }
+  if(!lines.length){const x=liveX(V,s,k);if(x)lines.push('Effet estimé : '+x+'.')}
+  return{lines,targets:highlight}}
+function targetsForPreview(V,s,spec){return targets(V,s,spec,null,null,true)}
 function computeHL(){
-  const D=DUEL,V=D.V,me=V.me,s=D.sel,hl={};if(!s||!mine())return hl;
+  const D=DUEL,V=D.V,me=V.me,s=D.sel,hl={};D.previewHl={};if(!s||!mine())return hl;
   const put=L=>L.forEach(t=>hl[t.s+':'+t.i]=1);
-  if(s.t==='hand'){const cd=CARDS[V.p[me].hand[s.i].k];if(cd.t==='s'){const sp=cryTg(cd);if(sp)put(targets(V,me,sp.tg,sp.tgf))}}
+  if(s.t==='hand'){const cd=CARDS[V.p[me].hand[s.i].k],pv=effectPreview(V,me,cd.k);D.previewHl=pv.targets;if(cd.t==='s'){const sp=cryTg(cd);if(sp)put(targets(V,me,sp.tg,sp.tgf))}}
   else if(s.t==='cry')put(s.t1?tg2List(V,me,s.sl):targets(V,me,s.sp.tg,s.sp.tgf));
   else if(s.t==='sp2')put(sp2List(V,me,s.t1));                      // Clutch : la cible à soigner
   else if(s.t==='atk')put(atkTargets(V,me,s.f));
@@ -4233,6 +4302,7 @@ function boardNodes(s,ids){
   const D=DUEL,V=D.V,me=V.me,out=[],B=V.p[s].board,L=fl(V,s);
   for(let i=0;i<CELLS;i++){
     const c=B[i];const sl=h('div',{class:'slot'+(c?'':' empty'),'data-s':s,'data-i':i});sl._dz={t:'slot',s,i};
+    if(c&&D.previewHl&&D.previewHl[s+':'+i])sl.classList.add('preview');
     const T=V.o.ter?terrOf(V,s,i):null;if(T&&TD[T.d]){sl.classList.add('ter');sl.style.setProperty('--tc',GAMES[TD[T.d].g].c)}   // case couverte par un terrain
     const sel=D.sel,cellT=sel&&sel.t==='cry'&&CELLT[sel.sp.tg];
     if(!c&&s===me&&sel&&((sel.t==='hand'&&CARDS[sel.k].t==='c')||(sel.t==='cry'&&sel.sl===i))){sl.classList.add('hi');
@@ -4274,7 +4344,7 @@ function stripNode(s,el){
     if(!id){el.append(h('div',{class:'tcell none',style:'grid-column:'+(i+1),'data-c':i}));i++;continue}
     let j=i;while(j<CELLS&&P.cells[j]===id)j++;const T=P.terrs.find(t=>t.id===id),td=TD[T.d],g=GAMES[td.g],st=i,n=P.cells.filter(x=>x===id).length;
     const off=tOff(V,T);
-    const c=h('div',{class:'tcell'+(own?' own':'')+(off?' off':'')+(T.lk?' lk':''),style:'--gc:'+g.c+';grid-column:'+(i+1)+' / span '+(j-i),title:td.n+' — '+tTxt(td)+(off?'\n⛔ Désactivé tant que Kirua, crasheur de serveur est en jeu.':'')+(T.lk?'\n🔒 Ni détruit ni recouvert : il fond quand Kirua, la reine des neiges quitte le plateau.':''),'data-c':i,'data-tid':id},h('span',{class:'tn'},off?'⛔ ':T.lk?'🔒 ':gi(td.g),' '+td.n));
+    const c=h('div',{class:'tcell'+(own?' own':'')+(off?' off':'')+(T.lk?' lk':''),style:'--gc:'+g.c+';grid-column:'+(i+1)+' / span '+(j-i),title:td.n+' — '+tTxt(td)+(off?'\n⛔ Désactivé tant que Kirua, crasheur de serveur est en jeu.':'')+(T.lk?'\n🔒 Indestructible, recouvrable : il fond quand Kirua, la reine des neiges quitte le plateau.':''),'data-c':i,'data-tid':id},h('span',{class:'tn'},off?'⛔ ':T.lk?'🔒 ':gi(td.g),' '+td.n));
     c.addEventListener('click',e=>{const S=DUEL.sel;if(S&&S.t==='terr'&&own)return;e.stopPropagation();
       if(S&&S.t==='cry'&&CELLT[S.sp.tg]){const x=cellAt(e.clientX);if(isHL(s,x)){clickSlot(s,x);return}}
       cardPop({terr:T,s},e.clientX,e.clientY)});
@@ -4539,7 +4609,7 @@ function terrDetail(ctx){
   if(over)out.push(h('div',{class:'sm',style:'margin-top:5px;color:#bc8c94'},'⚠ Remplace le terrain déjà posé sur '+over+' de ces cases.'));
   if(ctx.buy&&!ctx.placed&&V.p[me].or<ctx.cost)out.push(h('div',{class:'sm',style:'margin-top:5px;color:#bc8c94'},'Il te manque 🪙 '+(ctx.cost-V.p[me].or)+' pour l’acheter.'));
   if(ctx.buy&&V.shop.length>1&&ctx.n===0)out.push(h('div',{class:'sm',style:'margin-top:5px;color:#cab095'},cycSoon(V)?'⏳ Ce terrain sera remplacé au début du prochain tour.':'⏳ Ce terrain sera remplacé dans 2 tours.'));
-  if(ctx.placed&&t.lk)out.push(h('div',{class:'sm',style:'margin-top:6px;color:#9cc8e8'},'🔒 Posé par Kirua, la reine des neiges : il ne peut être ni détruit ni recouvert, et fond quand elle quitte le plateau.'));
+  if(ctx.placed&&t.lk)out.push(h('div',{class:'sm',style:'margin-top:6px;color:#9cc8e8'},'🔒 Posé par Kirua, la reine des neiges : indestructible, recouvrable, et fond quand elle quitte le plateau.'));
   return out}
 function facDetail(I){
   const V=DUEL.V,f=I.fac,F=FAC[f],P=V.p[I.s],mem=[];
@@ -4553,15 +4623,20 @@ function showInfo(){
   const D=DUEL,V=D.V,box=$('#info'),I=D.info;box.innerHTML='';
   if(I&&I.cr){const c0=V.p[I.s].board[I.i];if(!c0||c0.id!==I.cr.id){D.info=null;showInfo();return}I.cr=c0}   // la créature a changé ou disparu
   const sel=D.sel,ht=hintText(),act=[];
+  const preview=I&&I.hand!=null&&sel&&(sel.t==='hand'||sel.t==='cry')&&sel.i===I.hand?effectPreview(V,V.me,I.k):null;
   if(I&&(I.terr||I.shop!=null)){if(sel&&sel.t==='terr'){
     if(sel.at!=null)act.push(h('button',{class:'btn gold sm',onclick:e=>{e.stopPropagation();buyTerr_(sel.n,sel.at)}},'Placer ici'));
     act.push(h('button',{class:'btn sm',onclick:e=>{e.stopPropagation();D.sel=null;renderDuel()}},'Annuler'))}}
   else if(I&&!I.fac&&I.k&&CARDS[I.k]){
     if(sel&&sel.t==='hand'&&CARDS[sel.k].t==='s'&&!cryTg(CARDS[sel.k]))act.push(h('button',{class:'btn pri sm',style:'--h:#73b0ad;--ht:#241e17',onclick:e=>{e.stopPropagation();playSpellOn(sel.i,null)}},'Jouer le sort'));
     if(sel)act.push(h('button',{class:'btn sm',onclick:e=>{e.stopPropagation();D.sel=null;renderDuel()}},'Annuler'))}
-  box.classList.toggle('empty',!ht&&!act.length);const tp=$('.dtop');if(tp)tp.classList.toggle('hashint',!!(ht||act.length));
+  box.classList.toggle('empty',!ht&&!act.length&&!preview);const tp=$('.dtop');if(tp)tp.classList.toggle('hashint',!!(ht||act.length||preview));
   if(ht)box.append(h('div',{class:'hintline'},'👉 '+ht));
-  if(act.length)box.append(h('div',{class:'acts'},act))}
+  if(act.length)box.append(h('div',{class:'acts'},act));
+  if(preview){const cd=CARDS[I.k];box.append(h('div',{class:'effect-preview'},
+    h('b',null,'Aperçu des effets · '+cd.n),
+    cd.tx?h('div',{class:'previewtext'},txNodes(cd.tx)):null,
+    preview.lines.map(line=>h('div',{class:'previewtargets'},line))))}}
 
 // ---------- interactions ----------
 function clickHand(i){
@@ -4583,7 +4658,7 @@ function clickShop(n){
 function setTerrAt(i){
   const D=DUEL,V=D.V,s=D.sel;if(!s||s.t!=='terr')return;const t=V.shop[s.n];if(!t)return;
   const at=Math.max(0,Math.min(i,CELLS-TD[t.d].size));
-  if(!freeSpan(V.p[V.me],at,TD[t.d].size)){toast('Le Blizzard de Kirua ne peut pas être recouvert.');return}
+  if(!freeSpan(V.p[V.me],at,TD[t.d].size)){toast('Emplacement invalide.');return}
   if(s.at===at){buyTerr_(s.n,at);return}
   s.at=at;renderDuel()}
 function buyTerr_(n,at){const D=DUEL;D.info=null;doAct({t:'buy',n,at})}
@@ -4779,7 +4854,7 @@ function hovParts(I){const V=DUEL.V,me=V.me;
   if(I.fac){const F=FAC[I.fac];return[h('div',{class:'fbadge',style:'--gc:'+F.c+';margin:0 auto'},F.ic),facDetail(I)]}
   if(I.terr||I.shop!=null){const t=I.terr||V.shop[I.shop];if(!t)return null;const td=TD[t.d],g=GAMES[td.g],cost=I.shop!=null?terrCost(V,me,t):null;
     return[tcardEl(t,{cost}),[h('h4',null,gi(td.g),' '+td.n),h('div',{class:'mut sm'},'Terrain '+g.n+' · '+td.size+' case'+(td.size>1?'s':'')+(cost!=null?' · 🪙 '+cost:'')),terrFxEl(td),
-      I.terr&&t.lk?h('div',{class:'sm',style:'margin-top:6px;color:#9cc8e8'},'🔒 Ni détruit ni recouvert : il fond quand Kirua, la reine des neiges quitte le plateau.'):null,
+      I.terr&&t.lk?h('div',{class:'sm',style:'margin-top:6px;color:#9cc8e8'},'🔒 Indestructible, recouvrable : il fond quand Kirua, la reine des neiges quitte le plateau.'):null,
       I.terr&&tOff(V,t)?h('div',{class:'sm',style:'margin-top:6px;color:#bc8c94'},'⛔ Désactivé tant que Kirua, crasheur de serveur est en jeu.'):null,
       I.shop===0&&V.shop.length>1?h('div',{class:'sm',style:'margin-top:6px;color:#cab095'},cycSoon(V)?'⏳ Remplacé au début du prochain tour.':'⏳ Remplacé dans 2 tours.'):null].filter(Boolean)]}
   if(I.k&&CARDS[I.k])return[cardEl(I.k),cardNodes(I).filter(n=>!(n.classList&&n.classList.contains('lore')))];
@@ -4887,6 +4962,7 @@ function animate(es){
     case 'gold':{if(e.from!=null){proj(elAt(e.from,-1),elAt(e.ts,-1),'#dab77a','🪙',t,FL*1.2);popAt(e.ts,-1,'+'+e.n+' 🪙','gold',t+FL*1.2);popAt(e.from,-1,'−'+e.n+' 🪙','gold',t);t+=300}
       else{const se=srcEl(e);if(se&&e.si!==-1){proj(se,elAt(e.ts,-1),'#dab77a','🪙',t,FL);popAt(e.ts,-1,'+'+e.n+' 🪙','gold',t+FL);t+=220}else{popAt(e.ts,-1,'+'+e.n+' 🪙','gold',t);t+=150}}
       break}
+    case 'orRoll':popAt(e.ts,-1,(e.n>0?'+':'')+e.n+' 🪙','gold',t);t+=180;break;
     case 'fac':{const F=FAC[e.f],n=e.n;famBurst(e.ts,e.f,e.f==='ravages'?(n-1)+' missile'+(n>2?'s':'')+' !':e.f==='farmer'?'+'+(e.or||n)+' Or':e.f==='alien'?'Vol de '+(n-1)+' Or':'×'+n,t);t+=550;break}
     case 'tfx':{const td=TD[e.d];if(!td)break;flashSlot(e.ts,e.i,GAMES[td.g].c,t);popAt(e.ts,e.i,[gi(td.g),' '+td.n],'txt',t);t+=260;break}
     case 'buff':popAt(e.ts,e.i,e.tmp?sg(e.ba)+' ATK ce tour':sg(e.ba)+'/'+sg(e.bh),'buf',t);t+=110;break;
@@ -4905,6 +4981,8 @@ function animate(es){
     case 'loot':popAt(e.ts,-1,e.n===6?'💰 Drop exceptionnel !':e.n===5?'🪞 Oh, j’ai drop un mirror !':'🎁 Butin','txt',t);t+=e.n>=5?700:300;break;
     case 'dupc':popAt(e.ts,-1,'🪞 Miroir de Kalandra','txt',t);t+=250;break;
     case 'discc':popAt(e.ts,-1,'🎲 défausse au choix','txt',t);t+=200;break;
+    case 'jump':popAt(e.ts,e.to,'🌀 saute','txt',t);t+=180;break;
+    case 'atk0':popAt(e.ts,e.i,'ATK → 0','txt',t);t+=150;break;
     case 'rethand':popAt(e.ts,-1,'↩ retour en main','txt',t);t+=200;break;
     case 'pick3':popAt(e.ts,-1,'🃏 garde 1 carte sur '+e.n,'txt',t);t+=250;break;
     case 'tax':popAt(e.ts,-1,'🪙 −'+e.n,'txt',t);break;
@@ -4999,6 +5077,7 @@ function histNodes(e){
   case 'hc':return['heal',[e.cs&&e.cs!==e.k?srcChip(e.cs):null,h('span',{class:'vb'},'♥'),mini(e.k,e.st),h('span',{class:'hl'},'+'+e.n)]];
   case 'pz':return['pz',[sc||(e.cs?srcChip(e.cs):null),h('span',{class:'vb'},'☠'),tgChip(e.ts,e.i,e.k,e.st),h('span',{class:'pzc'},'+'+e.n)]];
   case 'gold':return['gold',[e.from!=null?h('span',{class:'mut'},'vol :'):(sc||(e.cs?srcChip(e.cs):null)),h('span',{class:'vb'},'🪙'),heroChip(e.ts),h('span',{class:'gd'},'+'+e.n),e.from!=null&&sc?sc:null]];
+  case 'orRoll':return['gold',[mini(e.k),h('span',{class:'vb'},'🎲'),heroChip(e.ts),'résultat : '+(e.roll>0?'+':'')+e.roll+' Or',e.n!==e.roll?h('span',{class:'mut'},'(variation réelle '+(e.n>0?'+':'')+e.n+')'):null]];
   case 'fac':return['fac',[facChip(e.f),h('b',{style:'color:'+FAC[e.f].c},'×'+e.n)]];
   case 'tfx':return TD[e.d]?['tfx',[terrChip(e.d),e.k?[A,mini(e.k)]:null]]:null;
   case 'die':return e.kick?null:['die',[h('span',{class:'vb'},e.ban?'⛔':'✝'),mini(e.k),h('span',{class:'vt'},e.ban?'Bannie':'meurt'),by(e)]];
@@ -5018,8 +5097,10 @@ function histNodes(e){
   case 'steal':return['card',[by(e),h('span',{class:'vb'},'📸'),e.k?mini(e.k):'copie une carte']];
   case 'exil':return['move',e.fum?[h('span',{class:'vb'},e.fum===2?'🛂':'💨'),mini(e.k),e.fum===2?'immunité diplomatique (inciblable)':'disparaît dans la fumée (inciblable)']:[h('span',{class:'vb'},'✈️'),mini(e.k),'part à l’étranger',e.n?h('span',{class:'cst'},'−'+e.n+' 🪙'):'(gratuit)']];
   case 'move':return['move',[h('span',{class:'vb'},'↔'),mini(e.k),e.k2?['⇄',mini(e.k2)]:'déplacé(e)',costTag(e)]];
+  case 'jump':return['move',[mini(e.k),h('span',{class:'vb'},'🌀'), 'saute de la case '+(e.i+1)+' à la case '+(e.to+1)]];
   case 'tmove':return['move',[h('span',{class:'vb'},'↔'),terrChip(e.d),e.bound?'suit son propriétaire':'déplacé',costTag(e)]];
   case 'back':return['move',[h('span',{class:'vb'},e.fum===2?'🛂':e.fum?'💨':'🏠'),mini(e.k),e.fum===2?'n’est plus inciblable':e.fum?'sort de la fumée':'est de retour']];
+  case 'atk0':return['ctl',[mini(e.k),h('span',{class:'vb'},'⬇'), 'ATK passe à 0']];
   case 'reshuf':return['card',[h('span',{class:'vb'},'♻'),who(e),'Cimetière remélangé : deck reformé ('+e.n+' cartes)',DUEL.V.o.fat?h('span',{class:'mut'},'· la Fatigue commence'):null]];
   case 'echo':return['play',[h('span',{class:'vb'},'×2'),mini(e.k)]];
   case 'story':return['sys',[by(e),h('span',{class:'vb'},'📖'),STORY[e.n]]];
@@ -5572,7 +5653,7 @@ function vFriends(v){
   nameI.addEventListener('change',()=>{S.name=nameI.value.trim().slice(0,16)||S.name;saveS();refreshTop()});
   const link=location.href.split('#')[0]+'#'+S.code;
   const statusEl=h('div',{class:'sm',id:'netl'},netLine());
-  const codeI=h('input',{placeholder:'ARCANE-XXXXXX',style:'flex:1;text-transform:uppercase'});
+  const codeI=h('input',{placeholder:'Code ou lien d’invitation',style:'flex:1;text-transform:uppercase'});
   const list=h('div');
   v.append(h('div',{class:'cols'},
     h('div',null,
@@ -5580,7 +5661,8 @@ function vFriends(v){
         h('div',{class:'row',style:'margin-top:12px'},h('div',{style:'flex:1;min-width:150px'},h('div',{class:'sm mut'},'Mon code ami'),h('b',{style:'font-size:22px;letter-spacing:.1em',class:'gold codebig'},S.code)),
           h('button',{class:'btn sm pri',onclick:()=>copy(S.code,'Code copié')},ico('copy'),' Copier le code'),h('button',{class:'btn sm pri',onclick:()=>copy(link,'Lien d’invitation copié')},ico('link'),' Copier le lien')),
         h('div',{style:'margin-top:10px'},statusEl)),
-      h('div',{class:'panel'},ph('adduser','Ajouter un ami'),h('div',{class:'row'},h('label',{class:'inico'},codeI,ico('adduser')),h('button',{class:'btn pri',onclick:()=>addFriend(codeI.value,list)},ico('adduser'),' Ajouter')))),
+      h('div',{class:'panel'},ph('adduser','Ajouter un ami'),h('div',{class:'row'},h('label',{class:'inico'},codeI,ico('adduser')),h('button',{class:'btn pri',onclick:()=>addFriend(codeI.value,list)},ico('adduser'),' Ajouter')),
+        h('p',{class:'mut sm',style:'margin:8px 0 0'},'Colle le code ARCANE ou le lien d’invitation associé à son compte.'))),
     h('div',null,h('div',{class:'panel'},ph('friends','Mes amis'),list))));list.id='flist';
   drawFriends(list);
   pingAll(list);FR_T=setInterval(()=>{const e=$('#netl');if(e)e.textContent=netLine();pingAll(list)},20000)}
@@ -5620,13 +5702,13 @@ function drawFriends(list){
       h('button',{class:'btn sm',title:'Retirer '+f.name,onclick:()=>ask('Retirer '+f.name+' ?',null,[{t:'Annuler'},{t:'Retirer',c:'danger',f:()=>{S.friends=S.friends.filter(x=>x!==f);saveS();drawFriends(list)}}])},'✕'))))})}
 function pingAll(list){S.friends.forEach(f=>pingFriend(f.code,r=>{PRES[f.code]=r?{on:true,busy:r.busy}:{on:false};if(r&&r.name&&r.name!==f.name&&!f.custom){f.name=r.name;saveS()}if(CUR==='friends'&&document.body.contains(list))drawFriends(list)}))}
 function addFriend(raw,list){
-  const code=String(raw||'').trim().toUpperCase();
+  const input=String(raw||'').trim().toUpperCase(),match=input.match(/(?:^|[^A-Z0-9])(ARCANE-[A-Z0-9]{6})(?:$|[^A-Z0-9])/),code=match?match[1]:input;
   if(!validCode(code)){toast('Code invalide (format ARCANE-XXXXXX).');return}
   if(code===S.code){toast('C’est ton propre code !');return}
   if(S.friends.some(f=>f.code===code)){toast('Déjà dans ta liste.');return}
   const f={code,name:'Ami '+code.slice(7)};S.friends.push(f);saveS();toast('Ami ajouté.');
   pingFriend(code,r=>{if(r&&r.name){f.name=r.name;saveS()}PRES[code]=r?{on:true,busy:r.busy}:{on:false};if(CUR==='friends'&&list&&document.body.contains(list))drawFriends(list)});
-  drawFriends(list);const i=$('#view input[placeholder="ARCANE-XXXXXX"]');if(i)i.value=''}
+  drawFriends(list);const i=$('#view input[placeholder="Code ou lien d’invitation"]');if(i)i.value=''}
 function cleanOpt(o){const r=Object.assign({},OPTDEF);OPTSET.forEach(g=>{if(o&&g.v.some(x=>x[0]===o[g.k]))r[g.k]=o[g.k]});return r}
 function optSummary(o){return OPTSET.map(g=>{const x=g.v.find(y=>y[0]===o[g.k]);return g.n.split(' (')[0]+' : '+(x?x[1]:'?')}).join(' · ')}
 function challengeFriend(f){pickDeckModal('Défier '+f.name,'Choisis ton deck pour ce défi (il restera secret).',i=>sendDuelTo(f,i))}
@@ -5841,7 +5923,7 @@ function startApp(isNew){
 function boot(){
   loadS();
   const lg=h('div',{class:'logo'});lg.innerHTML=EMBLEM;lg.append(h('b',null,'L’ÉTAT ARCANIQUE'));
-  $('#top').append(lg,h('nav',{id:'nav'}),h('span',{id:'pname',title:'Ton compte',onclick:()=>go('acct')}),h('span',{id:'accb',hidden:true,onclick:()=>go('acct')}),h('div',{class:'gems',title:'Tes diamants'},h('span',{class:'gi'},'💎'),h('span',{id:'gemn'},S.gems)));
+  $('#top').append(lg,h('nav',{id:'nav'}),h('span',{id:'appver',title:'Version du jeu'},'v'+APPV),h('span',{id:'pname',title:'Ton compte',onclick:()=>go('acct')}),h('span',{id:'accb',hidden:true,onclick:()=>go('acct')}),h('div',{class:'gems',title:'Tes diamants'},h('span',{class:'gi'},'💎'),h('span',{id:'gemn'},S.gems)));
   if(loggedIn())startApp(false);else loginScreen(startApp)}
 window.addEventListener('load',boot);
 
