@@ -1944,7 +1944,7 @@ homz:{n:'Homz',fac:['alien','farmer'],sc:{wow:2,dofus:0,lol:1,cs:1},lore:'Fan d�
 boku:{n:'Boku',fac:['weebos'],sc:{wow:0,dofus:0,lol:2,cs:1},lore:'GM et turbo weeb, OTP Katarina : chaque kill donne envie d’en refaire un. Ne s’est énervé que DEUX fois dans toute sa vie. Il en reste une.',v:[
   {st:'Présence apaisante',c:2,a:2,h:3,eot:[{t:'healAdj',n:1}],tx:'Fin de ton tour : soigne de 1 PV les créatures à côté de lui.'},
   {st:'Japan Expo enjoyer',stl:'Japan Expo enjoyer',c:4,a:2,h:2,cry:[{t:'summon',k:'weeb',n:2}],tx:'Cri d’arrivée : invoque 2 Weebs 1/1 (Weebos).'},
-  {st:'Maître KATARINA',last:[{t:'dmgAll',n:1}],c:8,a:6,h:6,kw:['hate','tilt'],reset:1,killAtk:[{t:'dmgAll',n:1}],tilt:[{t:'dmgAll',n:1}],tx:'Hâte. Après avoir tué une créature en attaquant, inflige 1 dégât à toutes les créatures ennemies et peut attaquer à nouveau. Tilt et Agonie : inflige 1 dégât à toutes les créatures ennemies.'}]},
+  {st:'Maître KATARINA',c:8,a:6,h:6,kw:['hate'],reset:1,killAtk:[{t:'dmgAll',n:1}],tx:'Hâte. Après avoir tué une créature en attaquant, inflige 1 dégât à toutes les créatures ennemies et peut attaquer à nouveau.'}]},
 haddmi:{n:'Haddmi',fac:['xeno'],sc:{wow:0,dofus:0,lol:1,cs:2},lore:'Meneur d’un discord rival : une armée à lui tout seul. Bosse chez Vitality, niveau 10 sur FACEIT. Se vexe au quart de tour, et ça le fait tilt.',v:[
   {st:'Chouineur professionnel',c:1,a:0,h:3,kw:['rempart','tilt'],tilt:[{t:'grow',a:1,h:0}],lore:'« Je peux plus jouer la lane, go next. »',tx:'Rempart. Tilt : gagne +1 ATK.'},
   {st:'Chef dissident',c:5,a:3,h:2,cry:[{t:'ctl',tg:'ec',tgf:'cm3'}],tx:'Cri d’arrivée : prend le contrôle d’une créature ennemie qui coûte 3 ou moins.'},
@@ -1964,7 +1964,7 @@ takk:{n:'Takk',fac:['weebos','expats'],sc:{wow:2,dofus:1,lol:1,cs:0},sym:'✈',c
   {r:3,st:'Pourquoi il est mort ?',c:5,a:4,h:5,kw:['frenesie'],last:[{t:'buffAffN',g:'wow',a:3,h:3}],tx:'Frénésie. Agonie : tes créatures qui ont une affinité WoW gagnent +3/+3.'}]},
 kirua:{n:'Kirua',fac:['alien','vestige'],sc:{wow:0,dofus:2,lol:0,cs:2},sym:'❄',col:'#8fb8d7',lore:'Panthère sur le terrain, reine des neiges en dehors, et le serveur plante dès que Kirua se connecte.',v:[
   {r:1,st:'Crasheur de serveur',c:2,a:2,h:3,cry:[{t:'tOff',tg:'terr'}],tx:'Cri d’arrivée : désactive un terrain (un des tiens ou un de l’adversaire) tant que Kirua, crasheur de serveur est en jeu. S’il est Mute, le terrain refonctionne.'},
-  {r:2,st:'La panthère',c:4,a:4,h:2,kw:['hate','tilt'],tilt:[{t:'dmgFace',n:2}],jumpAttacked:1,tx:'Hâte. La première fois qu’elle est attaquée à chaque tour, saute sur une case libre aléatoire de ton plateau. Tilt : inflige 2 dégâts au héros adverse.'},
+  {r:2,st:'La panthère',c:4,a:4,h:2,kw:['hate','tilt'],tilt:[{t:'dmgFace',n:2}],jumpAttacked:1,tx:'Hâte. La première fois qu’elle est attaquée à chaque tour, esquive l’attaque en sautant sur une case libre aléatoire de ton plateau. Tilt : inflige 2 dégâts au héros adverse.'},
   {r:3,st:'La reine des neiges',c:5,a:5,h:5,cry:[{t:'blizzard',tg:'ecell'}],tx:'Cri d’arrivée : pose le terrain Blizzard (2 cases) où tu veux sur le plateau adverse : les créatures dessus ne peuvent pas attaquer. Il ne peut pas être détruit, peut être recouvert, disparaît quand elle meurt et dort tant qu’elle est Mute.'}]},
 rasta:{n:'Rasta',fac:['ravages','vestige'],sc:{wow:0,dofus:2,lol:0,cs:1},sym:'☁',col:'#91ab64',lore:'On le sent arriver avant de le voir. Quand on lui dit « viens dehors », il le prend au pied de la lettre.',v:[
   {r:1,st:'Fardeau pour l’équipe',c:2,a:2,h:3,cry:[{t:'sumE',k:'poutch',tg:'eslot'}],tx:'Cri d’arrivée : choisis une case libre du plateau adverse où invoquer un Poutch 0/4.'},
@@ -2116,7 +2116,7 @@ const TDEF=[
  {d:'fontaine',g:'lol',n:'Fontaine',size:1,cost:1,t1:'Début de ton tour : récupère 3 PV.',t2:'Début de ton tour : récupère tous ses PV.',f:x=>({sot:[{t:'healSelf',n:x>1?99:3}]})},
  {d:'nashor',g:'lol',n:'Buff du Nashor',size:3,cost:7,t1:'+1 ATK.',t2:'+2/+1.',f:x=>({a:x,h:x>1?1:0})},
  {d:'jungle',g:'lol',n:'Jungle et Smite',size:2,cost:2,t1:'+1 ATK quand elle attaque une créature.',t2:'+2 ATK quand elle attaque une créature.',f:x=>({vsC:x})},
- {d:'zaap',g:'dofus',n:'Zaap d’Astrub',size:1,cost:3,t1:'Arrivée : pioche 1 carte, puis défausse 1 carte de ton choix.',t2:'Arrivée : pioche 1 carte, puis défausse 1 carte de ton choix.',f:()=>({arr:[{t:'draw',n:1},{t:'discPick',n:1}]})},
+ {d:'zaap',g:'dofus',n:'Zaap d’Astrub',size:1,cost:3,t1:'Arrivée : pioche 1 carte, puis défausse 1 carte de ton choix.',t2:'Arrivée : pioche 1 carte.',f:x=>({arr:x>1?[{t:'draw',n:1}]:[{t:'draw',n:1},{t:'discPick',n:1}]})},
  {d:'bonta',g:'dofus',n:'Milice de Bonta',size:1,cost:6,t1:'Rempart.',t2:'Rempart, +1 PV.',f:x=>({kw:{rempart:1},h:x>1?1:0})},
  {d:'bouftou',g:'dofus',n:'Donjon Bouftou',size:3,cost:6,t1:'Fin de ton tour : +0/+1.',t2:'Fin de ton tour : +1/+1.',f:x=>({eot:[{t:'grow',a:x>1?1:0,h:1}]})},
  {d:'forge',g:'dofus',n:'Atelier de forgemagie',size:1,cost:5,t1:'Créature qui arrive dessus : gagne Égide.',t2:'Créature qui arrive dessus : gagne Égide et +1 ATK.',f:x=>({arr:x>1?[{t:'egide'},{t:'buff',a:1,h:0,self:1}]:[{t:'egide'}]})},
@@ -3039,10 +3039,15 @@ function trainOk(G,s,i,t){const A=G.p[s].board[i];if(!A||A.mut||!CARDS[A.k].trai
   const EA=eff(G,s,i),ED=eff(G,1-s,t.i);return ED.a<=EA.a||ED.hp<=EA.hp}
 function attack(G,s,i,t){
   const e=1-s,A=G.p[s].board[i];A.af++;A.aw=1;
-  if(trainOk(G,s,i,t)){A.a+=1;A.h+=1;lg(G,{t:'buff',ts:s,i,k:A.k,ba:1,bh:1})}
   const L=fl(G,s),EA=eff(G,s,i,L),xa={ss:s,si:i,src:A.k,sid:A.id};
-  const as=snap(G,s,i);
   if(CARDS[A.k].c<=4){G.p[s].board.forEach((b,j)=>{const bd=b&&CARDS[b.k];if(bd&&bd.atkLow&&!b.mut&&!G.over)heroHit(G,e,bd.atkLow.n,b.k,false,{ss:s,si:j,src:b.k})});if(G.over)return}   // Le Coach : 2 dégâts au héros adverse
+  if(t.i>=0){const D=G.p[e].board[t.i];
+    if(D&&!D.mut&&CARDS[D.k].jumpAttacked&&D.jt!==G.turn){const defenderSlot=slotOf(G,e,D),free=[];
+      G.p[e].board.forEach((c,j)=>{if(!c)free.push(j)});
+      if(free.length){D.jt=G.turn;const to=pick(G,free);auraOff(G,e,defenderSlot);G.p[e].board[defenderSlot]=null;G.p[e].board[to]=D;
+        lg(G,{t:'jump',ts:e,i:defenderSlot,to,k:D.k,evade:1});keepAlive(G,e);return}}}
+  if(trainOk(G,s,i,t)){A.a+=1;A.h+=1;lg(G,{t:'buff',ts:s,i,k:A.k,ba:1,bh:1})}
+  const as=snap(G,s,i);
   if(t.i<0){
     const n=EA.a,hp0=G.p[e].hp;heroHit(G,e,n,A.k,true);lg(G,{t:'atk',k:A.k,i,ts:e,ti:-1,to:'hero',n,r:0,as,hp0});
     if(EA.kw.siphon)heal(G,s,n,A.k);
@@ -3069,9 +3074,7 @@ function attack(G,s,i,t){
     const kg=(C,cs,ci,T)=>{const g=!C.mut&&CARDS[C.k].killGrow;if(g&&T&&TD[T.d].g===g.g){C.a+=g.a;C.h+=g.h;lg(G,{t:'buff',ts:cs,i:ci,k:C.k,ba:g.a,bh:g.h})}};
     if(!G.over&&attackerAlive&&killed)kg(A,s,i,aT);
     if(!G.over&&nd&&nd.id===did&&!attackerAlive)kg(D,e,t.i,dT);
-    const defenderSlot=slotOf(G,e,D);
-    if(defenderSlot>=0&&!D.mut&&CARDS[D.k].jumpAttacked&&D.jt!==G.turn){D.jt=G.turn;const free=[];G.p[e].board.forEach((c,j)=>{if(!c)free.push(j)});
-      if(free.length){const to=pick(G,free);auraOff(G,e,defenderSlot);G.p[e].board[defenderSlot]=null;G.p[e].board[to]=D;lg(G,{t:'jump',ts:e,i:defenderSlot,to,k:D.k});keepAlive(G,e)}}}
+  }
 }
 
 // ---------- vue d'un joueur (main adverse et pioches masquées) ; hist = nouveautés depuis `from` ----------
@@ -4981,7 +4984,7 @@ function animate(es){
     case 'loot':popAt(e.ts,-1,e.n===6?'💰 Drop exceptionnel !':e.n===5?'🪞 Oh, j’ai drop un mirror !':'🎁 Butin','txt',t);t+=e.n>=5?700:300;break;
     case 'dupc':popAt(e.ts,-1,'🪞 Miroir de Kalandra','txt',t);t+=250;break;
     case 'discc':popAt(e.ts,-1,'🎲 défausse au choix','txt',t);t+=200;break;
-    case 'jump':popAt(e.ts,e.to,'🌀 saute','txt',t);t+=180;break;
+    case 'jump':popAt(e.ts,e.to,e.evade?'🌀 esquive !':'🌀 saute','txt',t);t+=180;break;
     case 'atk0':popAt(e.ts,e.i,'ATK → 0','txt',t);t+=150;break;
     case 'rethand':popAt(e.ts,-1,'↩ retour en main','txt',t);t+=200;break;
     case 'pick3':popAt(e.ts,-1,'🃏 garde 1 carte sur '+e.n,'txt',t);t+=250;break;
@@ -5097,7 +5100,7 @@ function histNodes(e){
   case 'steal':return['card',[by(e),h('span',{class:'vb'},'📸'),e.k?mini(e.k):'copie une carte']];
   case 'exil':return['move',e.fum?[h('span',{class:'vb'},e.fum===2?'🛂':'💨'),mini(e.k),e.fum===2?'immunité diplomatique (inciblable)':'disparaît dans la fumée (inciblable)']:[h('span',{class:'vb'},'✈️'),mini(e.k),'part à l’étranger',e.n?h('span',{class:'cst'},'−'+e.n+' 🪙'):'(gratuit)']];
   case 'move':return['move',[h('span',{class:'vb'},'↔'),mini(e.k),e.k2?['⇄',mini(e.k2)]:'déplacé(e)',costTag(e)]];
-  case 'jump':return['move',[mini(e.k),h('span',{class:'vb'},'🌀'), 'saute de la case '+(e.i+1)+' à la case '+(e.to+1)]];
+  case 'jump':return['move',[mini(e.k),h('span',{class:'vb'},'🌀'),e.evade?'esquive une attaque et saute de la case '+(e.i+1)+' à la case '+(e.to+1):'saute de la case '+(e.i+1)+' à la case '+(e.to+1)]];
   case 'tmove':return['move',[h('span',{class:'vb'},'↔'),terrChip(e.d),e.bound?'suit son propriétaire':'déplacé',costTag(e)]];
   case 'back':return['move',[h('span',{class:'vb'},e.fum===2?'🛂':e.fum?'💨':'🏠'),mini(e.k),e.fum===2?'n’est plus inciblable':e.fum?'sort de la fumée':'est de retour']];
   case 'atk0':return['ctl',[mini(e.k),h('span',{class:'vb'},'⬇'), 'ATK passe à 0']];
