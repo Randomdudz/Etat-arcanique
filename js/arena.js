@@ -55,14 +55,15 @@ async function arenaWeeklyUpdate(kind,mode,runT){
   if(!ACC||!cloudOn()){toast(kind==='run'?'Course non inscrite au classement : connecte-toi à un compte en ligne.':'Victoire non inscrite au classement : connecte-toi à un compte en ligne.');return false}
   try{
     const week=arenaWeekKey(),uid=ACC.uid,pseudo=String(S.name||ACC.id||'Joueur').trim().slice(0,18)||'Joueur',tok=await accTok(),
-      docName=arenaLeaderboardUrl(week)+'/players/'+encodeURIComponent(uid),
+      docUrl=arenaLeaderboardUrl(week)+'/players/'+encodeURIComponent(uid),
+      docName='projects/'+encodeURIComponent(CLOUD.projectId)+'/databases/(default)/documents/arenaWeeks/'+week+'/players/'+uid,
       url='https://firestore.googleapis.com/v1/projects/'+encodeURIComponent(CLOUD.projectId)+'/databases/(default)/documents:commit?key='+encodeURIComponent(CLOUD.apiKey),
       transforms=kind==='run'?[{fieldPath:'runs',increment:{integerValue:'1'}}]:
         [{fieldPath:'total',increment:{integerValue:'1'}},{fieldPath:mode==='ai'?'winsAI':'winsHuman',increment:{integerValue:'1'}}];
     let saved=false;
     for(let attempt=0;attempt<2&&!saved;attempt++){
       let exists=true,r,stored=null;
-      try{r=await fetch(docName,{headers:{Authorization:'Bearer '+tok}})}catch(e){throw new Error(accErr(''))}
+      try{r=await fetch(docUrl,{headers:{Authorization:'Bearer '+tok}})}catch(e){throw new Error(accErr(''))}
       if(r.status===404)exists=false;
       else if(!r.ok){const j=await r.json().catch(()=>({})),e=j.error||{};throw new Error(accErr(e.status||e.message))}
       else stored=await r.json().catch(()=>null);
