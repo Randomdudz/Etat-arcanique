@@ -1413,6 +1413,13 @@ body{background:#060c17}
 #app .btn.big::before,#app .btn.big::after{content:'';position:absolute;top:50%;width:16px;height:16px;background:linear-gradient(135deg,#fbe7ad,#c99a48);border:1px solid #6b4c1e;transform:translateY(-50%) rotate(45deg);box-shadow:0 0 8px #e9c46a77}
 #app .btn.big::before{left:-9px}#app .btn.big::after{right:-9px}
 #app .btn.big svg.ic{font-size:30px}
+#app .jouer-icon{display:block;flex:none;object-fit:contain;filter:drop-shadow(0 2px 2px #0009)}
+#nav .ni .jouer-icon{width:36px;height:31px}
+#app .btn.big .jouer-icon{width:42px;height:36px}
+#nav .ni .nav-art{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 2px 2px #0009)}
+#app .panel-art{display:block;width:42px;height:42px;object-fit:contain;filter:drop-shadow(0 2px 2px #0009)}
+#app .v-ia h3 .panel-art{width:54px;height:54px}
+#top .gems .gi{width:25px;height:25px;font-size:0;background:url("diamond.png") center/contain no-repeat}
 #app .btn.tip{position:relative;margin:0 10px}
 #app .btn.tip::before,#app .btn.tip::after{content:'';position:absolute;top:50%;width:11px;height:11px;transform:translateY(-50%) rotate(45deg);background:inherit;border:1px solid #fff8;pointer-events:none}
 #app .btn.tip::before{left:-6px}#app .btn.tip::after{right:-6px}
@@ -1762,7 +1769,43 @@ body{background:#060c17}
 #mullov .mbox{background:linear-gradient(180deg,#10203af2,#0a1628f5);border:1px solid #c9a35a99;border-radius:9px;box-shadow:0 0 0 3px #07101d,0 0 0 4px #c9a35a45,0 18px 50px #000c}
 #mullov h2{font-family:var(--disp);font-variant:small-caps;letter-spacing:.06em;color:#f3e7cc}
 /* barre des menus : tient aussi en 1280 px de large */
-@media(max-width:1320px){#nav button{padding:8px 10px 8px 8px;margin:0 1px}#top{padding:8px 14px}}
+@media(max-width:1320px){#nav button{padding:6px 7px 6px 6px;margin:0 1px;gap:5px;font-size:13px}#nav .ni:has(.nav-art){width:32px;height:29px}#nav .nav-art{width:32px;height:29px}#top{gap:12px;padding:8px 10px}}
+/* illustrations du menu */
+#nav .ni:has(.nav-art){width:38px;height:34px;overflow:visible;background:none!important}
+#nav .nav-art{display:block;width:38px;height:34px;object-fit:contain;filter:drop-shadow(0 2px 2px #0009)}
+#app .v-ia::after{width:42%;background:url("duel-character.png") right 8px bottom/auto 96% no-repeat;opacity:1;
+  -webkit-mask-image:none;mask-image:none}
+#app .v-friend::after{background-image:radial-gradient(circle at 50% 55%,#f2d28144,transparent 67%),url("friends.png");
+  background-position:center,center;background-size:100% 100%,contain;background-repeat:no-repeat}
+#app .v-guide::after{right:12px;top:7px;width:112px;height:112px;background:url("guide.png") center/contain no-repeat}
+#app .v-gain::after{width:138px;height:124px;background:url("daily-chest.png") center/contain no-repeat}
+#app .v-arenap h3 .pi .panel-art{width:38px;height:38px}
+#app .v-gain h3 .pi .panel-art{width:34px;height:34px}
+#app .v-arenap .phr.arena-cost{display:flex;align-items:center;gap:5px}
+#app .v-arenap .arena-gem{width:22px;height:22px;object-fit:contain}
+#app .btn.art-button{display:block;width:78%;padding:0;margin:18px auto 4px;border:0;border-radius:12px;background:transparent;box-shadow:none}
+#app .btn.art-button::before,#app .btn.art-button::after{display:none}
+#app .btn.art-button:hover{filter:brightness(1.08) drop-shadow(0 3px 5px #0008)}
+#app .btn.art-button:active{transform:translateY(2px);box-shadow:none}
+#app .btn.art-button .button-art{display:block;width:100%;height:auto}
+#app .v-arenap .btn.art-button{width:min(100%,300px);margin:8px 0 0}
+#app .v-ia{background-image:linear-gradient(90deg,#071426dc 0%,#071426a8 48%,#07142624 100%),url("panel-duel-bg.png");background-size:100% 100%,auto 100%;background-position:center,right center;background-repeat:no-repeat}
+#app .v-arenap{background-image:linear-gradient(90deg,#160a0ce8 0%,#160a0c99 62%,#160a0c40 100%),url("panel-arena-bg.png");background-size:100% 100%,cover;background-position:center,center;background-repeat:no-repeat}
+#app .v-friend{background-image:linear-gradient(90deg,#071426dc 0%,#071426a8 58%,#07142630 100%),url("panel-friends-bg.png");background-size:100% 100%,cover;background-position:center,center;background-repeat:no-repeat}
+#app .v-gain{background-image:linear-gradient(90deg,#071426c9,#071426a8),url("panel-rewards-bg.png");background-size:100% 100%,cover;background-position:center,center;background-repeat:no-repeat}
+#app .v-ia::after,#app .v-friend::after,#app .v-gain::after{display:none}
+#app .v-gain h3:has(.pi)::after{right:24px}
+#app .v-gain .bar,#app .v-gain .vstat{margin-right:0!important}
+#app .v-arenap .btn.art-button{margin:8px auto 0}
+body{background:linear-gradient(#080d187a,#080d187a),url("site-background.png") center/cover fixed no-repeat!important}
+#app{background:transparent}
+#view[data-t]{background-image:none!important;background-color:transparent}
+#app .v-settings{background-image:linear-gradient(90deg,#071426e8 0%,#071426ba 58%,#07142638 100%),url("panel-settings-bg.png");background-size:100% 100%,cover;background-position:center,center;background-repeat:no-repeat}
+#app .v-guide{color:#f3ead6;border-color:#c9a35a;background-image:linear-gradient(90deg,#071426e8 0%,#071426c4 58%,#07142648 100%),url("panel-guide-bg.png");background-size:100% 100%,cover;background-position:center,center;background-repeat:no-repeat}
+#app .v-guide::after{display:none}
+#app .v-guide h3{color:#f3e7cc;text-shadow:0 2px 8px #000}
+#app .v-guide h3:has(.pi)::after{filter:none}
+#app .v-guide .mut{color:#e0e5ef!important}
 /* @@/V20DUEL@@ */
 </style>
 <script defer src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
@@ -5190,16 +5233,18 @@ var CUR='play';let DECKI=null,FR_T=0,CT='cards',SETOPEN=false;
 // filtres : q (recherche), t/r/cost = un choix parmi ceux cochés (OU), fac/aff/kw = tous ceux cochés (ET), own = possédées, sort = tri
 const CF={q:'',t:[],r:[],cost:[],fac:[],aff:[],kw:[],own:false,sort:'cost'},DF={q:'',t:[],r:[],cost:[],fac:[],aff:[],kw:[],own:true,sort:'cost'};
 const TABS=[['play','Jouer','play'],['shop','Boutique','shop'],['coll','Collection','coll'],['decks','Decks','decks'],['friends','Amis','friends'],['acct','Compte','acct'],['code','Code','code']];
+const TABART={play:'nav-play.png',shop:'nav-shop.png',coll:'nav-collection.png',decks:'nav-decks.png',friends:'nav-friends.png',acct:'nav-account.png',code:'nav-code.png'};
 const THUE={play:['#d9a24e','#24170a'],shop:['#2f8fe0','#fff'],coll:['#2f8fe0','#fff'],decks:['#2f8fe0','#fff'],friends:['#d6409a','#fff'],acct:['#8a72e0','#fff'],code:['#3fae7a','#fff']};
 function refreshTop(){const g=$('#gemn');if(g)g.textContent=S.gems;const n=$('#pname');if(n)n.textContent=S.name||'';
   const c=$('#accb');if(c){c.textContent=ACC?(ACC_ST==='err'?'⚠️':ACC_ST==='sync'?'⏳':'☁️'):'';c.title=ACC?'Compte '+ACC.id+' · '+accStTxt():'';c.hidden=!ACC}}
-function ph(icon,title,right){return h('h3',null,h('span',{class:'pi'},ICONS[icon]?ico(icon):icon),title,right?h('span',{class:'phr',style:'margin-left:auto;font-size:13px;font-weight:700'},right):null)}
+function ph(icon,title,right){const art=icon==='💎'?'diamond.png':icon==='arena'?'arena.png':null;
+  return h('h3',null,h('span',{class:'pi'},art?h('img',{class:'panel-art',src:art,alt:''}):ICONS[icon]?ico(icon):icon),title,right?h('span',{class:'phr',style:'margin-left:auto;font-size:13px;font-weight:700'},right):null)}
 function go(t){
   CUR=t;hideTip();hideHoverCard();clearInterval(FR_T);if(t!=='decks')DECKI=null;
   const nav=$('#nav');nav.innerHTML='';
   const nt=t==='arena'?'play':t;
   TABS.forEach(x=>nav.append(h('button',{class:x[0]===nt?'on':'',style:'--h:'+THUE[x[0]][0]+';--ht:'+THUE[x[0]][1],onclick:()=>go(x[0])},
-    h('span',{class:'ni'},ico(x[2])),h('span',{class:'nl'},x[1]))));
+    h('span',{class:'ni'},TABART[x[0]]?h('img',{class:'nav-art',src:TABART[x[0]],alt:''}):ico(x[2])),h('span',{class:'nl'},x[1]))));
   const v=$('#view');v.innerHTML='';v.scrollTop=0;v.dataset.t=t;
   ({play:vPlay,arena:vArena,shop:vShop,coll:vColl,decks:vDecks,friends:vFriends,acct:vAcct,code:vCode})[t](v);refreshTop()}
 function gotoGuide(sec){CT=sec;go('coll')}
@@ -5208,7 +5253,7 @@ function gotoGuide(sec){CT=sec;go('coll')}
 const OPTI={tim:'⏳',hp:'❤️',cap:'🔷',hand:'🃏',inc:'🪙',ter:'⛰️',evt:'🌀',comp:'✨',rw:'🎁'};       // icônes des réglages du duel
 function settingsPanel(){
   const summ=OPTSET.filter(g=>S.opt[g.k]!==OPTDEF[g.k]).length;
-  const box=h('div',{class:'panel'},ph('gear','Réglages du duel',h('button',{class:'btn sm',onclick:()=>{SETOPEN=!SETOPEN;go('play')}},SETOPEN?'Masquer':'Modifier'+(summ?' ('+summ+')':''))),
+  const box=h('div',{class:'panel v-settings'},ph('gear','Réglages du duel',h('button',{class:'btn sm',onclick:()=>{SETOPEN=!SETOPEN;go('play')}},SETOPEN?'Masquer':'Modifier'+(summ?' ('+summ+')':''))),
     h('div',{class:'sm mut'},'S’appliquent à ton prochain duel (IA ou défi lancé à un ami).'),
     SETOPEN?null:h('div',{class:'sm setchips',style:'margin-top:8px;line-height:1.5'},OPTSET.map(g=>{const x=g.v.find(y=>y[0]===S.opt[g.k]);return h('span',{class:'chip',style:'cursor:default;margin:2px 4px 2px 0;padding:2px 9px;font-size:12px'},OPTI[g.k]?h('i',null,OPTI[g.k]):null,g.n.split(' (')[0].replace(' en 💎','')+(g.k==='rw'?' en 💎':'')+' : '+(x?x[1]:'?'))})));
   if(SETOPEN){
@@ -5237,13 +5282,14 @@ function vPlay(v){
     h('div',null,
       h('div',{class:'panel hl v-ia'},ph('play','Duel contre l’IA'),
         h('p',{class:'mut sm',style:'margin:0 0 12px'},'L’IA construit son deck avec des cartes de ton niveau de collection, autour d’une famille. Gagne des 💎 pour ouvrir des boosters. Tu choisis ton deck juste après avoir cliqué sur Jouer.'),
-        h('button',{class:'btn gold big',disabled:!anyOk,onclick:()=>pickDeckModal('Choisis ton deck','Ton adversaire ne saura jamais lequel tu as pris.',i=>startAIDuel(i))},anyOk?'⚔ Jouer':'Crée d’abord un deck valide')),
+        h('button',{class:'btn gold big'+(anyOk?' art-button':''),disabled:!anyOk,onclick:()=>pickDeckModal('Choisis ton deck','Ton adversaire ne saura jamais lequel tu as pris.',i=>startAIDuel(i))},
+          anyOk?h('img',{class:'button-art',src:'play-button.png',alt:'Jouer'}):'Crée d’abord un deck valide')),
       arenaPanel(),
       settingsPanel()),
     h('div',null,
       h('div',{class:'panel v-friend'},ph('friends','Défier un ami'),
         h('p',{class:'mut sm',style:'margin:0 0 12px'},'Ajoute un ami avec son code, puis lance-lui un défi en ligne. Vous devez être connectés tous les deux.'),
-        h('button',{class:'btn gline',onclick:()=>go('friends')},ico('adduser'),' Ouvrir mes amis')),
+        h('button',{class:'btn gold art-button',onclick:()=>go('friends')},h('img',{class:'button-art',src:'friends-button.png',alt:'Ouvrir mes amis'}))),
       h('div',{class:'panel v-guide'},ph('guide','Tout savoir avant de jouer'),
         h('p',{class:'mut sm',style:'margin:0 0 10px'},'Terrains, familles, mots-clés et règles : toutes les infos sont dans la Collection.'),
         h('div',{class:'row'},[['terr','🏟 Terrains'],['fam','🧬 Familles'],['kw','📖 Mots-clés'],['rules','📜 Règles']].map(([s,l])=>h('button',{class:'btn sm g-'+s,onclick:()=>gotoGuide(s)},l)))),
@@ -5252,10 +5298,10 @@ function vPlay(v){
         h('div',{class:'row',style:'justify-content:space-between'},h('span',{class:'sm mut'},'💎 Victoire +'+ECON.win+' · Défaite +'+ECON.loss+' · 1re victoire du jour +'+ECON.first),h('b',{class:'sm vstat',title:'Victoires et défaites'},S.stats.w+' V · '+S.stats.l+' D'))))))}
 // Arène : draft et duels entre amis (voir arena.js)
 function arenaPanel(){const r=S.arena&&S.arena.run;
-  return h('div',{class:'panel v-arenap'},ph('play','Arène',r?r.w+' V · '+r.l+' D':ARENA.cost+' 💎'),
+  return h('div',{class:'panel v-arenap'},ph('arena','Arène',r?r.w+' V · '+r.l+' D':h('span',{class:'arena-cost'},ARENA.cost,h('img',{class:'arena-gem',src:'diamond.png',alt:'diamants'}))),
     h('p',{class:'mut sm',style:'margin:0 0 12px'},r?(r.picks.length<ARENA.picks?'Ton draft est en cours : '+r.picks.length+' / '+ARENA.picks+' cartes choisies.':'Ton deck d’Arène est prêt : défie tes amis, jusqu’à '+ARENA.maxW+' victoires ou '+ARENA.maxL+' défaites.'):
       'Draft de 30 cartes, 1 parmi 3 à chaque choix, sans limite d’exemplaires. Puis affronte tes amis (jamais l’IA) : jusqu’à '+ARENA.rw[ARENA.maxW]+' 💎 à gagner.'),
-    h('button',{class:'btn gold',onclick:()=>go('arena')},r?(r.picks.length<ARENA.picks?'Continuer le draft':'Ouvrir l’Arène'):'Découvrir l’Arène'))}
+    h('button',{class:'btn gold'+(!r?' art-button':''),onclick:()=>go('arena')},r?(r.picks.length<ARENA.picks?'Continuer le draft':'Ouvrir l’Arène'):h('img',{class:'button-art',src:'arena-button.png',alt:"Découvrir l’Arène"})))}
 function rulesNodes(){
   const li=(t,d)=>h('div',{style:'margin:10px 0;line-height:1.45'},h('b',{class:'gold'},t+' '),d);
   return[
