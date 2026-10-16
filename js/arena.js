@@ -52,9 +52,26 @@ async function arenaWeeklyRecord(mode){
       url='https://firestore.googleapis.com/v1/projects/'+encodeURIComponent(CLOUD.projectId)+'/databases/(default)/documents:commit?key='+encodeURIComponent(CLOUD.apiKey),
       transforms=[{fieldPath:'total',increment:{integerValue:'1'}},
         {fieldPath:mode==='ai'?'winsAI':'winsHuman',increment:{integerValue:'1'}}];
-    await accFetch(url,{method:'POST',headers:{Authorization:'Bearer '+tok,'Content-Type':'application/json'},
-      body:JSON.stringify({writes:[{update:{name:docName,fields:{uid:{stringValue:uid},pseudo:{stringValue:pseudo}}},
-        updateMask:{fieldPaths:['uid','pseudo']},updateTransforms:transforms}]})});
+    let saved=false;
+    for(let attempt=0;attempt<2&&!saved;attempt++){
+      let exists=true,r,stored=null;
+      try{r=await fetch(docName,{headers:{Authorization:'Bearer '+tok}})}catch(e){throw new Error(accErr(''))}
+      if(r.status===404)exists=false;
+      else if(!r.ok){const j=await r.json().catch(()=>({})),e=j.error||{};throw new Error(accErr(e.status||e.message))}
+      else stored=await r.json().catch(()=>null);
+      const fields={uid:{stringValue:uid},pseudo:{stringValue:pseudo}},fieldPaths=['uid','pseudo'];
+      if(!exists){fields.total={integerValue:'0'};fields.winsAI={integerValue:'0'};fields.winsHuman={integerValue:'0'};
+        fieldPaths.push('total','winsAI','winsHuman')}
+      else for(const k of['total','winsAI','winsHuman'])if(!stored||!stored.fields||!stored.fields[k]){
+        fields[k]={integerValue:'0'};fieldPaths.push(k)}
+      try{
+        await accFetch(url,{method:'POST',headers:{Authorization:'Bearer '+tok,'Content-Type':'application/json'},
+          body:JSON.stringify({writes:[{update:{name:docName,fields},updateMask:{fieldPaths},updateTransforms:transforms,
+            currentDocument:{exists}}]})});
+        saved=true;
+      }catch(e){if(attempt||!String(e.message).includes('FAILED_PRECONDITION'))throw e}
+    }
+    if(!saved)throw new Error('Impossible d’enregistrer la victoire après une mise à jour concurrente.');
     ARENA_LB.week=week;ARENA_LB.rows=null;ARENA_LB.at=0;
     if($('#arenaLeaderboard'))arenaLeaderboardLoad(true);
   }catch(e){console.error(e);toast('Victoire non inscrite au classement hebdomadaire : '+e.message)}
