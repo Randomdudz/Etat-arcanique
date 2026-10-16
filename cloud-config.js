@@ -22,15 +22,23 @@
 //       match /arenaWeeks/{week}/players/{uid} {
 //         allow read: if true;
 //         allow create: if request.auth != null && request.auth.uid == uid
-//           && request.resource.data.uid == uid && request.resource.data.total == 1
-//           && request.resource.data.winsAI + request.resource.data.winsHuman == 1;
+//           && request.resource.data.uid == uid
+//           && ((request.resource.data.get('runs', 0) == 1 && request.resource.data.total == 0
+//             && request.resource.data.winsAI == 0 && request.resource.data.winsHuman == 0)
+//             || (request.resource.data.get('runs', 0) == 0 && request.resource.data.total == 1
+//             && request.resource.data.winsAI + request.resource.data.winsHuman == 1));
 //         allow update: if request.auth != null && request.auth.uid == uid
 //           && request.resource.data.uid == uid
-//           && request.resource.data.total == resource.data.total + 1
-//           && ((request.resource.data.winsAI == resource.data.winsAI + 1
+//           && ((request.resource.data.get('runs', 0) == resource.data.get('runs', 0) + 1
+//             && request.resource.data.total == resource.data.total
+//             && request.resource.data.winsAI == resource.data.winsAI
 //             && request.resource.data.winsHuman == resource.data.winsHuman)
-//             || (request.resource.data.winsHuman == resource.data.winsHuman + 1
-//             && request.resource.data.winsAI == resource.data.winsAI));
+//             || (request.resource.data.get('runs', 0) == resource.data.get('runs', 0)
+//             && request.resource.data.total == resource.data.total + 1
+//             && ((request.resource.data.winsAI == resource.data.winsAI + 1
+//               && request.resource.data.winsHuman == resource.data.winsHuman)
+//               || (request.resource.data.winsHuman == resource.data.winsHuman + 1
+//               && request.resource.data.winsAI == resource.data.winsAI))));
 //       }
 //     }
 //   }

@@ -3,13 +3,14 @@
 // (indépendamment de la collection) ; la graine est fixée à l'entrée : recharger la page ne relance pas les choix.
 // Les limites d'exemplaires ne comptent pas. À chaque défaite non éliminatoire, cinq cartes du deck peuvent être remplacées.
 const ARENA={cost:100,picks:30,redraft:5,maxW:9,maxL:3,rw:[40,65,95,135,185,250,335,445,580,750],odds:[0,69.5,24,6.5]};
-const ARENA_LB={week:'',rows:null,at:0,loading:false,error:''};
+const ARENA_LB={week:'',rows:null,at:0,loading:false,error:'',backfill:false};
 function arenaWeekKey(now=new Date()){const d=new Date(Date.UTC(now.getUTCFullYear(),now.getUTCMonth(),now.getUTCDate()));d.setUTCDate(d.getUTCDate()-(d.getUTCDay()+6)%7);return d.toISOString().slice(0,10)}
 function arenaWeekLabel(key){const start=new Date(key+'T00:00:00Z'),end=new Date(start);end.setUTCDate(end.getUTCDate()+6);
   const fmt=new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'short',timeZone:'UTC'});return fmt.format(start)+' – '+fmt.format(end)}
 function arenaLeaderboardUrl(week){return'https://firestore.googleapis.com/v1/projects/'+encodeURIComponent(CLOUD.projectId)+'/databases/(default)/documents/arenaWeeks/'+encodeURIComponent(week)}
 function arenaLeaderboardDoc(row){const f=row.document.fields||{},v=k=>f[k]&&(f[k].stringValue||f[k].integerValue)||'';
-  const ai=+v('winsAI')||0,human=+v('winsHuman')||0;return{uid:String(v('uid')),pseudo:String(v('pseudo')||'Joueur').slice(0,18),ai,human,total:(+v('total')||ai+human)}}
+  const ai=+v('winsAI')||0,human=+v('winsHuman')||0,total=Number(v('total'));return{uid:String(v('uid')),pseudo:String(v('pseudo')||'Joueur').slice(0,18),
+    ai,human,total:Number.isFinite(total)?total:ai+human,runs:+v('runs')||((ai+human)>0?1:0)}}
 function arenaLeaderboardRender(){
   const el=$('#arenaLeaderboard');if(!el)return;
   const title='Classement · '+arenaWeekLabel(ARENA_LB.week),refresh=h('button',{class:'btn sm',onclick:()=>arenaLeaderboardLoad(true)},'Actualiser');
@@ -17,10 +18,10 @@ function arenaLeaderboardRender(){
   el.replaceChildren(h('div',{class:'albh'},h('h3',null,title),refresh),
     ARENA_LB.loading?h('p',{class:'sm mut'},'Chargement du classement…'):
     ARENA_LB.error?h('div',{class:'sm'},h('p',{class:'lb-error'},'Classement indisponible : '+ARENA_LB.error),h('button',{class:'btn sm',onclick:()=>arenaLeaderboardLoad(true)},'Réessayer')):
-    !rows||!rows.length?h('p',{class:'sm mut'},'Aucune victoire enregistrée cette semaine. Connecte-toi à un compte pour inscrire tes victoires.'):
+    !rows||!rows.length?h('p',{class:'sm mut'},'Aucune course enregistrée cette semaine. Connecte-toi à un compte en ligne pour apparaître dans le classement.'):
     h('div',{class:'alblist'},rows.map((r,i)=>h('div',{class:'alborrow'},
       h('b',{class:'albrank'},String(i+1)),h('b',{class:'albpseudo'},r.pseudo),h('b',{class:'albtot'},r.total+' V'),
-      h('span',{class:'albsplit'},'IA '+r.ai+' · Joueurs '+r.human)))));
+      h('span',{class:'albsplit'},'Courses '+r.runs+' · IA '+r.ai+' · Joueurs '+r.human)))));
 }
 async function arenaLeaderboardLoad(force){
   const week=arenaWeekKey();
@@ -34,8 +35,8 @@ async function arenaLeaderboardLoad(force){
     const url=arenaLeaderboardUrl(week)+':runQuery?key='+encodeURIComponent(CLOUD.apiKey),rows=await accFetch(url,{method:'POST',headers,
       body:JSON.stringify({structuredQuery:{from:[{collectionId:'players'}],orderBy:[{field:{fieldPath:'total'},direction:'DESCENDING'}],limit:10}})});
     if(ARENA_LB.week!==week)return;
-    ARENA_LB.rows=rows.filter(x=>x.document).map(arenaLeaderboardDoc).filter(x=>x.total>0)
-      .sort((a,b)=>b.total-a.total||b.human-a.human||a.pseudo.localeCompare(b.pseudo)).slice(0,10);
+    ARENA_LB.rows=rows.filter(x=>x.document).map(arenaLeaderboardDoc).filter(x=>x.runs>0)
+      .sort((a,b)=>b.total-a.total||b.runs-a.runs||b.human-a.human||a.pseudo.localeCompare(b.pseudo)).slice(0,10);
     ARENA_LB.at=Date.now();
   }catch(e){console.error(e);if(ARENA_LB.week===week)ARENA_LB.error=e.message==='Serveur injoignable (connexion internet ?).'
     ?'Impossible de joindre Firestore depuis cette page. Vérifie les règles du classement et teste depuis GitHub Pages, pas depuis un fichier local.'
@@ -44,14 +45,20 @@ async function arenaLeaderboardLoad(force){
 }
 function arenaLeaderboardPanel(){const panel=h('div',{class:'panel arena-lb',id:'arenaLeaderboard'});
   Promise.resolve().then(()=>arenaLeaderboardLoad(false));return panel}
-async function arenaWeeklyRecord(mode){
-  if(!ACC||!cloudOn()){toast('Victoire non inscrite au classement : connecte-toi à un compte en ligne.');return}
+function arenaLeaderboardBackfillLast(){
+  const last=S.arena&&S.arena.last;
+  if(ARENA_LB.backfill||!last||last.lb||last.w!==0||last.l<1||arenaWeekKey(new Date(last.t))!==arenaWeekKey()||!ACC||!cloudOn())return;
+  ARENA_LB.backfill=true;
+  arenaWeeklyRun(last.t).finally(()=>{ARENA_LB.backfill=false});
+}
+async function arenaWeeklyUpdate(kind,mode,runT){
+  if(!ACC||!cloudOn()){toast(kind==='run'?'Course non inscrite au classement : connecte-toi à un compte en ligne.':'Victoire non inscrite au classement : connecte-toi à un compte en ligne.');return false}
   try{
     const week=arenaWeekKey(),uid=ACC.uid,pseudo=String(S.name||ACC.id||'Joueur').trim().slice(0,18)||'Joueur',tok=await accTok(),
       docName=arenaLeaderboardUrl(week)+'/players/'+encodeURIComponent(uid),
       url='https://firestore.googleapis.com/v1/projects/'+encodeURIComponent(CLOUD.projectId)+'/databases/(default)/documents:commit?key='+encodeURIComponent(CLOUD.apiKey),
-      transforms=[{fieldPath:'total',increment:{integerValue:'1'}},
-        {fieldPath:mode==='ai'?'winsAI':'winsHuman',increment:{integerValue:'1'}}];
+      transforms=kind==='run'?[{fieldPath:'runs',increment:{integerValue:'1'}}]:
+        [{fieldPath:'total',increment:{integerValue:'1'}},{fieldPath:mode==='ai'?'winsAI':'winsHuman',increment:{integerValue:'1'}}];
     let saved=false;
     for(let attempt=0;attempt<2&&!saved;attempt++){
       let exists=true,r,stored=null;
@@ -60,22 +67,31 @@ async function arenaWeeklyRecord(mode){
       else if(!r.ok){const j=await r.json().catch(()=>({})),e=j.error||{};throw new Error(accErr(e.status||e.message))}
       else stored=await r.json().catch(()=>null);
       const fields={uid:{stringValue:uid},pseudo:{stringValue:pseudo}},fieldPaths=['uid','pseudo'];
-      if(!exists){fields.total={integerValue:'0'};fields.winsAI={integerValue:'0'};fields.winsHuman={integerValue:'0'};
-        fieldPaths.push('total','winsAI','winsHuman')}
-      else for(const k of['total','winsAI','winsHuman'])if(!stored||!stored.fields||!stored.fields[k]){
+      if(!exists){fields.total={integerValue:'0'};fields.winsAI={integerValue:'0'};fields.winsHuman={integerValue:'0'};fields.runs={integerValue:kind==='run'?'1':'0'};
+        fieldPaths.push('total','winsAI','winsHuman','runs')}
+      else for(const k of(kind==='run'?['total','winsAI','winsHuman']:['total','winsAI','winsHuman','runs']))if(!stored||!stored.fields||!stored.fields[k]){
         fields[k]={integerValue:'0'};fieldPaths.push(k)}
+      const writeTransforms=!exists&&kind==='run'?[]:transforms;
       try{
         await accFetch(url,{method:'POST',headers:{Authorization:'Bearer '+tok,'Content-Type':'application/json'},
-          body:JSON.stringify({writes:[{update:{name:docName,fields},updateMask:{fieldPaths},updateTransforms:transforms,
+          body:JSON.stringify({writes:[{update:{name:docName,fields},updateMask:{fieldPaths},updateTransforms:writeTransforms,
             currentDocument:{exists}}]})});
         saved=true;
       }catch(e){if(attempt||!String(e.message).includes('FAILED_PRECONDITION'))throw e}
     }
-    if(!saved)throw new Error('Impossible d’enregistrer la victoire après une mise à jour concurrente.');
+    if(!saved)throw new Error('Impossible de mettre à jour le classement après une mise à jour concurrente.');
+    if(kind==='run'){
+      if(S.arena.run&&S.arena.run.t===runT)S.arena.run.lb=true;
+      if(S.arena.last&&S.arena.last.t===runT)S.arena.last.lb=true;
+      saveS();
+    }
     ARENA_LB.week=week;ARENA_LB.rows=null;ARENA_LB.at=0;
     if($('#arenaLeaderboard'))arenaLeaderboardLoad(true);
-  }catch(e){console.error(e);toast('Victoire non inscrite au classement hebdomadaire : '+e.message)}
+    return true;
+  }catch(e){console.error(e);toast((kind==='run'?'Course':'Victoire')+' non inscrite au classement hebdomadaire : '+e.message);return false}
 }
+function arenaWeeklyRun(t){return arenaWeeklyUpdate('run',null,t)}
+function arenaWeeklyRecord(mode){return arenaWeeklyUpdate('win',mode)}
 function arenaRng(seed){let t=seed>>>0;return()=>{t=(t+0x6D2B79F5)|0;let r=Math.imul(t^t>>>15,t|1);r^=r+Math.imul(r^r>>>7,r|61);return((r^r>>>14)>>>0)/4294967296}}
 function arenaSeed(){const b=new Uint32Array(1);try{crypto.getRandomValues(b)}catch(e){b[0]=(Math.random()*4294967296)>>>0}return b[0]>>>0}
 // choix n° n (0 à 29) d'une course : {r: rareté, c: [3 cartes différentes]} ; le 1er choix est toujours un choix de légendaires
@@ -104,13 +120,13 @@ function arenaFix(a){a=a&&typeof a==='object'?a:{};const r=a.run;let run=null;
       }else if(sw.stage==='remove'&&picks.length===ARENA.picks-ARENA.redraft+Math.min(ARENA.redraft,Math.max(0,sw.drafted|0))){
         swap={stage:'legacyPick',drafted:Math.min(ARENA.redraft,Math.max(0,sw.drafted|0))}
       }}
-    run={seed:(+r.seed)>>>0,picks,swap,
+    run={seed:(+r.seed)>>>0,picks,swap,lb:!!r.lb,
       w:Math.min(ARENA.maxW,Math.max(0,r.w|0)),l:Math.min(ARENA.maxL,Math.max(0,r.l|0)),t:+r.t||Date.now(),log:(Array.isArray(r.log)?r.log:[]).slice(-20),
       cur:r.cur&&typeof r.cur==='object'?{o:String(r.cur.o||'').slice(0,18),t:+r.cur.t||0,mode:r.cur.mode==='ai'?'ai':'human'}:null}}
-  return{run,runs:Math.max(0,a.runs|0),best:Math.max(0,a.best|0),last:a.last&&typeof a.last==='object'?{w:a.last.w|0,l:a.last.l|0,g:a.last.g|0,t:+a.last.t||0}:null}}
+  return{run,runs:Math.max(0,a.runs|0),best:Math.max(0,a.best|0),last:a.last&&typeof a.last==='object'?{w:a.last.w|0,l:a.last.l|0,g:a.last.g|0,t:+a.last.t||0,lb:!!a.last.lb}:null}}
 function arenaReady(){const r=S.arena&&S.arena.run;return!!(r&&!r.swap&&r.picks.length>=ARENA.picks)}
 function arenaEnter(){if(S.arena.run)return'Tu as déjà une course en cours.';if(S.gems<ARENA.cost)return'Il te faut '+ARENA.cost+' 💎 pour entrer.';
-  S.gems-=ARENA.cost;S.arena.run={seed:arenaSeed(),picks:[],w:0,l:0,t:Date.now(),log:[],cur:null};saveS();return null}
+  S.gems-=ARENA.cost;const t=Date.now();S.arena.run={seed:arenaSeed(),picks:[],w:0,l:0,t,lb:false,log:[],cur:null};saveS();arenaWeeklyRun(t);return null}
 function arenaPick(i){const r=S.arena.run;if(!r||r.swap&&r.swap.stage!=='draft'&&r.swap.stage!=='legacyPick'||!r.swap&&r.picks.length>=ARENA.picks)return null;
   const n=r.swap?r.swap.drafted+1:r.picks.length,o=arenaOffer(r.seed,n),k=o.c[i];if(!k)return null;
   if(r.swap&&r.swap.stage==='draft'){
@@ -134,7 +150,7 @@ function arenaRecord(res,opp){const r=S.arena.run;if(!r)return null;const mode=r
   if(res===0){r.seed=arenaSeed();r.swap={stage:'draft',drafted:0,replacements:[]};out.redraft=true}
   saveS();return out}
 function arenaFinish(){const r=S.arena.run;if(!r)return{over:true,g:0};const g=ARENA.rw[Math.min(r.w,ARENA.maxW)];S.gems+=g;
-  S.arena.last={w:r.w,l:r.l,g,t:Date.now()};S.arena.runs++;S.arena.best=Math.max(S.arena.best,r.w);S.arena.run=null;saveS();return{over:true,g}}
+  S.arena.last={w:r.w,l:r.l,g,t:Date.now(),lb:!!r.lb};S.arena.runs++;S.arena.best=Math.max(S.arena.best,r.w);S.arena.run=null;saveS();return{over:true,g}}
 // partie d'Arène interrompue (jeu fermé ou connexion coupée avant la fin) : comptée comme une défaite
 function arenaCheckStale(){const r=S.arena&&S.arena.run;if(!r||!r.cur||(typeof DUEL!=='undefined'&&DUEL))return null;const res=arenaRecord(0,r.cur.o);
   if(typeof toast==='function')toast('Partie d’Arène interrompue : comptée comme une défaite.');return res}
@@ -286,7 +302,7 @@ function arenaDeckList(picks,removed,onRemove){if(onRemove)return h('div',{class
   return h('div',{class:'adeck'},ks.map(k=>h('div',{class:'arow r'+CARDS[k].r,onclick:()=>showCard(k),oncontextmenu:e=>{e.preventDefault();showCard(k)}},
     h('b',{class:'acost'},String(CARDS[k].c)),h('span',{class:'aav'},miniAv(k)),h('span',{class:'anm'},fullName(k)),c[k]>1?h('em',null,'×'+c[k]):null)))}
 function vArena(v){
-  arenaCheckStale();const A=S.arena,r=A.run;
+  arenaCheckStale();arenaLeaderboardBackfillLast();const A=S.arena,r=A.run;
   const rules=h('div',{class:'sm mut',style:'line-height:1.55'},
     'Entrée : ',h('b',null,ARENA.cost+' 💎'),'. Tu construis un deck de ',h('b',null,'30 cartes'),' en ',h('b',null,'30 choix'),' : à chaque fois, garde 1 carte parmi 3 de la même rareté. ',
     'Les limites d’exemplaires ne comptent pas. Ensuite, affronte l’IA ou cherche un joueur avec le matchmaking : les decks de l’IA gagnent en rareté aux paliers 4 et 7. La course s’arrête à ',h('b',null,ARENA.maxW+' victoires'),' ou ',h('b',null,ARENA.maxL+' défaites'),'. Après une défaite non éliminatoire, garde ton deck : choisis d’abord ',h('b',null,ARENA.redraft+' remplaçantes'),' (1 parmi 3 pour chacune), puis sélectionne les cartes qu’elles remplaceront.',

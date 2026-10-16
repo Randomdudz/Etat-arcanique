@@ -56,5 +56,5 @@ Après une défaite qui ne met pas fin à ta course, tu gardes ton deck. Tu choi
 
 ## Classement hebdomadaire de l’Arène
 
-- Un classement visible dans l’Arène affiche les 10 joueurs ayant remporté le plus de duels cette semaine, avec leur pseudo et le détail des victoires contre l’IA et contre des joueurs.
+- Le classement hebdomadaire affiche les joueurs ayant lancé une course, même avec zéro victoire ou après un abandon, avec le nombre de courses et le détail des victoires contre l’IA et contre des joueurs.
 - Les victoires sont enregistrées pour les comptes en ligne. Les défis directs entre amis sont remplacés par le matchmaking.
