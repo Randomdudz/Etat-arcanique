@@ -43,3 +43,8 @@ Après une défaite qui ne met pas fin à ta course, tu gardes ton deck. Tu choi
 
 - Les boutons principaux de l’Arène reprennent le fond de la tuile Arène du menu.
 - Les pictogrammes ont été retirés de ces boutons pour laisser les libellés bien lisibles.
+
+## Commande d’attaque directe
+
+- En duel, **Ctrl + clic gauche** sur l’une de tes créatures permet de viser directement le héros adverse.
+- Si l’attaque est impossible, le jeu en indique la raison, par exemple un **Rempart** ou **Désorientée**.

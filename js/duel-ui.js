@@ -174,7 +174,7 @@ function hintText(){
   if(s.t==='cry'&&s.sp.tg==='terr')return 'Choisis le terrain à désactiver : un des tiens ou un de l’adversaire';
   if(s.t==='cry')return s.t1?'Choisis ta créature à échanger (ou sa propre case pour l’échanger lui-même)':s.sp.tg2?'Choisis la créature ennemie à prendre':'Choisis la cible du Cri d’arrivée';
   const me=V.me,mc=canMoveC(V,me),mt=canMoveT(V,me);
-  if(s.t==='atk')return 'Choisis qui attaquer'+(mc?', ou une case de ton plateau pour déplacer cette créature (◆ '+mvCost(V,me)+')':'');
+  if(s.t==='atk')return 'Choisis qui attaquer'+(mc?', ou une case de ton plateau pour déplacer cette créature (◆ '+mvCost(V,me)+')':'')+' · Ctrl+clic gauche sur ta créature : attaquer le héros';
   if(s.t==='mv')return mc?'Choisis une case de ton plateau pour déplacer cette créature (◆ '+mvCost(V,me)+')':mvWhy(V,me,0);
   if(s.t==='tm')return mt?'Choisis où déplacer ce terrain sur ton plateau (🪙 '+mvCost(V,me)+')':mvWhy(V,me,1);
   if(s.t==='terr')return s.at==null?'Clique où poser le terrain sur ton plateau':'Clique à nouveau pour confirmer';
@@ -224,9 +224,17 @@ function discNode(){
     h('button',{class:'btn sm',onclick:()=>{if(D.mode==='host')D.host.resign(1);else leaveDuel()}},D.mode==='host'?'Réclamer la victoire':'Quitter')))}
 
 // pourquoi une de tes créatures ne peut pas attaquer (icône, explication)
-function atkWhy(V,s,i){const c=V.p[s].board[i];if(!c)return null;const E=eff(V,s,i);
+function atkWhy(V,s,i){const c=V.p[s].board[i];if(!c)return null;if(pend(V,s))return['⏳','Termine d’abord le choix en attente avant d’attaquer'];const E=eff(V,s,i);
   if(c.blk>0)return['🔒','Bloquée : ne peut pas attaquer ce tour'];if(E.TE&&E.TE.noAtk)return['⛔','Ne peut pas attaquer sur ce terrain'];
   if(c.sick&&!E.kw.hate)return['⏳','Vient d’arriver : pourra attaquer au prochain tour'];return['✓','A déjà attaqué ce tour']}
+function faceAttackBlockReason(V,s,i){
+  const c=V.p[s].board[i];if(!c)return'Aucune créature à cet emplacement.';
+  if(!canAtk(V,s,i)){const why=atkWhy(V,s,i);return why?why[1]:'Cette créature ne peut pas attaquer.'}
+  if(eff(V,s,i).kw.deso)return'Désorientée : sa cible d’attaque est aléatoire, le héros ne peut pas être choisi directement.';
+  const legal=atkTargets(V,s,i);if(legal.some(t=>t.s===1-s&&t.i===-1))return null;
+  const guards=legal.filter(t=>t.s===1-s&&t.i>=0).map(t=>fullName(V.p[t.s].board[t.i].k));
+  return guards.length?'Rempart adverse : tu dois d’abord attaquer '+guards.join(', ')+'.':'Cette attaque ne peut pas cibler le héros.';
+}
 function heroNode(s){
   const D=DUEL,V=D.V,me=V.me,P=V.p[s],isMe=s===me;
   const tot=Math.max(P.cap,P.eth),cr=[];for(let i=0;i<tot;i++)cr.push(h('i',{class:i<P.eth?(i>=P.cap?'x':'f'):''}));
@@ -266,6 +274,7 @@ function boardNodes(s,ids){
   const D=DUEL,V=D.V,me=V.me,out=[],B=V.p[s].board,L=fl(V,s);
   for(let i=0;i<CELLS;i++){
     const c=B[i];const sl=h('div',{class:'slot'+(c?'':' empty'),'data-s':s,'data-i':i});sl._dz={t:'slot',s,i};
+    if(c&&s===me&&mine())sl.title=faceAttackBlockReason(V,me,i)||'Ctrl+clic gauche : attaquer le héros adverse';
     if(c&&D.previewHl&&D.previewHl[s+':'+i])sl.classList.add('preview');
     const T=V.o.ter?terrOf(V,s,i):null;if(T&&TD[T.d]){sl.classList.add('ter');sl.style.setProperty('--tc',GAMES[TD[T.d].g].c)}   // case couverte par un terrain
     const sel=D.sel,cellT=sel&&sel.t==='cry'&&CELLT[sel.sp.tg];
@@ -284,7 +293,7 @@ function boardNodes(s,ids){
       sl.append(cardEl(c.k,{bd:true,cr:c,E,cls,L,rdy:ready,why,rps:rpsOf(V,c)}));
       if(s===me)makeDrag(sl,()=>{const V2=DUEL.V;if(!mine()||!V2.p[V2.me].board[i]||!canAtk(V2,V2.me,i))return null;return{t:'atk',f:i,k:c.k,atk:true}});
     }
-    sl.addEventListener('click',e=>{e.stopPropagation();clickSlot(s,i)});
+    sl.addEventListener('click',e=>{e.stopPropagation();clickSlot(s,i,e)});
     out.push(sl)}
   return out}
 
@@ -626,9 +635,15 @@ function setTerrAt(i){
   if(s.at===at){buyTerr_(s.n,at);return}
   s.at=at;renderDuel()}
 function buyTerr_(n,at){const D=DUEL;D.info=null;doAct({t:'buy',n,at})}
-function clickSlot(s,i){
+function clickSlot(s,i,event){
   const D=DUEL,V=D.V,me=V.me,c=i>=0?V.p[s].board[i]:null,sel=D.sel;
   if(Date.now()-D.dragT<300)return;
+  if(event&&event.ctrlKey&&event.button===0&&s===me&&c){
+    event.preventDefault();D.info={k:c.k,cr:c,s,i};
+    if(!mine()){D.sel=null;toast('Tu ne peux attaquer que pendant ton tour.');renderDuel();return}
+    const blocked=faceAttackBlockReason(V,me,i);
+    if(blocked){D.sel=canAtk(V,me,i)?{t:'atk',f:i}:null;toast(blocked);renderDuel();return}
+    doAct({t:'atk',f:i,tg:{s:1-me,i:-1}});return}
   if(sel&&mine()){
     if(sel.t==='hand'){const cd=CARDS[V.p[me].hand[sel.i].k];
       if(cd.t==='c'){if(s===me&&i>=0&&!c){playCreatureAt(sel.i,i);return}}
@@ -1145,4 +1160,3 @@ function showResult(){
       V.o.arena?h('button',{class:'btn pri',onclick:()=>{leaveDuel();go('arena')}},'Retour à l’Arène'):null,
       h('button',{class:'btn',onclick:leaveDuel},'Retour au menu')));
   modal(box,{sticky:true});if(typeof refreshTop==='function')refreshTop()}
-
