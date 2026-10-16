@@ -15,6 +15,10 @@
 //       match /saves/{uid} {
 //         allow read, write: if request.auth != null && request.auth.uid == uid;
 //       }
+//     match /arenaQueue/{uid} {
+//       allow read: if request.auth != null;
+//       allow create, update, delete: if request.auth != null && request.auth.uid == uid;
 //     }
 //   }
-window.EA_CLOUD={apiKey:'',projectId:''};
+//   }
+window.EA_CLOUD={apiKey:'AIzaSyCTnxKnzBGxTs2DM5uodP4VOadaLQWHQIg',projectId:'etat-arcanique'};
