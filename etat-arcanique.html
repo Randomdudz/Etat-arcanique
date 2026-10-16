@@ -1929,7 +1929,7 @@ xulyes:{n:'Xulyes',fac:['alien','farmer'],sc:{wow:2,dofus:0,lol:1,cs:1},lore:'To
   {st:'Serveur charmant',c:3,a:3,h:3,cry:[{t:'healE',n:3,tg:'e',tgf:'hurt'}],tx:'Cri d’arrivée : rend jusqu’à 3 PV à un ennemi blessé (héros compris) et gagne 1 Or par PV rendu (3 max).'},
   {st:'Commandant des armées',c:4,a:4,h:4,kw:['vip'],aura:{others:1,a:1,h:1},tx:'VIP. Tes autres créatures ont +1/+1.'}]},
 losk:{n:'Losk',fac:['xeno','expats'],sc:{wow:2,dofus:2,lol:1,cs:0},lore:'Déménagé en Andorre pour la fiscalité. Ne parle plus que de bitcoin. Sous son déguisement de requin, il optimise tout, surtout ta trésorerie.',v:[
-  {st:'Dévoreur de chapeau',c:2,a:4,h:3,cry:[{t:'bounceOwn',tg:'ac'}],tx:'Cri d’arrivée : Kick une de tes autres créatures (elle retourne dans ta main ; s’il est seul, c’est lui qui y retourne).'},
+  {r:1,st:'Crypto farmer',c:3,a:3,h:3,fac:['farmer','expats'],sc:{wow:0,dofus:1,lol:0,cs:1},sym:'🪙',col:'#d3b970',lore:'Il revient de voyage avec un portefeuille plein… ou vide.',travelGoldGuard:1,sot:[{t:'rndOr',min:-2,max:6}],tx:'Tant qu’il est en voyage, ton Or ne peut pas être volé. Début de ton tour : gagne aléatoirement entre −2 et 6 Or.'},
   {st:'Officier tyrannique',c:4,a:3,h:5,kw:['rempart','tilt'],tilt:[{t:'banOn',g:['wow','dofus']}],tx:'Rempart. Tilt : Bannit une créature ennemie au hasard posée sur un terrain WoW ou Dofus.'},
   {st:'Crypto farmer',c:5,a:4,h:5,sot:[{t:'or',n:5}],tx:'Début de ton tour : gagne 5 Or.'}]},
 sadamie:{n:'Sadamie',fac:['ravages','alien'],sc:{wow:0,dofus:1,lol:1,cs:0},lore:'Pour lui, le jeu n’est pas une compétition, c’est un amusement ;). Son activité préférée : invoquer Chanssus pour atteindre le combo le plus broken de l’histoire. Triche aux jeux de cartes… et perd quand même.',v:[
@@ -2047,8 +2047,6 @@ miichi:{n:'Miichi',fac:['weebos','alien'],sc:{wow:1,dofus:0,lol:2,cs:0},sym:'�
 // v22 : nouvelle légendaire
 BASES.coach={n:'Le Coach',fac:['ravages'],sc:{wow:0,dofus:0,lol:1,cs:2},sym:'📣',col:'#c9773a',lore:'« Go go go ! » Il ne connaît qu’une stratégie : tout le monde fonce.',v:[
   {r:3,st:'Capitaine du rush',c:3,a:3,h:3,kw:['insolence'],atkLow:{max:4,n:2},tx:'Insolence. Chaque fois que tu attaques avec une créature qui coûte 4 ou moins, le héros adverse subit 2 dégâts.'}]};
-BASES.losk={n:'Losk',fac:['farmer','expats'],sc:{wow:0,dofus:1,lol:0,cs:1},sym:'🪙',col:'#d3b970',lore:'Il revient de voyage avec un portefeuille plein… ou vide.',v:[
-  {r:1,st:'Crypto farmer',c:3,a:3,h:3,travelGoldGuard:1,sot:[{t:'rndOr',min:-2,max:6}],tx:'Tant qu’il est en voyage, ton Or ne peut pas être volé. Début de ton tour : gagne aléatoirement entre −2 et 6 Or.'}]};
 const BASEK=Object.keys(BASES);
 
 const CARDS={};
