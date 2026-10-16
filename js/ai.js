@@ -39,7 +39,7 @@ function evalG(G,me,W){
   const tv=P=>P.terrs.reduce((n,T)=>n+(TD[T.d].teot?3:0),0);v+=tv(A)-tv(B)*.8;         // terrains qui invoquent (Éco village, Serveur Minecraft)
   // synergies de familles
   const fv=(L)=>{let s=0;for(const f in L){const n=L[f];if(n<2)continue;
-    s+=f==='farmer'?Math.min(n,4)*.9:f==='ravages'?(n-1)*1.3:f==='toxic'?(n-1)*.6:f==='weebos'?(n>=4?2.5:.8):f==='expats'?.6:f==='vestige'?Math.floor(n/2)*1.3:f==='xeno'?(n>=3?(n-1)*.9:.4):.4}return s};
+    s+=f==='farmer'?Math.min(n,4)*.9:f==='ravages'?(n-1)*1.3:f==='toxic'?(n-1)*.6:f==='weebos'?(n>=5?2.5:n>=3?.8:0):f==='expats'?.6:f==='vestige'?Math.floor(n/2)*1.3:f==='xeno'?(n>=3?(n-1)*.9:.4):.4}return s};
   v+=fv(LA)-fv(LB);
   return v}
 
@@ -255,4 +255,3 @@ function deckFromCode(info,coll,fill){
       if(!k)k=pool.find(free);if(!k)break;
       cnt[k]=(cnt[k]||0)+1;cards.push(k);added.push(k)}}
   return{cards,miss,added}}
-

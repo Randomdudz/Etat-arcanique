@@ -48,3 +48,8 @@ Après une défaite qui ne met pas fin à ta course, tu gardes ton deck. Tu choi
 
 - En duel, **Ctrl + clic gauche** sur l’une de tes créatures permet de viser directement le héros adverse.
 - Si l’attaque est impossible, le jeu en indique la raison, par exemple un **Rempart** ou **Désorientée**.
+
+## Équilibrage des Weebos
+
+- Le bonus de **+1 PV** s’active désormais à **3 Weebos** au lieu de 2.
+- La réduction de **1 dégât de combat** s’active désormais à **5 Weebos** au lieu de 4.

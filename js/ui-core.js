@@ -77,7 +77,7 @@ function baseEl(b){const B=BASES[b],k0=b+versOf(b)[0];return h('span',{class:'me
 function facTiers(f,n){const F=FAC[f];
   return h('div',{class:'tiers',style:'--gc:'+F.c},F.tiers.map(t=>h('div',{class:'tier'+(n>=t[0]?' on':'')},h('span',{class:'tn'},'×'+t[0]),h('span',null,t[1]))))}
 function facTag(f,n){if(n<2)return null;
-  return({toxic:'☠+'+(n-1),weebos:n>=4?'+1 PV 🛡':'+1 PV',farmer:'+'+Math.min(4,n)+'🪙',expats:'✈ '+exCost(n)+'🪙',ravages:'🚀×'+(n-1),alien:'vol '+(n-1)+'🪙',xeno:n>=3?'+'+(n-1)+' ATK':'+1 ATK 👽',vestige:'+'+Math.floor(n/2)+' PV'})[f]}
+  return({toxic:'☠+'+(n-1),weebos:n>=5?'+1 PV 🛡':n>=3?'+1 PV':null,farmer:'+'+Math.min(4,n)+'🪙',expats:'✈ '+exCost(n)+'🪙',ravages:'🚀×'+(n-1),alien:'vol '+(n-1)+'🪙',xeno:n>=3?'+'+(n-1)+' ATK':'+1 ATK 👽',vestige:'+'+Math.floor(n/2)+' PV'})[f]}
 
 // ----- texte des cartes avec mots-clés survolables -----
 const KWRE=new RegExp('(?<![\\p{L}])(?:'+GLOS.map(g=>g[0].source).join('|')+')(?![\\p{L}])','gu');
@@ -270,4 +270,3 @@ function pileModal(s,key){
       h('li',null,'Créatures détruites en même temps : celles du joueur dont c’est le tour d’abord, de gauche à droite, puis celles de l’adversaire. Chacune va dans le cimetière de son propriétaire.')),
     n?h('div',{class:'pilegrid'},L.slice().reverse().map((c,j)=>h('div',{class:'cc2',onclick:()=>showCard(c.k)},
       h('span',{class:'gyn'+(j===0?' last':'')},'N° '+(j+1)+(j===0?' · dernière arrivée':j===n-1&&n>1?' · la plus ancienne':'')),cardEl(c.k,{tilt:1})))):h('p',{class:'mut'},'Vide.')))}
-

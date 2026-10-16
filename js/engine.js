@@ -139,7 +139,7 @@ function eff(G,s,i,L){
     if(TE.duo&&P.board.some((b,j)=>b&&j!==i&&P.cells[j]===P.cells[i]))a+=(TE.duo.a||0)*m}   // Arène 2v2 : une autre de tes créatures sur l'arène
   if(T&&!c.mut&&cd.gr&&cd.gr.g===TD[T.d].g){a+=cd.gr.a;h+=cd.gr.h}
   if(T&&P.arts&&P.arts.length&&TD[T.d].g==='dofus'){if(hasArt(P,'pourpre'))a+=2;if(hasArt(P,'emeraude'))h+=2}   // Dofus Pourpre et Émeraude
-  if(hasFC(c,'weebos')&&(L.weebos||0)>=2)h+=1;
+  if(hasFC(c,'weebos')&&(L.weebos||0)>=3)h+=1;
   if(hasFC(c,'vestige')&&(L.vestige||0)>=2)h+=Math.floor(L.vestige/2);   // Vestiges : +1 PV par paire de Vestiges
   if(!c.mut&&cd.withB&&P.board.some(b=>b&&b!==c&&CARDS[b.k].base===cd.withB.b)){a+=cd.withB.a;h+=cd.withB.h}   // Maki : +1/+2 avec un Osiris
   if(!c.mut&&cd.allFamActive){const fams=new Set();P.board.forEach(b=>{if(b&&CARDS[b.k].fac)CARDS[b.k].fac.forEach(f=>fams.add(f))});a+=fams.size;h+=fams.size}
@@ -844,7 +844,7 @@ function atkCalc(G,s,i,t){const e=1-s,A=G.p[s].board[i],L=fl(G,s),EA=eff(G,s,i,L
   const D=G.p[e].board[t.i],LD=fl(G,e),ED=eff(G,e,t.i,LD);let pa=EA.a,xb=0,vs=0;
   if(hasFC(A,'xeno')&&(hasFC(D,'alien')||(L.xeno||0)>=3||xenoAll(G,s))&&(L.xeno||0)>=2){xb=L.xeno-1;pa+=xb}   // contre toutes les créatures dès 3 Xénophobes, ou avec Homz (porteur de la flamme)
   if(EA.TE&&EA.TE.vsC){vs=EA.TE.vsC*tMul(G,s,EA.T);pa+=vs}
-  const rd=(LD.weebos||0)>=4&&hasFC(D,'weebos')&&pa>0?1:0,ra0=(L.weebos||0)>=4&&hasFC(A,'weebos')&&ED.a>0?1:0;   // Weebos : -1 dégât de combat à partir de 4
+  const rd=(LD.weebos||0)>=5&&hasFC(D,'weebos')&&pa>0?1:0,ra0=(L.weebos||0)>=5&&hasFC(A,'weebos')&&ED.a>0?1:0;   // Weebos : -1 dégât de combat à partir de 5
   const noRet=!A.mut&&CARDS[A.k].noRet;                                  // Haddmi (sniper) : ne subit pas de riposte
   return{pa:Math.max(0,pa-rd),ra:noRet?0:Math.max(0,ED.a-ra0),xb,rd,ra0,vs}}
 // Simon (train ses mécaniques) : +1/+1 avant le combat contre une créature qui a autant d'ATK ou autant de PV que lui (ou moins)
@@ -898,4 +898,3 @@ function view(G,me,from){
   if(G.rps)V.rps=G.rps.map(r=>r.s===me?Object.assign({},r):Object.assign({},r,{v:'?'}));   // le signe d'Osiris reste secret pour l'adversaire
   V.hist=hh.slice(from).map(e=>{if(e.pv!=null&&e.pv!==me){const q=Object.assign({},e);if(e.t==='rpsb')delete q.v;else delete q.k;return q}return e});
   return V}
-

@@ -25,8 +25,8 @@ const FAC={
     sum:'Chaque Toxic gagne Venin 1 pour chaque autre Toxic sur ton plateau (le Venin agit quand elle attaque).',
     tiers:[[2,'Tes Toxic ont Venin +1.'],[3,'Venin +2.'],[4,'Venin +3.'],[5,'Venin +4.'],[6,'Venin +5.']]},
   weebos:{n:'WEEBOS',ic:'🌸',c:'#b46a82',d:'Les fans d’animés.',
-    sum:'À 2, tes Weebos gagnent +1 PV. À 4, tes Weebos (et seulement eux) subissent 1 dégât de combat de moins.',
-    tiers:[[2,'Tes Weebos gagnent +1 PV.'],[4,'Tes Weebos subissent aussi 1 dégât de combat de moins.']]},
+    sum:'À 3, tes Weebos gagnent +1 PV. À 5, tes Weebos (et seulement eux) subissent 1 dégât de combat de moins.',
+    tiers:[[3,'Tes Weebos gagnent +1 PV.'],[5,'Tes Weebos subissent aussi 1 dégât de combat de moins.']]},
   farmer:{n:'FARMERS',ic:'🌾',c:'#c49b3c',d:'Les acharnés du farm.',
     sum:'Début de ton tour : gagne N−1 Or, N étant le nombre de Farmers sur ton plateau (4 Or au maximum).',
     tiers:[[2,'Début de ton tour : +1 Or.'],[3,'+2 Or.'],[4,'+3 Or.'],[5,'+4 Or (maximum).']]},
@@ -417,4 +417,3 @@ const ART=Object.fromEntries(Object.entries(ART_PATHS).map(([key,path])=>[key,pa
 TDEF.forEach(t=>{t.img=ART['ter_'+t.d]||null});
 // illustration : celle de la version (ex. boku2) si elle existe, sinon celle du personnage
 function artOf(k){const cd=CARDS[k];return cd?(ART[k]||ART[cd.art||k]):null}
-
