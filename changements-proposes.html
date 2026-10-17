@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>État Arcanique — Changements proposés</title>
+<style>
+:root{--bg:#0e1013;--panel:#15181d;--line:#242a33;--txt:#e7e9ee;--mut:#9aa1ae;--head:#2b3a56;--green:#173a26;--greenb:#39d17a;--red:#4a1d21;--redb:#ff5d6c;--grey:#1a1d22;--accent:#c9b079}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);font:15px/1.5 "Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.wrap{max-width:1000px;margin:0 auto;padding:48px 28px 80px}
+h1{font:700 42px/1.1 Georgia,"Times New Roman",serif;letter-spacing:.16em;text-align:center;margin:0;color:#f3f4f7}
+h1 .gold{color:var(--accent)}
+.sub{text-align:center;color:var(--mut);font-size:18px;margin:8px 0 4px}
+.note{text-align:center;color:var(--redb);font-size:12px;letter-spacing:.16em;text-transform:uppercase;margin:14px 0 34px}
+h2{font:700 20px/1.2 Georgia,serif;color:var(--accent);border-bottom:1px solid var(--line);padding-bottom:8px;margin:38px 0 14px;letter-spacing:.04em}
+.cnt{font:600 12px/1 "Segoe UI",sans-serif;color:var(--mut);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:3px 9px;vertical-align:middle;margin-left:8px}
+table{width:100%;border-collapse:separate;border-spacing:0;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--panel)}
+thead th{background:var(--head);color:#fff;text-align:left;font-weight:700;font-size:13px;letter-spacing:.05em;padding:12px 14px;text-transform:none}
+td{padding:10px 14px;border-top:1px solid var(--line);vertical-align:top;font-size:14px;transition:filter .12s}
+tbody tr:hover td{filter:brightness(1.18)}
+tbody tr td:first-child{border-left:3px solid transparent}
+tr.down td:first-child{border-left-color:var(--greenb)}
+tr.up td:first-child{border-left-color:var(--redb)}
+tr.neutral td:first-child{border-left-color:#4a5262}
+td.card{font-weight:600;color:#f1f2f5;width:31%}
+td.chg{width:27%;white-space:nowrap}
+td.why{color:var(--mut);font-size:13px}
+tr.down td{background:var(--green)}
+tr.up td{background:var(--red)}
+tr.neutral td{background:var(--grey)}
+tr.down td.card{color:#c6f5da}
+tr.up td.card{color:#ffd2d6}
+.cost{font-weight:700}
+.arw{opacity:.7}
+.dot{opacity:.5;margin:0 2px}
+.stat{font-weight:600}
+tr.down .stat{color:var(--greenb)}
+tr.up .stat{color:var(--redb)}
+.legend{display:flex;gap:26px;flex-wrap:wrap;margin:6px 0 8px}
+.legend div{display:flex;align-items:center;gap:8px;color:var(--mut);font-size:13px}
+.chip{width:14px;height:14px;border-radius:4px;display:inline-block}
+.chip.g{background:var(--greenb)}.chip.r{background:var(--redb)}.chip.n{background:#6b7280}
+h3.k{font:600 13px/1 uppercase;letter-spacing:.14em;color:var(--accent);margin:26px 0 8px}
+</style></head>
+<body><div class="wrap">
+<h1>ÉTAT <span class="gold">ARCANIQUE</span></h1>
+<div class="sub">Changements proposés — résumé</div>
+<div class="note">Propositions uniquement • Aucun changement appliqué</div>
+<h3 class="k">Lecture rapide</h3>
+<div class="legend">
+<div><span class="chip g"></span>VERT — coût en baisse / carte renforcée</div>
+<div><span class="chip r"></span>ROUGE — coût en hausse / carte affaiblie</div>
+<div><span class="chip n"></span>GRIS — autre ajustement ou précision</div>
+</div>
+<h2>Personnages <span class="cnt">96</span></h2>
+<table>
+<thead><tr><th>Carte</th><th>Changement proposé</th><th>Pourquoi ? (très résumé)</th></tr></thead>
+<tbody>
+<tr class="neutral"><td class="card">Mikalev, shinobi des smokes</td><td class="chg"><span class="cost">Coût 1 <span class="arw">→</span> 1</span></td><td class="why">petit 1-drop d'évasion, référence de coût 1</td></tr>
+<tr class="down"><td class="card">Mikalev, homme à tout faire</td><td class="chg"><span class="cost">Coût 3 <span class="arw">→</span> 2</span></td><td class="why">base faible, payoff tardif (toutes familles actives) : c'est un 2</td></tr>
+<tr class="up"><td class="card">Mikalev, chef habile</td><td class="chg"><span class="cost">Coût 4 <span class="arw">→</span> 5</span> <span class="dot">•</span> <span class="stat">Stat +1 ATK</span></td><td class="why">Rempart + valeur récurrente : bombe de milieu, pas à 4</td></tr>
+<tr class="down"><td class="card">Boku, présence apaisante</td><td class="chg"><span class="cost">Coût 2 <span class="arw">→</span> 1</span> <span class="dot">•</span> <span class="stat">Stat −1 PV</span></td><td class="why">petit 2-drop, dégraissé (2/3 → 2/2)</td></tr>
+<tr class="down"><td class="card">Boku, Japan Expo enjoyer</td><td class="chg"><span class="cost">Coût 4 <span class="arw">→</span> 3</span></td><td class="why">2/2 + 2 jetons : trop cher à 4, juste à 3</td></tr>
+<tr class="down"><td class="card">Boku, maître KATARINA</td><td class="chg"><span class="cost">Coût 8 <span class="arw">→</span> 8</span> <span class="dot">•</span> <span class="stat">Stat +1 PV</span></td><td class="why">Hâte + reprise : bombe (6/7)</td></tr>
+<tr class="up"><td class="card">Coco, esprit tourmenté</td><td class="chg"><span class="cost">Coût 2 <span class="arw">→</span> 4</span></td><td class="why">moteur de pioche, trop fort pour 2 ; devient un vrai 4 (0/4)</td></tr>
+<tr class="down"><td class="card">Coco, flashin 1v4</td><td class="chg"><span class="cost">Coût 2 <span class="arw">→</span> 1</span> <span class="dot">•</span> <span class="stat">Stat −1 PV</span></td><td class="why">petit 2-drop, dégraissé pour garnir le coût 1</td></tr>
+<tr class="up"><td class="card">Coco, communauté autosuffisante</td><td class="chg"><span class="cost">Coût 6 <span class="arw">→</span> 7</span> <span class="dot">•</span> <span class="stat">Stat +1/+1</span></td><td class="why">terrain à lui tout seul, bombe de fin de partie</td></tr>
+<tr class="down"><td class="card">Dreos, mot de merde</td><td class="chg"><span class="cost">Coût 2 <span class="arw">→</span> 1</span></td><td class="why">contrôle pas cher : 1/3 Rempart, bloque et se recycle</td></tr>
+<tr class="neutral"><td class="card">Dreos, rusheur serveur</td><td class="chg"><span class="cost">Coût 3 <span class="arw">→</span> 3</span></td><td class="why">référence 3</td></tr>
+<tr class="up"><td class="card">Dreos, surrender to madness</td><td class="chg"><span class="cost">Coût 8 <span class="arw">→</span> 9</span> <span class="dot">•</span> <span class="stat">Stat +1 ATK</span></td><td class="why">siphon + insolence + folie : bombe (6/8)</td></tr>
+<tr class="up"><td class="card">Elkatrix, doux comme un agneau</td><td class="chg"><span class="cost">Coût 2 <span class="arw">→</span> 3</span></td><td class="why">double les terrains LoL : au-dessus de la courbe à 2</td></tr>
+<tr class="up"><td class="card">Elkatrix, top 3 Guardian</td><td class="chg"><span class="cost">Coût 4 <span class="arw">→</span> 5</span> <span class="dot">•</span> <span class="stat">Stat +1 ATK</span></td><td class="why">Rempart + soin récurrent : vrai 5 (4/5)</td></tr>
+<tr class="down"><td class="card">Elkatrix, unleashed</td><td class="chg"><span class="cost">Coût 5 <span class="arw">→</span> 5</span> <span class="dot">•</span> <span class="stat">Stat +1 PV</span></td><td class="why">payoff de fin de partie (4/6)</td></tr>
+<tr class="neutral"><td class="card">Xulyes, briseur d'écrans</td><td class="chg"><span class="cost">Coût 2 <span class="arw">→</span> 2</span></td><td class="why">2/2 baseline, reste la référence du coût 2</td></tr>
+<tr class="up"><td class="card">Xulyes, serveur charmant</td><td class="chg"><span class="cost">Coût 3 <span class="arw">→</span> 4</span> <span class="dot">•</span> <span class="stat">Stat +1 PV</span></td><td class="why">soin + Or = beaucoup de valeur pour 3 (3/4)</td></tr>
+<tr class="up"><td class="card">Xulyes, commandant des armées</td><td class="chg"><span class="cost">Coût 4 <span class="arw">→</span> 6</span> <span class="dot">•</span> <span class="stat">Stat +1 ATK</span></td><td class="why">VIP + aura +1/+1 : payoff complet à 4, bombe à 6</td></tr>
+<tr class="down"><td class="card">Losk, crypto farmer (jeune)</td><td class="chg"><span class="cost">Coût 3 <span class="arw">→</span> 3</span> <span class="dot">•</span> <span class="stat">Stat +1 PV</span></td><td class="why">Or aléatoire ; à 3 avec 3/4</td></tr>
+<tr class="up"><td class="card">Losk, officier tyrannique</td><td class="chg"><span class="cost">Coût 4 <span class="arw">→</span> 5</span> <span class="dot">•</span> <span class="stat">Stat +1 ATK</span></td><td class="why">Rempart + valeur récurrente (3/5 → 4/5)</td></tr>
+<tr class="up"><td class="card">Losk, crypto farmer (vétéran)</td><td class="chg"><span class="cost">Coût 5 <span class="arw">→</span> 6</span> <span class="dot">•</span> <span class="stat">Stat +1 ATK</span></td><td class="why">rampe d'Or récurrente = bombe tardive</td></tr>
+<tr class="down"><td class="card">Sadamie, adorateur de Chanssus</td><td class="chg"><span class="cost">Coût 2 <span class="arw">→</span> 1</span> <span class="dot">•</span> <span class="stat">Stat −1 PV</span></td><td class="why">petit 2-drop avec pioche côté adverse, dégraissé</td></tr>
+<tr class="neutral"><td class="card">Sadamie, agent du chaos</td><td class="chg"><span class="cost">Coût 3 <span class="arw">→</span> 3</span></td><td class="why">3/3, reste référence</td></tr>
+<tr class="down"><td class="card">Sadamie, highroller ultime</td><td class="chg"><span class="cost">Coût 8 <span class="arw">→</span> 8</span> <span class="dot">•</span> <span class="stat">Stat +1 PV</span></td><td class="why">gros aléatoire de fin de partie, bombe assumée</td></tr>
+<tr class="down"><td class="card">Lasorius, mets une pierre</td><td class="chg"><span class="cost">Coût 2 <span class="arw">→</span> 1</span> <span class="dot">•</span> <span class="stat">Stat −1 PV</span></td><td class="why">petit 2-drop, dégraissé</td></tr>
+<tr class="up"><td class="card">Lasorius, avatar de la rancune</td><td class="chg"><span class="cost">Coût 3 <span class="arw">→</span> 4</span> <span class="dot">•</span> <span class="stat">Stat +1 ATK</span></td><td class="why">se blesse + 3 dégâts = bon 4 (4/3)</td></tr>
+<tr class="neutral"><td class="card">Lasorius, instigateur sournois</td><td class="chg"><span class="cost">Coût 6 <span class="arw">→</span> 6</span></td><td class="why">échange/vol de créature = contrôle mental, reste bombe</td></tr>
+<tr class="up"><td class="card">Osiris, joueur retraité</td><td class="chg"><span class="cost">Coût 2 <span class="arw">→</span> 3</span></td><td class="why">bloqueur Rempart 0/4 + valeur : au-dessus de la courbe à 2</td></tr>
+<tr class="neutral"><td class="card">Osiris, Jak</td><td class="chg"><span class="cost">Coût 3 <span class="arw">→</span> 3</span></td><td class="why">invoque un 3/4 Rempart à la mort, référence 3</td></tr>
+<tr class="down"><td class="card">Osiris, expert bluffeur</td><td class="chg"><span class="cost">Coût 5 <span class="arw">→</span> 5</span> <span class="dot">•</span> <span class="stat">Stat +1 PV</span></td><td class="why">valeur récurrente, reste à 5</td></tr>
+<tr class="up"><td class="card">Maki, fan d'Osiris</td><td class="chg"><span class="cost">Coût 2 <span class="arw">→</span> 3</span></td><td class="why">2/3 + tuteur : au-dessus de la courbe à 2</td></tr>
+<tr class="neutral"><td class="card">Maki, chef coach</td><td class="chg"><span class="cost">Coût 2 <span class="arw">→</span> 2</span></td><td class="why">2/2 baseline</td></tr>
+<tr class="down"><td class="card">Maki, aristocrate condescendant</td><td class="chg"><span class="cost">Coût 4 <span class="arw">→</span> 4</span> <span class="dot">•</span> <span class="stat">Stat +1 PV</span></td><td class="why">taxe + 3/6, reste à 4</td></tr>
+<tr class="neutral"><td class="card">George Randall, pornstar</td><td class="chg"><span class="cost">Coût 2 <span class="arw">→</span> 2</span></td><td class="why">2/2 baseline (bloque)</td></tr>
+<tr class="down"><td class="card">George Randall, the storyteller</td><td class="chg"><span class="cost">Coût 3 <span class="arw">→</span> 2</span></td><td class="why">3/2 aléatoire, redescend pour garnir le 2</td></tr>
+<tr class="up"><td class="card">George Randall, rank 1 every game</td><td class="chg"><span class="cost">Coût 5 <span class="arw">→</span> 6</span> <span class="dot">•</span> <span class="stat">Stat +1 PV</span></td><td class="why">double les terrains = bombe (6/5)</td></tr>
+<tr class="neutral"><td class="card">Gobi, chef des baveux</td><td class="chg"><span class="cost">Coût 2 <span class="arw">→</span> 2</span></td><td class="why">plusieurs corps, reste un 2</td></tr>
+<tr class="down"><td class="card">Gobi, slayer of Sludgefist</td><td class="chg"><span class="cost">Coût 4 <span class="arw">→</span> 3</span></td><td class="why">4/2 Réincarnation : juste à 3</td></tr>
+<tr class="down"><td class="card">Gobi, collectionneur de Dofus</td><td class="chg"><span class="cost">Coût 6 <span class="arw">→</span> 6</span> <span class="dot">•</span> <span class="stat">Stat +1 PV</span></td><td class="why">artefact Dofus, reste bombe à 6</td></tr>
+<tr class="neutral"><td class="card">Gollwyd Bambou, kickeur compulsif</td><td class="chg"><span class="cost">Coût 3 <span class="arw">→</span> 3</span></td><td class="why">2/2 + éjection : référence 3</td></tr>
+<tr class="up"><td class="card">Gollwyd Bambou, nostalgique</td><td class="chg"><span class="cost">Coût 4 <span class="arw">→</span> 5</span> <span class="dot">•</span> <span class="stat">Stat +1 ATK</span></td><td class="why">3/5 + anti-mutisme global : vrai 5</td></tr>
+<tr class="neutral"><td class="card">Gollwyd Bambou, grand reformatage</td><td class="chg"><span class="cost">Coût 10 <span class="arw">→</span> 10</span></td><td class="why">wipe de plateau, bombe ultime</td></tr>
+<tr class="neutral"><td class="card">Haddmi, chouineur professionnel</td><td class="chg"><span class="cost">Coût 1 <span class="arw">→</span> 1</span></td><td class="why">contrôle pas cher : 0/3 Rempart + valeur</td></tr>
+<tr class="down"><td class="card">Haddmi, chef dissident</td><td class="chg"><span class="cost">Coût 5 <span class="arw">→</span> 4</span></td><td class="why">contrôle conditionnel d'une créature ≤ 3 : juste à 4</td></tr>
+<tr class="down"><td class="card">Haddmi, sniper d'élite</td><td class="chg"><span class="cost">Coût 6 <span class="arw">→</span> 6</span> <span class="dot">•</span> <span class="stat">Stat +1 PV</span></td><td class="why">tire à distance à chaque tour, reste 6</td></tr>
+<tr class="up"><td class="card">Homz, scrolleur invétéré</td><td class="chg"><span class="cost">Coût 2 <span class="arw">→</span> 3</span> <span class="dot">•</span> <span class="stat">Stat +1 ATK</span></td><td class="why">2/4 + blocage ponctuel : au-dessus de la courbe à 2</td></tr>
+<tr class="neutral"><td class="card">Homz, à la recherche du R14</td><td class="chg"><span class="cost">Coût 4 <span class="arw">→</span> 4</span></td><td class="why">Rempart + croissance, référence 4</td></tr>
+<tr class="up"><td class="card">Homz, porteur de la flamme</td><td class="chg"><span class="cost">Coût 5 <span class="arw">→</span> 7</span> <span class="dot">•</span> <span class="stat">Stat +1 ATK</span></td><td class="why">payoff de famille complet, bombe</td></tr>
+<tr class="neutral"><td class="card">Kirua, crasheur de serveur</td><td class="chg"><span class="cost">Coût 2 <span class="arw">→</span> 2</span></td><td class="why">2/3 anti-terrain, reste 2</td></tr>
+<tr class="neutral"><td class="card">Kirua, la panthère</td><td class="chg"><span class="cost">Coût 4 <span class="arw">→</span> 4</span></td><td class="why">4/2 agressif, référence 4</td></tr>
+<tr class="up"><td class="card">Kirua, la reine des neiges</td><td class="chg"><span class="cost">Coût 5 <span class="arw">→</span> 6</span> <span class="dot">•</span> <span class="stat">Stat +1 PV</span></td><td class="why">terrain Blizzard, bombe (6/5)</td></tr>
+<tr class="neutral"><td class="card">Korock, insulteur de lobby</td><td class="chg"><span class="cost">Coût 1 <span class="arw">→</span> 1</span></td><td class="why">1-drop agressif de référence</td></tr>
+<tr class="neutral"><td class="card">Korock, écraseur de main</td><td class="chg"><span class="cost">Coût 3 <span class="arw">→</span> 3</span></td><td class="why">met l'ATK à 0, référence contrôle à 3</td></tr>
+<tr class="down"><td class="card">Korock, ban à vie</td><td class="chg"><span class="cost">Coût 5 <span class="arw">→</span> 5</span> <span class="dot">•</span> <span class="stat">Stat +1 PV</span></td><td class="why">Hâte + dégâts en main, reste 5</td></tr>
+<tr class="down"><td class="card">Laloutre, débatteur invétéré</td><td class="chg"><span class="cost">Coût 4 <span class="arw">→</span> 3</span> <span class="dot">•</span> <span class="stat">Stat −1 PV</span></td><td class="why">2/3 Rempart : trop cher à 4, juste à 3</td></tr>
+<tr class="down"><td class="card">Laloutre, élitiste de l'esport</td><td class="chg"><span class="cost">Coût 4 <span class="arw">→</span> 4</span> <span class="dot">•</span> <span class="stat">Stat +1 PV</span></td><td class="why">3/4, référence</td></tr>
+<tr class="up"><td class="card">Laloutre, démon de la custom</td><td class="chg"><span class="cost">Coût 4 <span class="arw">→</span> 5</span> <span class="dot">•</span> <span class="stat">Stat +1 PV</span></td><td class="why">aura de mot-clé aléatoire, vrai 5</td></tr>
+<tr class="down"><td class="card">Lanfear, vapoteuse insoutenable</td><td class="chg"><span class="cost">Coût 2 <span class="arw">→</span> 1</span></td><td class="why">contrôle pas cher : Venin lent à 1</td></tr>
+<tr class="neutral"><td class="card">Lanfear, micro de merde</td><td class="chg"><span class="cost">Coût 4 <span class="arw">→</span> 4</span></td><td class="why">référence</td></tr>
+<tr class="down"><td class="card">Lanfear, maître des trains</td><td class="chg"><span class="cost">Coût 3 <span class="arw">→</span> 2</span></td><td class="why">2/2, contrôle déplaçant : juste à 2</td></tr>
+<tr class="up"><td class="card">Le Coach, capitaine du rush</td><td class="chg"><span class="cost">Coût 3 <span class="arw">→</span> 4</span></td><td class="why">payoff aggro (Insolence + basse ATK), vrai 4</td></tr>
+<tr class="up"><td class="card">Lisdoon, gomuscu</td><td class="chg"><span class="cost">Coût 2 <span class="arw">→</span> 3</span></td><td class="why">2/3 + Croissance : au-dessus de la courbe à 2</td></tr>
+<tr class="neutral"><td class="card">Lisdoon, patriarche</td><td class="chg"><span class="cost">Coût 3 <span class="arw">→</span> 3</span></td><td class="why">référence</td></tr>
+<tr class="neutral"><td class="card">Lisdoon, Roro</td><td class="chg"><span class="cost">Coût 6 <span class="arw">→</span> 6</span></td><td class="why">6/5 Frénésie, reste 6</td></tr>
+<tr class="down"><td class="card">Loractys, fast thinker</td><td class="chg"><span class="cost">Coût 2 <span class="arw">→</span> 1</span></td><td class="why">1/2, rampe différée : juste à 1</td></tr>
+<tr class="neutral"><td class="card">Loractys, de retour de Chine</td><td class="chg"><span class="cost">Coût 3 <span class="arw">→</span> 3</span></td><td class="why">2/3 + pioche à la mort, référence</td></tr>
+<tr class="up"><td class="card">Loractys, abuseur du système</td><td class="chg"><span class="cost">Coût 4 <span class="arw">→</span> 6</span> <span class="dot">•</span> <span class="stat">Stat +1/+1</span></td><td class="why">double les cris = combos, nettement au-dessus de 4</td></tr>
+<tr class="neutral"><td class="card">Minuit, raciste originel</td><td class="chg"><span class="cost">Coût 3 <span class="arw">→</span> 3</span></td><td class="why">référence</td></tr>
+<tr class="down"><td class="card">Minuit, guerrier enragé</td><td class="chg"><span class="cost">Coût 4 <span class="arw">→</span> 4</span> <span class="dot">•</span> <span class="stat">Stat +1 ATK</span></td><td class="why">4/3 Balayage, référence 4</td></tr>
+<tr class="up"><td class="card">Minuit, chef de raid</td><td class="chg"><span class="cost">Coût 5 <span class="arw">→</span> 6</span> <span class="dot">•</span> <span class="stat">Stat +1/+1</span></td><td class="why">aura + nettoyage, bombe (4/4)</td></tr>
+<tr class="down"><td class="card">Miichi, cosplayeuse express</td><td class="chg"><span class="cost">Coût 2 <span class="arw">→</span> 1</span> <span class="dot">•</span> <span class="stat">Stat −1 ATK</span></td><td class="why">petit 2-drop, dégraissé (2/1 → 1/1)</td></tr>
+<tr class="neutral"><td class="card">Miichi, speedrunneuse d'anime</td><td class="chg"><span class="cost">Coût 3 <span class="arw">→</span> 3</span></td><td class="why">référence 3</td></tr>
+<tr class="down"><td class="card">Miichi, waifu intergalactique</td><td class="chg"><span class="cost">Coût 5 <span class="arw">→</span> 5</span> <span class="dot">•</span> <span class="stat">Stat +1 PV</span></td><td class="why">Hâte + vol d'Or + aura : haut de bande (4/4)</td></tr>
+<tr class="down"><td class="card">Natinganz, privé d'ordinateur</td><td class="chg"><span class="cost">Coût 2 <span class="arw">→</span> 1</span> <span class="dot">•</span> <span class="stat">Stat −1 PV</span></td><td class="why">petit contrôle conditionnel, dégraissé</td></tr>
+<tr class="neutral"><td class="card">Natinganz, puits de connaissance</td><td class="chg"><span class="cost">Coût 2 <span class="arw">→</span> 2</span></td><td class="why">1/3 piocheur, reste 2</td></tr>
+<tr class="down"><td class="card">Natinganz, j'ai dl le boss</td><td class="chg"><span class="cost">Coût 5 <span class="arw">→</span> 5</span> <span class="dot">•</span> <span class="stat">Stat +1 PV</span></td><td class="why">laser ambulant, reste 5</td></tr>
+<tr class="down"><td class="card">Potatoll, serviteur de Kiwi</td><td class="chg"><span class="cost">Coût 2 <span class="arw">→</span> 1</span> <span class="dot">•</span> <span class="stat">Stat −1 ATK</span></td><td class="why">1/1 + Kiwi : 2/2 pour 1, dégraissé</td></tr>
+<tr class="neutral"><td class="card">Potatoll, désinstallation sauvage</td><td class="chg"><span class="cost">Coût 3 <span class="arw">→</span> 3</span></td><td class="why">référence</td></tr>
+<tr class="down"><td class="card">Potatoll, fou du Bazar</td><td class="chg"><span class="cost">Coût 8 <span class="arw">→</span> 8</span> <span class="dot">•</span> <span class="stat">Stat +1 PV</span></td><td class="why">terrain Bazar, bombe</td></tr>
+<tr class="up"><td class="card">Rasta, fardeau pour l'équipe</td><td class="chg"><span class="cost">Coût 2 <span class="arw">→</span> 3</span></td><td class="why">2/3 + invoc adverse : au-dessus de la courbe à 2</td></tr>
+<tr class="up"><td class="card">Rasta, viens dehors</td><td class="chg"><span class="cost">Coût 3 <span class="arw">→</span> 4</span> <span class="dot">•</span> <span class="stat">Stat +1 ATK</span></td><td class="why">double invocation + destruction : vrai 4</td></tr>
+<tr class="down"><td class="card">Rasta, aura nauséabonde</td><td class="chg"><span class="cost">Coût 6 <span class="arw">→</span> 6</span> <span class="dot">•</span> <span class="stat">Stat +1 PV</span></td><td class="why">Venin à répétition, reste 6</td></tr>
+<tr class="neutral"><td class="card">Sadagod, poisson rouge</td><td class="chg"><span class="cost">Coût 1 <span class="arw">→</span> 1</span></td><td class="why">référence du 1 (défausse → pioche)</td></tr>
+<tr class="neutral"><td class="card">Sadagod, instamuter</td><td class="chg"><span class="cost">Coût 3 <span class="arw">→</span> 3</span></td><td class="why">2/3 + mutisme, référence</td></tr>
+<tr class="down"><td class="card">Sadagod, master baiter</td><td class="chg"><span class="cost">Coût 5 <span class="arw">→</span> 5</span> <span class="dot">•</span> <span class="stat">Stat +1 PV</span></td><td class="why">VIP + ATK variable, reste 5</td></tr>
+<tr class="down"><td class="card">Saja, presque world first Rygelon</td><td class="chg"><span class="cost">Coût 3 <span class="arw">→</span> 2</span></td><td class="why">1/2, met les PV à 1 : contrôle à 2</td></tr>
+<tr class="down"><td class="card">Saja, fascisme incarné</td><td class="chg"><span class="cost">Coût 6 <span class="arw">→</span> 6</span> <span class="dot">•</span> <span class="stat">Stat +1 PV</span></td><td class="why">aura de position, reste 6</td></tr>
+<tr class="neutral"><td class="card">Simon, monologueur insolent</td><td class="chg"><span class="cost">Coût 3 <span class="arw">→</span> 3</span></td><td class="why">référence</td></tr>
+<tr class="neutral"><td class="card">Simon, train ses mécaniques</td><td class="chg"><span class="cost">Coût 2 <span class="arw">→</span> 2</span></td><td class="why">2/2 qui monte en puissance, reste 2</td></tr>
+<tr class="up"><td class="card">Simon, rusheur de ligue</td><td class="chg"><span class="cost">Coût 6 <span class="arw">→</span> 7</span> <span class="dot">•</span> <span class="stat">Stat +1 ATK</span></td><td class="why">Hâte + butin de destruction : bombe</td></tr>
+<tr class="up"><td class="card">Snoux, facecheck</td><td class="chg"><span class="cost">Coût 3 <span class="arw">→</span> 4</span> <span class="dot">•</span> <span class="stat">Stat +1 ATK</span></td><td class="why">3/3 agressif de référence, se cale à 4 (4/3)</td></tr>
+<tr class="up"><td class="card">Snoux, tête la première</td><td class="chg"><span class="cost">Coût 3 <span class="arw">→</span> 4</span> <span class="dot">•</span> <span class="stat">Stat +1 ATK</span></td><td class="why">ignore les Remparts + croissance : vrai 4 (4/3)</td></tr>
+<tr class="up"><td class="card">Snoux, le face, c'est la place</td><td class="chg"><span class="cost">Coût 4 <span class="arw">→</span> 5</span> <span class="dot">•</span> <span class="stat">Stat +1 PV</span></td><td class="why">anti-Rempart global, payoff aggro, 5</td></tr>
+<tr class="neutral"><td class="card">Takk, enchaîneur de waifus</td><td class="chg"><span class="cost">Coût 3 <span class="arw">→</span> 3</span></td><td class="why">référence</td></tr>
+<tr class="up"><td class="card">Takk, TN Lacoste</td><td class="chg"><span class="cost">Coût 2 <span class="arw">→</span> 3</span></td><td class="why">Hâte + vol d'Or : au-dessus de la courbe à 2</td></tr>
+<tr class="up"><td class="card">Takk, pourquoi il est mort ?</td><td class="chg"><span class="cost">Coût 5 <span class="arw">→</span> 7</span> <span class="dot">•</span> <span class="stat">Stat +1 ATK</span></td><td class="why">Frénésie + buff de groupe = bombe de finisher</td></tr>
+</tbody>
+</table>
+<h2>Sorts génériques <span class="cnt">31</span></h2>
+<table>
+<thead><tr><th>Carte</th><th>Changement proposé</th><th>Pourquoi ? (très résumé)</th></tr></thead>
+<tbody>
+<tr class="neutral"><td class="card">Nitro</td><td class="chg"><span class="cost">Coût 0 <span class="arw">→</span> 0</span></td><td class="why">accélérateur gratuit, assumé</td></tr>
+<tr class="neutral"><td class="card">Achat compulsif</td><td class="chg"><span class="cost">Coût 0 <span class="arw">→</span> 0</span></td><td class="why">pioche conditionnelle à l'Or, assumé</td></tr>
+<tr class="up"><td class="card">Freelance</td><td class="chg"><span class="cost">Coût 0 <span class="arw">→</span> 1</span></td><td class="why">+2/+2 « sans famille » : trop fort pour 0</td></tr>
+<tr class="neutral"><td class="card">Ping</td><td class="chg"><span class="cost">Coût 1 <span class="arw">→</span> 1</span></td><td class="why">référence du 1 (2 dégâts)</td></tr>
+<tr class="neutral"><td class="card">Webhook</td><td class="chg"><span class="cost">Coût 1 <span class="arw">→</span> 1</span></td><td class="why">référence (1 dégât + pioche)</td></tr>
+<tr class="neutral"><td class="card">Mute</td><td class="chg"><span class="cost">Coût 1 <span class="arw">→</span> 1</span></td><td class="why">référence contrôle</td></tr>
+<tr class="neutral"><td class="card">Nerf</td><td class="chg"><span class="cost">Coût 1 <span class="arw">→</span> 1</span></td><td class="why">−3 ATK : contrôle pas cher</td></tr>
+<tr class="neutral"><td class="card">Quitter le serveur</td><td class="chg"><span class="cost">Coût 1 <span class="arw">→</span> 1</span></td><td class="why">combo sacrifice + pioche, assumé à 1</td></tr>
+<tr class="neutral"><td class="card">Ragequit</td><td class="chg"><span class="cost">Coût 1 <span class="arw">→</span> 1</span></td><td class="why">combo sacrifice, assumé à 1</td></tr>
+<tr class="up"><td class="card">Smurf</td><td class="chg"><span class="cost">Coût 1 <span class="arw">→</span> 2</span></td><td class="why">+1/+1 + affiliation : valeur de 2</td></tr>
+<tr class="neutral"><td class="card">Boost</td><td class="chg"><span class="cost">Coût 2 <span class="arw">→</span> 2</span></td><td class="why">référence</td></tr>
+<tr class="neutral"><td class="card">Pizza Party</td><td class="chg"><span class="cost">Coût 2 <span class="arw">→</span> 2</span></td><td class="why">référence (soin)</td></tr>
+<tr class="neutral"><td class="card">Kick</td><td class="chg"><span class="cost">Coût 2 <span class="arw">→</span> 2</span></td><td class="why">référence contrôle</td></tr>
+<tr class="neutral"><td class="card">Spam</td><td class="chg"><span class="cost">Coût 2 <span class="arw">→</span> 2</span></td><td class="why">3 jetons, reste 2</td></tr>
+<tr class="neutral"><td class="card">Giveaway</td><td class="chg"><span class="cost">Coût 2 <span class="arw">→</span> 2</span></td><td class="why">pioche 2, référence</td></tr>
+<tr class="up"><td class="card">Screenshot</td><td class="chg"><span class="cost">Coût 2 <span class="arw">→</span> 3</span></td><td class="why">2 cartes volées = avantage net, vrai 3</td></tr>
+<tr class="neutral"><td class="card">Sanction</td><td class="chg"><span class="cost">Coût 2 <span class="arw">→</span> 2</span></td><td class="why">référence contrôle conditionnel</td></tr>
+<tr class="up"><td class="card">Reconnexion</td><td class="chg"><span class="cost">Coût 2 <span class="arw">→</span> 3</span></td><td class="why">résurrection, vrai 3</td></tr>
+<tr class="neutral"><td class="card">Multi-casquettes</td><td class="chg"><span class="cost">Coût 2 <span class="arw">→</span> 2</span></td><td class="why">référence</td></tr>
+<tr class="up"><td class="card">Ducks in a muck</td><td class="chg"><span class="cost">Coût 3 <span class="arw">→</span> 6</span></td><td class="why">remplit les deux plateaux : commune à 6, désengorge le 3</td></tr>
+<tr class="neutral"><td class="card">Flame</td><td class="chg"><span class="cost">Coût 3 <span class="arw">→</span> 3</span></td><td class="why">référence Venin</td></tr>
+<tr class="up"><td class="card">Mise à jour du Bot</td><td class="chg"><span class="cost">Coût 3 <span class="arw">→</span> 5</span></td><td class="why">invoque un 2/5 Rempart : grosse valeur, commune à 5</td></tr>
+<tr class="neutral"><td class="card">Flood</td><td class="chg"><span class="cost">Coût 3 <span class="arw">→</span> 3</span></td><td class="why">référence</td></tr>
+<tr class="up"><td class="card">Premade</td><td class="chg"><span class="cost">Coût 3 <span class="arw">→</span> 4</span></td><td class="why">+1/+1 à tout le plateau, vrai 4</td></tr>
+<tr class="neutral"><td class="card">Clutch</td><td class="chg"><span class="cost">Coût 3 <span class="arw">→</span> 3</span></td><td class="why">référence</td></tr>
+<tr class="neutral"><td class="card">Clip</td><td class="chg"><span class="cost">Coût 3 <span class="arw">→</span> 3</span></td><td class="why">clone, reste 3</td></tr>
+<tr class="neutral"><td class="card">Raid</td><td class="chg"><span class="cost">Coût 4 <span class="arw">→</span> 4</span></td><td class="why">référence</td></tr>
+<tr class="neutral"><td class="card">Ban</td><td class="chg"><span class="cost">Coût 4 <span class="arw">→</span> 4</span></td><td class="why">retrait, reste 4</td></tr>
+<tr class="up"><td class="card">@everyone</td><td class="chg"><span class="cost">Coût 4 <span class="arw">→</span> 5</span></td><td class="why">4 dégâts à tout le camp adverse, vrai 5</td></tr>
+<tr class="up"><td class="card">Slowmode</td><td class="chg"><span class="cost">Coût 5 <span class="arw">→</span> 6</span></td><td class="why">bloque tout + pioche, vrai 6</td></tr>
+<tr class="down"><td class="card">Toxicité</td><td class="chg"><span class="cost">Coût 5 <span class="arw">→</span> 4</span></td><td class="why">Venin de zone, redescend (contrôle à 4)</td></tr>
+</tbody>
+</table>
+<h2>Sorts de famille <span class="cnt">15</span></h2>
+<table>
+<thead><tr><th>Carte</th><th>Changement proposé</th><th>Pourquoi ? (très résumé)</th></tr></thead>
+<tbody>
+<tr class="neutral"><td class="card">Ambiance toxique</td><td class="chg"><span class="cost">Coût 1 <span class="arw">→</span> 1</span></td><td class="why">référence</td></tr>
+<tr class="neutral"><td class="card">Signalements</td><td class="chg"><span class="cost">Coût 2 <span class="arw">→</span> 2</span></td><td class="why">référence</td></tr>
+<tr class="neutral"><td class="card">Genkidama</td><td class="chg"><span class="cost">Coût 2 <span class="arw">→</span> 2</span></td><td class="why">référence</td></tr>
+<tr class="neutral"><td class="card">Binge-watching</td><td class="chg"><span class="cost">Coût 3 <span class="arw">→</span> 3</span></td><td class="why">référence</td></tr>
+<tr class="neutral"><td class="card">Pay to win</td><td class="chg"><span class="cost">Coût 2 <span class="arw">→</span> 2</span></td><td class="why">référence</td></tr>
+<tr class="neutral"><td class="card">Coup de valise</td><td class="chg"><span class="cost">Coût 2 <span class="arw">→</span> 2</span></td><td class="why">référence</td></tr>
+<tr class="neutral"><td class="card">Coup de folie</td><td class="chg"><span class="cost">Coût 1 <span class="arw">→</span> 1</span></td><td class="why">référence</td></tr>
+<tr class="neutral"><td class="card">Soirée ravagée</td><td class="chg"><span class="cost">Coût 2 <span class="arw">→</span> 2</span></td><td class="why">référence</td></tr>
+<tr class="up"><td class="card">Immunité diplomatique</td><td class="chg"><span class="cost">Coût 2 <span class="arw">→</span> 3</span></td><td class="why">vol + immunité de famille : vrai 3</td></tr>
+<tr class="neutral"><td class="card">Enlèvement</td><td class="chg"><span class="cost">Coût 7 <span class="arw">→</span> 7</span></td><td class="why">contrôle mental, reste bombe</td></tr>
+<tr class="neutral"><td class="card">Gatekeeping</td><td class="chg"><span class="cost">Coût 2 <span class="arw">→</span> 2</span></td><td class="why">référence</td></tr>
+<tr class="neutral"><td class="card">Réémigration prioritaire</td><td class="chg"><span class="cost">Coût 1 <span class="arw">→</span> 1</span></td><td class="why">contrôle pas cher conditionnel</td></tr>
+<tr class="neutral"><td class="card">C'était mieux avant</td><td class="chg"><span class="cost">Coût 2 <span class="arw">→</span> 2</span></td><td class="why">référence</td></tr>
+<tr class="neutral"><td class="card">Nostalgie</td><td class="chg"><span class="cost">Coût 2 <span class="arw">→</span> 2</span></td><td class="why">référence</td></tr>
+<tr class="neutral"><td class="card">Vol low-cost</td><td class="chg"><span class="cost">Coût 1 <span class="arw">→</span> 1</span></td><td class="why">référence</td></tr>
+</tbody>
+</table>
+<h2>Sorts d’affinité <span class="cnt">8</span></h2>
+<table>
+<thead><tr><th>Carte</th><th>Changement proposé</th><th>Pourquoi ? (très résumé)</th></tr></thead>
+<tbody>
+<tr class="neutral"><td class="card">Bénédiction des rois</td><td class="chg"><span class="cost">Coût 3 <span class="arw">→</span> 3</span></td><td class="why">référence</td></tr>
+<tr class="neutral"><td class="card">Drain de vie</td><td class="chg"><span class="cost">Coût 3 <span class="arw">→</span> 3</span></td><td class="why">référence</td></tr>
+<tr class="neutral"><td class="card">Parchemin de sagesse</td><td class="chg"><span class="cost">Coût 1 <span class="arw">→</span> 1</span></td><td class="why">référence</td></tr>
+<tr class="neutral"><td class="card">Bouclier Féca</td><td class="chg"><span class="cost">Coût 2 <span class="arw">→</span> 2</span></td><td class="why">référence</td></tr>
+<tr class="neutral"><td class="card">Flash</td><td class="chg"><span class="cost">Coût 2 <span class="arw">→</span> 2</span></td><td class="why">référence</td></tr>
+<tr class="neutral"><td class="card">Smite</td><td class="chg"><span class="cost">Coût 3 <span class="arw">→</span> 3</span></td><td class="why">référence (dégâts conditionnels)</td></tr>
+<tr class="neutral"><td class="card">Fumigène</td><td class="chg"><span class="cost">Coût 2 <span class="arw">→</span> 2</span></td><td class="why">référence</td></tr>
+<tr class="neutral"><td class="card">Headshot</td><td class="chg"><span class="cost">Coût 3 <span class="arw">→</span> 3</span></td><td class="why">référence (retrait conditionnel)</td></tr>
+</tbody>
+</table>
+
+</div></body></html>

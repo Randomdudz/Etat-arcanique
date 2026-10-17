@@ -1,10 +1,14 @@
 // ============ IA : évaluation à un coup d'avance + constructeur de decks ============
 // mode : 'face' = attaque toujours le héros quand c'est possible, 'clear' = nettoie le plateau d'abord
+// Poids d’évaluation. Calibrés par comparaison directe (auto-jeu, sièges alternés, ~2000 parties) :
+// le plateau adverse (eb) est le levier principal — l’IA l’évaluait trop bas et échangeait/défendait
+// trop peu (+2,6 % de victoires contre l’ancienne évaluation, à échantillon constant).
 const WGT={
-  bal:{me:1,op:1.05,atk:1.15,hpw:.95,eb:1,hand:.5,gold:.45,lam:.4},
-  agro:{me:.8,op:1.5,atk:1.3,hpw:.8,eb:.95,hand:.45,gold:.4,lam:.5},
-  ctrl:{me:1.25,op:.75,atk:1,hpw:1.1,eb:1.05,hand:.6,gold:.45,lam:.3}};
-function hpv(h){return h>=0?h+(h<14?(14-h)*.7:0):h*3}
+  bal:{me:1,op:1.2075,atk:1.265,hpw:.95,eb:1.4,hand:.75,gold:.45,lam:.4},
+  agro:{me:.8,op:1.725,atk:1.43,hpw:.8,eb:1.33,hand:.675,gold:.4,lam:.5},
+  ctrl:{me:1.25,op:.8625,atk:1.1,hpw:1.1,eb:1.47,hand:.9,gold:.45,lam:.3}};
+// PV du héros : linéaires (l’ancienne courbe comprimait les PV bas et faussait la défense).
+function hpv(h){return h>=0?h:h*3}
 function cval(G,s,i,W,L){
   const c=G.p[s].board[i],cd=CARDS[c.k],E=eff(G,s,i,L),hp=Math.max(E.hp,0),k=E.kw;
   const noA=E.TE&&E.TE.noAtk;
@@ -181,7 +185,7 @@ function completeDeck(coll,cards,pref,rs){
       out.forEach(k=>{const cd=CARDS[k];if(!cd)return;(cd.fac||[]).forEach(f=>fc[f]=(fc[f]||0)+1);if(cd.fam)fc[cd.fam]=(fc[cd.fam]||0)+1;if(cd.t==='c'&&cd.sc)for(const g in cd.sc)if(cd.sc[g]>=2)gc[g]=(gc[g]||0)+1});
       fam=Object.keys(fc).filter(f=>fc[f]>=2).sort((a,b)=>fc[b]-fc[a]).slice(0,2);
       const g=Object.keys(gc).sort((a,b)=>gc[b]-gc[a])[0];if(g&&gc[g]>=3)aff=[g]}
-    if(!fam.length&&!aff.length){const A=ARCH[pickArch(coll,rs?(rs%1000)/1000:0)];   // deck vide : l'archétype le mieux fourni par la collection
+    if(!fam.length&&!aff.length){const A=ARCH[coverArch(coll,rs?(rs%1000)/1000:0)];   // deck vide : l'archétype le mieux fourni par la collection
       fam=A.fam.slice();if(A.aff)aff=[A.aff];pri=A.pri;agro=A.agro;ctrl=A.ctrl}}
   // cartes clés des archétypes qui correspondent aux choix (sorts de famille, sorts de jeu, cartes phares)
   const pl=[pri].concat(fam.map(f=>ARCH[f]?ARCH[f].pri:[]),aff.map(g=>ARCH[g]?ARCH[g].pri:[]));
@@ -208,10 +212,48 @@ function completeDeck(coll,cards,pref,rs){
   for(let r=0;r<2&&out.length<size;r++)for(const k of avail){if(CARDS[k].t==='s'&&spells()>=11)continue;add(k)}
   for(const k of avail)add(k);
   return out}
-function pickArch(coll,rs){
-  // l'IA joue un archétype dont elle possède assez de cartes
+// choisit l'archétype dont la collection fournit le plus de cartes (rapide, sans auto-jeu).
+// Sert au deckbuilder (compléter un deck vide) et de repli.
+function coverArch(coll,rs){
   const sc=ARCHK.map(a=>{const d=autoDeck(coll,a);const A=ARCH[a];return{a,v:d.filter(k=>CARDS[k].fac&&CARDS[k].fac.some(f=>A.fam.indexOf(f)>=0)||A.pri.indexOf(k)>=0||(A.aff&&CARDS[k].sc&&CARDS[k].sc[A.aff]===2)).length}});
   const mx=Math.max(...sc.map(x=>x.v));const top=sc.filter(x=>x.v>=mx-4).map(x=>x.a);return top[Math.floor(rs*top.length)%top.length]}
+
+// ----- sélection du « meilleur deck » -----
+// Les archétypes ne se valent pas (écart de ~25 pts de winrate) et aucun score statique ne le
+// prédit : seul l'auto-jeu tranche. On fait donc un tournoi round-robin (2 parties/paire incluant
+// l'alternance des sièges) entre les decks de tous les archétypes, et l'IA joue le vainqueur.
+// Résultat mis en cache par collection : le tournoi ne tourne qu'une fois par session.
+const BEST_GPP=2;                       // parties par paire (2 = fiable ; 1 = ~2x plus rapide mais peu fiable ; 0 = désactivé)
+var _bdCache={};
+function bdSig(coll){if(!coll)return'ALL';const ks=Object.keys(coll).sort();let h=5381;
+  for(const k of ks)h=((h*33)+(((coll[k]&&coll[k].n)||0)*7+((coll[k]&&coll[k].p)||0)))>>>0;
+  return'C'+h+'_'+ks.length}
+function bdPlay(d0,d1,a0,a1,seed,first){
+  const G=newGame({seed:(seed>>>0)||1,decks:[d0.slice(),d1.slice()],o:{},first:first?1:0,lg:false});
+  let g=0;
+  while(!G.over&&g++<4000){const s=G.cur,W=WGT[(ARCH[s===0?a0:a1]||{}).w]||WGT.bal;
+    if(G.phase==='rps'){const r=act(G,s,aiPick(G,s,W));if(!r.ok)act(G,s,{t:'end'});continue}
+    aiTurn(G,s,W)}
+  return G.over?G.over.w:-1}
+function bestDeck(coll,rs){
+  if(BEST_GPP<=0)return null;                    // tournoi désactivé : pickArch retombe sur coverArch
+  const sig=bdSig(coll);if(sig in _bdCache)return _bdCache[sig];
+  let out=null;
+  try{
+    const cands=ARCHK.map(a=>autoDeck(coll,a,ECON.deck,(rs||1)+a.length*131));
+    const wins=cands.map(()=>0),pl=cands.map(()=>0);
+    for(let i=0;i<cands.length;i++)for(let j=i+1;j<cands.length;j++)for(let q=0;q<BEST_GPP;q++){
+      const first=(i+j+q)&1;
+      const w=bdPlay(cands[i],cands[j],ARCHK[i],ARCHK[j],(((rs||1)*2654435761)+i*131+j*17+q*7+1)>>>0,first);
+      pl[i]++;pl[j]++;if(w===0)wins[i]++;else if(w===1)wins[j]++}
+    let bi=0,bv=-1;for(let i=0;i<cands.length;i++){const p=pl[i]?wins[i]/pl[i]:0;if(p>bv){bv=p;bi=i}}
+    out={arch:ARCHK[bi],cards:cands[bi],p:bv};
+  }catch(e){out=null}
+  _bdCache[sig]=out;return out}
+function pickArch(coll,rs){
+  // l'IA joue le meilleur deck pour la collection (tournoi), pas un archétype tiré au hasard.
+  const b=bestDeck(coll,rs);if(b&&b.arch)return b.arch;
+  return coverArch(coll,rs)}
 
 // ----- codes de deck : un deck se partage par copier-coller -----
 // code = « EAD1- » + somme de contrôle (4 car.) + « - » + base64url de « nom|clé*n.clé.… » (clés des cartes : le code reste valable quand on ajoute des cartes)
