@@ -357,8 +357,8 @@ function reap(G){
     outer:for(const s of [G.cur,1-G.cur]){const L=fl(G,s);for(let i=0;i<CELLS;i++){const c=G.p[s].board[i];if(c&&!c.pd){const E=eff(G,s,i,L);if(E.hp<=0){d={s,i,c,E};break outer}}}}
     if(!d)break;
     const{s,i,c,E}=d,cd=CARDS[c.k],P=G.p[s];
-    if(E.h>0&&(c.inv||c.rsp)){                             
-      if(!c.inv){c.inv=1;}c.dm=Math.max(0,E.h-1);continue}
+    if(E.h>0&&c.inv){c.dm=Math.max(0,E.h-1);continue}       // invincible : ne meurt pas ce tour-ci
+    // Respawn (mot-clé ou donné par Lasorius, mets une pierre) : la créature revient une fois avec 1 PV (voir plus bas)
     const OP=G.p[c.o!=null?c.o:s];removeC(G,s,i,false);if(!c.sm)toGrave(OP,c);syncMute(G);lockSweep(G);   // au cimetière de son propriétaire
     const oppT=G.cur!==s;
     P.board.forEach((b,j)=>{if(!b||b.mut)return;const bd=CARDS[b.k];
