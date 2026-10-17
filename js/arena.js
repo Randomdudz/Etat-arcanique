@@ -275,8 +275,8 @@ function arenaQueueFinished(){
 function arenaAIDeck(tier,seed){
   const maxR=tier>=7?3:tier>=4?2:1,coll={};
   POOL.forEach(k=>{if(CARDS[k].r<=maxR)coll[k]={n:CARDS[k].r===3?1:2,p:0}});
-  const arch=ARCHK[(tier-1)%ARCHK.length];
-  return{deck:autoDeck(coll,arch,ARENA.picks,seed),arch}
+  const ai=bestAIDeck(coll,seed,arenaOpt());
+  return{deck:ai.cards,arch:ai.arch}
 }
 function startArenaAIDuel(){
   if(AQ.active){toast('Annule la recherche de joueur avant de lancer un duel contre l’IA.');return}

@@ -29,12 +29,20 @@ function cval(G,s,i,W,L){
   if(c.blk)v-=E.a*.8;if(c.pz)v-=Math.min(c.pz*(c.pz+1)/2,hp)*.9;
   if(c.ex){let th=0;G.p[1-s].board.forEach(b=>{if(b)th+=b.a});v+=th>=hp?v*.45:v*.1}
   return v}
+function facePressure(G,s,W){
+  const P=G.p[s];let dmg=0;
+  for(let i=0;i<CELLS;i++){const c=P.board[i];if(!c||c.blk>0)continue;
+    const E=eff(G,s,i);if((E.TE&&E.TE.noAtk)||(c.sick&&!E.kw.hate))continue;
+    const hits=(E.kw.frenesie?2:1)+(c.xat||0)-c.af;if(hits<=0)continue;
+    if(atkTargets(G,s,i).some(t=>t.i<0))dmg+=E.a*hits}
+  return dmg*W.atk*.35}
 function evalG(G,me,W){
   if(G.over)return G.over.w===me?1e5:(G.over.w<0?0:-1e5);
   const A=G.p[me],B=G.p[1-me];
   let v=W.me*hpv(A.hp)-W.op*hpv(B.hp)-(A.pz*(A.pz+1)/2)*.8+(B.pz*(B.pz+1)/2)*.8;
   const LA=fl(G,me),LB=fl(G,1-me);
   for(let i=0;i<CELLS;i++){if(A.board[i])v+=cval(G,me,i,W,LA);if(B.board[i])v-=cval(G,1-me,i,W,LB)*W.eb}
+  v+=facePressure(G,me,W)-facePressure(G,1-me,W)*W.eb; // les Remparts protègent le héros et bloquent les attaques accessibles
   for(const h of A.hand){const cd=CARDS[h.k];v+=W.hand+.12*cd.c;
     if(cd.t==='c'){let m=0;for(let i=0;i<CELLS;i++)if(!A.board[i]){const b=slotBonus(G,me,i,h.k);if(b>m)m=b}v+=.4*m}}
   v+=(A.pq||[]).reduce((t,q)=>t+(q.m==='disc'?-1:1),0)*(W.hand+.6);                  // choix en attente : une carte de plus (Coco, Miroir) ou de moins (Coup de folie)                                                  // choix en attente (Coco, Miroir) : une carte de plus
@@ -52,6 +60,10 @@ function candSlots(G,s,k){const B=G.p[s].board;const b=bestSlot(G,s,k);const r=[
   if(r.length<2)for(let i=0;i<CELLS;i++)if(!B[i]&&i!==b){r.push(i);break}
   if(CARDS[k].laser){const l=B.findIndex(c=>!c);if(l>=0&&r.indexOf(l)<0)r.push(l)}             // Natinganz : le plus à gauche possible
   return r}
+function atkMoves(G,s){const M=[];
+  for(let i=0;i<CELLS;i++)if(canAtk(G,s,i)){if(eff(G,s,i).kw.deso){M.push({t:'atk',f:i,tg:{s:1-s,i:-1}});continue}
+    for(const t of atkTargets(G,s,i))M.push({t:'atk',f:i,tg:t})}
+  return M}
 function moves(G,s){
   const P=G.p[s],M=[],seen={};
   if(G.phase==='rps')return G.rpsTo===s?RPSK.map(v=>({t:'rps',v})):[];                   // Osiris (expert bluffeur) : l'adversaire choisit son signe avant son tour
@@ -65,8 +77,7 @@ function moves(G,s){
         if(sp.sg2){for(const t2 of sp2List(G,s,t))if(t2.s===s&&(t2.i<0||P.board[t2.i].dm>0))M.push({t:'play',i,tg:t,tg2:t2})}   // Clutch : soigner son héros ou une de ses créatures blessées
         else M.push({t:'play',i,tg:t})}
       else M.push({t:'play',i})}});
-  for(let i=0;i<CELLS;i++)if(canAtk(G,s,i)){if(eff(G,s,i).kw.deso){M.push({t:'atk',f:i,tg:{s:1-s,i:-1}});continue}   // Désorienté : la cible est tirée au hasard
-    for(const t of atkTargets(G,s,i))M.push({t:'atk',f:i,tg:t})}
+  M.push(...atkMoves(G,s));
   for(let i=0;i<CELLS;i++)if(canExil(G,s,i))M.push({t:'exil',i});
   // déplacements utiles : seulement ceux qui changent le terrain sous une créature (ils coûtent du Démoflux ou de l'Or, et sont plafonnés)
   if(G.o.ter&&P.terrs.length){
@@ -108,6 +119,10 @@ function aiPick(G,s,W){
   for(const m of M){
     const C=sim(G,s,m);if(!C)continue;
     let v=evalG(C,s,W)-W.lam*C.p[s].eth;
+    if(m.t==='atk'&&m.tg.i>=0&&eff(G,1-s,m.tg.i).kw.rempart){
+      for(const m2 of atkMoves(C,s)){const C2=sim(C,s,m2);if(!C2)continue;
+        const v2=evalG(C2,s,W)-W.lam*C2.p[s].eth;if(v2>v)v=v2}
+    }
     if(m.t==='move')v-=mvCost(G,s)*(W.lam+.5);           // le Démoflux d'un déplacement n'est pas « gratuit » : il aurait pu servir à jouer une carte
     else if(m.t==='tmove')v-=mvCost(G,s)*.3;             // (l'Or dépensé est déjà compté par evalG)
     if(m.t==='play'&&hasEth(G.p[s].hand[m.i].k)){        // sorts de Démoflux : on regarde un coup plus loin
@@ -225,35 +240,39 @@ function coverArch(coll,rs){
 // Résultat mis en cache par collection : le tournoi ne tourne qu'une fois par session.
 const BEST_GPP=2;                       // parties par paire (2 = fiable ; 1 = ~2x plus rapide mais peu fiable ; 0 = désactivé)
 var _bdCache={};
-function bdSig(coll){if(!coll)return'ALL';const ks=Object.keys(coll).sort();let h=5381;
+function bdSig(coll,opts){const settings=Object.assign({},OPTDEF,opts||{}),ok=['hp','cap','ter','evt','hand','inc','mv','fat','rw','comp','arena'];
+  const os=ok.map(k=>settings[k]).join(',');if(!coll)return'ALL_'+os;const ks=Object.keys(coll).sort();let h=5381;
   for(const k of ks)h=((h*33)+(((coll[k]&&coll[k].n)||0)*7+((coll[k]&&coll[k].p)||0)))>>>0;
-  return'C'+h+'_'+ks.length}
-function bdPlay(d0,d1,a0,a1,seed,first){
-  const G=newGame({seed:(seed>>>0)||1,decks:[d0.slice(),d1.slice()],o:{},first:first?1:0,lg:false});
+  return'C'+h+'_'+ks.length+'_'+os}
+function bdPlay(d0,d1,a0,a1,seed,first,opts){
+  const G=newGame({seed:(seed>>>0)||1,decks:[d0.slice(),d1.slice()],o:opts||{},first:first?1:0,lg:false});
   let g=0;
   while(!G.over&&g++<4000){const s=G.cur,W=WGT[(ARCH[s===0?a0:a1]||{}).w]||WGT.bal;
     if(G.phase==='rps'){const r=act(G,s,aiPick(G,s,W));if(!r.ok)act(G,s,{t:'end'});continue}
     aiTurn(G,s,W)}
   return G.over?G.over.w:-1}
-function bestDeck(coll,rs){
+function bestDeck(coll,rs,opts){
   if(BEST_GPP<=0)return null;                    // tournoi désactivé : pickArch retombe sur coverArch
-  const sig=bdSig(coll);if(sig in _bdCache)return _bdCache[sig];
+  const sig=bdSig(coll,opts);if(sig in _bdCache)return _bdCache[sig];
   let out=null;
   try{
     const cands=ARCHK.map(a=>autoDeck(coll,a,ECON.deck,(rs||1)+a.length*131));
     const wins=cands.map(()=>0),pl=cands.map(()=>0);
     for(let i=0;i<cands.length;i++)for(let j=i+1;j<cands.length;j++)for(let q=0;q<BEST_GPP;q++){
       const first=(i+j+q)&1;
-      const w=bdPlay(cands[i],cands[j],ARCHK[i],ARCHK[j],(((rs||1)*2654435761)+i*131+j*17+q*7+1)>>>0,first);
-      pl[i]++;pl[j]++;if(w===0)wins[i]++;else if(w===1)wins[j]++}
+      const w=bdPlay(cands[i],cands[j],ARCHK[i],ARCHK[j],(((rs||1)*2654435761)+i*131+j*17+q*7+1)>>>0,first,opts);
+      pl[i]++;pl[j]++;if(w===0){wins[i]++;}else if(w===1){wins[j]++;}else{wins[i]+=.5;wins[j]+=.5}}
     let bi=0,bv=-1;for(let i=0;i<cands.length;i++){const p=pl[i]?wins[i]/pl[i]:0;if(p>bv){bv=p;bi=i}}
     out={arch:ARCHK[bi],cards:cands[bi],p:bv};
-  }catch(e){out=null}
+  }catch(e){console.error('Le tournoi de decks de l’IA a échoué :',e);out=null}
   _bdCache[sig]=out;return out}
 function pickArch(coll,rs){
   // l'IA joue le meilleur deck pour la collection (tournoi), pas un archétype tiré au hasard.
   const b=bestDeck(coll,rs);if(b&&b.arch)return b.arch;
   return coverArch(coll,rs)}
+function bestAIDeck(coll,rs,opts){
+  const b=bestDeck(coll,rs,opts);if(b&&b.cards&&b.cards.length===ECON.deck)return{arch:b.arch,cards:b.cards.slice()};
+  const arch=coverArch(coll,rs);return{arch,cards:autoDeck(coll,arch,ECON.deck,rs)}}
 
 // ----- codes de deck : un deck se partage par copier-coller -----
 // code = « EAD1- » + somme de contrôle (4 car.) + « - » + base64url de « nom|clé*n.clé.… » (clés des cartes : le code reste valable quand on ajoute des cartes)

@@ -8,9 +8,9 @@ function newDuelState(x){DUEL=Object.assign({V:null,hist:[],sel:null,info:null,r
 
 function startAIDuel(di){
   const d=S.decks[di],chk=deckCheck(d);if(!chk.ok){toast('Deck invalide : '+chk.err);return}
-  const arch=pickArch(S.coll,Math.random()),o=Object.assign({},S.opt);
+  const o=Object.assign({},S.opt),seed=(Math.random()*4294967296)>>>0,ai=bestAIDeck(S.coll,seed,o),arch=ai.arch;
   const G=newGame({names:[S.name||'Moi',AINAMES[rint(0,AINAMES.length-1)]],
-    decks:[deckKeys(d.cards),autoDeck(S.coll,arch,ECON.deck,rint(1,99999))],seed:(Math.random()*4294967296)>>>0,o,mull:true});
+    decks:[deckKeys(d.cards),ai.cards],seed,o,mull:true});
   const Hh=HostGame(G,[{kind:'me'},{kind:'ai',W:WGT[ARCH[arch].w]}],v=>applyView(v));
   newDuelState({mode:'ai',deck:di,host:Hh,ctl:{act:a=>Hh.act(0,a),resign:()=>Hh.resign(0),close:()=>Hh.close()}});
   mountDuel();Hh.start()}

@@ -1,6 +1,6 @@
 # Rééquilibrage global — coûts & archétypes — État Arcanique
 
-> Document de travail à inspecter. **Aucun code n'a été modifié et rien n'a été poussé.**
+> Document de travail à inspecter. **Aucun coût ni effet de carte proposé ici n'a été appliqué et rien n'a été poussé.** L'IA des duels et de l'Arène a, elle, été améliorée séparément dans `js/ai.js`, `js/duel-ui.js` et `js/arena.js`.
 > Il contient : **(1)** une proposition de **coûts** (+ ajustements d'effets pour rester cohérent) et **(2)** une analyse + des **propositions de mécaniques** pour équilibrer les archétypes.
 > Rien n'est appliqué dans `js/data.js`, `js/ai.js` ou `js/engine.js` : à valider/ajuster avant toute intégration.
 
@@ -430,7 +430,7 @@ Paquet : **mécanique Expats + mécanique Alien** (+ variante d'IA « valorisati
 
 ## 9. Notes, limites et décisions ouvertes
 
-- **Aucune ligne de `js/data.js`, `js/ai.js` ou `js/engine.js` n'a été touchée.** Document de proposition ; l'application (coûts + tweaks, éventuelles mécaniques) reste à faire après validation.
+- **Aucun changement de carte ou de règle n'est appliqué** : les coûts, effets et mécaniques décrits ici restent des propositions. L'amélioration indépendante de l'IA ne modifie pas les cartes. Rien n'a été poussé.
 - **Moyenne de coût +0,20** (3,12 → 3,32) : prix du désengorgement du pool. Si tu préfères 3,12, on redescend ~10 cartes du 3 vers le 2/1.
 - **Communes** : elles montent jusqu'à **6** (`Ducks in a muck`) et 5 (`Mise à jour du Bot`). Atteindre 7–8 exigerait d'inventer un très gros effet (hors « on garde les effets »).
 - **Écart de winrates (objectif 45–55 %) : non atteignable par les coûts** (§7.4). Le rééquilibrage des coûts ne le dégrade pas ; les mécaniques dédiées (§8) l'améliorent partiellement. Pour aller plus loin, il faut toucher `js/ai.js` et l'ensemble `js/engine.js` (mécaniques), pas les coûts.
