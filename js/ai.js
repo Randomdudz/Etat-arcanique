@@ -237,7 +237,8 @@ function coverArch(coll,rs){
 // Les archétypes ne se valent pas (écart de ~25 pts de winrate) et aucun score statique ne le
 // prédit : seul l'auto-jeu tranche. On fait donc un tournoi round-robin (2 parties/paire incluant
 // l'alternance des sièges) entre les decks de tous les archétypes, et l'IA joue le vainqueur.
-// Résultat mis en cache par collection : le tournoi ne tourne qu'une fois par session.
+// Le tournoi dure ~20 s : il tourne dans un Worker (js/ai-worker.js), jamais sur le thread
+// principal. Résultat mis en cache en mémoire et dans localStorage (une fois par collection).
 const BEST_GPP=2;                       // parties par paire (2 = fiable ; 1 = ~2x plus rapide mais peu fiable ; 0 = désactivé)
 var _bdCache={};
 function bdSig(coll,opts){const settings=Object.assign({},OPTDEF,opts||{}),ok=['hp','cap','ter','evt','hand','inc','mv','fat','rw','comp','arena'];
@@ -273,6 +274,45 @@ function pickArch(coll,rs){
 function bestAIDeck(coll,rs,opts){
   const b=bestDeck(coll,rs,opts);if(b&&b.cards&&b.cards.length===ECON.deck)return{arch:b.arch,cards:b.cards.slice()};
   const arch=coverArch(coll,rs);return{arch,cards:autoDeck(coll,arch,ECON.deck,rs)}}
+
+// ----- deck de l'IA sans figer l'interface -----
+// Le tournoi complet prend une vingtaine de secondes : il tourne dans un Worker et le duel
+// démarre tout de suite avec le repli rapide coverArch (quelques millisecondes). Dès que le
+// tournoi a fini, son résultat est mémorisé (mémoire + localStorage) et sert aux duels suivants.
+var _bdJobs={},_bdBad={},_bdWorker=null,_bdCleaned=0;
+function bdKey(sig){return 'ea_bd_'+(typeof APPV!=='undefined'?APPV:'0')+'_'+sig}
+function bdClean(){
+  if(_bdCleaned)return;_bdCleaned=1;
+  try{const pre=bdKey('');for(let i=localStorage.length-1;i>=0;i--){const k=localStorage.key(i);if(k&&k.indexOf('ea_bd_')===0&&k.indexOf(pre)!==0)localStorage.removeItem(k)}}catch(e){}}
+function bdStore(sig,out){
+  if(!out||!out.cards||out.cards.length!==ECON.deck)return;
+  try{bdClean();localStorage.setItem(bdKey(sig),JSON.stringify(out))}catch(e){}}
+function bdLoad(sig){
+  try{const s=localStorage.getItem(bdKey(sig));if(!s)return null;
+    const o=JSON.parse(s);if(o&&o.cards&&o.cards.length===ECON.deck){_bdCache[sig]=o;return o}}catch(e){}
+  return null}
+function warmBestDeck(coll,opts){
+  if(BEST_GPP<=0||typeof Worker==='undefined')return;
+  const sig=bdSig(coll,opts);
+  if(_bdCache[sig]||_bdJobs[sig]||_bdBad[sig])return;
+  if(bdLoad(sig))return;
+  _bdJobs[sig]=1;
+  try{
+    if(!_bdWorker){
+      _bdWorker=new Worker('js/ai-worker.js?v='+(typeof APPV!=='undefined'?APPV:'0'));
+      _bdWorker.onmessage=e=>{const d=e.data||{};if(d.sig)delete _bdJobs[d.sig];
+        if(d.out&&d.out.cards){_bdCache[d.sig]=d.out;bdStore(d.sig,d.out)}else if(d.sig)_bdBad[d.sig]=1};
+      _bdWorker.onerror=()=>{_bdJobs={};try{_bdWorker.terminate()}catch(e){}_bdWorker=null};
+    }
+    _bdWorker.postMessage({sig,rs:0.5,coll,opts});
+  }catch(e){delete _bdJobs[sig];_bdWorker=null}}
+// deck prêt immédiatement : tournoi déjà calculé, sinon coverArch + calcul du tournoi en fond
+function bestAIDeckFast(coll,rs,opts){
+  const sig=bdSig(coll,opts),b=_bdCache[sig]||bdLoad(sig);
+  if(b&&b.cards&&b.cards.length===ECON.deck)return{arch:b.arch,cards:b.cards.slice()};
+  warmBestDeck(coll,opts);
+  const arch=coverArch(coll,rs);
+  return{arch,cards:autoDeck(coll,arch,ECON.deck,rs)}}
 
 // ----- codes de deck : un deck se partage par copier-coller -----
 // code = « EAD1- » + somme de contrôle (4 car.) + « - » + base64url de « nom|clé*n.clé.… » (clés des cartes : le code reste valable quand on ajoute des cartes)

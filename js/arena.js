@@ -275,7 +275,7 @@ function arenaQueueFinished(){
 function arenaAIDeck(tier,seed){
   const maxR=tier>=7?3:tier>=4?2:1,coll={};
   POOL.forEach(k=>{if(CARDS[k].r<=maxR)coll[k]={n:CARDS[k].r===3?1:2,p:0}});
-  const ai=bestAIDeck(coll,seed,arenaOpt());
+  const ai=bestAIDeckFast(coll,seed,arenaOpt());
   return{deck:ai.cards,arch:ai.arch}
 }
 function startArenaAIDuel(){

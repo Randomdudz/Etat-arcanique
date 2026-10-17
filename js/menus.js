@@ -734,6 +734,7 @@ function loginScreen(then){
   draw();document.body.append(ov)}
 function startApp(isNew){
   go('play');refreshTop();
+  setTimeout(()=>{if(typeof warmBestDeck==='function')try{warmBestDeck(S.coll,S.opt)}catch(e){}},1500);   // prépare le deck de l'IA en fond (ne bloque jamais l'interface)
   accBoot(()=>{if(!DUEL)go(CUR);refreshTop();toast('☁️ Progression chargée depuis ton compte.')});   // compte en ligne : on récupère la sauvegarde la plus récente
   const m=location.hash.match(/#(ARCANE-[A-Z0-9]{6})/i);
   if(m){const code=m[1].toUpperCase();history.replaceState(null,'',location.pathname+location.search);

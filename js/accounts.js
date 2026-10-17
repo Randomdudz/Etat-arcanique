@@ -48,7 +48,10 @@ function loadS(){
   S=fixS(st);if(!S){S=freshState();S.st0=STARTER.slice()}
   return S}
 // nosync : écriture locale seulement (sauvegarde qui vient d'être reçue du compte en ligne)
-function saveS(nosync){if(!nosync)S.upd=Date.now();try{localStorage.setItem(LS_KEY,JSON.stringify(S))}catch(e){}locSync();if(!nosync&&typeof cloudSoon==='function')cloudSoon()}
+function saveS(nosync){if(!nosync)S.upd=Date.now();try{localStorage.setItem(LS_KEY,JSON.stringify(S))}catch(e){}locSync();if(!nosync&&typeof cloudSoon==='function')cloudSoon();
+  // la collection a peut-être changé (boosters, échanges, recyclage, arène) : on relance le
+  // calcul du deck de l'IA en fond, sans jamais bloquer l'interface
+  if(typeof warmBestDeck==='function'){clearTimeout(saveS._w);saveS._w=setTimeout(()=>{if(typeof DUEL!=='undefined'&&DUEL)return;try{warmBestDeck(S.coll,S.opt)}catch(e){}},1500)}}
 function freshStateNew(){const st=freshState();st.st0=STARTER.slice();return st}
 
 // ============ COMPTES LOCAUX : connexion obligatoire même sans serveur de sauvegarde ============

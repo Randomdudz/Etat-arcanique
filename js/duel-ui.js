@@ -8,7 +8,7 @@ function newDuelState(x){DUEL=Object.assign({V:null,hist:[],sel:null,info:null,r
 
 function startAIDuel(di){
   const d=S.decks[di],chk=deckCheck(d);if(!chk.ok){toast('Deck invalide : '+chk.err);return}
-  const o=Object.assign({},S.opt),seed=(Math.random()*4294967296)>>>0,ai=bestAIDeck(S.coll,seed,o),arch=ai.arch;
+  const o=Object.assign({},S.opt),seed=(Math.random()*4294967296)>>>0,ai=bestAIDeckFast(S.coll,seed,o),arch=ai.arch;
   const G=newGame({names:[S.name||'Moi',AINAMES[rint(0,AINAMES.length-1)]],
     decks:[deckKeys(d.cards),ai.cards],seed,o,mull:true});
   const Hh=HostGame(G,[{kind:'me'},{kind:'ai',W:WGT[ARCH[arch].w]}],v=>applyView(v));
@@ -183,7 +183,7 @@ function hintText(){
 // ---------- rendu ----------
 function renderDuel(){
   const D=DUEL;if(!D||!D.V||!$('#hOpp'))return;if(!$('.cpop'))hideTip();const V=D.V,me=V.me,op=1-me;
-  const rects={},idr={};$$('#duel .slot').forEach(sl=>{const c=sl.firstElementChild;if(c&&c.classList.contains('card')){const r=sl.getBoundingClientRect();rects[sl.dataset.s+':'+sl.dataset.i]={r,n:c.cloneNode(true)};if(c.dataset.id)idr[c.dataset.id]=r}});
+  const rects={},idr={};$$('#duel .slot').forEach(sl=>{const c=sl.firstElementChild;if(c&&c.classList.contains('card')){const r=sl.getBoundingClientRect();rects[sl.dataset.s+':'+sl.dataset.i]={r,n:c};if(c.dataset.id)idr[c.dataset.id]=r}});   // n = carte vivante : clonée seulement si une animation en a besoin (pas à chaque rendu)
   D.rects=rects;
   fixSel();D.hl=computeHL();
   const m=mine();
@@ -893,7 +893,7 @@ function flashSlot(s,i,col,delay){setTimeout(()=>{const el=elAt(s,i);if(!el)retu
 function castShow(k,delay){setTimeout(()=>{$$('.castc').forEach(x=>x.remove());const c=h('div',{class:'castc'},h('span',{class:'lbl'},'L’adversaire joue'),cardEl(k,{big:true}));document.body.append(c);setTimeout(()=>c.remove(),1650*ANIM)},(delay||0)*ANIM)}
 function ghostDie(s,i,ban,delay){
   const D=DUEL,g=D.rects[s+':'+i];if(!g)return;
-  setTimeout(()=>{const n=g.n;n.classList.add('ghostc');n.style.cssText='left:'+g.r.left+'px;top:'+g.r.top+'px;width:'+g.r.width+'px;height:'+g.r.height+'px;'+(ban?'filter:hue-rotate(160deg)':'');
+  setTimeout(()=>{const n=g.n.cloneNode(true);n.classList.add('ghostc');n.style.cssText='left:'+g.r.left+'px;top:'+g.r.top+'px;width:'+g.r.width+'px;height:'+g.r.height+'px;'+(ban?'filter:hue-rotate(160deg)':'');
     document.body.append(n);setTimeout(()=>n.remove(),900*ANIM)},(delay||0)*ANIM)}
 function lunge(s,i,ts,ti,delay){
   setTimeout(()=>{const a=elAt(s,i),t=elAt(ts,ti);if(!a||!t||!a.firstElementChild)return;
@@ -1128,6 +1128,8 @@ function histNodes(e){
   default:return null}}
 function renderHist(){
   const D=DUEL,V=D.V,me=V.me,el=$('#hlist');if(!el)return;
+  // rien de neuf (ex. simple sélection d'une carte) : on ne reconstruit pas tout l'historique
+  if(D._hLen===D.hist.length&&D._hFilt===D.filt&&el.firstChild)return;
   const atBottom=el.scrollTop+el.clientHeight>=el.scrollHeight-40;
   el.innerHTML='';
   el.append(h('div',{class:'hh'},h('b',null,'Historique'),
@@ -1140,7 +1142,7 @@ function renderHist(){
     if(D.filt==='opp'&&e.s===me)continue;
     if(!grp||grp.a!==e.a){flush();grp={a:e.a,s:e.s,n:[],anon:e.anon}}
     const r=histNodes(e);if(r){if(!grp.n.length&&!grp.anon)grp.n.push(h('div',{class:'hwho'},e.s===me?'Toi':V.p[e.s].nm));grp.n.push(h('div',{class:'hr k-'+r[0]+(grp.n.length>1?' sub':' main')},r[1]))}}
-  flush();el.append(list);if(atBottom||!D._hs)el.scrollTop=el.scrollHeight;D._hs=1}
+  flush();el.append(list);if(atBottom||!D._hs)el.scrollTop=el.scrollHeight;D._hs=1;D._hLen=D.hist.length;D._hFilt=D.filt}
 
 // ---------- fin de duel ----------
 function showResult(){
