@@ -2,30 +2,30 @@
 
 Journal des mises à jour, la plus récente en premier. Les annonces détaillées des grandes versions restent en dessous.
 
+<!-- Style des notes : écrire pour les joueurs. Pas de termes techniques (fichiers, serveurs, code, noms de collections) :
+     seulement ce qui change en jeu, et comment en profiter. -->
+
 ## v3.9.12 — 18/10/2026
 
-### Visuels — Rasta et Natinganz ont enfin leurs illustrations
-- Les 6 cartes des deux personnages s’affichent désormais avec une image au lieu du visuel de secours :
-  **Rasta** (Fardeau pour l’équipe, Viens dehors, Aura nauséabonde) et **Natinganz** (Privé d’ordinateur,
-  Puits de connaissance, J’ai dl le boss).
-- Nouvelles images `rasta1-3.jpg` et `natingaz1-3.jpg` dans `assets/cards/`, déclarées dans `js/card-art.js`
-  (mêmes conventions que les autres personnages : une illustration par version).
+### Rasta et Natinganz ont enfin leurs illustrations
+- Les 6 cartes des deux personnages ont maintenant leur propre image :
+  **Rasta** (Fardeau pour l’équipe, Viens dehors, Aura nauséabonde) et **Natinganz**
+  (Privé d’ordinateur, Puits de connaissance, J’ai dl le boss).
+- Une illustration différente pour chacune des trois versions, comme pour les autres personnages.
 
 ## v3.9.11 — 18/10/2026
 
-### Duels — le matchmaking arrive aussi sur les duels normaux
-- Un panneau **« Duel en ligne »** apparaît dans l’onglet Jouer : choisis un deck, lance la recherche, et le
-  matchmaking te trouve un adversaire humain qui cherche aussi une partie. Même principe que la file d’Arène :
-  entrée Firestore `duelQueue/{uid}`, appariement déterministe, défi PeerJS accepté automatiquement des deux
-  côtés. 5 minutes de recherche maximum, avec bouton pour annuler.
-- Les matchs en ligne se jouent en **réglages standard** (30 PV, 80 s par tour, mêmes règles que les duels par
-  défaut) avec les récompenses habituelles (soumis au plafond quotidien). Les réglages personnalisés restent
-  réservés aux duels contre l’IA et aux défis lancés à un ami.
-- Si l’adversaire n’a plus de deck valide, est déjà en partie ou est injoignable, tu le sautes automatiquement et
-  la recherche reprend. Impossible de chercher en même temps dans la file d’Arène et dans celle des duels.
-- ⚠️ Firebase : ajoute la collection `duelQueue` aux règles Firestore (texte complet dans cloud-config.js ou
-  fourni avec cette mise à jour). Sans ça, la recherche de duel en ligne est refusée par le serveur.
-- À la fin d’un match en ligne, un bouton « Chercher un autre adversaire » relance directement une recherche.
+### Trouve un adversaire en duel, même sans ami connecté
+- Nouveau panneau **« Duel en ligne »** dans l’onglet Jouer : choisis ton deck, lance la recherche, et le jeu
+  te trouve un adversaire humain qui cherche aussi une partie. Ça marche comme la recherche de l’Arène, mais
+  pour les duels classiques.
+- Les matchs se jouent en **réglages standard** (30 PV, 80 secondes par tour), avec les récompenses habituelles
+  dans la limite du plafond quotidien. Tes réglages personnalisés restent pour les duels contre l’IA et les
+  défis lancés à un ami.
+- Recherche de 5 minutes maximum, annulable à tout moment. Si l’adversaire n’est pas disponible, la recherche
+  reprend toute seule, sans avoir à la relancer.
+- Il faut un compte en ligne pour utiliser la recherche.
+- À la fin du match, un bouton « Chercher un autre adversaire » relance directement la recherche.
 
 ## v3.9.10 — 18/10/2026
 
