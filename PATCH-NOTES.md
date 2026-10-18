@@ -2,6 +2,12 @@
 
 Journal des mises à jour, la plus récente en premier. Les annonces détaillées des grandes versions restent en dessous.
 
+## v3.9.5 — 18/10/2026
+
+- Mise à jour de version : le numéro affiché en haut à droite du jeu passe à **v3.9.5**.
+- Aucun changement de gameplay : cette version accompagne la mise en place de ce journal des mises à jour,
+  dont la première entrée (les changements de la v3.9.4) est juste en dessous.
+
 ## v3.9.4 — 18/10/2026
 
 ### Arène plus juste
