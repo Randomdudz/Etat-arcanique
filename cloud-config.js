@@ -8,7 +8,7 @@
 //     remplacer tout le texte par les règles ci-dessous, puis « Publier ».
 //  4. ⚙ Paramètres du projet → « Vos applications » → icône </> (Web) → donner un nom → copier ici apiKey et projectId.
 //
-// Règles Firestore : sauvegardes privées, file de matchmaking, classement hebdomadaire public en lecture.
+// Règles Firestore : sauvegardes privées, file de matchmaking, classement et journal d'Arène en lecture publique.
 //   rules_version = '2';
 //   service cloud.firestore {
 //     match /databases/{database}/documents {
@@ -19,28 +19,13 @@
 //         allow read: if request.auth != null;
 //         allow create, update, delete: if request.auth != null && request.auth.uid == uid;
 //       }
-//       match /arenaWeeks/{week}/players/{uid} {
+//       // Classement + journal d'Arène : lecture publique, écriture réservée à la Cloud Function « arena »
+//       // (les compteurs ne peuvent donc plus être falsifiés depuis la console du navigateur).
+//       match /arenaWeeks/{week}/{doc=**} {
 //         allow read: if true;
-//         allow create: if request.auth != null && request.auth.uid == uid
-//           && request.resource.data.uid == uid
-//           && ((request.resource.data.get('runs', 0) == 1 && request.resource.data.total == 0
-//             && request.resource.data.winsAI == 0 && request.resource.data.winsHuman == 0)
-//             || (request.resource.data.get('runs', 0) == 0 && request.resource.data.total == 1
-//             && request.resource.data.winsAI + request.resource.data.winsHuman == 1));
-//         allow update: if request.auth != null && request.auth.uid == uid
-//           && request.resource.data.uid == uid
-//           && ((request.resource.data.get('runs', 0) == resource.data.get('runs', 0) + 1
-//             && request.resource.data.total == resource.data.total
-//             && request.resource.data.winsAI == resource.data.winsAI
-//             && request.resource.data.winsHuman == resource.data.winsHuman)
-//             || (request.resource.data.get('runs', 0) == resource.data.get('runs', 0)
-//             && request.resource.data.total == resource.data.total + 1
-//             && ((request.resource.data.winsAI == resource.data.winsAI + 1
-//               && request.resource.data.winsHuman == resource.data.winsHuman)
-//               || (request.resource.data.winsHuman == resource.data.winsHuman + 1
-//               && request.resource.data.winsAI == resource.data.winsAI))));
+//         allow write: if false;
 //       }
 //     }
 //   }
-// }
-window.EA_CLOUD={apiKey:'AIzaSyCTnxKnzBGxTs2DM5uodP4VOadaLQWHQIg',projectId:'etat-arcanique'};
+window.EA_CLOUD={apiKey:'AIzaSyCTnxKnzBGxTs2DM5uodP4VOadaLQWHQIg',projectId:'etat-arcanique',
+  arenaFn:'https://europe-west1-etat-arcanique.cloudfunctions.net/arena'};   // Cloud Function du classement d'Arène ('' = ancien mode : écriture directe par le client)

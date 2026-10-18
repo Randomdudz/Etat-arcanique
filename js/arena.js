@@ -49,7 +49,7 @@ function arenaLeaderboardBackfillLast(){
   const last=S.arena&&S.arena.last;
   if(ARENA_LB.backfill||!last||last.lb||last.w!==0||last.l<1||arenaWeekKey(new Date(last.t))!==arenaWeekKey()||!ACC||!cloudOn())return;
   ARENA_LB.backfill=true;
-  arenaWeeklyRun(last.t).finally(()=>{ARENA_LB.backfill=false});
+  arenaRegisterRun(last.t).finally(()=>{ARENA_LB.backfill=false});
 }
 async function arenaWeeklyUpdate(kind,mode,runT){
   if(!ACC||!cloudOn()){toast(kind==='run'?'Course non inscrite au classement : connecte-toi à un compte en ligne.':'Victoire non inscrite au classement : connecte-toi à un compte en ligne.');return false}
@@ -93,6 +93,47 @@ async function arenaWeeklyUpdate(kind,mode,runT){
 }
 function arenaWeeklyRun(t){return arenaWeeklyUpdate('run',null,t)}
 function arenaWeeklyRecord(mode){return arenaWeeklyUpdate('win',mode)}
+
+// ---------- anti-triche : Cloud Function « arena » (facultative mais recommandée) ----------
+// Quand elle est déployée (et les règles Firestore durcies), seule cette fonction écrit les compteurs du
+// classement : le client lui demande d'ouvrir une course, délivre un billet horodaté au début de chaque match,
+// puis lui déclare le résultat. Tant qu'elle ne répond pas, on retombe sur l'écriture directe (ancien mode).
+const ARENA_FN={state:'?'};                                     // '?' inconnu · 'on' opérationnelle · 'off' absente
+function arenaFnUrl(){return(typeof CLOUD!=='undefined'&&CLOUD&&CLOUD.arenaFn)||''}
+async function arenaFnCall(op,body){
+  const url=arenaFnUrl();if(!url||ARENA_FN.state==='off')return null;
+  if(!ACC||!cloudOn())return null;
+  let tok;try{tok=await accTok()}catch(e){return null}
+  let r;try{r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+tok},
+    body:JSON.stringify(Object.assign({op,ver:APPV},body||{}))})}
+  catch(e){console.warn('Arène : fonction serveur injoignable ('+e.message+').');return null}
+  if(r.status===404||r.status===501){ARENA_FN.state='off';console.warn('Arène : fonction serveur non déployée ('+r.status+') — écriture directe utilisée.');return null}
+  const j=await r.json().catch(()=>({}));
+  if(!r.ok||j.ok===false){const msg=j.err||('erreur '+r.status);console.warn('Arène : '+op+' refusé par le serveur : '+msg);return{refused:msg}}
+  ARENA_FN.state='on';return j;
+}
+function arenaLbDirty(t){                                       // le classement a bougé : on relit la semaine
+  if(S.arena){if(t&&S.arena.run&&S.arena.run.t===t)S.arena.run.lb=true;if(t&&S.arena.last&&S.arena.last.t===t)S.arena.last.lb=true;saveS()}
+  ARENA_LB.week=arenaWeekKey();ARENA_LB.rows=null;ARENA_LB.at=0;
+  if($('#arenaLeaderboard'))arenaLeaderboardLoad(true);
+}
+function arenaPseudo(){return String(S.name||(ACC&&ACC.id)||'Joueur').trim().slice(0,18)||'Joueur'}
+async function arenaRegisterRun(t){                             // ouverture de course
+  const j=await arenaFnCall('run',{pseudo:arenaPseudo()});
+  if(j&&!j.refused){arenaLbDirty(t);return true}
+  if(j&&j.refused){toast('Course non inscrite au classement : '+j.refused);return false}
+  return arenaWeeklyRun(t);                                     // fonction absente : ancien mode
+}
+async function arenaRegisterResult(res,mode,opp,tk){            // résultat d'un match d'Arène
+  const j=await arenaFnCall(res?'win':'loss',res?{ticket:tk,opp}:{opp});
+  if(j&&!j.refused){if(res)arenaLbDirty();return true}
+  if(j&&j.refused){if(res)toast('Victoire non inscrite au classement : '+j.refused);return false}
+  return res?arenaWeeklyRecord(mode):false;                     // fonction absente : ancien mode (défaite : rien à inscrire)
+}
+function arenaServerMatch(mode){                                // billet horodaté délivré au début d'un match
+  return arenaFnCall('match',{mode:mode==='ai'?'ai':'human'}).then(j=>j&&!j.refused&&j.ticket?j.ticket:null,()=>null);
+}
+function arenaServerEnd(){return arenaFnCall('end',{}).then(()=>true,()=>false)}   // fin ou abandon de course
 function arenaRng(seed){let t=seed>>>0;return()=>{t=(t+0x6D2B79F5)|0;let r=Math.imul(t^t>>>15,t|1);r^=r+Math.imul(r^r>>>7,r|61);return((r^r>>>14)>>>0)/4294967296}}
 function arenaSeed(){const b=new Uint32Array(1);try{crypto.getRandomValues(b)}catch(e){b[0]=(Math.random()*4294967296)>>>0}return b[0]>>>0}
 // choix n° n (0 à 29) d'une course : {r: rareté, c: [3 cartes différentes]} ; le 1er choix est toujours un choix de légendaires
@@ -123,11 +164,11 @@ function arenaFix(a){a=a&&typeof a==='object'?a:{};const r=a.run;let run=null;
       }}
     run={seed:(+r.seed)>>>0,picks,swap,lb:!!r.lb,
       w:Math.min(ARENA.maxW,Math.max(0,r.w|0)),l:Math.min(ARENA.maxL,Math.max(0,r.l|0)),t:+r.t||Date.now(),log:(Array.isArray(r.log)?r.log:[]).slice(-20),
-      cur:r.cur&&typeof r.cur==='object'?{o:String(r.cur.o||'').slice(0,18),t:+r.cur.t||0,mode:r.cur.mode==='ai'?'ai':'human'}:null}}
+      cur:r.cur&&typeof r.cur==='object'?{o:String(r.cur.o||'').slice(0,18),t:+r.cur.t||0,mode:r.cur.mode==='ai'?'ai':'human',tk:String(r.cur.tk||'').slice(0,64)}:null}}
   return{run,runs:Math.max(0,a.runs|0),best:Math.max(0,a.best|0),last:a.last&&typeof a.last==='object'?{w:a.last.w|0,l:a.last.l|0,g:a.last.g|0,t:+a.last.t||0,lb:!!a.last.lb}:null}}
 function arenaReady(){const r=S.arena&&S.arena.run;return!!(r&&!r.swap&&r.picks.length>=ARENA.picks)}
 function arenaEnter(){if(S.arena.run)return'Tu as déjà une course en cours.';if(S.gems<ARENA.cost)return'Il te faut '+ARENA.cost+' 💎 pour entrer.';
-  S.gems-=ARENA.cost;const t=Date.now();S.arena.run={seed:arenaSeed(),picks:[],w:0,l:0,t,lb:false,log:[],cur:null};saveS();arenaWeeklyRun(t);return null}
+  S.gems-=ARENA.cost;const t=Date.now();S.arena.run={seed:arenaSeed(),picks:[],w:0,l:0,t,lb:false,log:[],cur:null};saveS();arenaRegisterRun(t);return null}
 function arenaPick(i){const r=S.arena.run;if(!r||r.swap&&r.swap.stage!=='draft'&&r.swap.stage!=='legacyPick'||!r.swap&&r.picks.length>=ARENA.picks)return null;
   const n=r.swap?r.swap.drafted+1:r.picks.length,o=arenaOffer(r.seed,n),k=o.c[i];if(!k)return null;
   if(r.swap&&r.swap.stage==='draft'){
@@ -142,16 +183,18 @@ function arenaApplyRemoval(){
   const r=S.arena.run;if(!r||!r.swap||r.swap.stage!=='remove'||r.swap.removed.length!==ARENA.redraft||r.swap.replacements.length!==ARENA.redraft)return false;
   const replacements=r.swap.replacements,removed=r.swap.removed.slice().sort((a,b)=>a-b);let next=0;
   r.picks=r.picks.map((k,i)=>i===removed[next]?replacements[next++]:k);r.swap=null;saveS();return true}
-function arenaStart(opp,mode){const r=S.arena.run;if(!r)return;r.cur={o:String(opp||'').slice(0,18),t:Date.now(),mode:mode==='ai'?'ai':'human'};saveS()}
+function arenaStart(opp,mode){const r=S.arena.run;if(!r)return;
+  const cur={o:String(opp||'').slice(0,18),t:Date.now(),mode:mode==='ai'?'ai':'human',tk:''};r.cur=cur;saveS();
+  arenaServerMatch(cur.mode).then(tk=>{if(tk&&S.arena.run===r&&r.cur===cur){cur.tk=tk;saveS()}})}
 // résultat d'une partie : 1 victoire, 0 défaite, -1 égalité (ne compte pas)
-function arenaRecord(res,opp){const r=S.arena.run;if(!r)return null;const mode=r.cur&&r.cur.mode==='ai'?'ai':'human';r.cur=null;
-  if(res>=0){if(res){r.w++;arenaWeeklyRecord(mode)}else r.l++;r.log.push({o:String(opp||'?').slice(0,18),w:res?1:0,t:Date.now(),mode})}
+function arenaRecord(res,opp){const r=S.arena.run;if(!r)return null;const cur=r.cur,mode=cur&&cur.mode==='ai'?'ai':'human',tk=cur&&cur.tk||'';r.cur=null;
+  if(res>=0){if(res){r.w++}else{r.l++}arenaRegisterResult(res?1:0,mode,opp,tk);r.log.push({o:String(opp||'?').slice(0,18),w:res?1:0,t:Date.now(),mode})}
   const out={w:r.w,l:r.l,over:false,g:0,redraft:false};
   if(r.w>=ARENA.maxW||r.l>=ARENA.maxL)return Object.assign(out,arenaFinish());
   if(res===0){r.seed=arenaSeed();r.swap={stage:'draft',drafted:0,replacements:[]};out.redraft=true}
   saveS();return out}
 function arenaFinish(){const r=S.arena.run;if(!r)return{over:true,g:0};const g=ARENA.rw[Math.min(r.w,ARENA.maxW)];S.gems+=g;
-  S.arena.last={w:r.w,l:r.l,g,t:Date.now(),lb:!!r.lb};S.arena.runs++;S.arena.best=Math.max(S.arena.best,r.w);S.arena.run=null;saveS();return{over:true,g}}
+  S.arena.last={w:r.w,l:r.l,g,t:Date.now(),lb:!!r.lb};S.arena.runs++;S.arena.best=Math.max(S.arena.best,r.w);S.arena.run=null;saveS();arenaServerEnd();return{over:true,g}}
 // partie d'Arène interrompue (jeu fermé ou connexion coupée avant la fin) : comptée comme une défaite
 function arenaCheckStale(){const r=S.arena&&S.arena.run;if(!r||!r.cur||(typeof DUEL!=='undefined'&&DUEL))return null;const res=arenaRecord(0,r.cur.o);
   if(typeof toast==='function')toast('Partie d’Arène interrompue : comptée comme une défaite.');return res}
@@ -307,7 +350,7 @@ function vArena(v){
   const rules=h('div',{class:'sm mut',style:'line-height:1.55'},
     'Entrée : ',h('b',null,ARENA.cost+' 💎'),'. Tu construis un deck de ',h('b',null,'30 cartes'),' en ',h('b',null,'30 choix'),' : à chaque fois, garde 1 carte parmi 3 de la même rareté. ',
     'Les limites d’exemplaires ne comptent pas. Ensuite, affronte l’IA ou cherche un joueur avec le matchmaking : les decks de l’IA gagnent en rareté aux paliers 4 et 7. La course s’arrête à ',h('b',null,ARENA.maxW+' victoires'),' ou ',h('b',null,ARENA.maxL+' défaites'),'. Après une défaite non éliminatoire, garde ton deck : choisis d’abord ',h('b',null,ARENA.redraft+' remplaçantes'),' (1 parmi 3 pour chacune), puis sélectionne les cartes qu’elles remplaceront.',
-    h('br'),'Mêmes chances pour tout le monde : commune '+ARENA.odds[1]+' %, rare '+ARENA.odds[2]+' %, légendaire '+ARENA.odds[3]+' % par choix (le 1er choix est toujours un choix de légendaires), sans tenir compte de ta collection. Les choix sont fixés dès l’entrée : recharger la page ne les change pas. Une partie quittée avant la fin compte comme une défaite.');
+    h('br'),'Mêmes chances pour tout le monde : commune '+ARENA.odds[1]+' %, rare '+ARENA.odds[2]+' %, légendaire '+ARENA.odds[3]+' % par choix (le 1er choix est toujours un choix de légendaires), sans tenir compte de ta collection. Les choix sont fixés dès l’entrée : recharger la page ne les change pas. Le second joueur garde la Pièce et l’Or de compensation, mais pas les '+COMP.hp+' PV bonus. Une partie quittée avant la fin compte comme une défaite.');
   const head=h('div',{class:'panel hl v-arena'},ph('play','Arène',r?r.w+' V · '+r.l+' D':(A.best?'Record : '+A.best+' V':'')),rules);
   if(!r){
     apn(head,h('div',{class:'row',style:'margin-top:14px;gap:12px'},

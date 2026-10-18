@@ -31,7 +31,7 @@ function newGame(cfg){
   G.nev=ri(G,EVENTS.length);
   for(let s=0;s<2;s++){const n=s===G.first?3:4;const P=G.p[s];for(let j=0;j<n;j++){const c=P.deck.pop();if(c)P.hand.push(c)}}
   const sec=G.p[1-G.first];
-  if(o.comp){sec.or+=COMP.or;sec.hp+=COMP.hp;sec.mhp+=COMP.hp}         // compensation du second joueur
+  if(o.comp){sec.or+=COMP.or;if(!o.arena){sec.hp+=COMP.hp;sec.mhp+=COMP.hp}}   // compensation du second joueur (en Arène : pas de PV bonus)
   // mulligan : chaque joueur choisit d'abord les cartes de sa main de départ à remplacer (la Pièce arrive après)
   if(cfg.mull){G.phase='mull';G.mull=[0,0];G.cur=G.first;return G}
   sec.hand.push(mkCard(G,'piece'));

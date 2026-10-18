@@ -33,6 +33,8 @@
   .livecard{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-width:230px}
   .livecard b{color:var(--gold)}
   .kpis{color:var(--mut);font-size:12px}
+  .badrow td{background:#3a1f22}
+  .badrow td:first-child{border-left:3px solid var(--bad)}
 </style>
 </head>
 <body>
@@ -54,6 +56,16 @@
 <div class="panel">
   <h2 style="margin-top:0">Classement de la semaine</h2>
   <div id="tblwrap" class="mut">Charge le classement…</div>
+</div>
+
+<div class="panel">
+  <h2 style="margin-top:0">Journal serveur <span class="mut" style="font-weight:400;font-size:12px">(écrit par la Cloud Function « arena », une ligne par partie)</span></h2>
+  <div class="bar" style="margin-bottom:8px">
+    <button id="logload">Actualiser le journal</button>
+    <label><input type="checkbox" id="logauto" checked> Rafraîchir toutes les 30 s</label>
+    <span id="logstate" class="mut"></span>
+  </div>
+  <div id="logtbl" class="mut">Journal indisponible tant que la Cloud Function n’est pas déployée.</div>
 </div>
 
 <h2>Joueurs suivis</h2>
@@ -98,6 +110,40 @@ async function getDoc(week,uid){
   if(r.status===404)return null;
   if(!r.ok)throw new Error('Firestore '+r.status);
   return parseDoc(await r.json());
+}
+// ---------- journal serveur (Cloud Function « arena ») ----------
+const KINDS={run:'▶ course',win:'⚔ victoire',loss:'✕ défaite',end:'⏹ fin de course'};
+const MODES={ai:'IA',human:'joueur','':'—'};
+function parseLog(j){
+  const f=j.fields||{},g=k=>f[k]?(f[k].stringValue!==undefined?f[k].stringValue:f[k].integerValue):'';
+  return{kind:String(g('kind')),mode:String(g('mode')),pseudo:String(g('pseudo')||'?'),opp:String(g('opp')||''),
+    at:+g('at')||0,el:+g('elapsedMs')||0,w:+g('wins')||0,l:+g('losses')||0,uid:String(g('uid'))};
+}
+async function loadLog(){
+  const el=$('#logtbl'),st=$('#logstate');
+  try{
+    st.textContent='chargement…';
+    const r=await fetch(lbUrl(WEEK)+':runQuery?key='+KEY,{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({structuredQuery:{from:[{collectionId:'log'}],orderBy:[{field:{fieldPath:'at'},direction:'DESCENDING'}],limit:25}})});
+    if(!r.ok)throw new Error('Firestore '+r.status+' '+(await r.text()).slice(0,160));
+    const rows=(await r.json()).filter(x=>x.document).map(x=>parseLog(x.document));
+    if(!rows.length){el.className='mut';el.textContent='Aucun évènement cette semaine (journal vide ou fonction pas encore déployée).';st.textContent='0 évènement';return}
+    let wins=0,fast=0;rows.forEach(e=>{if(e.kind==='win')wins++;if(e.kind==='win'&&e.el<60000)fast++});
+    const t=document.createElement('table');
+    t.innerHTML='<thead><tr><th>Heure</th><th>Joueur</th><th>Évènement</th><th>Adversaire</th><th>Durée du match</th><th>Course</th><th>uid</th></tr></thead>';
+    const tb=document.createElement('tbody');
+    rows.forEach(e=>{
+      const tr=document.createElement('tr');
+      if(e.kind==='win'&&e.el<60000)tr.className='badrow';
+      tr.innerHTML=`<td class="mut">${e.at?dt(new Date(e.at)):'—'}</td><td>${esc(e.pseudo)}</td>
+        <td>${KINDS[e.kind]||esc(e.kind)} <span class="mut">${MODES[e.mode]||''}</span></td>
+        <td class="mut">${esc(e.opp||'—')}</td><td>${e.kind==='run'||e.kind==='end'?'—':dur(e.el/1000)}</td>
+        <td class="mut">${e.w} V · ${e.l} D</td><td class="mut" style="font-size:11px">${esc(e.uid.slice(0,10))}…</td>`;
+      tb.append(tr);
+    });
+    t.append(tb);el.className='';el.replaceChildren(t);
+    st.textContent=rows.length+' derniers évènements · '+wins+' victoire(s)'+(fast?' · ⚠ '+fast+' match(s) sous 60 s':'');
+  }catch(e){st.textContent='';el.className='mut';el.innerHTML='<span style="color:#e06a63">Journal : '+esc(e.message)+'</span><br><span class="mut">Normal tant que la Cloud Function n’est pas déployée (voir functions/README.md).</span>'}
 }
 
 // ---------- état ----------
@@ -208,10 +254,12 @@ async function load(){
   }catch(e){$('#tblwrap').innerHTML='<span style="color:#e06a63">Échec : '+esc(e.message)+'</span><br><span class="mut">Ouvre cette page depuis GitHub Pages (https://randomdudz.github.io/Etat-arcanique/dev/surveillance-arene.html) : Firestore refuse les appels depuis un fichier local.</span>'}
 }
 $('#week').value=WEEK;
-$('#load').onclick=()=>{WEEK=$('#week').value.trim()||WEEK;$('#log').textContent='—';load();restartTimer()};
+$('#load').onclick=()=>{WEEK=$('#week').value.trim()||WEEK;$('#log').textContent='—';load();loadLog();restartTimer()};
 $('#iv').onchange=restartTimer;
 $('#auto').onchange=e=>{AUTO=e.target.checked;if(AUTO)load()};
-renderLive();load();restartTimer();
+$('#logload').onclick=()=>loadLog();
+setInterval(()=>{if($('#logauto').checked)loadLog()},30000);
+renderLive();load();loadLog();restartTimer();
 </script>
 </body>
 </html>
