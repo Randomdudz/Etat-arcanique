@@ -14,21 +14,24 @@
 //         l'évaluation (défaut 1), uct: constante d'exploration (défaut .7), min: playouts (ou
 //         manches en mode plat) minimum (défaut 3), max: maximum (défaut 400), msMax: plafond dur
 //         (défaut ms×1,5), seed: graine imposée (tests), now: horloge injectée, hide: 1 = la main
-//         adverse est remplacée au hasard pendant les simulations, topK: ne garde que les K
+//         adverse est remplacée au hasard pendant les simulations (0 = l'IA la voit ; c'est le
+//         réglage de l'IA experte), topK: ne garde que les K
 //         meilleurs coups à la racine (0 = tous, défaut 0), trace: détail des décisions (mise au point) }
 // Toutes les valeurs de l'arbre sont du point de vue du joueur racine.
 //
-// Le module n'utilise que le moteur : moves(), cloneG(), act(), evalG(), aiPick(), aiMull(), POOL.
+// Le module n'utilise que le moteur : moves(), cloneG(), act(), evalG(), aiPick(), aiMull(), CARDS, POOL.
 // Coûts mesurés en Node : aiPick ≈ 0,6 ms, cloneG ≈ 0,005 ms, tour complet ≈ 1 ms : un budget de
 // 150 ms laisse donc ~30-50 playouts (UCT) ou ~10-25 manches de quelques coups (plat). Le module
 // n'est pas chargé dans le worker (tournoi de decks), seulement dans la page de jeu.
 const MCTSOPT={ms:150,roll:1,uct:.7,min:3,max:400,msMax:0,seed:null,now:null,topK:0,hide:0};
 // Réglages de l'IA « experte » (Arène et duels contre l'ordinateur) : recherche plate appariée
-// (aiFlatMC), main adverse cachée pendant les simulations, ~0,25 s de réflexion par action
-// (le surcoût est absorbé par les pauses d'animation de l'hôte). Mesuré en miroir : ~61 % de
-// victoires contre l'IA à un coup sur 80 parties (4 archétypes), ~0,6 s par tour à 150 ms.
-// aiMCTS (UCT) sert d'alternative explorée.
-const MCTS_STRONG={ms:250,topK:6,roll:1,hide:1};
+// (aiFlatMC) qui voit la main adverse pendant les simulations (hide 0 : elle joue en pleine
+// connaissance de cause) et pousse la simulation jusqu'à deux allers-retours complets (roll 2) —
+// c'est la combinaison la plus forte mesurée en miroir contre l'IA à un coup : 37/40 = 92,5 %
+// (40 parties, 4 archétypes ; détails et variantes dans PATCH-NOTES). ~0,25 s de réflexion par
+// action, absorbés en bonne partie par les pauses d'animation de l'hôte. aiMCTS (UCT) sert
+// d'alternative explorée.
+const MCTS_STRONG={ms:250,topK:6,roll:2,hide:0};
 
 // qui doit décider dans cet état (le joueur avec un choix en attente, sinon celui dont c'est le tour)
 function mctsActor(G){
@@ -88,7 +91,8 @@ function mctsExpand(nd,seed){
   nd.ch=[];
   for(const m of M){
     const C=cloneG(G);C.lg=0;C.hist=[];C.rs=(seed+nd.ch.length*7919)>>>0||1;
-    if(act(C,nd.cu,m).ok)nd.ch.push({G:C,cu:mctsActor(C),me:nd.me,parent:nd,move:m,n:0,v:0,ch:null})
+    if(act(C,nd.cu,m).ok)nd.ch.push({G:C,cu:mctsActor(C),me:nd.me,parent:nd,move:m,n:0,v:0,ch:null,
+      pk:m.t==='play'&&G.p[s].hand[m.i]?G.p[s].hand[m.i].k:null})       // carte jouée, pour repérer les gaspillages
   }
   for(let i=nd.ch.length-1;i>0;i--){const j=ri({rs:(seed+i*131)>>>0||1},i+1),t=nd.ch[i];nd.ch[i]=nd.ch[j];nd.ch[j]=t}   // ordre mélangé
   return nd.ch}
@@ -114,6 +118,17 @@ function mctsPrune(G0,s,W,ch,k){
   if(e&&keep.indexOf(e)<0)keep.push(e);
   return keep}
 
+// Une carte qui ne fait que gagner du Démoflux (Pièce, Nitro, Paris-Brest) alors que plus rien ne
+// peut être joué ensuite est une carte gaspillée : son Démoflux part à la fin du tour sans servir.
+// Finir le tour la garde en main pour un tour où elle servira — c'est toujours au moins aussi bon.
+// On écarte donc ce coup des candidats (sans toucher à ceux qui débloquent ensuite une carte).
+function mctsWaste(nd){
+  const k=nd.pk;if(!k)return false;
+  const cd=CARDS[k];if(cd.t!=='s'||!cd.fx||!cd.fx.length||!cd.fx.every(o=>o.t==='eth'))return false;
+  if(nd.G.cur!==nd.cu)return false;
+  return !moves(nd.G,nd.cu).some(q=>q.t==='play'||q.t==='move')}
+function mctsDropWaste(ch){const k=ch.filter(c=>!mctsWaste(c));return k.length?k:ch}
+
 // choix final : meilleure valeur moyenne (au moins `pick` visites), la plus visitée en secours
 function mctsBestMove(root,pick){
   let best=null,bv=-2;
@@ -133,7 +148,7 @@ function aiMCTS(G0,s,W,opt){
   const root={G:R,cu:s,me:s,move:null,n:0,v:0,ch:null,parent:null};
   let seed=(o.seed!=null?o.seed:(G0.rs^Math.imul(G0.turn+1,2654435761)))>>>0||1;
   mctsExpand(root,seed);
-  root.ch=mctsPrune(G0,s,W,root.ch,o.topK);
+  root.ch=mctsPrune(G0,s,W,mctsDropWaste(root.ch),o.topK);
   if(!root.ch.length||root.ch.length===1)return root.ch.length?root.ch[0].move:aiPick(G0,s,W);
   const cap=o.msMax||Math.round(o.ms*1.5);
   let k=0;
@@ -162,7 +177,7 @@ function aiFlatMC(G0,s,W,opt){
   const root={G:R,cu:s,me:s,parent:null,move:null,n:0,v:0,ch:null};
   let seed=(o.seed!=null?o.seed:(G0.rs^Math.imul(G0.turn+3,2654435761)))>>>0||1;
   mctsExpand(root,seed);
-  root.ch=mctsPrune(G0,s,W,root.ch,o.topK);
+  root.ch=mctsPrune(G0,s,W,mctsDropWaste(root.ch),o.topK);
   if(!root.ch.length||root.ch.length===1)return root.ch.length?root.ch[0].move:aiPick(G0,s,W);
   const cap=o.msMax||Math.round(o.ms*1.5);
   let k=0;

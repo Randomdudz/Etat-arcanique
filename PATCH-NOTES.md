@@ -2,6 +2,27 @@
 
 Journal des mises à jour, la plus récente en premier. Les annonces détaillées des grandes versions restent en dessous.
 
+## v3.9.9 — 18/10/2026
+
+### Duels & Arène — l’IA experte joue à cartes ouvertes (et sans gaspillage)
+- L’IA qui simule la suite de la partie **connaît désormais ta main** : pendant ses simulations, tes cartes ne
+  sont plus remplacées au hasard — elle anticipe en pleine connaissance de cause. Objectif assumé : qu’elle joue
+  toujours son meilleur coup possible.
+- Sa recherche est réoptimisée pour cette information : les simulations jouent maintenant **deux allers-retours
+  complets** (son tour, ton tour, son tour, ton tour) avant d’évaluer la position, au lieu d’un seul.
+- Mesure en miroir contre l’IA à un coup (40 parties, 4 archétypes de deck, sièges et premier joueur alternés,
+  toujours ~0,25 s de réflexion par action) : **37/40 = 92,5 % de victoires**, contre 62,5 % pour la version
+  3.9.8.
+- À budget égal, les variantes essayées donnent : 70 % à un aller-retour, 85 % à trois, 77,5 % avec 4 candidats,
+  85 % avec 8 — deux allers-retours avec 6 candidats est le meilleur réglage trouvé.
+- Correctif de comportement : l’IA ne jouera plus une carte qui ne donne que du Démoflux (Pièce, Nitro,
+  Paris-Brest) quand plus rien n’est jouable ensuite — elle termine son tour et garde la carte pour un tour où
+  elle servira. C’était le « elle joue la Pièce au tour 1 pour ne rien faire ».
+- Elle termine son tour dans 53 cas sur 400 décisions réelles (dont 7 où la seule carte jouable était justement une
+  carte de Démoflux inutile, désormais écartée d’office). Dans tous les autres cas, la simulation a jugé le passage
+  meilleur que les coups disponibles — le plus souvent refuser un achat de terrain ou ne pas dépenser une petite carte
+  pour rien.
+
 ## v3.9.8 — 18/10/2026
 
 ### Duels — l’IA experte arrive aussi contre toi
