@@ -257,6 +257,7 @@ function arenaQueueStart(){
   if(!cloudOn()||!ACC){toast('La file mondiale nécessite un compte Firebase connecté. Les comptes locaux ne peuvent pas y accéder.');return}
   if(!netReady()){toast('Connexion au serveur de rencontre en cours… réessaie dans un instant.');return}
   if(AQ.active)return;
+  if(typeof DQ!=='undefined'&&DQ.active){toast('Tu cherches déjà un adversaire en duel en ligne : annule cette recherche d’abord.');return}
   if(AQ.cleanup){AQ.cleanup.then(arenaQueueStart);return}
   const now=Date.now();Object.assign(AQ,{active:true,state:'searching',uid:ACC.uid,qid:arenaSeed().toString(36),created:now,expires:now+ARENA_QUEUE_MS,
     tier:Math.min(ARENA.maxW,S.arena.run.w+1),peer:null,busy:false,started:false,skip:[]});

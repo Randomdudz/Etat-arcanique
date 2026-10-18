@@ -1,5 +1,5 @@
 // ============ HÔTE DE PARTIE (IA locale ou en ligne) + RÉSEAU PEERJS ============
-const APPV='3.9.10';
+const APPV='3.9.11';
 const ANIM=1.6;                                             // vitesse des animations du duel (1 = ancienne vitesse ; plus grand = plus lent)
 function peerId(code){return 'etat-arcanique-'+String(code).replace('ARCANE-','').toLowerCase()}
 function validCode(c){return /^ARCANE-[A-Z0-9]{6}$/.test(String(c||'').trim().toUpperCase())}
@@ -106,7 +106,7 @@ function sendChallenge(friend,deckInfo,opt,cbs){
   c.on('data',m=>{
     if(!m)return;
     if(m.t==='busy'){done=true;cbs.fail(friend.name+' est déjà occupé(e).');try{c.close()}catch(e){}}
-    else if(m.t==='dec'){done=true;cbs.fail(m.why==='arena'?friend.name+' n’a pas de deck d’Arène prêt.':friend.name+' a refusé le défi.');try{c.close()}catch(e){}}
+    else if(m.t==='dec'){done=true;cbs.fail(m.why==='arena'?friend.name+' n’a pas de deck d’Arène prêt.':m.why==='duel'?friend.name+' n’a plus de deck valide.':friend.name+' a refusé le défi.');try{c.close()}catch(e){}}
     else if(m.t==='acc'){done=true;cbs.accepted(c,m)}});
   c.on('error',()=>fail('Erreur de connexion.'));
   c.on('close',()=>{if(!done)fail('La connexion a été coupée.')});

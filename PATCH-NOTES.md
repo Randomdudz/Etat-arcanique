@@ -2,6 +2,22 @@
 
 Journal des mises à jour, la plus récente en premier. Les annonces détaillées des grandes versions restent en dessous.
 
+## v3.9.11 — 18/10/2026
+
+### Duels — le matchmaking arrive aussi sur les duels normaux
+- Un panneau **« Duel en ligne »** apparaît dans l’onglet Jouer : choisis un deck, lance la recherche, et le
+  matchmaking te trouve un adversaire humain qui cherche aussi une partie. Même principe que la file d’Arène :
+  entrée Firestore `duelQueue/{uid}`, appariement déterministe, défi PeerJS accepté automatiquement des deux
+  côtés. 5 minutes de recherche maximum, avec bouton pour annuler.
+- Les matchs en ligne se jouent en **réglages standard** (30 PV, 80 s par tour, mêmes règles que les duels par
+  défaut) avec les récompenses habituelles (soumis au plafond quotidien). Les réglages personnalisés restent
+  réservés aux duels contre l’IA et aux défis lancés à un ami.
+- Si l’adversaire n’a plus de deck valide, est déjà en partie ou est injoignable, tu le sautes automatiquement et
+  la recherche reprend. Impossible de chercher en même temps dans la file d’Arène et dans celle des duels.
+- ⚠️ Firebase : ajoute la collection `duelQueue` aux règles Firestore (texte complet dans cloud-config.js ou
+  fourni avec cette mise à jour). Sans ça, la recherche de duel en ligne est refusée par le serveur.
+- À la fin d’un match en ligne, un bouton « Chercher un autre adversaire » relance directement une recherche.
+
 ## v3.9.10 — 18/10/2026
 
 ### Interface — listes de deck : tri par coût, légendaires bien visibles

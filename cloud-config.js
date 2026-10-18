@@ -8,7 +8,7 @@
 //     remplacer tout le texte par les règles ci-dessous, puis « Publier ».
 //  4. ⚙ Paramètres du projet → « Vos applications » → icône </> (Web) → donner un nom → copier ici apiKey et projectId.
 //
-// Règles Firestore : sauvegardes privées, file de matchmaking, classement et journal d'Arène en lecture publique.
+// Règles Firestore : sauvegardes privées, files de matchmaking (Arène et duel), classement et journal d'Arène en lecture publique.
 //   rules_version = '2';
 //   service cloud.firestore {
 //     match /databases/{database}/documents {
@@ -16,6 +16,10 @@
 //         allow read, write: if request.auth != null && request.auth.uid == uid;
 //       }
 //       match /arenaQueue/{uid} {
+//         allow read: if request.auth != null;
+//         allow create, update, delete: if request.auth != null && request.auth.uid == uid;
+//       }
+//       match /duelQueue/{uid} {
 //         allow read: if request.auth != null;
 //         allow create, update, delete: if request.auth != null && request.auth.uid == uid;
 //       }

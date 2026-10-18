@@ -1150,6 +1150,7 @@ function showResult(){
   const D=DUEL;if(!D||!D.V)return;const V=D.V,me=V.me,w=V.over.w,win=w===me,draw=w<0;
   let rw=null;if(V.o.rw&&!D.rewarded){D.rewarded=true;rw=rewardDuel(win)}
   const ar=V.o.arena?(D.arenaRes||(D.arenaRes=arenaAfterDuel(V,D))):null;
+  if(V.o.duelQueue&&!D.dqDone){D.dqDone=true;duelQueueFinished()}
   const box=h('div',{style:'text-align:center'},
     h('h2',{style:'font-size:34px;color:'+(win?'#dcc38d':draw?'#fff':'#c07772')},draw?'Égalité':win?'Victoire !':'Défaite'),
     h('p',{class:'mut'},V.over.res?(win?'Ton adversaire a abandonné.':'Tu as abandonné.'):V.over.lose?(win?'Son Dreos (Surrender to madness) est mort : il perd la partie.':'Ton Dreos (Surrender to madness) est mort : tu perds la partie.'):win?'L’État Arcanique est à toi.':'Ton adversaire a eu le dernier mot.'),
@@ -1161,5 +1162,6 @@ function showResult(){
     h('div',{class:'row',style:'justify-content:center;margin-top:12px'},
       D.mode==='ai'?h('button',{class:'btn pri',style:'--h:#73b0ad;--ht:#241e17',onclick:()=>{const di=D.deck;leaveDuel();startAIDuel(di)}},'Rejouer'):null,
       V.o.arena?h('button',{class:'btn pri',onclick:()=>{leaveDuel();go('arena')}},'Retour à l’Arène'):null,
+      V.o.duelQueue&&!V.o.arena?h('button',{class:'btn pri',onclick:()=>{leaveDuel();duelQueueStart()}},'Chercher un autre adversaire'):null,
       h('button',{class:'btn',onclick:leaveDuel},'Retour au menu')));
   modal(box,{sticky:true});if(typeof refreshTop==='function')refreshTop()}

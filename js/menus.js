@@ -60,12 +60,13 @@ function vPlay(v){
       h('div',{class:'panel v-friend'},ph('friends','Défier un ami'),
         h('p',{class:'mut sm',style:'margin:0 0 12px'},'Ajoute un ami avec son code, puis lance-lui un défi en ligne. Vous devez être connectés tous les deux.'),
         h('button',{class:'btn gold art-button',onclick:()=>go('friends')},h('img',{class:'button-art',src:'png/friends-button.png',alt:'Ouvrir mes amis'}))),
+      duelQueuePanel(),
       h('div',{class:'panel v-guide'},ph('guide','Tout savoir avant de jouer'),
         h('p',{class:'mut sm',style:'margin:0 0 10px'},'Terrains, familles, mots-clés et règles : toutes les infos sont dans la Collection.'),
         h('div',{class:'row'},[['terr','🏟 Terrains'],['fam','🧬 Familles'],['kw','📖 Mots-clés'],['rules','📜 Règles']].map(([s,l])=>h('button',{class:'btn sm g-'+s,onclick:()=>gotoGuide(s)},l)))),
       h('div',{class:'panel v-gain'},ph('💎','Gains du jour',S.daily.earned+' / '+ECON.cap),
         h('div',{class:'bar',style:'margin:2px 0 10px'},h('i',{style:'width:'+Math.min(100,S.daily.earned/ECON.cap*100)+'%'})),
-        h('div',{class:'row',style:'justify-content:space-between'},h('span',{class:'sm mut'},'💎 Victoire +'+ECON.win+' · Défaite +'+ECON.loss+' · 1re victoire du jour +'+ECON.first),h('b',{class:'sm vstat',title:'Victoires et défaites'},S.stats.w+' V · '+S.stats.l+' D'))))))}
+        h('div',{class:'row',style:'justify-content:space-between'},h('span',{class:'sm mut'},'💎 Victoire +'+ECON.win+' · Défaite +'+ECON.loss+' · 1re victoire du jour +'+ECON.first),h('b',{class:'sm vstat',title:'Victoires et défaites'},S.stats.w+' V · '+S.stats.l+' D'))))));duelQueueRender()}
 // Arène : draft, remplacements partiels, duels contre l'IA et matchmaking
 function arenaPanel(){const r=S.arena&&S.arena.run;
   return h('div',{class:'panel v-arenap'},ph('arena','Arène',r?r.w+' V · '+r.l+' D':h('span',{class:'arena-cost'},ARENA.cost,h('img',{class:'arena-gem',src:'png/diamond.png',alt:'diamants'}))),
@@ -99,6 +100,7 @@ function rulesNodes(){
     li('Échanges :','dans l’onglet Amis, « ⇄ Échanger » propose un échange à un ami connecté. Chacun choisit UNE carte à donner ; vous voyez tous les deux les deux cartes avant de valider, et l’échange n’a lieu que si les deux valident la même paire. Changer de carte annule les validations.'),
     li('Chrono :','tu as '+OPTDEF.tim+' secondes par tour (réglable). À la fin du temps, ton tour passe tout seul.'),
     li('Boosters :','gagne des 💎 en duel, ouvre des boosters de '+ECON.pack+' cartes en boutique.'),
+    li('Duel en ligne 🌐 :','le matchmaking te trouve un adversaire humain qui cherche aussi une partie normale, en réglages standard (30 PV, 80 s par tour) avec les récompenses habituelles. 5 minutes de recherche maximum. La file nécessite un compte Firebase en ligne et les règles Firestore indiquées dans cloud-config.js.'),
     li('Arène ⚔ :','entrée '+ARENA.cost+' 💎. Draft de '+ARENA.picks+' cartes (1 parmi 3 à chaque choix, mêmes chances pour tout le monde, sans limite d’exemplaires), puis affronte l’IA ou cherche un humain avec le matchmaking (5 minutes max). La file nécessite un compte Firebase en ligne et les règles Firestore indiquées dans cloud-config.js. Le classement hebdomadaire affiche les meilleurs joueurs et leurs victoires contre l’IA et contre des humains ; un compte en ligne est nécessaire pour y figurer. L’IA joue son meilleur deck possible (toutes raretés) dès le premier palier. La course s’arrête à '+ARENA.maxW+' victoires ou '+ARENA.maxL+' défaites ; après une défaite non éliminatoire, choisis d’abord '+ARENA.redraft+' nouvelles cartes, puis les cartes de ton deck qu’elles remplaceront. Récompense : de '+ARENA.rw[0]+' à '+ARENA.rw[ARENA.maxW]+' 💎 selon tes victoires. Une partie quittée avant la fin compte comme une défaite.')] }
 function howto(){
   modal(h('div',null,h('h2',null,'Comment jouer'),...rulesNodes(),
@@ -547,6 +549,7 @@ function onChallenge(c,m){
   const close=()=>{CHALLENGE_UI=null};
   c.on('close',()=>{if(CHALLENGE_UI&&!DUEL){close();closeModal();toast('Le défi a été annulé.')}});
   if(m.o&&m.o.arenaQueue)return onArenaQueueChallenge(c,m,nm,close);
+  if(m.o&&m.o.duelQueue)return onDuelQueueChallenge(c,m,nm,close);
   if(m.o&&m.o.arena){try{c.send({t:'dec',why:'arena'})}catch(e){}close();setTimeout(()=>{try{c.close()}catch(e){}},300);
     toast('Les défis directs d’Arène ne sont plus disponibles : utilise le matchmaking.');return}
   const accept=di=>{
