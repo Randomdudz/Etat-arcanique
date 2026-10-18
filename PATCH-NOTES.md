@@ -1,3 +1,25 @@
+# L’État Arcanique — Patch notes
+
+Journal des mises à jour, la plus récente en premier. Les annonces détaillées des grandes versions restent en dessous.
+
+## v3.9.4 — 18/10/2026
+
+### Arène plus juste
+- Le second joueur ne reçoit plus les **+5 PV** de compensation : en Arène, les deux héros commencent désormais à **30 PV**.
+  Le reste de la compensation est conservé (une carte en plus, la Pièce et l’Or).
+
+### Classement de l’Arène — protection côté serveur (en préparation)
+- Chaque victoire pourra être validée par le serveur du jeu : elle ne comptera que si le duel a réellement été joué
+  (match ouvert par le jeu, durée minimale de 60 s, course en cours, maximum 9 victoires / 3 défaites, 12 courses par 24 h).
+- Un **journal daté des parties** est conservé pour l’outil de surveillance : courses lancées, victoires (IA / joueur),
+  défaites, avec la durée de chaque match.
+- **Ce n’est pas encore activé** : en attendant, le classement s’enregistre exactement comme avant et rien ne change
+  pour les joueurs. Le jour de l’activation, il suffira de recharger la page (Ctrl+F5).
+
+Version du jeu concernée : **v3.9.4** (visible en haut à droite du jeu).
+
+---
+
 # L’État Arcanique — Mise à jour 3.9
 
 ## Une Arène repensée
