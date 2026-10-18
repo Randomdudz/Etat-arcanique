@@ -2,6 +2,15 @@
 
 Journal des mises à jour, la plus récente en premier. Les annonces détaillées des grandes versions restent en dessous.
 
+## v3.9.12 — 18/10/2026
+
+### Visuels — Rasta et Natinganz ont enfin leurs illustrations
+- Les 6 cartes des deux personnages s’affichent désormais avec une image au lieu du visuel de secours :
+  **Rasta** (Fardeau pour l’équipe, Viens dehors, Aura nauséabonde) et **Natinganz** (Privé d’ordinateur,
+  Puits de connaissance, J’ai dl le boss).
+- Nouvelles images `rasta1-3.jpg` et `natingaz1-3.jpg` dans `assets/cards/`, déclarées dans `js/card-art.js`
+  (mêmes conventions que les autres personnages : une illustration par version).
+
 ## v3.9.11 — 18/10/2026
 
 ### Duels — le matchmaking arrive aussi sur les duels normaux
