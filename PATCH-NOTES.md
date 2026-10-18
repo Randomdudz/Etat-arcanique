@@ -5,6 +5,12 @@ Journal des mises à jour, la plus récente en premier. Les annonces détaillée
 <!-- Style des notes : écrire pour les joueurs. Pas de termes techniques (fichiers, serveurs, code, noms de collections) :
      seulement ce qui change en jeu, et comment en profiter. -->
 
+## v3.9.13 — 18/10/2026
+
+### Mikalev a maintenant toutes ses illustrations
+- **Shinobi des smokes** et **Chef habile** ont leur propre image : le ninja dans ses fumées, et le chef
+  aux fourneaux. Son « Homme à tout faire » avait déjà la sienne.
+
 ## v3.9.12 — 18/10/2026
 
 ### Rasta et Natinganz ont enfin leurs illustrations
