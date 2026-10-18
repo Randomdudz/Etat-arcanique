@@ -2,6 +2,19 @@
 
 Journal des mises à jour, la plus récente en premier. Les annonces détaillées des grandes versions restent en dessous.
 
+## v3.9.7 — 18/10/2026
+
+### Arène — l’IA réfléchit avant de jouer
+- L’IA d’Arène ne se contente plus d’évaluer son coup immédiat : elle **simule la suite** de la partie
+  (fin de son tour, riposte adverse) et choisit le coup dont la moyenne est la meilleure. Les mêmes tirages
+  aléatoires sont utilisés pour tous les coups comparés, ce qui rend la comparaison fiable malgré un temps de
+  réflexion court.
+- Pendant ces simulations, **ta main est retirée au hasard** : l’IA joue mieux, mais ne lit pas tes cartes.
+- Mesure en miroir contre l’ancienne IA (80 parties, 4 archétypes de deck, sièges et premier joueur alternés) :
+  **~61 % de victoires** pour la nouvelle, contre 50 % pour l’ancienne.
+- Contrepartie : l’IA d’Arène réfléchit ~0,15 s par action (souvent moins d’une seconde par tour, quelques
+  secondes dans les positions les plus chargées). Les duels amicaux et le tournoi de decks ne changent pas.
+
 ## v3.9.6 — 18/10/2026
 
 ### Arène — l’IA ne se retient plus

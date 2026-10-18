@@ -1,5 +1,5 @@
 // ============ HÔTE DE PARTIE (IA locale ou en ligne) + RÉSEAU PEERJS ============
-const APPV='3.9.6';
+const APPV='3.9.7';
 const ANIM=1.6;                                             // vitesse des animations du duel (1 = ancienne vitesse ; plus grand = plus lent)
 function peerId(code){return 'etat-arcanique-'+String(code).replace('ARCANE-','').toLowerCase()}
 function validCode(c){return /^ARCANE-[A-Z0-9]{6}$/.test(String(c||'').trim().toUpperCase())}
@@ -37,7 +37,10 @@ function HostGame(G,seats,onMe){
     return Math.min(4200,base+w)*ANIM};
   H.aiStep=()=>{
     if(H.stop||G.over||G.phase)return;const s=G.cur;if(seats[s].kind!=='ai')return;
-    const n0=G.hist.length,m=aiPick(G,s,seats[s].W);const r=act(G,s,m);if(!r.ok)act(G,s,{t:'end'});
+    const st=seats[s],n0=G.hist.length;
+    // siège « fort » : l'IA simule la suite (MCTS plat apparié) au lieu d'évaluer son seul coup immédiat
+    const m=st.strong?aiFlatMC(G,s,st.W,st.strong===true?MCTS_ARENA:st.strong):aiPick(G,s,st.W);
+    const r=act(G,s,m);if(!r.ok)act(G,s,{t:'end'});
     H.after(pace(n0,m.t==='end'?400:600))};
   H.act=(side,a)=>{
     if(H.stop)return{ok:false,err:'Partie fermée.'};

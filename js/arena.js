@@ -331,7 +331,7 @@ function startArenaAIDuel(){
   if(ai.deck.length!==ARENA.picks){toast('Impossible de préparer le deck de l’IA pour ce palier. Réessaie.');return}
   arenaStart(opp,'ai');
   const G=newGame({names:[S.name||'Moi',opp],decks:[r.picks.slice(),ai.deck],seed:arenaSeed(),o,mull:true});
-  const Hh=HostGame(G,[{kind:'me'},{kind:'ai',W:WGT[ARCH[ai.arch].w]}],v=>applyView(v));
+  const Hh=HostGame(G,[{kind:'me'},{kind:'ai',W:WGT[ARCH[ai.arch].w],strong:1}],v=>applyView(v));
   newDuelState({mode:'arena-ai',host:Hh,ctl:{act:a=>Hh.act(0,a),resign:()=>Hh.resign(0),close:()=>Hh.close()}});
   mountDuel();Hh.start()}
 
