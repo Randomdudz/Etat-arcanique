@@ -2,6 +2,17 @@
 
 Journal des mises à jour, la plus récente en premier. Les annonces détaillées des grandes versions restent en dessous.
 
+## v3.9.8 — 18/10/2026
+
+### Duels — l’IA experte arrive aussi contre toi
+- L’IA qui simule la suite de la partie avant de jouer (celle de l’Arène depuis la v3.9.7) équipe désormais
+  **les duels contre l’ordinateur** : elle anticipe ta riposte au lieu de juger son coup sur l’instant.
+- Son temps de réflexion passe de ~0,15 s à ~0,25 s par action — quelques dixièmes de seconde de plus par tour,
+  absorbés en bonne partie par les pauses d’animation.
+- Mesure en miroir contre l’IA à un coup (40 parties, 4 archétypes de deck, sièges et premier joueur alternés) :
+  **62,5 % de victoires** pour la nouvelle, cohérent avec les 61 % relevés à 0,15 s.
+- Rappel : pendant ses simulations, **ta main est remplacée au hasard** — elle joue mieux, mais ne lit pas tes cartes.
+
 ## v3.9.7 — 18/10/2026
 
 ### Arène — l’IA réfléchit avant de jouer

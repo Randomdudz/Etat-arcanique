@@ -23,10 +23,12 @@
 // 150 ms laisse donc ~30-50 playouts (UCT) ou ~10-25 manches de quelques coups (plat). Le module
 // n'est pas chargé dans le worker (tournoi de decks), seulement dans la page de jeu.
 const MCTSOPT={ms:150,roll:1,uct:.7,min:3,max:400,msMax:0,seed:null,now:null,topK:0,hide:0};
-// Réglages de l'IA d'Arène « experte » : recherche plate appariée (aiFlatMC), main adverse cachée
-// pendant les simulations, budget court. Mesuré en miroir : ~61 % de victoires contre l'IA à un
-// coup sur 80 parties (4 archétypes), ~0,6 s par tour. aiMCTS (UCT) sert d'alternative explorée.
-const MCTS_ARENA={ms:150,topK:6,roll:1,hide:1};
+// Réglages de l'IA « experte » (Arène et duels contre l'ordinateur) : recherche plate appariée
+// (aiFlatMC), main adverse cachée pendant les simulations, ~0,25 s de réflexion par action
+// (le surcoût est absorbé par les pauses d'animation de l'hôte). Mesuré en miroir : ~61 % de
+// victoires contre l'IA à un coup sur 80 parties (4 archétypes), ~0,6 s par tour à 150 ms.
+// aiMCTS (UCT) sert d'alternative explorée.
+const MCTS_STRONG={ms:250,topK:6,roll:1,hide:1};
 
 // qui doit décider dans cet état (le joueur avec un choix en attente, sinon celui dont c'est le tour)
 function mctsActor(G){

@@ -11,7 +11,7 @@ function startAIDuel(di){
   const o=Object.assign({},S.opt),seed=(Math.random()*4294967296)>>>0,ai=bestAIDeckFast(S.coll,seed,o),arch=ai.arch;
   const G=newGame({names:[S.name||'Moi',AINAMES[rint(0,AINAMES.length-1)]],
     decks:[deckKeys(d.cards),ai.cards],seed,o,mull:true});
-  const Hh=HostGame(G,[{kind:'me'},{kind:'ai',W:WGT[ARCH[arch].w]}],v=>applyView(v));
+  const Hh=HostGame(G,[{kind:'me'},{kind:'ai',W:WGT[ARCH[arch].w],strong:1}],v=>applyView(v));   // duels : même IA experte que l'Arène
   newDuelState({mode:'ai',deck:di,host:Hh,ctl:{act:a=>Hh.act(0,a),resign:()=>Hh.resign(0),close:()=>Hh.close()}});
   mountDuel();Hh.start()}
 
