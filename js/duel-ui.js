@@ -73,8 +73,9 @@ function duelChat(){const i=h('input',{placeholder:'Écris un message… (Entré
 function chatLine(who,txt,mine){const l=$('#chl');if(!l)return;l.append(h('div',{class:'chm'+(mine?' me':'')},h('b',null,who+' : '),String(txt)));l.scrollTop=l.scrollHeight;
   if(!mine){const c=$('#dchat');if(c){c.classList.remove('ping');void c.offsetWidth;c.classList.add('ping')}}}
 function sendDuelChat(t){t=String(t||'').trim().slice(0,140);const D=DUEL;if(!t||!D)return;
-  if(t.toLowerCase()==='defaussesvp'){D.ctl.act({t:'devdisc'});return}                 // commande de test : l'adversaire défausse toute sa main (rien n'apparaît dans le chat)
-  if(t.toLowerCase()==='test'){doAct({t:'test'});return}
+  const dev=D.mode==='ai'&&!(D.V&&D.V.o.arena);                                        // outils de test : seulement en duel local contre l'IA (pas en Arène, pas en ligne)
+  if(dev&&t.toLowerCase()==='defaussesvp'){D.ctl.act({t:'devdisc'});return}            // commande de test : l'adversaire défausse toute sa main (rien n'apparaît dans le chat)
+  if(dev&&t.toLowerCase()==='test'){doAct({t:'test'});return}
   chatLine('Toi',t,true);
   if(D.mode==='ai'){if(Math.random()<.6)setTimeout(()=>{if(DUEL===D&&D.V)chatLine(D.V.p[1-D.V.me].nm,AICHAT[rint(0,AICHAT.length-1)])},900+Math.random()*1600);return}
   try{D.conn.send({t:'chat',m:t})}catch(e){toast('Message non envoyé.')}}
@@ -211,7 +212,7 @@ function artsNode(s,el){if(!el)return;const V=DUEL.V,P=V.p[s],A=P.arts||[];
     return h('i',{class:'egg kw','data-t':R.n,'data-d':R.tx,style:'--ec:'+R.col})})));el.classList.toggle('none',!A.length)}
 // actions spéciales disponibles pendant ton tour (voyage des Expats…) : à droite du plateau, au-dessus du deck
 function actsNode(){const el=$('#acts');if(!el)return;const D=DUEL,V=D.V,me=V.me,P=V.p[me],L=fl(V,me),bt=[];
-  if(mine()&&!V.over&&!V.phase&&!(P.pq&&P.pq.length)){const b=h('button',{class:'actb',title:'Code test : choisis une carte de ton deck et passe à 10 Démoflux.',
+  if(mine()&&D.mode==='ai'&&!V.o.arena&&!V.over&&!V.phase&&!(P.pq&&P.pq.length)){const b=h('button',{class:'actb',title:'Code test (duel local contre l’IA) : choisis une carte de ton deck et passe à 10 Démoflux.',
       disabled:P.hand.length>=V.o.hand||!P.dn,onclick:e=>{e.stopPropagation();doAct({t:'test'})}},'🧪',h('span',null,'Test'));
     bt.push(b)}
   if(mine())P.board.forEach((c,i)=>{if(c&&canExil(V,me,i)){const b=h('button',{class:'actb',title:'Disparaître à l’étranger : '+fullName(c.k)+' devient inciblable jusqu’à ton prochain tour ('+exCost(L.expats)+' Or)',

@@ -710,9 +710,12 @@ function act(G,s,a){
   if(G.over)return er('La partie est terminée.');
   if(!a||typeof a!=='object'||(s!==0&&s!==1))return er('Action invalide.');
   if(a.t==='resign'){G.aid++;G.cur=s;lg(G,{t:'res'});G.over={w:1-s,res:1};return{ok:true}}
-  if(a.t==='devdisc'){G.aid++;const P=G.p[1-s],pc=G.cs;G.cs=null;                       // commande de test (« defaussesvp » dans le chat du duel) : l'adversaire défausse toute sa main
+  if(a.t==='devdisc'){
+    if(G.o.arena||G.p[1-s].hum)return er('Commande de test désactivée : elle ne fonctionne qu’en duel local contre l’IA.');
+    G.aid++;const P=G.p[1-s],pc=G.cs;G.cs=null;                       // commande de test (« defaussesvp » dans le chat du duel) : l'adversaire défausse toute sa main
     while(P.hand.length){const c=P.hand.pop();toGrave(P,c);lg(G,{t:'disc',ts:1-s,k:c.k,anon:1})}G.cs=pc;return{ok:true}}
   if(a.t==='test'){
+    if(G.o.arena||G.p[1-s].hum)return er('Code test désactivé : il ne fonctionne qu’en duel local contre l’IA.');
     if(G.phase||G.cur!==s)return er('Le code test fonctionne uniquement pendant ton tour.');
     const P=G.p[s];if(P.pq&&P.pq.length)return er('Termine d’abord le choix en attente.');
     if(P.hand.length>=G.o.hand)return er('Ta main est pleine : libère une place avant d’utiliser le code test.');

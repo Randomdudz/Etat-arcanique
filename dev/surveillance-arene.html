@@ -1,0 +1,217 @@
+﻿<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Surveillance Arène — L’État Arcanique</title>
+<style>
+  :root{--bg:#12101c;--panel:#1c1930;--line:#332c4f;--gold:#e9cd86;--txt:#e8e4f5;--mut:#a79fc4;--ok:#5fbf8a;--warn:#e2a24b;--bad:#e06a63}
+  *{box-sizing:border-box}
+  body{margin:0;padding:24px;background:var(--bg);color:var(--txt);font:14px/1.5 system-ui,Segoe UI,Roboto,sans-serif}
+  h1{margin:0 0 4px;font-size:22px;color:var(--gold)}
+  h2{font-size:16px;margin:22px 0 8px;color:var(--gold)}
+  p.note{color:var(--mut);max-width:900px}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;margin:12px 0}
+  .bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  input,button{font:inherit;background:#241f3d;color:var(--txt);border:1px solid var(--line);border-radius:8px;padding:7px 10px}
+  button{cursor:pointer}
+  button:hover{border-color:var(--gold)}
+  button.on{border-color:var(--gold);color:var(--gold)}
+  input[type=number]{width:64px}
+  table{border-collapse:collapse;width:100%;font-size:13px}
+  th,td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+  th{color:var(--mut);font-weight:600}
+  tr.follow{background:#241f3d}
+  .v{color:var(--gold);font-weight:700}
+  .ai{color:var(--ok)}.hu{color:var(--warn)}
+  .mut{color:var(--mut)}
+  #log{background:#0d0b16;border:1px solid var(--line);border-radius:10px;padding:12px;max-height:420px;overflow:auto;font:12px/1.6 Consolas,monospace;white-space:pre-wrap}
+  .l-new{color:var(--gold)}
+  .l-run{color:var(--ok)}
+  .l-err{color:var(--bad)}
+  .live{display:flex;gap:14px;flex-wrap:wrap}
+  .livecard{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-width:230px}
+  .livecard b{color:var(--gold)}
+  .kpis{color:var(--mut);font-size:12px}
+</style>
+</head>
+<body>
+<h1>Surveillance du classement d’Arène</h1>
+<p class="note">
+  Outil interne (non lié depuis le jeu). Il lit le classement public Firestore et surveille les écritures des joueurs suivis :
+  <b>chaque victoire = une écriture</b> dans <span class="mut">arenaWeeks/{semaine}/players/{uid}</span> (les défaites n’écrivent rien, le lancement d’une course écrit <span class="mut">runs +1</span>).
+  En laissant cette page ouverte pendant qu’un joueur joue, on obtient l’heure de chacune de ses victoires et l’écart entre elles.
+</p>
+
+<div class="panel bar">
+  <label>Semaine <input id="week" size="10"> <span class="mut">(AAAA-MM-JJ, lundi)</span></label>
+  <button id="load">Charger le classement</button>
+  <label>Intervalle <input id="iv" type="number" value="5" min="2" max="120"> s</label>
+  <label><input type="checkbox" id="auto"> Suivre automatiquement les nouveaux arrivants</label>
+  <span id="state" class="mut"></span>
+</div>
+
+<div class="panel">
+  <h2 style="margin-top:0">Classement de la semaine</h2>
+  <div id="tblwrap" class="mut">Charge le classement…</div>
+</div>
+
+<h2>Joueurs suivis</h2>
+<div id="live" class="live"></div>
+
+<h2>Journal des écritures</h2>
+<div id="log">—</div>
+
+<script>
+'use strict';
+const KEY='AIzaSyCTnxKnzBGxTs2DM5uodP4VOadaLQWHQIg',PROJ='etat-arcanique';
+const $=s=>document.querySelector(s);
+const pad=n=>String(n).padStart(2,'0');
+const hhmmss=d=>pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getSeconds());
+const dt=d=>d?d.toLocaleString('fr-FR',{dateStyle:'short',timeStyle:'medium'}):'—';
+const dur=s=>s==null?'—':s<90?s.toFixed(0)+' s':s<5400?(s/60).toFixed(1)+' min':(s/3600).toFixed(2)+' h';
+
+function weekKey(now){
+  now=now||new Date();
+  const d=new Date(Date.UTC(now.getFullYear(),now.getMonth(),now.getDate()));
+  d.setUTCDate(d.getUTCDate()-(d.getUTCDay()+6)%7);
+  return d.toISOString().slice(0,10);
+}
+function lbUrl(week){return `https://firestore.googleapis.com/v1/projects/${PROJ}/databases/(default)/documents/arenaWeeks/${encodeURIComponent(week)}`}
+function docUrl(week,uid){return lbUrl(week)+'/players/'+encodeURIComponent(uid)+'?key='+KEY}
+const V=(f,k)=>(f[k]&&(f[k].stringValue!==undefined?f[k].stringValue:f[k].integerValue))||'';
+function parseDoc(j){
+  const f=j.fields||{};
+  const c=j.createTime?new Date(j.createTime):null,u=j.updateTime?new Date(j.updateTime):null;
+  return{name:j.name,uid:String(V(f,'uid')),pseudo:String(V(f,'pseudo')||'?'),runs:+V(f,'runs')||0,total:+V(f,'total')||0,
+    ai:+V(f,'winsAI')||0,hum:+V(f,'winsHuman')||0,c,u,span:c&&u?Math.round((u-c)/1000):null};
+}
+async function loadWeek(week){
+  const r=await fetch(lbUrl(week)+':runQuery?key='+KEY,{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({structuredQuery:{from:[{collectionId:'players'}],orderBy:[{field:{fieldPath:'total'},direction:'DESCENDING'}],limit:100}})});
+  if(!r.ok)throw new Error('Firestore '+r.status+' '+(await r.text()).slice(0,200));
+  const rows=await r.json();
+  return rows.filter(x=>x.document).map(x=>parseDoc(x.document)).filter(x=>x.runs>0);
+}
+async function getDoc(week,uid){
+  const r=await fetch(docUrl(week,uid));
+  if(r.status===404)return null;
+  if(!r.ok)throw new Error('Firestore '+r.status);
+  return parseDoc(await r.json());
+}
+
+// ---------- état ----------
+const FOLLOW=JSON.parse(localStorage.getItem('ea_follow')||'{}');   // uid -> {pseudo, snap}
+let WEEK=weekKey(),TIMER=0,BUSY=false,AUTO=false;
+const ROWS={};                                                     // uid -> dernière version connue
+function saveFollow(){localStorage.setItem('ea_follow',JSON.stringify(FOLLOW))}
+function log(txt,cls){
+  const el=$('#log');
+  if(el.textContent==='—')el.textContent='';
+  const d=new Date(),line='['+hhmmss(d)+'] '+txt;
+  const span=document.createElement('span');
+  span.className=cls||'';span.textContent=line+'\n';
+  el.append(span);el.scrollTop=el.scrollHeight;
+}
+
+// ---------- tableau ----------
+function renderTable(rows){
+  rows.forEach(r=>ROWS[r.uid]=r);
+  const wrap=$('#tblwrap');wrap.className='';
+  const t=document.createElement('table');
+  t.innerHTML='<thead><tr><th>#</th><th>Joueur</th><th>V</th><th>Courses</th><th>IA</th><th>Humains</th><th>Doc créé</th><th>Dernière écriture</th><th>Durée créé→dernier</th><th></th></tr></thead>';
+  const tb=document.createElement('tbody');
+  rows.forEach((r,i)=>{
+    const tr=document.createElement('tr');
+    if(FOLLOW[r.uid])tr.className='follow';
+    tr.innerHTML=`<td>${i+1}</td><td>${esc(r.pseudo)}</td><td class="v">${r.total}</td><td>${r.runs}</td>
+      <td class="ai">${r.ai}</td><td class="hu">${r.hum}</td><td class="mut">${dt(r.c)}</td><td>${dt(r.u)}</td>
+      <td>${dur(r.span)}</td>`;
+    const td=document.createElement('td');
+    const b=document.createElement('button');
+    b.textContent=FOLLOW[r.uid]?'Suivi ✓':'👁 Suivre';
+    b.className=FOLLOW[r.uid]?'on':'';
+    b.onclick=()=>{toggleFollow(r);renderTable(rows)};
+    td.append(b);tr.append(td);tb.append(tr);
+  });
+  t.append(tb);wrap.replaceChildren(t);
+}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+
+function toggleFollow(r){
+  if(FOLLOW[r.uid]){delete FOLLOW[r.uid];log('arrêt du suivi de '+r.pseudo)}
+  else{FOLLOW[r.uid]={pseudo:r.pseudo,snap:r,first:true};log('suivi de '+r.pseudo+' (uid '+r.uid+', '+r.total+' V, '+r.runs+' course(s))','l-new')}
+  saveFollow();renderLive();sync()}
+
+// ---------- cartes des joueurs suivis ----------
+function renderLive(){
+  const el=$('#live');const uids=Object.keys(FOLLOW);
+  if(!uids.length){el.innerHTML='<p class="mut">Aucun joueur suivi. Clique sur « 👁 Suivre » dans le classement.</p>';return}
+  el.replaceChildren(...uids.map(uid=>{
+    const f=FOLLOW[uid],s=f.snap||{};
+    const last=s.u?Math.round((Date.now()-s.u)/1000):null;
+    const card=document.createElement('div');card.className='livecard';
+    card.innerHTML=`<b>${esc(f.pseudo)}</b><br>
+      <span class="v">${s.total||0} V</span> · ${s.runs||0} course(s) · <span class="ai">IA ${s.ai||0}</span> · <span class="hu">hum ${s.hum||0}</span><br>
+      <span class="kpis">dernière écriture : ${dt(s.u)}${last!=null?' (il y a '+dur(last)+')':''}<br>
+      observées : ${f.seen||0} écriture(s)${f.avg?' · ~'+dur(f.avg)+' entre deux':''}${f.lastGap?' · dernier écart '+dur(f.lastGap):''}</span>`;
+    const b=document.createElement('button');b.textContent='Ne plus suivre';b.style.marginTop='6px';
+    b.onclick=()=>{delete FOLLOW[uid];saveFollow();log('arrêt du suivi de '+f.pseudo);renderLive()};
+    card.append(b);return card
+  }));
+}
+
+// ---------- comparaison d'un doc ----------
+function diff(f,cur){
+  const p=f.snap;const name=f.pseudo;
+  const w=cur.total-(p.total||0),run=cur.runs-(p.runs||0);
+  const gap=p.u&&cur.u?Math.round((cur.u-p.u)/1000):null;
+  if(gap!=null&&gap>=0&&(w>0)){f.lastGap=gap;f.gaps=(f.gaps||[]).concat(gap);f.avg=Math.round(f.gaps.reduce((a,b)=>a+b,0)/f.gaps.length)}
+  if(run>0)log('▶ '+name+' lance '+(run>1?run+' courses':'une course')+' ('+cur.runs+' au total) — l’horloge de la course repart','l-run');
+  if(cur.hum-(p.hum||0)>0)log('⚔ '+name+' : VICTOIRE contre un joueur humain ('+w+' écriture(s)) → '+cur.total+' V, '+cur.hum+' vs humains','l-new');
+  if(cur.ai-(p.ai||0)>0)log('✔ '+name+' : victoire IA #'+(cur.ai)+' → '+cur.total+' V'+(gap!=null?' · écart '+dur(gap)+' avec la précédente':'')+(run>0?' · nouvelle course':''));
+  if(w<=0&&run<=0&&cur.u!==p.u)log('✎ '+name+' : écriture sans victoire ('+cur.total+' V, '+cur.runs+' course(s))');
+  f.snap=cur;f.seen=(f.seen||0)+(w>0?w:0);f.first=false;
+}
+async function sync(){
+  if(BUSY)return;BUSY=true;
+  const uids=Object.keys(FOLLOW);
+  try{
+    for(const uid of uids){
+      const f=FOLLOW[uid];if(!f)continue;
+      const cur=await getDoc(WEEK,uid);
+      if(!cur){log('⚠ '+f.pseudo+' : document introuvable (supprimé ?)','l-err');continue}
+      if(f.pseudo!==cur.pseudo){f.pseudo=cur.pseudo}
+      if(!f.snap||f.snap.u!==cur.u||f.snap.total!==cur.total||f.snap.runs!==cur.runs)diff(f,cur);
+    }
+    saveFollow();renderLive();
+    $('#state').textContent='surveillance active · '+new Date().toLocaleTimeString('fr-FR')+' · '+uids.length+' joueur(s)';
+  }catch(e){
+    log('erreur de lecture : '+e.message,'l-err');$('#state').textContent='erreur : '+e.message;
+  }finally{BUSY=false}
+}
+function restartTimer(){
+  clearInterval(TIMER);const iv=Math.max(2,+$('#iv').value||5)*1000;
+  TIMER=setInterval(sync,iv);
+}
+
+// ---------- démarrage ----------
+async function load(){
+  try{
+    $('#state').textContent='chargement…';
+    const rows=await loadWeek(WEEK);
+    renderTable(rows);
+    $('#state').textContent=rows.length+' joueur(s) cette semaine';
+    if(AUTO)rows.forEach(r=>{if(!FOLLOW[r.uid])toggleFollow(r)});
+    rows.forEach(r=>{if(FOLLOW[r.uid]){FOLLOW[r.uid].pseudo=r.pseudo;FOLLOW[r.uid].snap=Object.assign({},r,{u:FOLLOW[r.uid].snap&&FOLLOW[r.uid].snap.u||r.u})}});
+    saveFollow();renderLive();
+  }catch(e){$('#tblwrap').innerHTML='<span style="color:#e06a63">Échec : '+esc(e.message)+'</span><br><span class="mut">Ouvre cette page depuis GitHub Pages (https://randomdudz.github.io/Etat-arcanique/dev/surveillance-arene.html) : Firestore refuse les appels depuis un fichier local.</span>'}
+}
+$('#week').value=WEEK;
+$('#load').onclick=()=>{WEEK=$('#week').value.trim()||WEEK;$('#log').textContent='—';load();restartTimer()};
+$('#iv').onchange=restartTimer;
+$('#auto').onchange=e=>{AUTO=e.target.checked;if(AUTO)load()};
+renderLive();load();restartTimer();
+</script>
+</body>
+</html>
