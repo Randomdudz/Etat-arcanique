@@ -316,8 +316,10 @@ function arenaQueueFinished(){
   if(!AQ.active)return;
   arenaQueueRelease('');}
 function arenaAIDeck(tier,seed){
-  const maxR=tier>=7?3:tier>=4?2:1,coll={};
-  POOL.forEach(k=>{if(CARDS[k].r<=maxR)coll[k]={n:CARDS[k].r===3?1:2,p:0}});
+  // l'IA joue au maximum de sa force dès le palier 1 : toutes les raretés sont disponibles,
+  // quel que soit le palier (le palier ne sert plus qu'à nommer l'adversaire).
+  const coll={};
+  POOL.forEach(k=>{coll[k]={n:CARDS[k].r===3?1:2,p:0}});
   const ai=bestAIDeckFast(coll,seed,arenaOpt());
   return{deck:ai.cards,arch:ai.arch}
 }
@@ -349,7 +351,7 @@ function vArena(v){
   arenaCheckStale();arenaLeaderboardBackfillLast();const A=S.arena,r=A.run;
   const rules=h('div',{class:'sm mut',style:'line-height:1.55'},
     'Entrée : ',h('b',null,ARENA.cost+' 💎'),'. Tu construis un deck de ',h('b',null,'30 cartes'),' en ',h('b',null,'30 choix'),' : à chaque fois, garde 1 carte parmi 3 de la même rareté. ',
-    'Les limites d’exemplaires ne comptent pas. Ensuite, affronte l’IA ou cherche un joueur avec le matchmaking : les decks de l’IA gagnent en rareté aux paliers 4 et 7. La course s’arrête à ',h('b',null,ARENA.maxW+' victoires'),' ou ',h('b',null,ARENA.maxL+' défaites'),'. Après une défaite non éliminatoire, garde ton deck : choisis d’abord ',h('b',null,ARENA.redraft+' remplaçantes'),' (1 parmi 3 pour chacune), puis sélectionne les cartes qu’elles remplaceront.',
+    'Les limites d’exemplaires ne comptent pas. Ensuite, affronte l’IA ou cherche un joueur avec le matchmaking : l’IA joue son meilleur deck possible (toutes raretés) dès le premier palier. La course s’arrête à ',h('b',null,ARENA.maxW+' victoires'),' ou ',h('b',null,ARENA.maxL+' défaites'),'. Après une défaite non éliminatoire, garde ton deck : choisis d’abord ',h('b',null,ARENA.redraft+' remplaçantes'),' (1 parmi 3 pour chacune), puis sélectionne les cartes qu’elles remplaceront.',
     h('br'),'Mêmes chances pour tout le monde : commune '+ARENA.odds[1]+' %, rare '+ARENA.odds[2]+' %, légendaire '+ARENA.odds[3]+' % par choix (le 1er choix est toujours un choix de légendaires), sans tenir compte de ta collection. Les choix sont fixés dès l’entrée : recharger la page ne les change pas. Le second joueur garde la Pièce et l’Or de compensation, mais pas les '+COMP.hp+' PV bonus. Une partie quittée avant la fin compte comme une défaite.');
   const head=h('div',{class:'panel hl v-arena'},ph('play','Arène',r?r.w+' V · '+r.l+' D':(A.best?'Record : '+A.best+' V':'')),rules);
   if(!r){

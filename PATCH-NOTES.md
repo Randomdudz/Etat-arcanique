@@ -2,6 +2,16 @@
 
 Journal des mises à jour, la plus récente en premier. Les annonces détaillées des grandes versions restent en dessous.
 
+## v3.9.6 — 18/10/2026
+
+### Arène — l’IA ne se retient plus
+- L’IA d’Arène joue **son meilleur deck possible dès le palier 1** : toutes les raretés lui sont accessibles d’entrée de jeu.
+  La montée en rareté aux paliers 4 et 7 annoncée avec la mise à jour 3.9 est remplacée par cette règle.
+- La difficulté de l’IA est donc la même du premier au dernier palier ; seules les récompenses augmentent avec tes victoires.
+- Bénéfice au passage : un seul deck d’IA à préparer pour toute la course (calcul en arrière-plan effectué une seule fois).
+
+Version du jeu concernée : **v3.9.6** (visible en haut à droite du jeu).
+
 ## v3.9.5 — 18/10/2026
 
 - Mise à jour de version : le numéro affiché en haut à droite du jeu passe à **v3.9.5**.
