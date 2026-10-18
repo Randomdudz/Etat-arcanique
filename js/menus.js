@@ -358,8 +358,8 @@ function vDeckEdit(v,di){
         h('button',{class:'btn sm danger',onclick:()=>{d.cards=[];saveS();refresh()}},'Vider')),
       h('div',{class:'sm mut',style:'margin:0 0 6px'},'Survol : la carte · clic droit : en retirer une'),
       h('div',{class:'dlist',style:'grid-template-columns:1fr'},Object.keys(cnt).sort(sortK).map(k=>
-        h('div',{class:'dl'+(DKNEW&&DKNEW.indexOf(k)>=0?' added':''),'data-hk':k,style:'border-left:4px solid '+RCOL[CARDS[k].r],oncontextmenu:e=>{e.preventDefault();rem(k)}},h('span',{class:'dc'},CARDS[k].c),miniAv(k),
-          h('span',{class:'dn',style:'color:'+RCOL[CARDS[k].r],onclick:()=>showCard(k)},RGEM[CARDS[k].r]+' '+fullName(k)),affMini(k),h('span',{class:'mut'},'×'+cnt[k]),
+        h('div',{class:'dl'+(CARDS[k].r===3?' leg':'')+(DKNEW&&DKNEW.indexOf(k)>=0?' added':''),'data-hk':k,style:'border-left:4px solid '+RCOL[CARDS[k].r],oncontextmenu:e=>{e.preventDefault();rem(k)}},h('span',{class:'dc'},CARDS[k].c),miniAv(k),
+          h('span',{class:'dn',style:'color:'+RCOL[CARDS[k].r],onclick:()=>showCard(k)},RGEM[CARDS[k].r]+' '+fullName(k)),CARDS[k].r===3?legBadge():null,affMini(k),h('span',{class:'mut'},'×'+cnt[k]),
           h('button',{class:'btn sm',title:'Retirer un exemplaire',onclick:()=>rem(k)},'−')))),
       d.cards.length?null:h('div',{class:'mut sm'},'Deck vide : ajoute des cartes à droite (clic).')].filter(Boolean));
     left.scrollTop=y};

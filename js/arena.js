@@ -341,12 +341,14 @@ function arenaPips(w,l){return h('div',{class:'apips'},
   h('span',{class:'aw',title:w+' victoire'+(w>1?'s':'')+' sur '+ARENA.maxW},Array.from({length:ARENA.maxW},(_,i)=>h('i',{class:i<w?'on':''},'⚔'))),
   h('span',{class:'al',title:l+' défaite'+(l>1?'s':'')+' sur '+ARENA.maxL},Array.from({length:ARENA.maxL},(_,i)=>h('i',{class:i<l?'on':''},'✕'))))}
 function arenaRewards(w){return h('div',{class:'arw'},ARENA.rw.map((g,i)=>h('div',{class:'arwc'+(w===i?' cur':'')},h('b',null,i+' V'),h('span',null,g+' 💎'))))}
-function arenaDeckList(picks,removed,onRemove){if(onRemove)return h('div',{class:'adeck'},picks.map((k,i)=>h('div',{class:'arow r'+CARDS[k].r+(removed.indexOf(i)>=0?' selected':''),onclick:()=>onRemove(i),oncontextmenu:e=>{e.preventDefault();showCard(k)}},
-    h('b',{class:'acost'},String(CARDS[k].c)),h('span',{class:'aav'},miniAv(k)),h('span',{class:'anm'},fullName(k)),h('em',null,removed.indexOf(i)>=0?'À remplacer':'Garder'))));
+// tri commun des listes d'Arène : coût croissant, puis légendaires > rares > communes, puis nom
+const ARROW_SORT=(a,b)=>CARDS[a].c-CARDS[b].c||CARDS[b].r-CARDS[a].r||fullName(a).localeCompare(fullName(b));
+function arenaDeckList(picks,removed,onRemove){if(onRemove)return h('div',{class:'adeck'},picks.map((k,i)=>[k,i]).sort((x,y)=>ARROW_SORT(x[0],y[0])).map(([k,i])=>h('div',{class:'arow r'+CARDS[k].r+(removed.indexOf(i)>=0?' selected':''),onclick:()=>onRemove(i),oncontextmenu:e=>{e.preventDefault();showCard(k)}},
+    h('b',{class:'acost'},String(CARDS[k].c)),h('span',{class:'aav'},miniAv(k)),h('span',{class:'anm'},fullName(k)),CARDS[k].r===3?legBadge():null,h('em',null,removed.indexOf(i)>=0?'À remplacer':'Garder'))));
   const c={};picks.forEach(k=>c[k]=(c[k]||0)+1);
-  const ks=Object.keys(c).sort((a,b)=>CARDS[a].c-CARDS[b].c||CARDS[b].r-CARDS[a].r||fullName(a).localeCompare(fullName(b)));
+  const ks=Object.keys(c).sort(ARROW_SORT);
   return h('div',{class:'adeck'},ks.map(k=>h('div',{class:'arow r'+CARDS[k].r,onclick:()=>showCard(k),oncontextmenu:e=>{e.preventDefault();showCard(k)}},
-    h('b',{class:'acost'},String(CARDS[k].c)),h('span',{class:'aav'},miniAv(k)),h('span',{class:'anm'},fullName(k)),c[k]>1?h('em',null,'×'+c[k]):null)))}
+    h('b',{class:'acost'},String(CARDS[k].c)),h('span',{class:'aav'},miniAv(k)),h('span',{class:'anm'},fullName(k)),CARDS[k].r===3?legBadge():null,c[k]>1?h('em',null,'×'+c[k]):null)))}
 function vArena(v){
   arenaCheckStale();arenaLeaderboardBackfillLast();const A=S.arena,r=A.run;
   const rules=h('div',{class:'sm mut',style:'line-height:1.55'},

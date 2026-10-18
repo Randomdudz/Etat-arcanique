@@ -74,6 +74,8 @@ function memEl(k){return h('span',{class:'mem',style:'border-color:'+RCOL[CARDS[
 // versions existantes d'un personnage (les nouveaux n'ont pas encore leurs 3 raretés)
 function versOf(b){return[1,2,3].filter(r=>CARDS[b+r])}
 function baseEl(b){const B=BASES[b],k0=b+versOf(b)[0];return h('span',{class:'mem',onclick:()=>showCard(k0)},miniAv(k0),B.n,h('span',{class:'rd'},versOf(b).map(r=>h('i',{style:'background:'+RCOL[r]}))))}
+// pastille « Légendaire » : les légendaires se repèrent d'un coup d'œil dans les listes et résumés de deck
+function legBadge(){return h('span',{class:'legt',title:'Carte légendaire'},'★ Légendaire')}
 function facTiers(f,n){const F=FAC[f];
   return h('div',{class:'tiers',style:'--gc:'+F.c},F.tiers.map(t=>h('div',{class:'tier'+(n>=t[0]?' on':'')},h('span',{class:'tn'},'×'+t[0]),h('span',null,t[1]))))}
 function facTag(f,n){if(n<2)return null;

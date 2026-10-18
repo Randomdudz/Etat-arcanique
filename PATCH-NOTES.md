@@ -2,6 +2,15 @@
 
 Journal des mises à jour, la plus récente en premier. Les annonces détaillées des grandes versions restent en dessous.
 
+## v3.9.10 — 18/10/2026
+
+### Interface — listes de deck : tri par coût, légendaires bien visibles
+- Les listes et résumés de deck trient les cartes **par coût croissant** (à coût égal : légendaire, puis rare, puis
+  commune, puis ordre alphabétique). C’était déjà le cas du deck dans l’éditeur et du récapitulatif d’Arène ; la
+  liste des **remplaçantes** de l’Arène, jusqu’ici dans l’ordre du draft, est désormais triée elle aussi.
+- Les **légendaires** se repèrent d’un coup d’œil partout : pastille dorée « ★ Légendaire », nom en doré et ligne
+  légèrement teintée dans l’éditeur de deck, nom doré dans les listes d’Arène.
+
 ## v3.9.9 — 18/10/2026
 
 ### Duels & Arène — l’IA experte joue à cartes ouvertes (et sans gaspillage)
