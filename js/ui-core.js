@@ -38,7 +38,12 @@ const ICONS={
  pen:'<path d="M4 20 L5 15 L16 4 L20 8 L9 19Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M13.5 6.5 L17.5 10.5" stroke="currentColor" stroke-width="2"/>'};
 function ico(n,cls){const e=document.createElement('span');e.className='icw'+(cls?' '+cls:'');e.style.display='contents';
   e.innerHTML='<svg class="ic" viewBox="0 0 24 24" aria-hidden="true">'+(ICONS[n]||'')+'</svg>';return e.firstChild}
-const EMBLEM='<svg viewBox="0 0 64 64"><defs><linearGradient id="lgE" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fbeec4"/><stop offset=".55" stop-color="#e2c072"/><stop offset="1" stop-color="#a77c35"/></linearGradient></defs><circle cx="32" cy="32" r="17" fill="none" stroke="url(#lgE)" stroke-width="2"/><polygon points="32.0,2.0 35.1,24.6 41.2,22.8 39.4,28.9 62.0,32.0 39.4,35.1 41.2,41.2 35.1,39.4 32.0,62.0 28.9,39.4 22.8,41.2 24.6,35.1 2.0,32.0 24.6,28.9 22.8,22.8 28.9,24.6" fill="url(#lgE)" stroke="#3a2a12" stroke-width=".9"/><circle cx="32" cy="32" r="4.2" fill="#fff2c8"/></svg>';
+// illustrations de l'interface (png/ui) : emblème, ressources, mots-clés
+function uiSrc(n){return 'png/ui/'+n+'.webp?v='+(typeof APPV!=='undefined'?APPV:'')}
+function uiIco(n,cls){return h('img',{class:'uico'+(cls?' '+cls:''),src:uiSrc(n),alt:'',draggable:'false'})}
+const KWIMG={rempart:1,venin:1,siphon:1,hate:1,egide:1,croissance:1,frenesie:1,afk:1,insolence:1,tilt:1,respawn:1,vip:1,deso:1,cleave:1};
+function kwIco(x){return KWIMG[x]?uiIco('kw-'+x,'kwim'):document.createTextNode(KWI[x]?KWI[x][1]:'')}
+const EMBLEM='<img class="emb" src="png/ui/ui-logo.webp" alt="" draggable="false">';
 
 // ----- terrains, familles, affinités : visuels -----
 // icône d'un jeu : le vrai logo (WoW, Dofus, LoL, CS), l'emoji pour les terrains neutres
@@ -163,8 +168,8 @@ function cardEl(k,o){
   const kwset=E?E.kw:(()=>{const r={};(cd.kw||[]).forEach(x=>r[x]=1);if(cd.cleave)r.cleave=cd.cleave;return r})();
   // icônes des mots-clés : leur définition s'affiche au survol, partout (collection, boosters, défis, duel)
   const kws=KWORDER.filter(x=>kwset[x]||(x==='egide'&&cr&&cr.eg)).map(x=>{const nm=KWI[x][0],d=defOf(nm);
-    return x==='venin'?h('i',{class:'vn kw','data-t':'Venin'+(kwset.venin>1?' '+kwset.venin:''),'data-d':d},'☠'+(kwset.venin>1?kwset.venin:'')):
-      x==='cleave'?h('i',{class:'kw','data-t':'Cleave '+kwset.cleave,'data-d':d},'🪓'+kwset.cleave):h('i',{class:'kw','data-t':nm,'data-d':d},KWI[x][1])});
+    return x==='venin'?h('i',{class:'vn kw','data-t':'Venin'+(kwset.venin>1?' '+kwset.venin:''),'data-d':d},kwIco('venin'),kwset.venin>1?String(kwset.venin):null):
+      x==='cleave'?h('i',{class:'kw','data-t':'Cleave '+kwset.cleave,'data-d':d},kwIco('cleave'),String(kwset.cleave)):h('i',{class:'kw','data-t':nm,'data-d':d},kwIco(x))});
   const vip=!!kwset.vip;
   let a=cd.a,hp=cd.h,ac='',hc='';
   if(isC&&E){a=E.a;hp=E.hp;ac=stc(a,cd.a);hc=stc(hp,cd.h)}

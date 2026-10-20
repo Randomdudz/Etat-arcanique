@@ -5,6 +5,15 @@ Journal des mises à jour, la plus récente en premier. Les annonces détaillée
 <!-- Style des notes : écrire pour les joueurs. Pas de termes techniques (fichiers, serveurs, code, noms de collections) :
      seulement ce qui change en jeu, et comment en profiter. -->
 
+## v3.10.3 — 20/10/2026
+
+### Nouvelles illustrations de l’interface
+- **Plateau** : un tapis de jeu illustré sous les deux camps, de nouvelles cases vides en pierre aux coins dorés et un nouveau dos de carte (pioche, main adverse, animation de pioche).
+- **Ressources** : nouvelles icônes pour les PV, le Démoflux, l’Or, les cartes en main et le cimetière.
+- **Mots-clés** : chaque mot-clé a maintenant son icône illustrée, sur les cartes, dans l’historique, dans les filtres et dans le guide.
+- **Boutique** : un nouveau booster, aussi pendant l’ouverture.
+- **Logo** : un nouvel emblème en haut à gauche, en duel et sur l’écran de connexion.
+
 ## v3.10.2 — 20/10/2026
 
 ### Serveur Minecraft

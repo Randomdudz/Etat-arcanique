@@ -1899,3 +1899,40 @@ body{background:linear-gradient(#080d187a,#080d187a),url("../png/site-background
 /* créature arrivée puis morte avant le prochain affichage (flashLife) */
 .lifec{position:fixed;z-index:64;pointer-events:none;animation:lifein .35s ease-out}
 @keyframes lifein{0%{opacity:0;transform:scale(.85)}100%{opacity:1;transform:none}}
+/* --- illustrations de l'interface (png/ui) --- */
+.uico{width:1.15em;height:1.15em;object-fit:contain;vertical-align:-.22em;filter:drop-shadow(0 1px 2px #000a)}
+.uico.sm{width:1em;height:1em}
+#duel .hero .hst b .uico,#duel .hero .hpn .uico{width:1.25em;height:1.25em;vertical-align:-.28em}
+.card .kws i .kwim,.card .bdg i .kwim{width:1.25em;height:1.25em;vertical-align:-.25em;margin:-.1em 0;filter:drop-shadow(0 .3cqw .5cqw #000)}
+.card .kws i:has(.kwim:only-child){padding-left:.5cqw;padding-right:.5cqw}
+.kwi .kwim,.kchip .kwim{width:1.3em;height:1.3em;vertical-align:-.3em}
+/* dos des cartes : pioche, main adverse, animation de pioche */
+.cardback .ci{background:#0e1830 url("../png/ui/ui-cardback.webp") center/cover no-repeat;box-shadow:inset 0 0 0 .7cqw #0e0a07,0 .9cqw 2.6cqw #000b}
+.cardback .ci::before,.cardback .ci::after{content:none!important}
+/* cases vides du plateau */
+#duel .board.o .slot.empty,#duel .board.m .slot.empty{border:0;background:url("../png/ui/ui-slot.webp") center/100% 100% no-repeat;filter:brightness(.82)}
+#duel .board .slot.empty::before{content:none}
+#duel .board .slot.ter.empty{border:2px solid color-mix(in srgb,var(--tc) 80%,#f8f1e9 8%);background:linear-gradient(color-mix(in srgb,var(--tc) 26%,transparent),color-mix(in srgb,var(--tc) 18%,transparent)),url("../png/ui/ui-slot.webp") center/100% 100% no-repeat;filter:none}
+#duel .board .slot.empty.hi{background:radial-gradient(circle at 50% 50%,#93c4893a,#93c48914 70%),url("../png/ui/ui-slot.webp") center/100% 100% no-repeat;filter:none}
+/* tapis derrière les deux camps */
+#duel .dmat{position:absolute;z-index:0;pointer-events:none;border-radius:14px;background:url("../png/ui/ui-board.webp") center/100% 100% no-repeat;box-shadow:0 20px 50px #000b}
+#duel .field>.zone{position:relative;z-index:1}
+#duel .zopp,#duel .zme{background:linear-gradient(180deg,#0a16286b,#0a16287a)}
+#duel .zmid{background:linear-gradient(180deg,#0c1830b8,#08111fc4)}
+/* booster de la Boutique */
+.pk{background:url("../png/ui/ui-booster.webp") center/contain no-repeat!important;box-shadow:none!important}
+.pk .pl{bottom:7%}
+/* emblème du jeu */
+#top .logo .emb{width:44px;height:44px;flex:none;object-fit:contain;filter:drop-shadow(0 0 8px #e9cd8666)}
+#login .llogo .emb{width:100%;height:100%;object-fit:contain}
+#duel .dlogo .emb{width:34px;height:34px;flex:none;object-fit:contain;filter:drop-shadow(0 0 8px #e9cd8666)}
+@media(max-height:820px){#duel .dlogo .emb{width:28px;height:28px}}
+.card .kws i{display:inline-flex;align-items:center;gap:.6cqw}
+.card .kws i:has(.kwim){background:#0a0f1ab8;border-color:#c9a35a66}
+.card.bd .kws i .kwim{width:11.5cqw;height:11.5cqw;vertical-align:0;margin:0}
+.card.bd .kws i:has(.kwim){padding:.4cqw .8cqw}
+.card.bd .kws i:has(.kwim:only-child){padding:.4cqw}
+.pk::after{inset:0;border-radius:0;-webkit-mask:url("../png/ui/ui-booster.webp") center/contain no-repeat;mask:url("../png/ui/ui-booster.webp") center/contain no-repeat}
+.stage .top{background:url("../png/ui/ui-booster.webp") 50% 0/112.6% auto no-repeat;border:0;box-shadow:0 3px 6px #0007}
+.stage .top::after{display:none}
+.stage .top{left:0;right:0;top:0;height:13%;border-radius:0;background-size:100% auto;box-shadow:none}
