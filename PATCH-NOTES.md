@@ -8,7 +8,7 @@ Journal des mises à jour, la plus récente en premier. Les annonces détaillée
 ## v3.11.2 — 20/10/2026
 
 ### Mots-clés bien visibles sur les cartes
-- Les icônes des mots-clés (Rempart, Tilt, Hâte, Venin, Cleave…) sont beaucoup plus grandes et lumineuses : une pastille ronde cerclée d’or avec un halo, juste sous le nom de la carte. Sur le plateau, elles restent un peu plus petites pour laisser voir l’illustration.
+- Les icônes des mots-clés (Rempart, Tilt, Hâte, Venin, Cleave…) sont beaucoup plus grandes et lumineuses, sans fond, avec un halo pour ressortir sur l’illustration, juste sous le nom de la carte. Sur le plateau, elles restent un peu plus petites pour laisser voir l’illustration.
 
 ## v3.11.1 — 20/10/2026
 
