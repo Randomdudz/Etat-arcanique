@@ -23,7 +23,7 @@ function newGame(cfg){
     rp:0,cs:null,tq:[],tf:0,p:[],shop:[],tdeck:[],tdis:[],nev:0};
   G.first=cfg.first!=null?cfg.first:(rnd(G)<.5?0:1);
   for(let s=0;s<2;s++){
-    const P={nm:(cfg.names&&cfg.names[s])||('Joueur '+(s+1)),hp:o.hp,mhp:o.hp,pz:0,deck:[],hand:[],board:Array(CELLS).fill(null),
+    const P={nm:(cfg.names&&cfg.names[s])||('Joueur '+(s+1)),av:String((cfg.avs&&cfg.avs[s])||'').slice(0,16),hp:o.hp,mhp:o.hp,pz:0,deck:[],hand:[],board:Array(CELLS).fill(null),
       grave:[],terrs:[],cells:Array(CELLS).fill(0),cap:0,eth:0,or:0,fat:0,rsh:0,arts:[],pq:[]};
     P.deck=cfg.decks[s].map(e=>mkCard(G,String(e).replace('*','')));
     shuf(G,P.deck);G.p.push(P)}

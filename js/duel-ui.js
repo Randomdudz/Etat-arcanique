@@ -9,7 +9,7 @@ function newDuelState(x){DUEL=Object.assign({V:null,hist:[],sel:null,info:null,r
 function startAIDuel(di){
   const d=S.decks[di],chk=deckCheck(d);if(!chk.ok){toast('Deck invalide : '+chk.err);return}
   const o=Object.assign({},S.opt),seed=(Math.random()*4294967296)>>>0,ai=bestAIDeckFast(S.coll,seed,o),arch=ai.arch;
-  const G=newGame({names:[S.name||'Moi',AINAMES[rint(0,AINAMES.length-1)]],
+  const G=newGame({names:[S.name||'Moi',AINAMES[rint(0,AINAMES.length-1)]],avs:[S.av||'',avRand()],
     decks:[deckKeys(d.cards),ai.cards],seed,o,mull:true});
   const Hh=HostGame(G,[{kind:'me'},{kind:'ai',W:WGT[ARCH[arch].w],strong:1}],v=>applyView(v));   // duels : même IA experte que l'Arène
   newDuelState({mode:'ai',deck:di,host:Hh,ctl:{act:a=>Hh.act(0,a),resign:()=>Hh.resign(0),close:()=>Hh.close()}});
@@ -20,7 +20,7 @@ function startHostDuel(conn,m,di,opt){
   const arena=!!(opt&&opt.arena),mine=arena?S.arena.run.picks.slice():deckKeys(S.decks[di].cards);   // Arène : les decks draftés, sans limite d'exemplaires
   const lim={};const gd=(Array.isArray(m.deck)?m.deck:[]).filter(e=>{const k=String(e).replace('*','');if(!CARDS[k]||CARDS[k].tok)return false;
     lim[k]=(lim[k]||0)+1;if(!arena&&CARDS[k].r===3&&(lim.$leg=(lim.$leg||0)+1)>LEGMAX)return false;return arena||lim[k]<=LIMIT(CARDS[k].r)}).slice(0,ECON.deck);   // hors Arène : 7 légendaires au plus
-  const G=newGame({names:[S.name||'Moi',String(m.name||'Ami').slice(0,18)],decks:[mine,gd],
+  const G=newGame({names:[S.name||'Moi',String(m.name||'Ami').slice(0,18)],avs:[S.av||'',String(m.av||'')],decks:[mine,gd],
     seed:(Math.random()*4294967296)>>>0,o:opt,mull:true});
   const Hh=HostGame(G,[{kind:'me'},{kind:'net',send:x=>{try{conn.send(x)}catch(e){}}}],v=>applyView(v));
   newDuelState({mode:'host',deck:di,host:Hh,conn,ctl:{act:a=>Hh.act(0,a),resign:()=>Hh.resign(0),close:()=>{Hh.close();try{conn.close()}catch(e){}}}});
@@ -251,7 +251,7 @@ function heroNode(s){
   const st=(cl,lab,val,extra)=>h('div',{class:'hst '+cl},h('span',{class:'hl'},lab),h('b',null,...val),extra||null);
   const ml=mvLeft(V,s),mm=mvMax(V);
   const el=h('div',{class:cls,'data-s':s,'data-i':-1},
-    h('div',{class:'hav'},(P.nm||'?').trim().charAt(0).toUpperCase()),
+    h('div',{class:'hav'+(avOk(P.av)?' img':''),title:avOk(P.av)?AVK[P.av]:null},avOk(P.av)?h('img',{src:uiSrc('av-'+P.av),alt:'',draggable:'false'}):(P.nm||'?').trim().charAt(0).toUpperCase()),
     h('div',{class:'hid'},
       h('div',{class:'hrow'},h('div',{class:'hn'},P.nm)),
       h('div',{class:'hpl'},h('span',{class:'hl'},'Points de vie'),h('div',{class:'hbar'},h('i',{style:'width:'+pct+'%'})),h('b',{class:'hpn'},uiIco('ico-pv'),' '+P.hp,h('small',null,'/'+P.mhp)))),
@@ -271,7 +271,7 @@ function fxNode(s,el){
   if(!fs.length){el.append(h('span',{class:'none'},s===V.me?'Synergies : pose 2 créatures de la même famille.':'Aucune synergie en jeu.'));return}
   for(const f of fs){const F=FAC[f],n=cnt[f],tag=facTag(f,n);
     const c=h('div',{class:'fx'+(n>=2?' on':''),style:'--fc:'+F.c,title:F.n+' — '+F.sum,'data-f':f},
-      h('span',{class:'fi'},F.ic),h('span',null,F.n),
+      h('span',{class:'fi'},famIco(f)),h('span',null,F.n),
       h('span',{class:'pp'},Array.from({length:Math.max(3,n)},(_,j)=>h('i',{class:j<n?'f':''}))),
       tag?h('span',{class:'tag'},tag):null);
     c.addEventListener('click',e=>{e.stopPropagation();cardPop({fac:f,s},e.clientX,e.clientY)});      // clic : fiche de la famille
@@ -455,7 +455,7 @@ function famHover(k,on){
   const V=DUEL&&DUEL.V,cnt=V?fl(V,V.me):{};
   for(const f of fs){const F=FAC[f],n=cnt[f]||0;let pill=fm.querySelector('.fx[data-f="'+f+'"]');
     if(!pill&&add){fm.querySelectorAll('.none').forEach(e=>e.hidden=true);
-      pill=h('div',{class:'fx ghost',style:'--fc:'+F.c,'data-f':f},h('span',{class:'fi'},F.ic),h('span',null,F.n),h('span',{class:'pp'},Array.from({length:3},()=>h('i'))));fm.append(pill)}
+      pill=h('div',{class:'fx ghost',style:'--fc:'+F.c,'data-f':f},h('span',{class:'fi'},famIco(f)),h('span',null,F.n),h('span',{class:'pp'},Array.from({length:3},()=>h('i'))));fm.append(pill)}
     if(pill){pill.classList.add('hot');
       if(add){const dots=pill.querySelectorAll('.pp i');if(dots[n])dots[n].classList.add('gh');else pill.querySelector('.pp').append(h('i',{class:'gh nw'}));
         const t2=facTag(f,n+1);if(t2&&t2!==facTag(f,n))pill.append(h('span',{class:'tag nx'},'→ '+t2))}}
@@ -595,7 +595,7 @@ function facDetail(I){
   const V=DUEL.V,f=I.fac,F=FAC[f],P=V.p[I.s],mem=[];
   P.board.forEach(c=>{if(c&&CARDS[c.k].fac.indexOf(f)>=0)mem.push(c.k)});
   const n=mem.length,t=facTier(f,n);
-  return[h('h4',null,F.ic+' '+F.n),
+  return[h('h4',null,famIco(f),' '+F.n),
     h('div',{class:'pd'},F.sum),
     h('div',{class:'mut sm'},(I.s===V.me?'Sur ton plateau':'Sur son plateau')+' : '+n+' créature'+(n>1?'s':'')+(t?' → palier ×'+t[0]+' actif.':' → il en faut 2 pour activer la famille.')),
     facTiers(f,n),h('div',{class:'members'},mem.map(memEl))]}
@@ -814,7 +814,7 @@ function ctxInfo(t){
   return null}
 function cardPop(I,x,y){
   closePop();const D=DUEL,V=D.V,me=V.me;let left=null,right=[];
-  if(I.fac){const F=FAC[I.fac];left=h('div',{class:'fbadge',style:'--gc:'+F.c+';margin:0 auto'},F.ic);right=facDetail(I)}
+  if(I.fac){const F=FAC[I.fac];left=h('div',{class:'fbadge',style:'--gc:'+F.c+';margin:0 auto'},famIco(I.fac));right=facDetail(I)}
   else if(I.terr||I.shop!=null){const ctx=I.terr?{t:I.terr,s:I.s,at:null,placed:true}:{t:V.shop[I.shop],cost:terrCost(V,me,V.shop[I.shop]),s:me,at:null,n:I.shop,buy:true};
     if(!ctx.t)return;left=tcardEl(ctx.t,{cost:ctx.cost});right=terrDetail(ctx)}
   else if(I.k&&CARDS[I.k]){left=cardEl(I.k,{big:true});right=cardNodes(I)}
@@ -837,7 +837,7 @@ document.addEventListener('contextmenu',e=>{
 let HOV={el:null,t:0};
 function hovOff(){clearTimeout(HOV.t);HOV.t=0;HOV.el=null;$$('.cpop.hov').forEach(x=>x.remove())}
 function hovParts(I){const V=DUEL.V,me=V.me;
-  if(I.fac){const F=FAC[I.fac];return[h('div',{class:'fbadge',style:'--gc:'+F.c+';margin:0 auto'},F.ic),facDetail(I)]}
+  if(I.fac){const F=FAC[I.fac];return[h('div',{class:'fbadge',style:'--gc:'+F.c+';margin:0 auto'},famIco(I.fac)),facDetail(I)]}
   if(I.terr||I.shop!=null){const t=I.terr||V.shop[I.shop];if(!t)return null;const td=TD[t.d],g=GAMES[td.g],cost=I.shop!=null?terrCost(V,me,t):null;
     return[tcardEl(t,{cost}),[h('h4',null,gi(td.g),' '+td.n),h('div',{class:'mut sm'},'Terrain '+g.n+' · '+td.size+' case'+(td.size>1?'s':'')+(cost!=null?' · 🪙 '+cost:'')),terrFxEl(td),
       I.terr&&t.lk?h('div',{class:'sm',style:'margin-top:6px;color:#9cc8e8'},'🔒 Indestructible, recouvrable : il fond quand Kirua, la reine des neiges quitte le plateau.'):null,
@@ -889,7 +889,7 @@ function proj(from,to,col,icon,delay,dur){
 // annonce de famille au-dessus du plateau + halo sur les membres
 function famBurst(s,f,sub,delay){
   setTimeout(()=>{const V=DUEL&&DUEL.V;if(!V)return;const F=FAC[f],B=$(s===V.me?'#bMe':'#bOpp');if(!B)return;const r=B.getBoundingClientRect();
-    const b=h('div',{class:'fburst',style:'--fc:'+F.c+';left:'+(r.left+r.width/2)+'px;top:'+(r.top+r.height/2)+'px'},h('span',{class:'fi'},F.ic),h('span',null,F.n,h('br'),h('small',null,sub)));
+    const b=h('div',{class:'fburst',style:'--fc:'+F.c+';left:'+(r.left+r.width/2)+'px;top:'+(r.top+r.height/2)+'px'},h('span',{class:'fi'},famIco(f)),h('span',null,F.n,h('br'),h('small',null,sub)));
     document.body.append(b);setTimeout(()=>b.remove(),1750*ANIM);
     const chip=famEl(s,f);if(chip&&chip.classList.contains('fx')){chip.classList.remove('fxp');void chip.offsetWidth;chip.classList.add('fxp')}
     $$('.slot[data-s="'+s+'"]').forEach(sl=>{const c=sl.firstElementChild;if(c&&c.classList.contains('card')&&CARDS[c.dataset.k]&&CARDS[c.dataset.k].fac.indexOf(f)>=0){
@@ -1050,7 +1050,7 @@ function mini(k,st){const cd=CARDS[k];if(!cd)return h('span',{class:'mi'},'?');s
 function heroChip(s){const V=DUEL.V,P=V.p[s];return h('span',{class:'mi hch'+(s===V.me?' me':' op')},h('u',null,(P.nm||'?').charAt(0).toUpperCase()),s===V.me?'Toi':P.nm)}
 function tgChip(s,i,k,st){return i<0?heroChip(s):mini(k,st)}
 function terrChip(d){const t=TD[d];if(!t)return h('span',{class:'mut'},'terrain');const g=GAMES[t.g];return chip(gi(t.g),t.n,g.c,'Terrain '+g.n+' — '+t.n)}
-function facChip(f){const F=FAC[f];return F?chip(F.ic,F.n,F.c,'Famille '+F.n):null}
+function facChip(f){const F=FAC[f];return F?chip(famIco(f),F.n,F.c,'Famille '+F.n):null}
 // d'où vient un effet : une carte, un terrain (« T:xxx »), une famille, le Venin, la Fatigue ou un événement
 function srcChip(src){
   if(!src)return null;

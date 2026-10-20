@@ -5,6 +5,18 @@ Journal des mises à jour, la plus récente en premier. Les annonces détaillée
 <!-- Style des notes : écrire pour les joueurs. Pas de termes techniques (fichiers, serveurs, code, noms de collections) :
      seulement ce qui change en jeu, et comment en profiter. -->
 
+## v3.11.0 — 20/10/2026
+
+### Avatars
+- Choisis ton **avatar** dans **Compte** : Archimage, Chevalier, Voleuse, Nain, Nécromancien, Orc, Prêtresse, Pirate, Samouraï, Gobelin geek ou Dragonnet.
+- Il remplace l’initiale de ton pseudo dans le rond de ton héros en duel. Ton adversaire le voit aussi en ligne, et l’IA prend un avatar au hasard.
+
+### Accueil illustré
+- Les 4 grandes cartes de l’accueil ont de nouveaux encarts, médaillons, bandeaux et boutons illustrés.
+
+### Familles
+- Les 8 familles ont de nouvelles icônes illustrées, sur les cartes, en duel, dans les filtres et dans les infobulles.
+
 ## v3.10.4 — 20/10/2026
 
 ### Accueil
