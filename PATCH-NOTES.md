@@ -8,7 +8,7 @@ Journal des mises à jour, la plus récente en premier. Les annonces détaillée
 ## v3.10.4 — 20/10/2026
 
 ### Accueil
-- L’icône et le texte des boutons des 4 grandes cartes sont centrés dans le bouton.
+- Les boutons des 4 grandes cartes sont placés au milieu de l’espace sous le texte, et non plus collés en bas de la carte. Leur icône et leur texte sont centrés.
 - La carte « Jouer » le dit maintenant : l’IA est **plus forte que jamais**.
 
 ## v3.10.3 — 20/10/2026

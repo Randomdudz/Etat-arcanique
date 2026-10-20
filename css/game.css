@@ -1939,3 +1939,4 @@ body{background:linear-gradient(#080d187a,#080d187a),url("../png/site-background
 /* accueil : icône et texte des boutons centrés ensemble dans le bouton */
 .hm-btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:11px 22px}
 .hm-btn::before{position:static;transform:none;flex:none}
+.hm-btn{margin-top:auto;margin-bottom:auto}   /* au milieu de l'espace libre sous le texte, pas collé en bas */
