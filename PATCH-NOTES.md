@@ -5,6 +5,11 @@ Journal des mises à jour, la plus récente en premier. Les annonces détaillée
 <!-- Style des notes : écrire pour les joueurs. Pas de termes techniques (fichiers, serveurs, code, noms de collections) :
      seulement ce qui change en jeu, et comment en profiter. -->
 
+## v3.9.16 — 20/10/2026
+
+### 26 sorts ont une nouvelle illustration
+- Achat compulsif, @everyone, Ban, Clutch, Flash, Headshot, Kick, Vol low-cost et 18 autres sorts passent aux vraies illustrations, dans le même style que les personnages.
+
 ## v3.9.15 — 20/10/2026
 
 ### 62 nouvelles illustrations
