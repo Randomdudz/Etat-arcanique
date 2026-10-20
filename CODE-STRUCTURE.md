@@ -14,6 +14,7 @@ Le jeu reste un site statique : GitHub Pages publie les fichiers tels quels, et 
 - `js/network.js` : PeerJS, défis et échanges entre joueurs.
 - `js/ui-core.js` : outils d’interface, modales et composants partagés.
 - `js/duel-ui.js` : affichage et interactions du duel.
+- `js/fx.js` : effets visuels du duel (calque de particules : impacts, morts, soins, bonus, Venin, Cleave, arrivées).
 - `js/menus.js` : écrans Jouer, Boutique, Collection, Decks, Amis et Compte.
 - `js/arena.js` : draft, courses, matchmaking et interface de l’Arène.
 - `png/` : illustrations, boutons, arrière-plans et autres images.

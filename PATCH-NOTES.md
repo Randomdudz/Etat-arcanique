@@ -5,6 +5,16 @@ Journal des mises à jour, la plus récente en premier. Les annonces détaillée
 <!-- Style des notes : écrire pour les joueurs. Pas de termes techniques (fichiers, serveurs, code, noms de collections) :
      seulement ce qui change en jeu, et comment en profiter. -->
 
+## v3.10.0 — 20/10/2026
+
+### Combats plus spectaculaires
+- **Attaques** : la créature prend son élan, fonce sur sa cible et marque un temps d’arrêt à l’impact. La carte touchée devient blanche un instant et des étincelles jaillissent.
+- **Gros coups** : à partir de 5 dégâts (3 sur un héros), le plateau tremble.
+- **Morts** : la carte vole en éclats dans un nuage de fumée et de braises. Les cartes bannies partent en éclats bleutés.
+- **Effets visibles** : particules vertes qui montent pour les soins, étincelles dorées pour les bonus, violettes qui tombent pour les malus, gouttes vertes pour le Venin, arc de lame pour Cleave, éclairs bleus pour Hâte, gerbe rouge pour le Tilt, cercle doré et poussière quand une créature arrive.
+- Les deux joueurs voient les mêmes effets en ligne.
+- Tu trouves ça trop chargé ? **☰ → Effets visuels réduits** remet les animations sobres. Elles sont aussi réduites automatiquement si ton appareil demande moins d’animations.
+
 ## v3.9.19 — 20/10/2026
 
 ### Main réparée
