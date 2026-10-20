@@ -1,5 +1,5 @@
 // ============ HÔTE DE PARTIE (IA locale ou en ligne) + RÉSEAU PEERJS ============
-const APPV='3.9.17';
+const APPV='3.9.18';
 const ANIM=1.6;                                             // vitesse des animations du duel (1 = ancienne vitesse ; plus grand = plus lent)
 function peerId(code){return 'etat-arcanique-'+String(code).replace('ARCANE-','').toLowerCase()}
 function validCode(c){return /^ARCANE-[A-Z0-9]{6}$/.test(String(c||'').trim().toUpperCase())}

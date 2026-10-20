@@ -5,6 +5,11 @@ Journal des mises à jour, la plus récente en premier. Les annonces détaillée
 <!-- Style des notes : écrire pour les joueurs. Pas de termes techniques (fichiers, serveurs, code, noms de collections) :
      seulement ce qui change en jeu, et comment en profiter. -->
 
+## v3.9.18 — 20/10/2026
+
+### Les nouvelles illustrations s’affichent tout de suite
+- Certaines cartes pouvaient garder leur ancienne image tant que le navigateur l’avait en mémoire (Nitro, Webhook…). Les illustrations se rechargent maintenant à chaque nouvelle version du jeu.
+
 ## v3.9.17 — 20/10/2026
 
 ### Tous les sorts ont maintenant leur illustration
