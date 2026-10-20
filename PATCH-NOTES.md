@@ -5,6 +5,11 @@ Journal des mises à jour, la plus récente en premier. Les annonces détaillée
 <!-- Style des notes : écrire pour les joueurs. Pas de termes techniques (fichiers, serveurs, code, noms de collections) :
      seulement ce qui change en jeu, et comment en profiter. -->
 
+## v3.9.17 — 20/10/2026
+
+### 29 autres sorts ont leur illustration
+- Nerf, Nitro, Pizza Party, Slowmode, Smurf, Coup de valise, Nostalgie, C’était mieux avant et 21 autres sorts passent aux vraies illustrations.
+
 ## v3.9.16 — 20/10/2026
 
 ### 26 sorts ont une nouvelle illustration
