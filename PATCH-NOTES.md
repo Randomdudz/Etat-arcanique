@@ -5,6 +5,19 @@ Journal des mises à jour, la plus récente en premier. Les annonces détaillée
 <!-- Style des notes : écrire pour les joueurs. Pas de termes techniques (fichiers, serveurs, code, noms de collections) :
      seulement ce qui change en jeu, et comment en profiter. -->
 
+## v3.11.1 — 20/10/2026
+
+### Avatars partout
+- Ton avatar apparaît aussi dans la barre du haut, dans « Mon profil » (clique dessus pour en changer), dans le chat et quand quelqu’un te défie.
+- Tes amis apparaissent avec leur avatar dans ta liste d’amis, dès qu’ils sont en ligne ou t’écrivent.
+
+### Historique plus clair
+- Les cartes citées sont maintenant de petites cartes avec leur illustration, leur ATK et leurs PV au moment de l’action : en vert au-dessus de la valeur d’origine, en rouge en dessous ou si elles sont blessées.
+- Les joueurs apparaissent avec leur avatar, les actions avec leurs icônes (attaque, Venin, Tilt, Égide, Respawn, mort…), et les textes sont plus courts.
+
+### Nouvelles icônes partout
+- Démoflux, Or et PV ont leur icône illustrée dans le guide des mots-clés, les règles, les chiffres qui s’affichent pendant les combats, l’historique, la boutique de terrains, les coûts et les messages.
+
 ## v3.11.0 — 20/10/2026
 
 ### Avatars

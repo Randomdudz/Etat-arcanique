@@ -1979,3 +1979,39 @@ body{background:linear-gradient(#080d187a,#080d187a),url("../png/site-background
 .hm-desc{margin-top:30px}
 #duel .hav.img{width:46px;height:46px}
 @media(max-height:820px){#duel .hav.img{width:36px;height:36px}}
+/* icônes Démoflux / Or / PV dans les textes, chiffres flottants, historique et projectiles */
+.uico.ti{width:1.1em;height:1.1em;vertical-align:-.2em;margin:0 .05em}
+.pop .uico.ti{width:1.05em;height:1.05em;vertical-align:-.15em;filter:drop-shadow(0 2px 3px #000)}
+.proj .uico.pj{width:26px;height:26px;display:block}
+#hlist .vb .uico.ti{width:1.15em;height:1.15em}
+.kwrow b .uico.kwim{width:1.3em;height:1.3em;vertical-align:-.3em;margin-right:4px}
+/* avatars hors duel : barre du haut, amis, chat, défis */
+.avs{display:inline-grid;place-items:center;flex:none;border-radius:50%;overflow:hidden;font-family:var(--disp);font-weight:700;color:#f3e7cc;border:2px solid #d8b56c;background:radial-gradient(circle at 50% 30%,#22426e,#0b1a30 70%)}
+.avs img{width:100%;height:100%;object-fit:cover;display:block}
+#top #pname{display:inline-flex;align-items:center;gap:8px;max-width:200px}
+#top #pname>span:last-child{overflow:hidden;text-overflow:ellipsis}
+.avs.tav{width:32px;height:32px;font-size:15px;border-width:1.5px}
+.avs.fav.sm{width:26px;height:26px;font-size:12px;border-width:1.5px}
+#fchat .fch{display:flex;align-items:center;gap:8px}
+.chalh{display:flex;align-items:center;gap:12px}
+.chalh .avs{width:52px;height:52px;font-size:22px}
+#top #pname{flex:0 0 auto;overflow:visible}
+#top #pname>span:last-child{max-width:110px;white-space:nowrap}
+.myprof{display:flex;align-items:center;gap:12px}
+.myprof .avs{width:54px;height:54px;font-size:24px;cursor:pointer}
+@media(max-width:1600px){#top #pname>span:last-child{display:none}}
+/* --- historique : petites cartes, avatars, icônes --- */
+.mi.mc{gap:5px;padding:1px 7px 1px 1px;border-radius:6px;background:#0a1220d9;border:1px solid color-mix(in srgb,var(--mc) 70%,#000)}
+.mth{position:relative;flex:none;width:24px;height:34px;border-radius:3px;background:#423c34 center 22%/cover no-repeat;border:1.5px solid var(--mc,#8a7a5a);box-shadow:0 1px 3px #000a;display:grid;place-items:center}
+.mth.sp{border-radius:3px 3px 8px 8px}
+.mth i{font-style:normal;font-size:13px}
+.mth b{position:absolute;bottom:-3px;min-width:11px;height:11px;padding:0 2px;border-radius:6px;font-size:8.5px;line-height:11px;text-align:center;font-weight:900;color:#f3e7cc;background:#120c06;border:1px solid #c9a35a99}
+.mth b.ma{left:-4px}.mth b.mh{right:-4px}
+.mth b.up{color:#8fe27c;border-color:#8fe27caa}.mth b.dn{color:#ff7c6c;border-color:#ff7c6caa}
+.mi.mc .mn{max-width:110px;overflow:hidden;text-overflow:ellipsis}
+.mi.hch{gap:5px;padding:1px 8px 1px 1px}
+.avs.hc{width:22px;height:22px;font-size:11px;border-width:1.5px}
+.hwho{display:flex;align-items:center;gap:6px}
+.avs.hw{width:20px;height:20px;font-size:10px;border-width:1.5px}
+#hlist .vb .uico.ti{width:1.3em;height:1.3em;vertical-align:-.3em}
+#hlist .hr{align-items:center}

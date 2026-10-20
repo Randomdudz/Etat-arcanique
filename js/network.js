@@ -1,5 +1,5 @@
 // ============ HÔTE DE PARTIE (IA locale ou en ligne) + RÉSEAU PEERJS ============
-const APPV='3.11.0';
+const APPV='3.11.1';
 const ANIM=1.78;                                            // vitesse des animations du duel (1 = ancienne vitesse ; plus grand = plus lent)
 function peerId(code){return 'etat-arcanique-'+String(code).replace('ARCANE-','').toLowerCase()}
 function validCode(c){return /^ARCANE-[A-Z0-9]{6}$/.test(String(c||'').trim().toUpperCase())}
@@ -85,7 +85,7 @@ function pingFriend(code,cb){
 function onIncoming(c){
   c.on('data',m=>{
     if(!m||!m.t)return;
-    if(m.t==='ping'){try{c.send({t:'pong',name:S.name,busy:!!window.DUEL})}catch(e){}return}
+    if(m.t==='ping'){try{c.send({t:'pong',name:S.name,av:S.av||'',busy:!!window.DUEL})}catch(e){}return}
     if(m.t==='chal'){
       if(window.DUEL||window.CHALLENGE_UI||window.TRADE_UI){try{c.send({t:'busy'})}catch(e){}return}
       if(typeof onChallenge==='function')onChallenge(c,m);return}
@@ -102,7 +102,7 @@ function sendChallenge(friend,deckInfo,opt,cbs){
   const t=setTimeout(()=>fail(friend.name+' est hors ligne (ou n’a pas ouvert le jeu).'),9000);
   NET.tries[id]=()=>fail(friend.name+' est hors ligne (ou n’a pas ouvert le jeu).');
   try{c=NET.peer.connect(id,{reliable:true})}catch(e){fail('Connexion impossible.');return null}
-  c.on('open',()=>{clearTimeout(t);delete NET.tries[id];c.send({t:'chal',name:S.name,code:S.code,o:opt,ver:APPV})});
+  c.on('open',()=>{clearTimeout(t);delete NET.tries[id];c.send({t:'chal',name:S.name,av:S.av||'',code:S.code,o:opt,ver:APPV})});
   c.on('data',m=>{
     if(!m)return;
     if(m.t==='busy'){done=true;cbs.fail(friend.name+' est déjà occupé(e).');try{c.close()}catch(e){}}
@@ -119,7 +119,7 @@ function sendMsg(friend,text,cb){
   const fin=v=>{if(done)return;done=true;clearTimeout(t);delete NET.tries[id];try{c&&c.close()}catch(e){}cb(v)};
   const t=setTimeout(()=>fin(false),7000);NET.tries[id]=()=>fin(false);
   try{c=NET.peer.connect(id,{reliable:true})}catch(e){return fin(false)}
-  c.on('open',()=>{try{c.send({t:'msg',name:S.name,code:S.code,m:String(text).slice(0,300)})}catch(e){fin(false)}});
+  c.on('open',()=>{try{c.send({t:'msg',name:S.name,av:S.av||'',code:S.code,m:String(text).slice(0,300)})}catch(e){fin(false)}});
   c.on('data',m=>{if(m&&m.t==='msgok')fin(true)});c.on('error',()=>fin(false))}
 // côté initiateur d'un échange : envoie la proposition et attend la réponse (accepté / refusé / occupé)
 function sendTrade(friend,cbs){
@@ -129,7 +129,7 @@ function sendTrade(friend,cbs){
   const fail=m=>{if(done)return;done=true;clearTimeout(t);delete NET.tries[id];try{c&&c.close()}catch(e){}cbs.fail(m)};
   const t=setTimeout(()=>fail(off),9000);NET.tries[id]=()=>fail(off);
   try{c=NET.peer.connect(id,{reliable:true})}catch(e){fail('Connexion impossible.');return null}
-  c.on('open',()=>{clearTimeout(t);delete NET.tries[id];try{c.send({t:'trade',name:S.name,code:S.code,ver:APPV})}catch(e){fail('Erreur de connexion.')}});
+  c.on('open',()=>{clearTimeout(t);delete NET.tries[id];try{c.send({t:'trade',name:S.name,av:S.av||'',code:S.code,ver:APPV})}catch(e){fail('Erreur de connexion.')}});
   c.on('data',m=>{
     if(!m||done)return;
     if(m.t==='busy'){done=true;cbs.fail(friend.name+' est occupé(e) (duel ou autre échange).');try{c.close()}catch(e){}}

@@ -46,7 +46,13 @@ const KWIMG={rempart:1,venin:1,siphon:1,hate:1,egide:1,croissance:1,frenesie:1,a
 const AVATARS=[['mage','Archimage'],['chevalier','Chevalier'],['voleuse','Voleuse'],['nain','Nain'],['necro','Nécromancien'],['orc','Orc'],['pretresse','Prêtresse'],['pirate','Pirate'],['samourai','Samouraï'],['gobelin','Gobelin geek'],['dragon','Dragonnet']];
 const AVK={};AVATARS.forEach(a=>AVK[a[0]]=a[1]);
 function avOk(k){return typeof k==='string'&&!!AVK[k]}
+// petit rond : l'avatar, sinon l'initiale du pseudo (barre du haut, amis, chat, défis)
+function avEl(av,name,cls){return h('span',{class:'avs'+(cls?' '+cls:''),title:avOk(av)?AVK[av]:null},avOk(av)?h('img',{src:uiSrc('av-'+av),alt:'',draggable:'false'}):(String(name||'?').trim().charAt(0).toUpperCase()||'?'))}
 function avRand(){return AVATARS[rint(0,AVATARS.length-1)][0]}
+// texte avec ◆ / 🪙 / ♥ : les symboles deviennent les icônes illustrées (Démoflux, Or, PV)
+const ICOTX={'◆':'ico-demoflux','🪙':'ico-or','♥':'ico-pv'};
+function icoText(s){if(Array.isArray(s))return s.map(icoText);if(typeof s!=='string'||!/[◆♥]|🪙/u.test(s))return s;
+  return s.split(/([◆♥]|🪙)/u).filter(x=>x!=='').map(x=>ICOTX[x]?uiIco(ICOTX[x],'ti'):x)}
 function kwIco(x){return KWIMG[x]?uiIco('kw-'+x,'kwim'):document.createTextNode(KWI[x]?KWI[x][1]:'')}
 const EMBLEM='<img class="emb" src="png/ui/ui-logo.webp" alt="" draggable="false">';
 
@@ -77,7 +83,7 @@ function terrFxEl(t){
     h('div',{class:'tier on'},h('span',{class:'tn'},gi(t.g),' 2'),h('span',null,t.t2)),
     h('div',{class:'tier'},h('span',{class:'tn'},gi(t.g),' 0'),h('span',{class:'mut'},'Affinité 0 : aucun effet.')))}
 function tcardEl(t,o){o=o||{};const td=TD[t.d],g=GAMES[td.g];
-  return h('div',{class:'tcard'+(td.img?' wimg':''),style:'--gc:'+g.c},o.cost!=null?h('span',{class:'tp'},'🪙'+o.cost):null,
+  return h('div',{class:'tcard'+(td.img?' wimg':''),style:'--gc:'+g.c},o.cost!=null?h('span',{class:'tp'},uiIco('ico-or','ti'),String(o.cost)):null,
     td.img?h('div',{class:'timg'},h('img',{src:td.img,alt:'',draggable:'false'})):null,h('span',{class:'tg'},gi(td.g)),h('b',null,td.n),szEl(td.size))}
 function miniAv(k){const cd=CARDS[k],a=artOf(k);return a?h('img',{src:a,alt:''}):h('u',{style:'background:'+(cd.col||'#423c34')},cd.sym||'✦')}
 function memEl(k){return h('span',{class:'mem',style:'border-color:'+RCOL[CARDS[k].r],onclick:()=>showCard(k)},miniAv(k),fullName(k))}
@@ -238,7 +244,7 @@ document.addEventListener('pointerout',e=>{const w=e.target.closest&&e.target.cl
 
 // ----- messages -----
 let toastT=0;
-function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('on'),2400)}
+function toast(m){const t=$('#toast');t.replaceChildren(...[].concat(icoText(String(m))));t.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('on'),2400)}
 function modal(node,opt){
   const m=$('#modal');m.innerHTML='';const box=h('div',{class:'mbox'},node);m.append(box);m.classList.add('on');
   m.onclick=e=>{if(e.target===m&&!(opt&&opt.sticky))closeModal()};return box}
