@@ -45,7 +45,7 @@ const EMBLEM='<svg viewBox="0 0 64 64"><defs><linearGradient id="lgE" x1="0" y1=
 // icônes des jeux et illustrations en URL blob: : chaque image est décodée une seule fois, et les grilles de 140 cartes ne recopient plus des chaînes de plusieurs Ko
 const blobURL=(data,type)=>{try{return URL.createObjectURL(new Blob([data],{type}))}catch(e){return null}};
 const GURI={};for(const g in GSVG)GURI[g]=blobURL(GSVG[g],'image/svg+xml')||'data:image/svg+xml,'+encodeURIComponent(GSVG[g]);
-(()=>{for(const k in ART){const v=ART[k],i=v.indexOf(',');if(!v.startsWith('data:')||v.slice(i-7,i)!==';base64')continue;
+(()=>{for(const k in ART){const v=ART[k],i=v.indexOf(',');if(!v.startsWith('data:')){ART[k]=v+'?v='+APPV;continue}if(v.slice(i-7,i)!==';base64')continue;   // ?v= : une illustration remplacée sous le même nom n'est pas gardée en cache
   try{const s=atob(v.slice(i+1)),u=new Uint8Array(s.length);for(let j=0;j<s.length;j++)u[j]=s.charCodeAt(j);const b=blobURL(u,v.slice(5,i-7));if(b)ART[k]=b}catch(e){}}
   TDEF.forEach(t=>{t.img=ART['ter_'+t.d]||null})})();
 // grille de cartes rendue par paquets : le premier écran tout de suite, le reste pendant les temps morts (l'écran ne fige plus)
