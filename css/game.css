@@ -2015,3 +2015,16 @@ body{background:linear-gradient(#080d187a,#080d187a),url("../png/site-background
 .avs.hw{width:20px;height:20px;font-size:10px;border-width:1.5px}
 #hlist .vb .uico.ti{width:1.3em;height:1.3em;vertical-align:-.3em}
 #hlist .hr{align-items:center}
+/* --- mots-clés sur les cartes : grosses pastilles lumineuses, sous le nom, à droite --- */
+.card .kws{top:17cqw;right:2cqw;gap:1.8cqw;z-index:5}
+.card .kws i:has(.kwim){display:inline-flex;align-items:center;justify-content:center;gap:.8cqw;min-width:16cqw;height:16cqw;padding:0;border-radius:99px;
+  background:radial-gradient(circle at 50% 38%,#2d4f86,#0c1730 72%);border:.8cqw solid #f0d68f;color:#fff3cf;font-size:10cqw;font-weight:900;
+  box-shadow:0 0 3.4cqw #ffd77acc,0 0 1.2cqw #fff3,inset 0 0 2cqw #8fc4ff55,0 .8cqw 1.6cqw #000c}
+.card .kws i:has(.kwim:not(:only-child)){padding:0 2.4cqw 0 .6cqw}
+.card .kws i .kwim{width:13.5cqw;height:13.5cqw;margin:0;vertical-align:0;filter:drop-shadow(0 0 1.4cqw #fff9) drop-shadow(0 0 .4cqw #ffe9b0) brightness(1.3) saturate(1.25)}
+.card .kws i.vn:has(.kwim){background:radial-gradient(circle at 50% 38%,#3f6a2a,#11240c 72%);border-color:#c8ef8a;box-shadow:0 0 3.4cqw #b6f07acc,0 0 1.2cqw #fff3,0 .8cqw 1.6cqw #000c}
+/* sur le plateau : un peu plus petites pour laisser voir l'illustration, mais aussi lumineuses */
+.card.bd .kws{top:22cqw;right:1.2cqw;gap:1.4cqw}
+.card.bd .kws i:has(.kwim){min-width:14cqw;height:14cqw;border-width:.7cqw;font-size:9cqw}
+.card.bd .kws i .kwim{width:12cqw;height:12cqw}
+.card.bd .kws i:has(.kwim:only-child){padding:0}

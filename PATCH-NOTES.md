@@ -5,6 +5,11 @@ Journal des mises à jour, la plus récente en premier. Les annonces détaillée
 <!-- Style des notes : écrire pour les joueurs. Pas de termes techniques (fichiers, serveurs, code, noms de collections) :
      seulement ce qui change en jeu, et comment en profiter. -->
 
+## v3.11.2 — 20/10/2026
+
+### Mots-clés bien visibles sur les cartes
+- Les icônes des mots-clés (Rempart, Tilt, Hâte, Venin, Cleave…) sont beaucoup plus grandes et lumineuses : une pastille ronde cerclée d’or avec un halo, juste sous le nom de la carte. Sur le plateau, elles restent un peu plus petites pour laisser voir l’illustration.
+
 ## v3.11.1 — 20/10/2026
 
 ### Avatars partout
