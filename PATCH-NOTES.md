@@ -5,6 +5,12 @@ Journal des mises à jour, la plus récente en premier. Les annonces détaillée
 <!-- Style des notes : écrire pour les joueurs. Pas de termes techniques (fichiers, serveurs, code, noms de collections) :
      seulement ce qui change en jeu, et comment en profiter. -->
 
+## v3.10.4 — 20/10/2026
+
+### Accueil
+- L’icône et le texte des boutons des 4 grandes cartes sont centrés dans le bouton.
+- La carte « Jouer » le dit maintenant : l’IA est **plus forte que jamais**.
+
 ## v3.10.3 — 20/10/2026
 
 ### Nouvelles illustrations de l’interface

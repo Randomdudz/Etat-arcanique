@@ -68,7 +68,7 @@ function vPlay(v){
       desc:'Ajoute un ami avec son code, puis lance-lui un défi en ligne. Vous devez être connectés tous les deux. Tu règles le duel au moment de le défier.',
       btn:h('button',{class:'hm-btn',onclick:()=>go('friends')},'Ouvrir mes amis')}),
     homeCard({k:'play',icon:'swords',title:'Jouer',
-      desc:'Affronte l’IA : elle construit son deck avec des cartes de ton niveau, autour d’une famille. Gagne des 💎 pour ouvrir des boosters.',
+      desc:['Affronte l’IA, ',h('b',null,'plus forte que jamais'),'. Elle construit son deck avec des cartes de ton niveau, autour d’une famille. Gagne des 💎 pour ouvrir des boosters.'],
       btn:h('button',{class:'hm-btn',disabled:!anyOk,onclick:()=>pickDeckModal('Lancer une partie','Règle le duel si besoin, puis choisis ton deck : ton adversaire ne saura jamais lequel tu as pris.',i=>startAIDuel(i),settingsBlock())},anyOk?'Lancer une partie':'Crée d’abord un deck valide')}),
     duelQueuePanel(),
     homeCard({k:'arena',icon:'trophy',title:'Arène',
