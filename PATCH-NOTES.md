@@ -5,6 +5,15 @@ Journal des mises à jour, la plus récente en premier. Les annonces détaillée
 <!-- Style des notes : écrire pour les joueurs. Pas de termes techniques (fichiers, serveurs, code, noms de collections) :
      seulement ce qui change en jeu, et comment en profiter. -->
 
+## v3.9.14 — 20/10/2026
+
+### Nouvel écran d’accueil
+- L’onglet **Jouer** présente maintenant 4 grandes cartes illustrées : **Défier un ami**, **Jouer** (contre l’IA),
+  **Chercher un adversaire** (duel en ligne) et **Arène**.
+- Les **réglages du duel** (chrono, PV, Démoflux, fatigue…) ne sont plus sur l’accueil : tu les règles au moment
+  de lancer une partie contre l’IA ou de défier un ami, juste avant de choisir ton deck.
+- Les gains du jour et les guides (Terrains, Familles, Mots-clés, Règles) restent accessibles sous les cartes.
+
 ## v3.9.13 — 18/10/2026
 
 ### Mikalev a maintenant toutes ses illustrations

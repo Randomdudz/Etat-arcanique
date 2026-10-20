@@ -1,5 +1,5 @@
 // ============ UI : menus (jouer, boutique, collection, decks, amis, code) ============
-var CUR='play';let DECKI=null,FR_T=0,CT='cards',SETOPEN=false;
+var CUR='play';let DECKI=null,FR_T=0,CT='cards';
 // filtres : q (recherche), t/r/cost = un choix parmi ceux cochés (OU), fac/aff/kw = tous ceux cochés (ET), own = possédées, sort = tri
 const CF={q:'',t:[],r:[],cost:[],fac:[],aff:[],kw:[],own:false,sort:'cost'},DF={q:'',t:[],r:[],cost:[],fac:[],aff:[],kw:[],own:true,sort:'cost'};
 const TABS=[['play','Jouer','play'],['shop','Boutique','shop'],['coll','Collection','coll'],['decks','Decks','decks'],['friends','Amis','friends'],['acct','Compte','acct'],['code','Code','code']];
@@ -21,17 +21,15 @@ function gotoGuide(sec){CT=sec;go('coll')}
 
 // ---------- JOUER ----------
 const OPTI={tim:'⏳',hp:'❤️',cap:'🔷',hand:'🃏',inc:'🪙',ter:'⛰️',evt:'🌀',comp:'✨',rw:'🎁'};       // icônes des réglages du duel
-function settingsPanel(){
-  const summ=OPTSET.filter(g=>S.opt[g.k]!==OPTDEF[g.k]).length;
-  const box=h('div',{class:'panel v-settings'},ph('gear','Réglages du duel',h('button',{class:'btn sm',onclick:()=>{SETOPEN=!SETOPEN;go('play')}},SETOPEN?'Masquer':'Modifier'+(summ?' ('+summ+')':''))),
-    h('div',{class:'sm mut'},'S’appliquent à ton prochain duel (IA ou défi lancé à un ami).'),
-    SETOPEN?null:h('div',{class:'sm setchips',style:'margin-top:8px;line-height:1.5'},OPTSET.map(g=>{const x=g.v.find(y=>y[0]===S.opt[g.k]);return h('span',{class:'chip',style:'cursor:default;margin:2px 4px 2px 0;padding:2px 9px;font-size:12px'},OPTI[g.k]?h('i',null,OPTI[g.k]):null,g.n.split(' (')[0].replace(' en 💎','')+(g.k==='rw'?' en 💎':'')+' : '+(x?x[1]:'?'))})));
-  if(SETOPEN){
-    OPTSET.forEach(g=>{
-      box.append(h('div',{class:'setgrp'},h('b',null,g.n),h('div',{class:'row'},g.v.map(([val,lab])=>
-        h('span',{class:'chip'+(S.opt[g.k]===val?' on':''),onclick:()=>{S.opt[g.k]=val;saveS();go('play')}},(S.opt[g.k]===val?'☑ ':'☐ ')+lab)))))});
-    box.append(h('button',{class:'btn sm',style:'margin-top:6px',onclick:()=>{S.opt=Object.assign({},OPTDEF);saveS();go('play')}},'Réglages par défaut'))}
-  return box}
+function settingsBlock(){
+  let open=false;const box=h('div',{class:'setblk'});
+  const draw=()=>{const summ=OPTSET.filter(g=>S.opt[g.k]!==OPTDEF[g.k]).length;
+    box.replaceChildren(...[h('div',{class:'setblk-h'},h('b',null,'⚙ Réglages du duel'),h('button',{class:'btn sm',onclick:()=>{open=!open;draw()}},open?'Masquer':'Modifier'+(summ?' ('+summ+')':''))),
+      open?null:h('div',{class:'sm setchips'},OPTSET.map(g=>{const x=g.v.find(y=>y[0]===S.opt[g.k]);return h('span',{class:'chip'},OPTI[g.k]?h('i',null,OPTI[g.k]):null,g.n.split(' (')[0].replace(' en 💎','')+(g.k==='rw'?' en 💎':'')+' : '+(x?x[1]:'?'))})),
+      ...(open?OPTSET.map(g=>h('div',{class:'setgrp'},h('b',null,g.n),h('div',{class:'row'},g.v.map(([val,lab])=>
+        h('span',{class:'chip'+(S.opt[g.k]===val?' on':''),onclick:()=>{S.opt[g.k]=val;saveS();draw()}},(S.opt[g.k]===val?'☑ ':'☐ ')+lab))))):[]),
+      open?h('button',{class:'btn sm',style:'margin-top:6px',onclick:()=>{S.opt=Object.assign({},OPTDEF);saveS();draw()}},'Réglages par défaut'):null].filter(Boolean))};
+  draw();return box}
 function deckFacs(d){const c={};d.cards.forEach(e=>{const k=e.replace('*','');if(CARDS[k])for(const f of (CARDS[k].fac||[]))c[f]=(c[f]||0)+1});return Object.keys(c).sort((a,b)=>c[b]-c[a]).map(f=>[f,c[f]])}
 function facDots(d,n){return h('span',{class:'fdots'},deckFacs(d).slice(0,n||4).map(([f,c])=>h('span',{class:'fdot',title:FAC[f].n+' ×'+c,style:'--fc:'+FAC[f].c},famBadge(f),String(c))))}
 function deckPicker(onPick){
@@ -39,40 +37,49 @@ function deckPicker(onPick){
   return h('div',{class:'deckchips'},S.decks.map((d,i)=>h('div',{class:'dchip'+(S.sel===i?' on':'')+(ok[i].ok?'':' bad'),onclick:()=>{S.sel=i;saveS();onPick(i)}},
     h('b',null,d.name),h('small',null,ok[i].ok?'Prêt · '+ECON.deck+' cartes':ok[i].err),h('div',{style:'margin-top:4px;min-height:20px'},facDots(d,3)))))}
 // choix du deck, au moment de lancer un duel ou un défi (ou d'en accepter un)
-function deckStep(title,sub,onPick,onBack){
+function deckStep(title,sub,onPick,onBack,extra){
   const ok=S.decks.map(d=>deckCheck(d));
-  return h('div',null,h('h2',null,title),sub?h('p',{class:'mut sm',style:'margin:0 0 10px'},sub):null,
+  return h('div',null,h('h2',null,title),sub?h('p',{class:'mut sm',style:'margin:0 0 10px'},sub):null,extra||null,
     S.decks.length?h('div',{class:'deckchips wrap'},S.decks.map((d,i)=>h('div',{class:'dchip'+(S.sel===i?' on':'')+(ok[i].ok?'':' bad'),onclick:()=>{if(!ok[i].ok){toast('Deck invalide : '+ok[i].err);return}S.sel=i;saveS();onPick(i)}},
       h('b',null,d.name),h('small',null,ok[i].ok?'Prêt · '+ECON.deck+' cartes':ok[i].err),h('div',{style:'margin-top:4px;min-height:20px'},facDots(d,3))))):h('p',{class:'mut'},'Aucun deck : crée-en un dans l’onglet Decks.'),
     h('div',{class:'row',style:'justify-content:space-between;margin-top:14px'},h('button',{class:'btn sm',onclick:()=>{closeModal();go('decks')}},'Gérer mes decks'),h('button',{class:'btn',onclick:onBack||closeModal},onBack?'Retour':'Annuler')))}
-function pickDeckModal(title,sub,onPick){modal(deckStep(title,sub,i=>{closeModal();onPick(i)}))}
+function pickDeckModal(title,sub,onPick,extra){modal(deckStep(title,sub,i=>{closeModal();onPick(i)},null,extra))}
+// accueil : 4 grandes cartes (médaillon, illustration, bandeau, texte, bouton)
+const HCICON={
+  friends:'<path d="M35 52a9 9 0 1 1 0-18 9 9 0 0 1 0 18Zm30 0a9 9 0 1 1 0-18 9 9 0 0 1 0 18ZM18 72c1-11 8-17 17-17s16 6 17 17Zm30 0c1-11 8-17 17-17s16 6 17 17Z"/>',
+  swords:'<g transform="rotate(45 50 50)"><path d="M50 9l5 9v44h-10V18z"/><rect x="35" y="62" width="30" height="6" rx="2"/><rect x="47" y="68" width="6" height="13"/><circle cx="50" cy="85" r="4.5"/></g><g transform="rotate(-45 50 50)"><path d="M50 9l5 9v44h-10V18z"/><rect x="35" y="62" width="30" height="6" rx="2"/><rect x="47" y="68" width="6" height="13"/><circle cx="50" cy="85" r="4.5"/></g>',
+  compass:'<path d="M50 22l5 18 18 5-18 5-5 18-5-18-18-5 18-5Z" transform="rotate(45 50 50)" opacity=".7"/><path d="M50 8l8 34 34 8-34 8-8 34-8-34-34-8 34-8Z"/><circle cx="50" cy="50" r="5" fill="#3a2408"/>',
+  trophy:'<path d="M34 24h32v14c0 10-7 18-16 18s-16-8-16-18Zm-10 4h9v6h-4c0 6 3 10 7 12l-2 4c-6-3-10-9-10-16Zm52 0h-9v6h4c0 6-3 10-7 12l2 4c6-3 10-9 10-16ZM46 56h8v8h7v6H39v-6h7Z"/>'};
+function hcMedal(icon){const m=document.createElement('div');m.className='hc-medal';
+  m.innerHTML='<svg viewBox="0 0 100 100"><defs><linearGradient id="hcg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff1b8"/><stop offset=".45" stop-color="#e2b04c"/><stop offset="1" stop-color="#8a5a16"/></linearGradient><radialGradient id="hcs" cx=".5" cy=".35" r=".7"><stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset="1" stop-color="#000" stop-opacity=".45"/></radialGradient></defs>'+
+    '<polygon points="50,1 57,14 71,8 72,23 87,24 81,38 96,45 84,54 92,67 77,70 76,85 62,80 54,94 46,82 33,92 29,77 14,78 20,64 6,56 18,46 9,33 24,31 24,16 38,19" fill="url(#hcg)" stroke="#5a3a10" stroke-width="1.2"/>'+
+    '<circle cx="50" cy="50" r="36" fill="#1a1006" stroke="url(#hcg)" stroke-width="5"/><circle cx="50" cy="50" r="30" style="fill:var(--mc)"/><circle cx="50" cy="50" r="30" fill="url(#hcs)"/>'+
+    '<g fill="url(#hcg)" stroke="#3a2408" stroke-width=".8">'+HCICON[icon]+'</g></svg>';return m}
+function homeCard(o){
+  return h('div',{class:'hc hc-'+o.k},hcMedal(o.icon),h('i',{class:'hc-k tl'}),h('i',{class:'hc-k tr'}),h('i',{class:'hc-k bl'}),h('i',{class:'hc-k br'}),h('i',{class:'hc-bd'}),
+    h('div',{class:'hc-art'}),
+    h('div',{class:'hc-banw'},h('i',{class:'hc-dl'}),h('div',{class:'hc-ban'},h('span',null,o.title)),h('i',{class:'hc-dr'})),
+    h('p',{class:'hc-desc'},...[].concat(o.desc)),o.extra||null,
+    ...[].concat(o.btn))}
 function vPlay(v){
-  const anyOk=S.decks.some(d=>deckCheck(d).ok);
-  v.append(h('div',{class:'cols'},
-    h('div',null,
-      h('div',{class:'panel hl v-ia'},ph('play','Duel contre l’IA'),
-        h('p',{class:'mut sm',style:'margin:0 0 12px'},'L’IA construit son deck avec des cartes de ton niveau de collection, autour d’une famille. Gagne des 💎 pour ouvrir des boosters. Tu choisis ton deck juste après avoir cliqué sur Jouer.'),
-        h('button',{class:'btn gold big'+(anyOk?' art-button':''),disabled:!anyOk,onclick:()=>pickDeckModal('Choisis ton deck','Ton adversaire ne saura jamais lequel tu as pris.',i=>startAIDuel(i))},
-          anyOk?h('img',{class:'button-art',src:'png/play-button.png',alt:'Jouer'}):'Crée d’abord un deck valide')),
-      arenaPanel(),
-      settingsPanel()),
-    h('div',null,
-      h('div',{class:'panel v-friend'},ph('friends','Défier un ami'),
-        h('p',{class:'mut sm',style:'margin:0 0 12px'},'Ajoute un ami avec son code, puis lance-lui un défi en ligne. Vous devez être connectés tous les deux.'),
-        h('button',{class:'btn gold art-button',onclick:()=>go('friends')},h('img',{class:'button-art',src:'png/friends-button.png',alt:'Ouvrir mes amis'}))),
-      duelQueuePanel(),
-      h('div',{class:'panel v-guide'},ph('guide','Tout savoir avant de jouer'),
-        h('p',{class:'mut sm',style:'margin:0 0 10px'},'Terrains, familles, mots-clés et règles : toutes les infos sont dans la Collection.'),
-        h('div',{class:'row'},[['terr','🏟 Terrains'],['fam','🧬 Familles'],['kw','📖 Mots-clés'],['rules','📜 Règles']].map(([s,l])=>h('button',{class:'btn sm g-'+s,onclick:()=>gotoGuide(s)},l)))),
-      h('div',{class:'panel v-gain'},ph('💎','Gains du jour',S.daily.earned+' / '+ECON.cap),
-        h('div',{class:'bar',style:'margin:2px 0 10px'},h('i',{style:'width:'+Math.min(100,S.daily.earned/ECON.cap*100)+'%'})),
-        h('div',{class:'row',style:'justify-content:space-between'},h('span',{class:'sm mut'},'💎 Victoire +'+ECON.win+' · Défaite +'+ECON.loss+' · 1re victoire du jour +'+ECON.first),h('b',{class:'sm vstat',title:'Victoires et défaites'},S.stats.w+' V · '+S.stats.l+' D'))))));duelQueueRender()}
-// Arène : draft, remplacements partiels, duels contre l'IA et matchmaking
-function arenaPanel(){const r=S.arena&&S.arena.run;
-  return h('div',{class:'panel v-arenap'},ph('arena','Arène',r?r.w+' V · '+r.l+' D':h('span',{class:'arena-cost'},ARENA.cost,h('img',{class:'arena-gem',src:'png/diamond.png',alt:'diamants'}))),
-    h('p',{class:'mut sm',style:'margin:0 0 12px'},r?(r.swap?(r.swap.stage==='remove'?'Choisis les '+ARENA.redraft+' cartes à remplacer.':'Choisis '+ARENA.redraft+' remplaçantes avant de sélectionner les cartes à remplacer.'):r.picks.length<ARENA.picks?'Ton draft initial : '+r.picks.length+' / '+ARENA.picks+' cartes choisies.':'Ton deck d’Arène est prêt : défie l’IA au palier '+Math.min(ARENA.maxW,r.w+1)+' ou cherche un joueur.'):
-      'Draft de 30 cartes, puis affronte l’IA ou cherche un joueur avec le matchmaking. 9 paliers, jusqu’à '+ARENA.rw[ARENA.maxW]+' 💎 à gagner.'),
-    h('button',{class:'btn gold'+(!r?' art-button':''),onclick:()=>go('arena')},r?(r.swap||r.picks.length<ARENA.picks?'Continuer':'Ouvrir l’Arène'):h('img',{class:'button-art',src:'png/arena-button.png',alt:"Découvrir l’Arène"})))}
+  const anyOk=S.decks.some(d=>deckCheck(d).ok),r=S.arena&&S.arena.run;
+  v.append(h('div',{class:'home4'},
+    homeCard({k:'friends',icon:'friends',title:'Défier un ami',
+      desc:'Ajoute un ami avec son code, puis lance-lui un défi en ligne. Vous devez être connectés tous les deux. Tu règles le duel au moment de le défier.',
+      btn:h('button',{class:'hc-btn',onclick:()=>go('friends')},'Ouvrir mes amis')}),
+    homeCard({k:'play',icon:'swords',title:'Jouer',
+      desc:'Affronte l’IA : elle construit son deck avec des cartes de ton niveau, autour d’une famille. Gagne des 💎 pour ouvrir des boosters.',
+      btn:h('button',{class:'hc-btn',disabled:!anyOk,onclick:()=>pickDeckModal('Lancer une partie','Règle le duel si besoin, puis choisis ton deck : ton adversaire ne saura jamais lequel tu as pris.',i=>startAIDuel(i),settingsBlock())},anyOk?'Lancer une partie':'Crée d’abord un deck valide')}),
+    duelQueuePanel(),
+    homeCard({k:'arena',icon:'trophy',title:'Arène',
+      desc:r?(r.swap?(r.swap.stage==='remove'?'Choisis les '+ARENA.redraft+' cartes à remplacer.':'Choisis '+ARENA.redraft+' remplaçantes avant de sélectionner les cartes à remplacer.'):r.picks.length<ARENA.picks?'Ton draft : '+r.picks.length+' / '+ARENA.picks+' cartes choisies.':'Ton deck d’Arène est prêt ('+r.w+' V · '+r.l+' D) : défie l’IA au palier '+Math.min(ARENA.maxW,r.w+1)+' ou cherche un joueur.'):
+        ['Draft de '+ARENA.picks+' cartes, puis affronte l’IA ou cherche un joueur avec le matchmaking. '+ARENA.maxW+' paliers, jusqu’à '+ARENA.rw[ARENA.maxW]+' 💎 à gagner. Entrée : '+ARENA.cost+' ',h('img',{class:'hc-gem',src:'png/diamond.png',alt:'diamants'}),'.'],
+      btn:h('button',{class:'hc-btn',onclick:()=>go('arena')},r?(r.swap||r.picks.length<ARENA.picks?'Continuer le draft':'Ouvrir l’Arène'):'Accéder à l’Arène')})),
+    h('div',{class:'homebar'},
+      h('div',{class:'hb-gain'},h('img',{src:'png/diamond.png',alt:''}),h('b',null,'Gains du jour'),h('div',{class:'bar'},h('i',{style:'width:'+Math.min(100,S.daily.earned/ECON.cap*100)+'%'})),
+        h('span',{class:'sm'},S.daily.earned+' / '+ECON.cap),h('span',{class:'sm mut'},'Victoire +'+ECON.win+' · Défaite +'+ECON.loss+' · 1re victoire du jour +'+ECON.first),h('b',{class:'sm vstat',title:'Victoires et défaites'},S.stats.w+' V · '+S.stats.l+' D')),
+      h('div',{class:'hb-guide'},h('span',{class:'sm mut'},'Tout savoir :'),[['terr','🏟 Terrains'],['fam','🧬 Familles'],['kw','📖 Mots-clés'],['rules','📜 Règles']].map(([k,l])=>h('button',{class:'btn sm g-'+k,onclick:()=>gotoGuide(k)},l)))));
+  duelQueueRender()}
 function rulesNodes(){
   const li=(t,d)=>h('div',{style:'margin:10px 0;line-height:1.45'},h('b',{class:'gold'},t+' '),d);
   return[
@@ -532,7 +539,7 @@ function addFriend(raw,list){
   drawFriends(list);const i=$('#view input[placeholder="Code ou lien d’invitation"]');if(i)i.value=''}
 function cleanOpt(o){const r=Object.assign({},OPTDEF);OPTSET.forEach(g=>{if(o&&g.v.some(x=>x[0]===o[g.k]))r[g.k]=o[g.k]});return r}
 function optSummary(o){return OPTSET.map(g=>{const x=g.v.find(y=>y[0]===o[g.k]);return g.n.split(' (')[0]+' : '+(x?x[1]:'?')}).join(' · ')}
-function challengeFriend(f){pickDeckModal('Défier '+f.name,'Choisis ton deck pour ce défi (il restera secret).',i=>sendDuelTo(f,i))}
+function challengeFriend(f){pickDeckModal('Défier '+f.name,'Règle le duel si besoin, puis choisis ton deck (il restera secret).',i=>sendDuelTo(f,i),settingsBlock())}
 function sendDuelTo(f,di){
   const chk=deckCheck(S.decks[di]);if(!chk.ok){toast('Deck invalide : '+chk.err);return}
   const opt=Object.assign({},S.opt);let h1=null;
