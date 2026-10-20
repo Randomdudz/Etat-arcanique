@@ -56,12 +56,13 @@ function hcMedal(icon){const m=document.createElement('div');m.className='hm-med
     '<circle cx="50" cy="50" r="36" fill="#1a1006" stroke="url(#hcg)" stroke-width="5"/><circle cx="50" cy="50" r="30" style="fill:var(--mc)"/><circle cx="50" cy="50" r="30" fill="url(#hcs)"/>'+
     '<g fill="url(#hcg)" stroke="#3a2408" stroke-width=".8">'+HCICON[icon]+'</g></svg>';return m}
 const HMMED={friends:'amis',play:'jouer',queue:'adversaire',arena:'arene'};   // médaillons illustrés de l'accueil (png/ui)
-function homeCard(o){
+// le bouton principal prend la place du titre, dans le bandeau ; les autres (Annuler la recherche…) restent sous le texte
+function homeCard(o){const btns=[].concat(o.btn).filter(Boolean),main=btns[0];if(main){main.classList.remove('hm-btn');main.classList.add('hm-banbtn')}
   return h('div',{class:'hm hm-'+o.k},HMMED[o.k]?h('div',{class:'hm-medal'},uiIco('hm-medal-'+HMMED[o.k],'hmmed')):hcMedal(o.icon),h('i',{class:'hm-k tl'}),h('i',{class:'hm-k tr'}),h('i',{class:'hm-k bl'}),h('i',{class:'hm-k br'}),h('i',{class:'hm-bd'}),
     h('div',{class:'hm-art'}),
-    h('div',{class:'hm-banw'},h('i',{class:'hm-dl'}),h('div',{class:'hm-ban'},h('span',null,o.title)),h('i',{class:'hm-dr'})),
+    h('div',{class:'hm-banw'},h('i',{class:'hm-dl'}),h('div',{class:'hm-ban',title:o.title},main||h('span',null,o.title)),h('i',{class:'hm-dr'})),
     h('p',{class:'hm-desc'},...[].concat(o.desc)),o.extra||null,
-    ...[].concat(o.btn))}
+    ...btns.slice(1))}
 function vPlay(v){
   const anyOk=S.decks.some(d=>deckCheck(d).ok),r=S.arena&&S.arena.run;
   v.append(h('div',{class:'home4'},
