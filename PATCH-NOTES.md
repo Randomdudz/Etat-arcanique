@@ -7,8 +7,9 @@ Journal des mises à jour, la plus récente en premier. Les annonces détaillée
 
 ## v3.9.17 — 20/10/2026
 
-### 29 autres sorts ont leur illustration
-- Nerf, Nitro, Pizza Party, Slowmode, Smurf, Coup de valise, Nostalgie, C’était mieux avant et 21 autres sorts passent aux vraies illustrations.
+### Tous les sorts ont maintenant leur illustration
+- Les 32 derniers sorts passent aux vraies illustrations : Nerf, Nitro, Pizza Party, Raid, Ragequit, Smite, Slowmode, Smurf, Nostalgie, C’était mieux avant…
+- **Haddmi, Sniper d’élite** a enfin sa propre image.
 
 ## v3.9.16 — 20/10/2026
 
