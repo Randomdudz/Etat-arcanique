@@ -1841,13 +1841,10 @@ body{background:linear-gradient(#080d187a,#080d187a),url("../png/site-background
 .hc-bd{left:calc(50% - 7px);bottom:-8px;width:14px;height:14px}
 .hc-art{position:relative;height:200px;border-radius:6px;border:2px solid #c99a4a;background:#0a1020 center/cover no-repeat;box-shadow:inset 0 0 26px #000d,0 2px 8px #0008;overflow:hidden}
 .hc-art::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,#0008)}
-.hc-friends .hc-art{background-image:url("../png/panel-friends-bg.png");background-position:6% 55%}
-.hc-play .hc-art{background-image:url("../png/panel-settings-bg.png");background-position:32% 38%}
-.hc-queue .hc-art{background-image:url("../png/panel-duel-bg.png");background-position:90% 50%}
-.hc-queue .hc-art::before{content:'';position:absolute;left:50%;top:52%;width:150px;height:150px;transform:translate(-30%,-50%);border-radius:50%;z-index:1;mix-blend-mode:screen;
-  background:radial-gradient(circle,transparent 52%,#4f9dff66 58%,#bfe0ff 61%,#4f9dff88 64%,transparent 72%);animation:hcPortal 6s linear infinite}
-@keyframes hcPortal{to{transform:translate(-30%,-50%) rotate(360deg)}}
-.hc-arena .hc-art{background-image:url("../png/panel-arena-bg.png");background-position:55% 40%}
+.hc-friends .hc-art{background-image:url("../png/home-amis.webp");background-position:50% 40%}
+.hc-play .hc-art{background-image:url("../png/home-jouer.webp");background-position:40% 30%}
+.hc-queue .hc-art{background-image:url("../png/home-adversaire.webp");background-position:45% 40%}
+.hc-arena .hc-art{background-image:url("../png/home-arene.webp");background-position:50% 40%}
 .hc-banw{position:relative;margin:-24px -24px 0;z-index:2}
 .hc-ban{height:48px;background:linear-gradient(180deg,#f6dc94,#b98632);clip-path:polygon(0 50%,16px 0,calc(100% - 16px) 0,100% 50%,calc(100% - 16px) 100%,16px 100%);filter:drop-shadow(0 4px 6px #000a)}
 .hc-ban span{position:absolute;inset:3px 4px;display:grid;place-items:center;background:linear-gradient(180deg,var(--b1),var(--b2));clip-path:polygon(0 50%,14px 0,calc(100% - 14px) 0,100% 50%,calc(100% - 14px) 100%,14px 100%);
