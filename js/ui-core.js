@@ -42,6 +42,11 @@ function ico(n,cls){const e=document.createElement('span');e.className='icw'+(cl
 function uiSrc(n){return 'png/ui/'+n+'.webp?v='+(typeof APPV!=='undefined'?APPV:'')}
 function uiIco(n,cls){return h('img',{class:'uico'+(cls?' '+cls:''),src:uiSrc(n),alt:'',draggable:'false'})}
 const KWIMG={rempart:1,venin:1,siphon:1,hate:1,egide:1,croissance:1,frenesie:1,afk:1,insolence:1,tilt:1,respawn:1,vip:1,deso:1,cleave:1};
+// avatars équipables (Compte) : ils remplacent l'initiale du pseudo dans le rond du héros, en duel
+const AVATARS=[['mage','Archimage'],['chevalier','Chevalier'],['voleuse','Voleuse'],['nain','Nain'],['necro','Nécromancien'],['orc','Orc'],['pretresse','Prêtresse'],['pirate','Pirate'],['samourai','Samouraï'],['gobelin','Gobelin geek'],['dragon','Dragonnet']];
+const AVK={};AVATARS.forEach(a=>AVK[a[0]]=a[1]);
+function avOk(k){return typeof k==='string'&&!!AVK[k]}
+function avRand(){return AVATARS[rint(0,AVATARS.length-1)][0]}
 function kwIco(x){return KWIMG[x]?uiIco('kw-'+x,'kwim'):document.createTextNode(KWI[x]?KWI[x][1]:'')}
 const EMBLEM='<img class="emb" src="png/ui/ui-logo.webp" alt="" draggable="false">';
 
@@ -142,7 +147,9 @@ function nmCls(cd){const n=fullName(cd).length;return n>29?' n4':n>24?' n3':n>19
 // icônes des familles, dessinées en SVG (identiques sur tous les appareils, contrairement aux émojis) ; --fcd = teinte sombre de la famille
 const FAMSVG={"toxic": "<path d=\"M10.35 9.14L7.2 3.69A9.6 9.6 0 0 1 16.8 3.69L13.65 9.14A3.3 3.3 0 0 0 10.35 9.14ZM15.3 12L21.6 12A9.6 9.6 0 0 1 16.8 20.31L13.65 14.86A3.3 3.3 0 0 0 15.3 12ZM10.35 14.86L7.2 20.31A9.6 9.6 0 0 1 2.4 12L8.7 12A3.3 3.3 0 0 0 10.35 14.86Z\"/><circle cx=\"12\" cy=\"12\" r=\"2\"/>", "weebos": "<g transform=\"rotate(0 12 12)\"><circle cx=\"12\" cy=\"7.1\" r=\"3.6\"/><path d=\"M11 3.4 12 5 13 3.4z\" style=\"fill:var(--fcd)\"/></g><g transform=\"rotate(72 12 12)\"><circle cx=\"12\" cy=\"7.1\" r=\"3.6\"/><path d=\"M11 3.4 12 5 13 3.4z\" style=\"fill:var(--fcd)\"/></g><g transform=\"rotate(144 12 12)\"><circle cx=\"12\" cy=\"7.1\" r=\"3.6\"/><path d=\"M11 3.4 12 5 13 3.4z\" style=\"fill:var(--fcd)\"/></g><g transform=\"rotate(216 12 12)\"><circle cx=\"12\" cy=\"7.1\" r=\"3.6\"/><path d=\"M11 3.4 12 5 13 3.4z\" style=\"fill:var(--fcd)\"/></g><g transform=\"rotate(288 12 12)\"><circle cx=\"12\" cy=\"7.1\" r=\"3.6\"/><path d=\"M11 3.4 12 5 13 3.4z\" style=\"fill:var(--fcd)\"/></g><circle cx=\"12\" cy=\"12\" r=\"2.3\" style=\"fill:var(--fcd)\"/><circle cx=\"12\" cy=\"12\" r=\"1\"/>", "farmer": "<path d=\"M12 21.5V6.2\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\"/><ellipse cx=\"9.7\" cy=\"15.6\" rx=\"1.75\" ry=\"2.9\" transform=\"rotate(-38 9.7 15.6)\"/><ellipse cx=\"14.3\" cy=\"15.6\" rx=\"1.75\" ry=\"2.9\" transform=\"rotate(38 14.3 15.6)\"/><ellipse cx=\"9.7\" cy=\"11.6\" rx=\"1.75\" ry=\"2.9\" transform=\"rotate(-38 9.7 11.6)\"/><ellipse cx=\"14.3\" cy=\"11.6\" rx=\"1.75\" ry=\"2.9\" transform=\"rotate(38 14.3 11.6)\"/><ellipse cx=\"9.9\" cy=\"7.8\" rx=\"1.75\" ry=\"2.9\" transform=\"rotate(-34 9.9 7.8)\"/><ellipse cx=\"14.1\" cy=\"7.8\" rx=\"1.75\" ry=\"2.9\" transform=\"rotate(34 14.1 7.8)\"/><ellipse cx=\"12\" cy=\"4.6\" rx=\"1.6\" ry=\"2.6\"/>", "expats": "<path transform=\"rotate(42 12 12)\" d=\"M12 2.4c1 0 1.4 1.1 1.4 2.1v5l7.6 4.6v2l-7.6-2.4v4.6l2.2 1.6v1.6L12 20.6l-3.6.9v-1.6l2.2-1.6v-4.6L3 16.1v-2l7.6-4.6v-5c0-1 .4-2.1 1.4-2.1z\"/>", "ravages": "<path d=\"M11 12a1.1 1.1 0 0 1 2.2 0a2.3 2.3 0 0 1-4.6 0a3.5 3.5 0 0 1 7 0a4.7 4.7 0 0 1-9.4 0a5.9 5.9 0 0 1 11.8 0\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" transform=\"translate(12.7 12) scale(1.18) translate(-12 -12)\"/>", "alien": "<path d=\"M12 2.8c-5.1 0-7.6 3.6-7.6 7.4 0 4.5 4.1 9.1 7.6 11 3.5-1.9 7.6-6.5 7.6-11 0-3.8-2.5-7.4-7.6-7.4z\"/><ellipse cx=\"8.8\" cy=\"11.6\" rx=\"2.7\" ry=\"1.55\" transform=\"rotate(32 8.8 11.6)\" style=\"fill:var(--fcd)\"/><ellipse cx=\"15.2\" cy=\"11.6\" rx=\"2.7\" ry=\"1.55\" transform=\"rotate(-32 15.2 11.6)\" style=\"fill:var(--fcd)\"/>", "xeno": "<rect x=\"5.6\" y=\"12.6\" width=\"1.9\" height=\"6.6\"/><rect x=\"16.5\" y=\"12.6\" width=\"1.9\" height=\"6.6\"/><rect x=\"3.9\" y=\"18.8\" width=\"5.3\" height=\"1.7\" rx=\".6\"/><rect x=\"14.8\" y=\"18.8\" width=\"5.3\" height=\"1.7\" rx=\".6\"/><rect x=\"2.6\" y=\"6.2\" width=\"18.8\" height=\"6.8\" rx=\"1\"/><path d=\"M6.8 6.2h2.6l-3.2 6.8H3.6 z\" style=\"fill:var(--fcd)\"/><path d=\"M11.6 6.2h2.6l-3.2 6.8H8.4 z\" style=\"fill:var(--fcd)\"/><path d=\"M16.4 6.2h2.6l-3.2 6.8H13.2 z\" style=\"fill:var(--fcd)\"/><circle cx=\"5.2\" cy=\"4.6\" r=\"1.3\"/><circle cx=\"18.8\" cy=\"4.6\" r=\"1.3\"/>", "vestige": "<path d=\"M12 2.6l9.2 4.9H2.8z\"/><rect x=\"3.4\" y=\"8.3\" width=\"17.2\" height=\"1.6\" rx=\".3\"/><rect x=\"5\" y=\"10.6\" width=\"2\" height=\"7.6\" rx=\".4\"/><rect x=\"9\" y=\"10.6\" width=\"2\" height=\"7.6\" rx=\".4\"/><rect x=\"13\" y=\"10.6\" width=\"2\" height=\"7.6\" rx=\".4\"/><rect x=\"17\" y=\"10.6\" width=\"2\" height=\"7.6\" rx=\".4\"/><rect x=\"3\" y=\"18.8\" width=\"18\" height=\"1.6\" rx=\".3\"/><rect x=\"2.2\" y=\"20.8\" width=\"19.6\" height=\"1.4\" rx=\".3\"/>"};
 const FAMICO={};
-function famIco(f){if(!FAMSVG[f])return document.createTextNode(FAC[f]?FAC[f].ic:'');
+const FAMIMG={toxic:1,weebos:1,farmer:1,expats:1,ravages:1,alien:1,xeno:1,vestige:1};
+// icône de famille : l'illustration (png/ui/fam-*.webp), sinon l'ancien dessin ou l'emoji
+function famIco(f){if(FAMIMG[f])return uiIco('fam-'+f,'famim');if(!FAMSVG[f])return document.createTextNode(FAC[f]?FAC[f].ic:'');
   if(!FAMICO[f]){const t=document.createElement('template');t.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true">'+FAMSVG[f]+'</svg>';FAMICO[f]=t.content.firstChild}
   return FAMICO[f].cloneNode(true)}
 // médaillon d'une famille (bandeau des cartes, filtres, decks…) : son nom et son effet au survol
@@ -226,7 +233,7 @@ document.addEventListener('pointerover',e=>{const w=e.target.closest&&e.target.c
 document.addEventListener('pointerout',e=>{const w=e.target.closest&&e.target.closest('.kw[data-d]');if(w)hideTip()});
 // pastille de famille : son effet et ses paliers apparaissent au survol
 document.addEventListener('pointerover',e=>{const w=e.target.closest&&e.target.closest('[data-tipf]');if(!w)return;const f=w.getAttribute('data-tipf'),F=FAC[f];if(!F)return;
-  showTip(w,[h('b',null,F.ic+' '+F.n+' — '),F.sum,facTiers(f,0),w.hasAttribute('data-sp')?h('div',{class:'tsp'},'Sort de famille : pensé pour un deck '+F.n+', presque inutile ailleurs.'):null].filter(Boolean))});
+  showTip(w,[h('b',null,famIco(f),' '+F.n+' — '),F.sum,facTiers(f,0),w.hasAttribute('data-sp')?h('div',{class:'tsp'},'Sort de famille : pensé pour un deck '+F.n+', presque inutile ailleurs.'):null].filter(Boolean))});
 document.addEventListener('pointerout',e=>{const w=e.target.closest&&e.target.closest('[data-tipf]');if(w)hideTip()});
 
 // ----- messages -----
@@ -246,8 +253,8 @@ function ask(title,msg,btns,opt){
 // pastilles de la fiche : familles, sort de famille ou d'affinité, mots-clés ; leurs explications n'apparaissent qu'au survol
 const NOTAG=/^(?:Or|Démoflux|Terrain|[Cc]imetière|[Dd]éfausse)$/;
 function tagRow(cd){const out=[];
-  for(const f of cd.fac||[])out.push(h('span',{class:'chip ftag','data-tipf':f,style:'--fc:'+FAC[f].c},FAC[f].ic+' '+FAC[f].n));
-  if(cd.fam)out.push(h('span',{class:'chip ftag','data-tipf':cd.fam,'data-sp':'1',style:'--fc:'+FAC[cd.fam].c},'Sort de famille : '+FAC[cd.fam].ic+' '+FAC[cd.fam].n));
+  for(const f of cd.fac||[])out.push(h('span',{class:'chip ftag','data-tipf':f,style:'--fc:'+FAC[f].c},famIco(f),' '+FAC[f].n));
+  if(cd.fam)out.push(h('span',{class:'chip ftag','data-tipf':cd.fam,'data-sp':'1',style:'--fc:'+FAC[cd.fam].c},'Sort de famille : ',famIco(cd.fam),' '+FAC[cd.fam].n));
   if(cd.gam)out.push(h('span',{class:'chip ftag kw','data-t':'Sort d’affinité '+GAMES[cd.gam].n,'data-d':'Pensé pour un deck de créatures très affinées '+GAMES[cd.gam].n+' (et leurs terrains) : presque inutile ailleurs.',style:'--fc:'+GAMES[cd.gam].c},gi(cd.gam),' Sort d’affinité '+GAMES[cd.gam].n));
   for(const [w,d] of defsFor(cd.k))if(!NOTAG.test(w))out.push(h('span',{class:'chip ktag kw','data-t':w,'data-d':d},w));
   return out.length?h('div',{class:'tags'},out):null}

@@ -55,8 +55,9 @@ function hcMedal(icon){const m=document.createElement('div');m.className='hm-med
     '<polygon points="50,1 57,14 71,8 72,23 87,24 81,38 96,45 84,54 92,67 77,70 76,85 62,80 54,94 46,82 33,92 29,77 14,78 20,64 6,56 18,46 9,33 24,31 24,16 38,19" fill="url(#hcg)" stroke="#5a3a10" stroke-width="1.2"/>'+
     '<circle cx="50" cy="50" r="36" fill="#1a1006" stroke="url(#hcg)" stroke-width="5"/><circle cx="50" cy="50" r="30" style="fill:var(--mc)"/><circle cx="50" cy="50" r="30" fill="url(#hcs)"/>'+
     '<g fill="url(#hcg)" stroke="#3a2408" stroke-width=".8">'+HCICON[icon]+'</g></svg>';return m}
+const HMMED={friends:'amis',play:'jouer',queue:'adversaire',arena:'arene'};   // médaillons illustrés de l'accueil (png/ui)
 function homeCard(o){
-  return h('div',{class:'hm hm-'+o.k},hcMedal(o.icon),h('i',{class:'hm-k tl'}),h('i',{class:'hm-k tr'}),h('i',{class:'hm-k bl'}),h('i',{class:'hm-k br'}),h('i',{class:'hm-bd'}),
+  return h('div',{class:'hm hm-'+o.k},HMMED[o.k]?h('div',{class:'hm-medal'},uiIco('hm-medal-'+HMMED[o.k],'hmmed')):hcMedal(o.icon),h('i',{class:'hm-k tl'}),h('i',{class:'hm-k tr'}),h('i',{class:'hm-k bl'}),h('i',{class:'hm-k br'}),h('i',{class:'hm-bd'}),
     h('div',{class:'hm-art'}),
     h('div',{class:'hm-banw'},h('i',{class:'hm-dl'}),h('div',{class:'hm-ban'},h('span',null,o.title)),h('i',{class:'hm-dr'})),
     h('p',{class:'hm-desc'},...[].concat(o.desc)),o.extra||null,
@@ -68,7 +69,7 @@ function vPlay(v){
       desc:'Ajoute un ami avec son code, puis lance-lui un défi en ligne. Vous devez être connectés tous les deux. Tu règles le duel au moment de le défier.',
       btn:h('button',{class:'hm-btn',onclick:()=>go('friends')},'Ouvrir mes amis')}),
     homeCard({k:'play',icon:'swords',title:'Jouer',
-      desc:'Affronte l’IA : elle construit son deck avec des cartes de ton niveau, autour d’une famille. Gagne des 💎 pour ouvrir des boosters.',
+      desc:['Affronte l’IA, ',h('b',null,'plus forte que jamais'),'. Elle construit son deck avec des cartes de ton niveau, autour d’une famille. Gagne des 💎 pour ouvrir des boosters.'],
       btn:h('button',{class:'hm-btn',disabled:!anyOk,onclick:()=>pickDeckModal('Lancer une partie','Règle le duel si besoin, puis choisis ton deck : ton adversaire ne saura jamais lequel tu as pris.',i=>startAIDuel(i),settingsBlock())},anyOk?'Lancer une partie':'Crée d’abord un deck valide')}),
     duelQueuePanel(),
     homeCard({k:'arena',icon:'trophy',title:'Arène',
@@ -235,7 +236,7 @@ function mkFilters(F,opt,onChange){
       row('Type',[['c','Créatures'],['s','Sorts']].map(([v,l])=>h('span',{class:'chip'+on('t',v),onclick:()=>tog('t',v)},l)),'Un des choix cochés'),
       row('Rareté',[1,2,3].map(r=>h('span',{class:'chip'+on('r',r),style:on('r',r)?'':'color:'+RCOL[r],onclick:()=>tog('r',r)},RAR[r])),'Un des choix cochés'),
       row('Coût',[1,2,3,4,5,6,7].map(c=>h('span',{class:'chip cchip'+on('cost',c),onclick:()=>tog('cost',c)},c===7?'7+':String(c))),'Un des coûts cochés'),
-      row('Famille',FACK.map(f=>h('span',{class:'chip fchip'+on('fac',f),style:'--fc:'+FAC[f].c,'data-tipf':f,onclick:()=>tog('fac',f)},FAC[f].ic,h('em',null,FAC[f].n))),'Toutes les familles cochées (ex. Toxic + Expats = les cartes qui ont les deux)'),
+      row('Famille',FACK.map(f=>h('span',{class:'chip fchip'+on('fac',f),style:'--fc:'+FAC[f].c,'data-tipf':f,onclick:()=>tog('fac',f)},famIco(f),h('em',null,FAC[f].n))),'Toutes les familles cochées (ex. Toxic + Expats = les cartes qui ont les deux)'),
       row('Affinité',AFG.map(g=>h('span',{class:'chip achip'+on('aff',g),style:'--fc:'+GAMES[g].c,title:'Créatures qui ont une affinité avec '+GAMES[g].n,onclick:()=>tog('aff',g)},gi(g),h('em',null,GAMES[g].n))),'Toutes les affinités cochées'),
       row('Mots-clés',KWF.map(([x,l])=>h('span',{class:'chip kchip'+on('kw',x),onclick:()=>tog('kw',x),title:x==='draw'?'Cartes qui font piocher':defOf(l)||''},(KWI[x]?[kwIco(x),' '+l]:(x==='draw'?'🂠 ':'')+l))),'Tous les mots-clés cochés'),
       row('Trier par',SORTS.map(([v,l])=>h('span',{class:'chip'+((F.sort||'cost')===v?' on':''),onclick:()=>{F.sort=v;draw();onChange()}},l))),
@@ -356,7 +357,7 @@ function vDeckEdit(v,di){
         h('span',{class:'chip legc'+(nLeg>=LEGMAX?' full':''),title:'Légendaires dans le deck : '+LEGMAX+' au maximum',style:'cursor:default'},h('i',{style:'background:'+RCOL[3]}),'Légendaires '+nLeg+' / '+LEGMAX),
         h('span',{class:'chip',style:'cursor:default;'+(chk.ok?'color:#a4db99;border-color:#93c489':'color:#bc8c94;border-color:#c15c58')},chk.ok?'Valide':chk.err)),
       curve(d),
-      facs.length?h('div',{class:'row',style:'margin-top:8px'},facs.map(([f,c])=>h('span',{class:'chip','data-tipf':f,style:'cursor:help;border-color:'+FAC[f].c+';background:'+FAC[f].c+'26;padding:3px 10px'},FAC[f].ic+' '+FAC[f].n+' ×'+c))):null,
+      facs.length?h('div',{class:'row',style:'margin-top:8px'},facs.map(([f,c])=>h('span',{class:'chip','data-tipf':f,style:'cursor:help;border-color:'+FAC[f].c+';background:'+FAC[f].c+'26;padding:3px 10px'},famIco(f),' '+FAC[f].n+' ×'+c))):null,
       h('div',{class:'row affrow',style:'margin-top:6px'},AFG.map(g=>h('span',{class:'chip kw','data-t':'Affinité '+GAMES[g].n+' du deck','data-d':'Somme des affinités '+GAMES[g].n+' de tes créatures ('+aff[g]+'). '+defOf('Affinité'),style:'cursor:help;border-color:'+GAMES[g].c+';background:'+GAMES[g].c+'22;padding:3px 10px'},gi(g),' '+GAMES[g].n+' '+aff[g]))),
       h('div',{class:'row',style:'margin:10px 0'},
         h('button',{class:'btn sm',onclick:()=>autoModal(di)},'✨ Construire automatiquement'),
@@ -417,7 +418,7 @@ function completeModal(di){
     const chip=(grp,x,cls,lab,o)=>h('span',Object.assign({class:'chip '+cls+(CPF[grp].indexOf(x)>=0?' on':''),onclick:()=>{const a=CPF[grp],i=a.indexOf(x);if(i>=0)a.splice(i,1);else a.push(x);draw()}},o||{}),lab);
     box.replaceChildren(h('h2',null,'🧩 Compléter mon deck automatiquement'),
       h('p',{class:'mut sm'},'L’IA ajoute des cartes de ta collection jusqu’à '+ECON.deck+', sans toucher à celles déjà dans ton deck. Coche ce autour de quoi tu veux qu’elle construise ; si tu ne coches rien, elle suit les familles et le jeu que ton deck contient déjà. Elle garde une courbe de coût et une part de sorts équilibrées.'),
-      h('div',{class:'cpsec'},h('b',null,'Familles'),h('div',{class:'row'},FACK.map(f=>chip('fac',f,'fchip',[FAC[f].ic,h('em',null,FAC[f].n)],{style:'--fc:'+FAC[f].c,'data-tipf':f})))),
+      h('div',{class:'cpsec'},h('b',null,'Familles'),h('div',{class:'row'},FACK.map(f=>chip('fac',f,'fchip',[famIco(f),h('em',null,FAC[f].n)],{style:'--fc:'+FAC[f].c,'data-tipf':f})))),
       h('div',{class:'cpsec'},h('b',null,'Affinités'),h('div',{class:'row'},AFG.map(g=>chip('aff',g,'achip',[gi(g),h('em',null,GAMES[g].n)],{style:'--fc:'+GAMES[g].c,title:'Créatures très affinées '+GAMES[g].n+' et sorts '+GAMES[g].n})))),
       h('div',{class:'cpsec'},h('b',null,'Mots-clés'),h('div',{class:'row'},KWF.filter(([x])=>POOL.some(k=>kwHas(CARDS[k],x))).map(([x,l])=>chip('kw',x,'kchip',(KWI[x]?[kwIco(x),' '+l]:(x==='draw'?'🂠 ':'')+l),{title:x==='draw'?'Cartes qui font piocher':defOf(l)||''})))),
       h('div',{class:'sm cpinfo'},miss>0?'Ton deck : '+d.cards.length+' / '+ECON.deck+' → '+miss+' carte'+(miss>1?'s':'')+' à ajouter'+(nsel?'.':', en suivant ce qu’il contient déjà.'):'Ton deck est déjà complet ('+ECON.deck+' cartes).'),
@@ -562,7 +563,7 @@ function onChallenge(c,m){
   const accept=di=>{
     const d=S.decks[di];if(!deckCheck(d).ok){toast('Choisis un deck valide.');return}
     c.on('data',x=>{if(x&&x.t==='st'&&!DUEL){close();closeModal();beginGuestDuel(c,x.v)}});
-    c.send({t:'acc',name:S.name,deck:deckKeys(d.cards),ver:APPV});
+    c.send({t:'acc',name:S.name,av:S.av||'',deck:deckKeys(d.cards),ver:APPV});
     modal(h('div',{style:'text-align:center'},h('h2',null,'Défi accepté'),h('p',{class:'mut'},'Le duel démarre…')),{sticky:true})};
   // on accepte d'abord, puis on choisit son deck
   const ask1=()=>modal(h('div',null,h('h2',null,'⚔ '+nm+' te défie !'),h('div',{class:'sm mut'},optSummary(opt)),
@@ -608,7 +609,7 @@ function tradeWindow(conn,peer){
     return h('div',{class:'tinfo'},h('b',null,fullName(cd)),
       h('div',{class:'sm mut'},(cd.t==='c'?'Créature':'Sort')+' · '+RAR[cd.r]+' · coût '+cd.c),
       h('div',{class:'sm ttx'},txNodes(cd.tx)),
-      (cd.fac&&cd.fac.length||cd.fam)?h('div',{class:'tfs'},(cd.fac||[cd.fam]).map(f=>h('span',{class:'chip',style:'cursor:default;padding:2px 9px;font-size:12px;border-color:'+FAC[f].c+';background:'+FAC[f].c+'33'},FAC[f].ic+' '+FAC[f].n))):null)};
+      (cd.fac&&cd.fac.length||cd.fam)?h('div',{class:'tfs'},(cd.fac||[cd.fam]).map(f=>h('span',{class:'chip',style:'cursor:default;padding:2px 9px;font-size:12px;border-color:'+FAC[f].c+';background:'+FAC[f].c+'33'},famIco(f),' '+FAC[f].n))):null)};
   const side=(cls,title,o,foot)=>h('div',{class:'tside '+cls},h('div',{class:'tl'},title),
     o?h('div',{class:'tcw'},cardEl(o.k,{big:true,tilt:1})):h('div',{class:'tempty'},cls==='me'?'Aucune carte choisie':peer.name+' n’a pas encore choisi de carte'),
     o?info(o):null,foot);
@@ -664,6 +665,14 @@ function accRefresh(){const e=$('#accst');if(e){e.textContent=accStTxt();e.style
 function dlFile(name,txt){const a=h('a',{href:URL.createObjectURL(new Blob([txt],{type:'application/json'})),download:name});document.body.append(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)}
 function askImport(st,src){ask('Remplacer ta progression ?','La progression de '+src+' ('+Object.keys(st.coll).length+' cartes différentes, '+st.gems+' 💎) va remplacer celle de cet ordinateur. Une copie de secours de ta progression actuelle est gardée.',
   [{t:'Annuler'},{t:'Remplacer',c:'pri',f:()=>{importSave(st);toast('✔ Progression importée.');refreshTop();go('acct')}}])}
+// choix de l'avatar : visible en duel par les deux joueurs
+function avatarPanel(){
+  const pan=h('div',{class:'panel',style:'max-width:700px'},ph('acct','Avatar'),h('p',{class:'mut sm',style:'margin:0 0 10px'},'Ton portrait en duel. Ton adversaire le voit aussi.'));
+  const grid=h('div',{class:'avgrid'}),pick=k=>{S.av=k;saveS();draw()};
+  const draw=()=>grid.replaceChildren(
+    h('button',{class:'avc'+(avOk(S.av)?'':' on'),title:'Initiale de ton pseudo',onclick:()=>pick('')},h('span',{class:'avl'},(S.name||'?').trim().charAt(0).toUpperCase()),h('small',null,'Initiale')),
+    ...AVATARS.map(([k,n])=>h('button',{class:'avc'+(S.av===k?' on':''),title:n,onclick:()=>pick(k)},h('img',{src:uiSrc('av-'+k),alt:'',draggable:'false'}),h('small',null,n))));
+  draw();pan.append(grid);return pan}
 function vAcct(v){
   const pan=h('div',{class:'panel hl',style:'max-width:700px;--h:'+THUE.acct[0]},ph('acct',cloudOn()?'Compte en ligne':'Compte'));
   if(!cloudOn()){const k=locSession(),a=k&&locAll()[k];
@@ -707,7 +716,7 @@ function vAcct(v){
     h('div',{class:'row',style:'margin-top:12px'},h('button',{class:'btn gold',onclick:()=>{const st=readSave(paste.value);if(!st){toast('Code de sauvegarde invalide ou incomplet.');return}askImport(st,'ce code')}},'Importer ce code'),
       h('button',{class:'btn',onclick:()=>file.click()},'📂 Ouvrir un fichier'),file,
       bak?h('button',{class:'btn sm',onclick:()=>{let st=null;try{st=fixS(JSON.parse(bak))}catch(e){}if(st)askImport(st,'la copie de secours');else toast('Copie de secours illisible.')}},'↺ Restaurer la copie de secours'):null),paste);
-  v.append(pan,tr);accRefresh()}
+  v.append(avatarPanel(),pan,tr);accRefresh()}
 
 // ---------- démarrage : écran de connexion obligatoire ----------
 // Compte en ligne (Firebase) si cloud-config.js est rempli, sinon compte local à cet ordinateur (pseudo + mot de passe).

@@ -126,7 +126,7 @@ function onDuelQueueChallenge(c,m,nm,close){
   close();duelQueueClearTimers();c.on('data',x=>{if(x&&x.t==='st'&&!DUEL){closeModal();beginGuestDuel(c,x.v)}});
   DQ.state='playing';duelQueueRender();
   duelQueueWrite('playing',r).catch(e=>{console.error(e);toast('Le duel démarre, mais le statut de file n’a pas pu être actualisé : '+e.message)});
-  c.send({t:'acc',name:S.name,deck:deckKeys(d.cards),duelQueue:1,duelQueueId:DQ.qid,duelOpponentQueueId:r.qid,ver:APPV});
+  c.send({t:'acc',name:S.name,av:S.av||'',deck:deckKeys(d.cards),duelQueue:1,duelQueueId:DQ.qid,duelOpponentQueueId:r.qid,ver:APPV});
   modal(h('div',{style:'text-align:center'},h('h2',null,'Match trouvé'),h('p',{class:'mut'},'Le duel contre '+nm+' démarre…')),{sticky:true})}
 function duelQueueFinished(){
   if(!DQ.active)return;

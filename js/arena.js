@@ -311,7 +311,7 @@ function onArenaQueueChallenge(c,m,nm,close){
   close();arenaQueueClearTimers();c.on('data',x=>{if(x&&x.t==='st'&&!DUEL){closeModal();beginGuestDuel(c,x.v)}});
   arenaStart(nm,'human');AQ.state='playing';arenaQueueRender();
   arenaQueueWrite('playing',r).catch(e=>{console.error(e);toast('Le duel démarre, mais le statut de file n’a pas pu être actualisé : '+e.message)});
-  c.send({t:'acc',name:S.name,deck:S.arena.run.picks.slice(),arena:1,arenaQueue:1,arenaQueueId:AQ.qid,arenaOpponentQueueId:r.qid,ver:APPV});
+  c.send({t:'acc',name:S.name,av:S.av||'',deck:S.arena.run.picks.slice(),arena:1,arenaQueue:1,arenaQueueId:AQ.qid,arenaOpponentQueueId:r.qid,ver:APPV});
   modal(h('div',{style:'text-align:center'},h('h2',null,'Match d’Arène trouvé'),h('p',{class:'mut'},'Le duel contre '+nm+' démarre…')),{sticky:true})}
 function arenaQueueFinished(){
   if(!AQ.active)return;
@@ -331,7 +331,7 @@ function startArenaAIDuel(){
     ai=arenaAIDeck(tier,r.seed^Math.imul(r.w+1,0x9E3779B1)),o=arenaOpt();
   if(ai.deck.length!==ARENA.picks){toast('Impossible de préparer le deck de l’IA pour ce palier. Réessaie.');return}
   arenaStart(opp,'ai');
-  const G=newGame({names:[S.name||'Moi',opp],decks:[r.picks.slice(),ai.deck],seed:arenaSeed(),o,mull:true});
+  const G=newGame({names:[S.name||'Moi',opp],avs:[S.av||'',avRand()],decks:[r.picks.slice(),ai.deck],seed:arenaSeed(),o,mull:true});
   const Hh=HostGame(G,[{kind:'me'},{kind:'ai',W:WGT[ARCH[ai.arch].w],strong:1}],v=>applyView(v));
   newDuelState({mode:'arena-ai',host:Hh,ctl:{act:a=>Hh.act(0,a),resign:()=>Hh.resign(0),close:()=>Hh.close()}});
   mountDuel();Hh.start()}
