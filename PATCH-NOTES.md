@@ -5,6 +5,11 @@ Journal des mises à jour, la plus récente en premier. Les annonces détaillée
 <!-- Style des notes : écrire pour les joueurs. Pas de termes techniques (fichiers, serveurs, code, noms de collections) :
      seulement ce qui change en jeu, et comment en profiter. -->
 
+## v3.11.3 — 20/10/2026
+
+### Accueil
+- Les bandeaux des 4 grandes cartes sont maintenant les boutons : « Ouvrir mes amis », « Lancer une partie », « Lancer la recherche », « Accéder à l’Arène ». Les titres et les anciens boutons dorés ont disparu, l’accueil est plus épuré.
+
 ## v3.11.2 — 20/10/2026
 
 ### Mots-clés bien visibles sur les cartes

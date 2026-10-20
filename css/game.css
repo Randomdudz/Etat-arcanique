@@ -2045,3 +2045,13 @@ body{background:linear-gradient(#080d187a,#080d187a),url("../png/site-background
 .fx .fi:has(.famim),.fburst .fi:has(.famim),.fbadge:has(.famim),.gi:has(.famim){background:none!important;box-shadow:none!important;border-color:transparent!important}
 .fx .fi .famim{width:1.45em;height:1.45em}
 .fbadge .famim{width:84%;height:84%}
+/* accueil : le bandeau est le bouton (plus de titre ni de bouton doré séparé) */
+.hm-ban .hm-banbtn{position:absolute;inset:0 15%;z-index:1;display:flex;align-items:center;justify-content:center;padding:0;border:0;background:none;cursor:pointer;
+  font-family:var(--disp);font-size:clamp(13px,6.6cqw,21px);font-weight:700;color:#fbf0d4;letter-spacing:.02em;text-shadow:0 2px 3px #000,0 0 10px #0008;white-space:nowrap}
+.hm-ban:has(.hm-banbtn:not(:disabled)):hover::before{filter:brightness(1.18) drop-shadow(0 0 12px #ffd77a99)}
+.hm-ban:has(.hm-banbtn:not(:disabled)):hover .hm-banbtn{color:#fff;text-shadow:0 2px 3px #000,0 0 14px #ffe7a6}
+.hm-ban .hm-banbtn:disabled{cursor:not-allowed;opacity:.65}
+.hm-ban .hm-banbtn::before{content:none!important}
+.hm-queue .hm-ban .hm-banbtn{font-size:clamp(12px,5.8cqw,19px)}
+.hm-cancel{margin-top:auto}
+.hm{min-height:440px}
