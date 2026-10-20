@@ -118,7 +118,7 @@ sadamie:{n:'Sadamie',fac:['ravages','alien'],sc:{wow:0,dofus:1,lol:1,cs:0},lore:
   {st:'Highroller ultime',c:6,a:1,h:1,cry:[{t:'highroll',n:4,k:4,min:5,onG:['dofus','lol']}],tx:'Cri d’arrivée : s’il arrive sur un terrain Dofus ou LoL, inflige 4 dégâts à toutes les créatures ennemies. Puis, si 4 créatures ennemies ou plus sont mortes ainsi, invoque 2 créatures au hasard de ton deck qui coûtent 5 ou plus.'}]},
 lasorius:{n:'Lasorius',fac:['weebos','farmer'],sc:{wow:2,dofus:1,lol:0,cs:0},lore:'A honte de sa voix de fillette de 8 ans : mute 90 % du temps, pas de micro depuis 7 ans. Mille heures par mois sur WoW. Prêt à se couper le bras pour que son pire ennemi perde sa main.',v:[
   {st:'Mets une pierre',c:3,a:2,h:2,cry:[{t:'respawnT',tg:'ac'}],tx:'Cri d’arrivée : une de tes créatures gagne Respawn.'},
-  {st:'Avatar de la rancune',c:3,a:3,h:3,cry:[{t:'hurtMe',n:3},{t:'dmg',n:2,tg:'ec'}],tx:'Cri d’arrivée : ton héros subit 3 dégâts, puis inflige 3 dégâts à une créature ennemie.'},
+  {st:'Avatar de la rancune',c:3,a:3,h:3,cry:[{t:'hurtMe',n:3},{t:'dmg',n:2,tg:'ec'}],tx:'Cri d’arrivée : ton héros subit 3 dégâts, puis inflige 2 dégâts à une créature ennemie.'},
   {st:'Instigateur sournois',c:6,a:1,h:1,cry:[{t:'swap',tg:'ec'}],tx:'Cri d’arrivée : Lasorius s’échange contre une créature ennemie : chacun passe dans l’autre camp.'}]},
 osiris:{n:'Osiris',fac:['toxic','expats'],sc:{wow:0,dofus:2,lol:1,cs:1},lore:'Capuche, lunettes noires, jamais un mot de trop. Son venin parle pour lui. Dreos le traite de débile, Laloutre le provoque ; il n’oublie rien. Il devient redoutable quand Maki est dans les parages.',v:[
   {st:'Joueur retraité',c:2,a:0,h:4,kw:['rempart'],eot:[{t:'draw',n:1,if:{ter:'lol'}},{t:'or',n:2,if:{ter:'dofus'}},{t:'grow',a:1,h:0,if:{ter:'cs'}}],tx:'Rempart. Fin de ton tour : sur un terrain LoL, pioche 1 carte ; sur un terrain Dofus, gagne 2 Or ; sur un terrain CS, gagne 1 d\'attaque.'},
@@ -154,7 +154,7 @@ minuit:{n:'Minuit',fac:['xeno','weebos'],sc:{wow:2,dofus:0,lol:1,cs:0},lore:'Chi
   {st:'Chef de raid',c:5,a:3,h:3,aura:{aff:'wow',a:1,h:1,scale:1},last:[{t:'killAll'}],tx:'Tes créatures avec une affinité WoW ont +1/+1 (WoW 1) ou +2/+2 (WoW 2). Agonie : détruit toutes les créatures.'}]},
 lisdoon:{n:'Lisdoon',fac:['xeno'],sc:{wow:1,dofus:0,lol:2,cs:0},lore:'Tout doux d’habitude, ancien gros reconverti en séducteur. Lance une partie de LoL et le gremlin se réveille, sans pitié. Va bientôt être père, et ses commentaires ressemblent à ceux d’une IA de boomer.',v:[
   {st:'Gomuscu',c:2,a:2,h:3,onGT:{kw:['croissance']},tx:'Croissance tant qu’il est sur un terrain de jeu.'},
-  {st:'Patriarche',c:5,a:5,h:5,last:[{t:'summon',k:'heritier',n:2}],tx:'Agonie : invoque un Héritier (Croissance).'},
+  {st:'Patriarche',c:5,a:5,h:5,last:[{t:'summon',k:'heritier',n:2}],tx:'Agonie : invoque 2 Héritiers (Croissance).'},
   {st:'Roro',stl:'Roro',c:6,a:6,h:5,onT:{g:'lol',kw:['frenesie']},tx:'Rage de Roro : sur un terrain LoL, peut attaquer deux fois par tour.'}]},
 loractys:{n:'Loractys',fac:['alien','weebos'],sc:{wow:1,dofus:2,lol:1,cs:1},lore:'Parle à toute vitesse, toujours depuis la Chine. Sigma player à l’esprit tordu : il trouve le bug que personne n’avait vu, sur tous les jeux. Goat fast learner. Se marie bientôt.',v:[
   {st:'Fast thinker',c:1,a:0,h:2,last:[{t:'cap',n:1}],tx:'Agonie : gagne 1 Démoflux maximum (10 au plus).'},

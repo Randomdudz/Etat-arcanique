@@ -5,6 +5,25 @@ Journal des mises à jour, la plus récente en premier. Les annonces détaillée
 <!-- Style des notes : écrire pour les joueurs. Pas de termes techniques (fichiers, serveurs, code, noms de collections) :
      seulement ce qui change en jeu, et comment en profiter. -->
 
+## v3.10.0 — 20/10/2026
+
+### Combats plus spectaculaires
+- **Attaques** : la créature prend son élan, fonce sur sa cible et marque un temps d’arrêt à l’impact. La carte touchée devient blanche un instant et des étincelles jaillissent.
+- **Gros coups** : à partir de 5 dégâts (3 sur un héros), le plateau tremble.
+- **Morts** : la carte vole en éclats dans un nuage de fumée et de braises. Les cartes bannies partent en éclats bleutés.
+- **Effets visibles** : particules vertes qui montent pour les soins, étincelles dorées pour les bonus, violettes qui tombent pour les malus, gouttes vertes pour le Venin, arc de lame pour Cleave, éclairs bleus pour Hâte, gerbe rouge pour le Tilt, cercle doré et poussière quand une créature arrive.
+- Les deux joueurs voient les mêmes effets en ligne.
+- Tu trouves ça trop chargé ? **☰ → Effets visuels réduits** remet les animations sobres. Elles sont aussi réduites automatiquement si ton appareil demande moins d’animations.
+
+## v3.9.19 — 20/10/2026
+
+### Main réparée
+- Les cartes de la main s’affichaient en géant pendant les duels. Elles ont repris leur taille normale.
+
+### Équilibrage
+- **Créatures** : Esprit tourmenté 5 ◆ 2/6 · Flashin 1v4 3 ◆ 3/2 · Xulyes, Commandant des armées 5 ◆ 5/5 · Highroller ultime 6 ◆ · Mets une pierre 3 ◆ · Avatar de la rancune inflige 2 dégâts (au lieu de 3) · Pornstar 3 ◆ 2/3 · Poisson rouge 1/1 · Elkatrix, Top 3 Guardian 5 ◆ · Lisdoon, Patriarche 5 ◆ 5/5, invoque 2 Héritiers · Fast thinker 1 ◆ 0/2 · De retour de Chine 3/3 · À la recherche du R14 3/4 · Boku, Maître KATARINA 5/6 · Chef dissident 2/2 · Kickeur compulsif 4 ◆ · Nostalgique de la vieille époque 2 ◆ 2/2 · Kirua, Crasheur de serveur 3 ◆ · Kirua, La reine des neiges 6 ◆ 5/6 · Natinganz, Privé d’ordinateur 3 ◆ 1/4 · Natinganz, J’ai dl le boss 4 ◆ 2/5 · Écraseur de main 1/2.
+- **Sorts** : Pizza Party 1 ◆ · Giveaway 3 ◆ · Quitter le serveur 2 ◆ · Screenshot 3 ◆ · Premade 2 ◆ · Raid 5 ◆ · Binge-watching 4 ◆ · Genkidama 1 ◆ · Immunité diplomatique 1 ◆ · Enlèvement 6 ◆ · Bénédiction des rois 2 ◆ · Drain de vie 2 ◆ · Bouclier Féca 1 ◆ · Headshot 2 ◆ · Multi-casquettes 3 ◆.
+
 ## v3.9.18 — 20/10/2026
 
 ### Les nouvelles illustrations s’affichent tout de suite
