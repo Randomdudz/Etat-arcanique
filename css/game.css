@@ -1979,3 +1979,69 @@ body{background:linear-gradient(#080d187a,#080d187a),url("../png/site-background
 .hm-desc{margin-top:30px}
 #duel .hav.img{width:46px;height:46px}
 @media(max-height:820px){#duel .hav.img{width:36px;height:36px}}
+/* icônes Démoflux / Or / PV dans les textes, chiffres flottants, historique et projectiles */
+.uico.ti{width:1.1em;height:1.1em;vertical-align:-.2em;margin:0 .05em}
+.pop .uico.ti{width:1.05em;height:1.05em;vertical-align:-.15em;filter:drop-shadow(0 2px 3px #000)}
+.proj .uico.pj{width:26px;height:26px;display:block}
+#hlist .vb .uico.ti{width:1.15em;height:1.15em}
+.kwrow b .uico.kwim{width:1.3em;height:1.3em;vertical-align:-.3em;margin-right:4px}
+/* avatars hors duel : barre du haut, amis, chat, défis */
+.avs{display:inline-grid;place-items:center;flex:none;border-radius:50%;overflow:hidden;font-family:var(--disp);font-weight:700;color:#f3e7cc;border:2px solid #d8b56c;background:radial-gradient(circle at 50% 30%,#22426e,#0b1a30 70%)}
+.avs img{width:100%;height:100%;object-fit:cover;display:block}
+#top #pname{display:inline-flex;align-items:center;gap:8px;max-width:200px}
+#top #pname>span:last-child{overflow:hidden;text-overflow:ellipsis}
+.avs.tav{width:32px;height:32px;font-size:15px;border-width:1.5px}
+.avs.fav.sm{width:26px;height:26px;font-size:12px;border-width:1.5px}
+#fchat .fch{display:flex;align-items:center;gap:8px}
+.chalh{display:flex;align-items:center;gap:12px}
+.chalh .avs{width:52px;height:52px;font-size:22px}
+#top #pname{flex:0 0 auto;overflow:visible}
+#top #pname>span:last-child{max-width:110px;white-space:nowrap}
+.myprof{display:flex;align-items:center;gap:12px}
+.myprof .avs{width:54px;height:54px;font-size:24px;cursor:pointer}
+@media(max-width:1600px){#top #pname>span:last-child{display:none}}
+/* --- historique : petites cartes, avatars, icônes --- */
+.mi.mc{gap:5px;padding:1px 7px 1px 1px;border-radius:6px;background:#0a1220d9;border:1px solid color-mix(in srgb,var(--mc) 70%,#000)}
+.mth{position:relative;flex:none;width:24px;height:34px;border-radius:3px;background:#423c34 center 22%/cover no-repeat;border:1.5px solid var(--mc,#8a7a5a);box-shadow:0 1px 3px #000a;display:grid;place-items:center}
+.mth.sp{border-radius:3px 3px 8px 8px}
+.mth i{font-style:normal;font-size:13px}
+.mth b{position:absolute;bottom:-3px;min-width:11px;height:11px;padding:0 2px;border-radius:6px;font-size:8.5px;line-height:11px;text-align:center;font-weight:900;color:#f3e7cc;background:#120c06;border:1px solid #c9a35a99}
+.mth b.ma{left:-4px}.mth b.mh{right:-4px}
+.mth b.up{color:#8fe27c;border-color:#8fe27caa}.mth b.dn{color:#ff7c6c;border-color:#ff7c6caa}
+.mi.mc .mn{max-width:110px;overflow:hidden;text-overflow:ellipsis}
+.mi.hch{gap:5px;padding:1px 8px 1px 1px}
+.avs.hc{width:22px;height:22px;font-size:11px;border-width:1.5px}
+.hwho{display:flex;align-items:center;gap:6px}
+.avs.hw{width:20px;height:20px;font-size:10px;border-width:1.5px}
+#hlist .vb .uico.ti{width:1.3em;height:1.3em;vertical-align:-.3em}
+#hlist .hr{align-items:center}
+/* --- mots-clés sur les cartes : grosses pastilles lumineuses, sous le nom, à droite --- */
+.card .kws{top:17cqw;right:2cqw;gap:1.8cqw;z-index:5}
+.card .kws i:has(.kwim){display:inline-flex;align-items:center;justify-content:center;gap:.8cqw;min-width:16cqw;height:16cqw;padding:0;border-radius:99px;
+  background:radial-gradient(circle at 50% 38%,#2d4f86,#0c1730 72%);border:.8cqw solid #f0d68f;color:#fff3cf;font-size:10cqw;font-weight:900;
+  box-shadow:0 0 3.4cqw #ffd77acc,0 0 1.2cqw #fff3,inset 0 0 2cqw #8fc4ff55,0 .8cqw 1.6cqw #000c}
+.card .kws i:has(.kwim:not(:only-child)){padding:0 2.4cqw 0 .6cqw}
+.card .kws i .kwim{width:13.5cqw;height:13.5cqw;margin:0;vertical-align:0;filter:drop-shadow(0 0 1.4cqw #fff9) drop-shadow(0 0 .4cqw #ffe9b0) brightness(1.3) saturate(1.25)}
+.card .kws i.vn:has(.kwim){background:radial-gradient(circle at 50% 38%,#3f6a2a,#11240c 72%);border-color:#c8ef8a;box-shadow:0 0 3.4cqw #b6f07acc,0 0 1.2cqw #fff3,0 .8cqw 1.6cqw #000c}
+/* sur le plateau : un peu plus petites pour laisser voir l'illustration, mais aussi lumineuses */
+.card.bd .kws{top:22cqw;right:1.2cqw;gap:1.4cqw}
+.card.bd .kws i:has(.kwim){min-width:14cqw;height:14cqw;border-width:.7cqw;font-size:9cqw}
+.card.bd .kws i .kwim{width:12cqw;height:12cqw}
+.card.bd .kws i:has(.kwim:only-child){padding:0}
+/* mots-clés : l'icône seule, sans fond ni cadre, avec un halo pour ressortir sur l'illustration */
+.card .kws i:has(.kwim),.card .kws i.vn:has(.kwim),.card.bd .kws i:has(.kwim){background:none;border:0;box-shadow:none;min-width:0;height:auto;padding:0;gap:.4cqw;
+  color:#fff6dc;text-shadow:0 0 1.6cqw #000,0 0 .6cqw #000,0 .3cqw .6cqw #000}
+.card .kws i .kwim{width:17cqw;height:17cqw;filter:drop-shadow(0 0 1.6cqw #ffe7a6) drop-shadow(0 0 .6cqw #fff8) drop-shadow(0 .5cqw .8cqw #000e) brightness(1.3) saturate(1.3)}
+.card .kws i.vn .kwim{filter:drop-shadow(0 0 1.6cqw #c6f58c) drop-shadow(0 0 .6cqw #fff8) drop-shadow(0 .5cqw .8cqw #000e) brightness(1.3) saturate(1.3)}
+.card .kws i:has(.kwim:not(:only-child)){font-size:11cqw;font-weight:900;padding:0}
+.card.bd .kws i .kwim{width:14cqw;height:14cqw}
+.card.bd .kws i:has(.kwim:not(:only-child)){font-size:9.5cqw}
+/* --- icônes de familles : sans cercle sombre, plus grandes et lumineuses --- */
+.card .tl i.fm:has(.famim){width:14cqw;height:14cqw;box-shadow:none;background:none}
+.card .tl .fms{gap:2cqw}
+.fm .famim{filter:drop-shadow(0 0 1.4cqw #ffe7a6) drop-shadow(0 0 .5cqw #fff8) drop-shadow(0 .4cqw .7cqw #000d) brightness(1.3) saturate(1.3)}
+.fi .famim,.chip .famim,.mi u .famim,h4 .famim,.tip b .famim,.fbadge .famim{filter:drop-shadow(0 0 4px #ffe7a6aa) drop-shadow(0 1px 2px #000c) brightness(1.25) saturate(1.25)}
+.fdot .fm:has(.famim){box-shadow:none;background:none}
+.fx .fi:has(.famim),.fburst .fi:has(.famim),.fbadge:has(.famim),.gi:has(.famim){background:none!important;box-shadow:none!important;border-color:transparent!important}
+.fx .fi .famim{width:1.45em;height:1.45em}
+.fbadge .famim{width:84%;height:84%}

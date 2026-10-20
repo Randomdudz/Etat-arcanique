@@ -222,7 +222,7 @@ function actsNode(){const el=$('#acts');if(!el)return;const D=DUEL,V=D.V,me=V.me
       disabled:P.hand.length>=V.o.hand||!P.dn,onclick:e=>{e.stopPropagation();doAct({t:'test'})}},'🧪',h('span',null,'Test'));
     bt.push(b)}
   if(mine())P.board.forEach((c,i)=>{if(c&&canExil(V,me,i)){const b=h('button',{class:'actb',title:'Disparaître à l’étranger : '+fullName(c.k)+' devient inciblable jusqu’à ton prochain tour ('+exCost(L.expats)+' Or)',
-      onclick:e=>{e.stopPropagation();doAct({t:'exil',i})}},miniAv(c.k),h('span',null,'✈️ '+exCost(L.expats)+'🪙'));
+      onclick:e=>{e.stopPropagation();doAct({t:'exil',i})}},miniAv(c.k),h('span',null,icoText('✈️ '+exCost(L.expats)+'🪙')));
     b.addEventListener('pointerenter',()=>{const sl=elAt(me,i);if(sl)sl.classList.add('acth')});b.addEventListener('pointerleave',()=>$$('.slot.acth').forEach(x=>x.classList.remove('acth')));bt.push(b)}});
   el.replaceChildren(...(bt.length?[h('b',{class:'al'},'Actions'),...bt]:[]));el.classList.toggle('none',!bt.length)}
 function discNode(){
@@ -273,7 +273,7 @@ function fxNode(s,el){
     const c=h('div',{class:'fx'+(n>=2?' on':''),style:'--fc:'+F.c,title:F.n+' — '+F.sum,'data-f':f},
       h('span',{class:'fi'},famIco(f)),h('span',null,F.n),
       h('span',{class:'pp'},Array.from({length:Math.max(3,n)},(_,j)=>h('i',{class:j<n?'f':''}))),
-      tag?h('span',{class:'tag'},tag):null);
+      tag?h('span',{class:'tag'},icoText(tag)):null);
     c.addEventListener('click',e=>{e.stopPropagation();cardPop({fac:f,s},e.clientX,e.clientY)});      // clic : fiche de la famille
     el.append(c)}}
 
@@ -360,14 +360,14 @@ function shopNode(){
   if(!V.o.ter){el.append(h('div',{class:'mut sm',style:'align-self:center'},'Terrains désactivés'));return}
   const rc=mine()&&canRoll(V,me);
   el.append(h('button',{class:'rollb'+(rc?' can':''),disabled:!rc,title:'Relancer les terrains : 2 nouveaux terrains pour '+ROLLC+' Or'+(mine()&&!rc?' (il te faut '+ROLLC+' Or)':''),
-    onclick:e=>{e.stopPropagation();doAct({t:'roll'})}},h('span',{class:'ri'},'🎲'),h('small',null,ROLLC+' 🪙')));
+    onclick:e=>{e.stopPropagation();doAct({t:'roll'})}},h('span',{class:'ri'},'🎲'),h('small',null,ROLLC+' ',uiIco('ico-or','ti'))));
   const keys=V.shop.map(t=>t?t.d:''),prev=D.prevShop||keys;
   V.shop.forEach((t,n)=>{
     if(!t){el.append(h('div',{class:'shT void'},'épuisé'));return}
     const td=TD[t.d],g=GAMES[td.g],cost=terrCost(V,me,t),can=mine()&&canBuy(V,me,n),old=n===0&&V.shop.length>1,soon=cycSoon(V);
     const d=h('div',{'data-n':n,class:'shT'+(can?' can':' no')+(D.sel&&D.sel.t==='terr'&&D.sel.n===n?' sel':'')+(prev.indexOf(keys[n])<0?' fresh':''),style:'--gc:'+g.c,title:td.n+' (terrain '+g.n+') — '+tTxt(td)},
       old?h('span',{class:'agetag'+(soon?'':' later'),title:soon?'Remplacé au début du prochain tour':'Remplacé dans 2 tours'},soon?'⏳ part bientôt':'⏳ dans 2 tours'):null,
-      h('div',{class:'r1'},h('span',{class:'sz'},Array.from({length:td.size},()=>h('i'))),h('span',{class:'pr'},'🪙'+cost)),
+      h('div',{class:'r1'},h('span',{class:'sz'},Array.from({length:td.size},()=>h('i'))),h('span',{class:'pr'},uiIco('ico-or','ti'),String(cost))),
       h('div',{class:'ef'},td.g==='bazar'?td.tn:'1 : '+td.t1+' · 2 : '+td.t2));
     d.addEventListener('click',e=>{e.stopPropagation();clickShop(n)});
     makeDrag(d,()=>{const V2=DUEL.V;if(!mine()||!canBuy(V2,V2.me,n))return null;return{t:'terr',n}});
@@ -380,7 +380,7 @@ function shopTile(n,prev,keys){
   const fx=td.g==='bazar'?[h('div',null,td.tn)]:[h('div',null,h('em',null,'1'),' '+td.t1),h('div',null,h('em',null,'2'),' '+td.t2)];
   const d=h('div',{'data-n':n,class:'shT side'+(can?' can':' no')+(D.sel&&D.sel.t==='terr'&&D.sel.n===n?' sel':'')+(prev.indexOf(keys[n])<0?' fresh':''),style:'--gc:'+g.c,title:td.n+' (terrain '+g.n+') — clic droit : détails'},
     h('div',{class:'tart'},td.img?h('img',{src:td.img,alt:'',draggable:'false'}):h('div',{class:'tph'})),
-    h('span',{class:'tsz2'},Array.from({length:td.size},()=>h('i'))),h('span',{class:'tco'},'🪙 '+cost),
+    h('span',{class:'tsz2'},Array.from({length:td.size},()=>h('i'))),h('span',{class:'tco'},uiIco('ico-or','ti'),' '+cost),
     old?h('span',{class:'agetag'+(soon?'':' later'),title:soon?'Remplacé au début du prochain tour':'Remplacé dans 2 tours'},soon?'⏳':'⏳ 2'):null,
     h('div',{class:'tfx2'},fx));
   d.addEventListener('click',e=>{e.stopPropagation();clickShop(n)});
@@ -391,7 +391,7 @@ function shopSide(L,zx){
   const keys=V.shop.map(t=>t?t.d:''),prev=D.prevShop||keys;
   const rc=mine()&&canRoll(V,me);
   const roll=h('button',{class:'rollb side'+(rc?' can':''),disabled:!rc,title:'Relancer les terrains : 2 nouveaux terrains pour '+ROLLC+' Or',
-    onclick:e=>{e.stopPropagation();doAct({t:'roll'})}},h('span',{class:'ri'},'🎲'),h('small',null,ROLLC+' 🪙'));
+    onclick:e=>{e.stopPropagation();doAct({t:'roll'})}},h('span',{class:'ri'},'🎲'),h('small',null,ROLLC+' ',uiIco('ico-or','ti')));
   const n=V.tdn||0,tdk=h('div',{class:'tdk',title:'Pioche de terrains : '+n+' terrain'+(n>1?'s':'')+'. La boutique s’y réapprovisionne.'},
     h('div',{class:'tdkc'},n?backEl():null),h('div',{class:'tdkt'},h('b',null,'Terrains'),h('span',null,n+' en pioche')));
   const t0=shopTile(0,prev,keys),t1=shopTile(1,prev,keys);el.replaceChildren(tdk,t0,roll,t1);
@@ -458,7 +458,7 @@ function famHover(k,on){
       pill=h('div',{class:'fx ghost',style:'--fc:'+F.c,'data-f':f},h('span',{class:'fi'},famIco(f)),h('span',null,F.n),h('span',{class:'pp'},Array.from({length:3},()=>h('i'))));fm.append(pill)}
     if(pill){pill.classList.add('hot');
       if(add){const dots=pill.querySelectorAll('.pp i');if(dots[n])dots[n].classList.add('gh');else pill.querySelector('.pp').append(h('i',{class:'gh nw'}));
-        const t2=facTag(f,n+1);if(t2&&t2!==facTag(f,n))pill.append(h('span',{class:'tag nx'},'→ '+t2))}}
+        const t2=facTag(f,n+1);if(t2&&t2!==facTag(f,n))pill.append(h('span',{class:'tag nx'},icoText('→ '+t2)))}}
     bm.querySelectorAll('.card[data-k]').forEach(c=>{const cc=CARDS[c.dataset.k];if(cc&&(cc.fac||[]).indexOf(f)>=0){c.classList.add('famhi');c.style.setProperty('--hc',F.c)}})}}
 // si la main est plus large que la place disponible, les cartes se chevauchent (au lieu de déborder de l'écran)
 function fitHand(){const el=$('#hand');if(!el)return;const cs=[...el.children];if(!cs.length)return;
@@ -487,7 +487,7 @@ function mullNode(){
     h('h2',null,done?'Main validée':'Ta main de départ'),
     h('p',{class:'mut'},done?'En attente de '+V.p[op].nm+'…':'Clique sur les cartes que tu veux remplacer, puis valide : elles retournent dans ton deck et tu en pioches autant de nouvelles. Clic droit : voir une carte en détail.'),
     h('div',{class:'mrow'+(done?' done':'')},cards),
-    h('p',{class:'sm mfirst'},V.first===me?'Tu joues en premier.':'Tu joues en second : tu recevras la Pièce (+1 ◆ pendant un tour) après le mulligan.'),go));
+    h('p',{class:'sm mfirst'},icoText(V.first===me?'Tu joues en premier.':'Tu joues en second : tu recevras la Pièce (+1 ◆ pendant un tour) après le mulligan.')),go));
   if(old)old.replaceWith(ov);else $('#duel').append(ov)}
 // Coco (esprit tourmenté) : à ton tour, choisis la carte à garder parmi celles piochées (les autres vont au cimetière)
 function pickNode(){
@@ -568,7 +568,7 @@ function drawFly(s,idx,delay){
 function terrDetail(ctx){
   const V=DUEL.V,me=V.me,t=ctx.t,td=TD[t.d],g=GAMES[td.g],P=V.p[ctx.s],out=[];
   out.push(...[h('h4',null,gi(td.g),' '+td.n),
-    h('div',{class:'mut sm'},'Terrain '+g.n+' · '+td.size+' case'+(td.size>1?'s':'')+(ctx.cost!=null?' · 🪙 '+ctx.cost:'')+(ctx.placed?' · posé sur '+(ctx.s===me?'ton':'son')+' plateau':'')),
+    h('div',{class:'mut sm'},icoText('Terrain '+g.n+' · '+td.size+' case'+(td.size>1?'s':'')+(ctx.cost!=null?' · 🪙 '+ctx.cost:'')+(ctx.placed?' · posé sur '+(ctx.s===me?'ton':'son')+' plateau':''))),
     terrFxEl(td),
     td.g==='lol'?h('div',{class:'sm',style:'color:#dcc38d'},'Lisdoon (Roro) y attaque deux fois par tour.'):null,
     td.g==='bazar'?h('div',{class:'sm mut'},'Terrain neutre : profite à toutes les créatures, quelle que soit leur affinité.'):h('div',{class:'sm mut'},'L’effet dépend de l’affinité '+g.n+' de chaque créature (points sur la carte).')].filter(Boolean));
@@ -587,7 +587,7 @@ function terrDetail(ctx){
   if(rows.length)out.push(h('div',{class:'tp-l'},rows));
   if(empty&&cells&&!ctx.placed)out.push(h('div',{class:'sm mut',style:'margin-top:5px'},empty+' case'+(empty>1?'s':'')+' vide'+(empty>1?'s':'')+' : l’effet s’appliquera aux créatures que tu y poseras.'));
   if(over)out.push(h('div',{class:'sm',style:'margin-top:5px;color:#bc8c94'},'⚠ Remplace le terrain déjà posé sur '+over+' de ces cases.'));
-  if(ctx.buy&&!ctx.placed&&V.p[me].or<ctx.cost)out.push(h('div',{class:'sm',style:'margin-top:5px;color:#bc8c94'},'Il te manque 🪙 '+(ctx.cost-V.p[me].or)+' pour l’acheter.'));
+  if(ctx.buy&&!ctx.placed&&V.p[me].or<ctx.cost)out.push(h('div',{class:'sm',style:'margin-top:5px;color:#bc8c94'},icoText('Il te manque 🪙 '+(ctx.cost-V.p[me].or)+' pour l’acheter.')));
   if(ctx.buy&&V.shop.length>1&&ctx.n===0)out.push(h('div',{class:'sm',style:'margin-top:5px;color:#cab095'},cycSoon(V)?'⏳ Ce terrain sera remplacé au début du prochain tour.':'⏳ Ce terrain sera remplacé dans 2 tours.'));
   if(ctx.placed&&t.lk)out.push(h('div',{class:'sm',style:'margin-top:6px;color:#9cc8e8'},'🔒 Posé par Kirua, la reine des neiges : indestructible, recouvrable, et fond quand elle quitte le plateau.'));
   return out}
@@ -611,7 +611,7 @@ function showInfo(){
     if(sel&&sel.t==='hand'&&CARDS[sel.k].t==='s'&&!cryTg(CARDS[sel.k]))act.push(h('button',{class:'btn pri sm',style:'--h:#73b0ad;--ht:#241e17',onclick:e=>{e.stopPropagation();playSpellOn(sel.i,null)}},'Jouer le sort'));
     if(sel)act.push(h('button',{class:'btn sm',onclick:e=>{e.stopPropagation();D.sel=null;renderDuel()}},'Annuler'))}
   box.classList.toggle('empty',!ht&&!act.length&&!preview);const tp=$('.dtop');if(tp)tp.classList.toggle('hashint',!!(ht||act.length||preview));
-  if(ht)box.append(h('div',{class:'hintline'},'👉 '+ht));
+  if(ht)box.append(h('div',{class:'hintline'},icoText('👉 '+ht)));
   if(act.length)box.append(h('div',{class:'acts'},act));
   if(preview){const cd=CARDS[I.k];box.append(h('div',{class:'effect-preview'},
     h('b',null,'Aperçu des effets · '+cd.n),
@@ -839,7 +839,7 @@ function hovOff(){clearTimeout(HOV.t);HOV.t=0;HOV.el=null;$$('.cpop.hov').forEac
 function hovParts(I){const V=DUEL.V,me=V.me;
   if(I.fac){const F=FAC[I.fac];return[h('div',{class:'fbadge',style:'--gc:'+F.c+';margin:0 auto'},famIco(I.fac)),facDetail(I)]}
   if(I.terr||I.shop!=null){const t=I.terr||V.shop[I.shop];if(!t)return null;const td=TD[t.d],g=GAMES[td.g],cost=I.shop!=null?terrCost(V,me,t):null;
-    return[tcardEl(t,{cost}),[h('h4',null,gi(td.g),' '+td.n),h('div',{class:'mut sm'},'Terrain '+g.n+' · '+td.size+' case'+(td.size>1?'s':'')+(cost!=null?' · 🪙 '+cost:'')),terrFxEl(td),
+    return[tcardEl(t,{cost}),[h('h4',null,gi(td.g),' '+td.n),h('div',{class:'mut sm'},icoText('Terrain '+g.n+' · '+td.size+' case'+(td.size>1?'s':'')+(cost!=null?' · 🪙 '+cost:''))),terrFxEl(td),
       I.terr&&t.lk?h('div',{class:'sm',style:'margin-top:6px;color:#9cc8e8'},'🔒 Indestructible, recouvrable : il fond quand Kirua, la reine des neiges quitte le plateau.'):null,
       I.terr&&tOff(V,t)?h('div',{class:'sm',style:'margin-top:6px;color:#bc8c94'},'⛔ Désactivé tant que Kirua, crasheur de serveur est en jeu.'):null,
       I.shop===0&&V.shop.length>1?h('div',{class:'sm',style:'margin-top:6px;color:#cab095'},cycSoon(V)?'⏳ Remplacé au début du prochain tour.':'⏳ Remplacé dans 2 tours.'):null].filter(Boolean)]}
@@ -869,10 +869,10 @@ function srcCol(src){if(typeof src!=='string')return '#c45f5b';if(FAC[src])retur
   if(src==='venin')return '#a6ba69';const cd=CARDS[src];return cd&&cd.t==='s'?(cd.col||'#c45f5b'):'#c99163'}
 function popAt(s,i,txt,cls,delay){
   setTimeout(()=>{const el=elAt(s,i);if(!el)return;const r=el.getBoundingClientRect();
-    const p=h('div',{class:'pop '+cls,style:'left:'+(r.left+r.width/2)+'px;top:'+(r.top+r.height*.3)+'px'},txt);document.body.append(p);setTimeout(()=>p.remove(),1300*ANIM);
+    const p=h('div',{class:'pop '+cls,style:'left:'+(r.left+r.width/2)+'px;top:'+(r.top+r.height*.3)+'px'},icoText(txt));document.body.append(p);setTimeout(()=>p.remove(),1300*ANIM);
     if(/dmg/.test(cls)){const c=i<0?el:el.firstElementChild;if(c){c.classList.remove('shk');void c.offsetWidth;c.classList.add('shk')}}},(delay||0)*ANIM)}
 function popEl(el,txt,cls,delay){setTimeout(()=>{if(!el||!el.isConnected)return;const r=el.getBoundingClientRect();
-  const p=h('div',{class:'pop '+cls,style:'left:'+(r.left+r.width/2)+'px;top:'+(r.top+r.height*.3)+'px'},txt);document.body.append(p);setTimeout(()=>p.remove(),1300*ANIM)},(delay||0)*ANIM)}
+  const p=h('div',{class:'pop '+cls,style:'left:'+(r.left+r.width/2)+'px;top:'+(r.top+r.height*.3)+'px'},icoText(txt));document.body.append(p);setTimeout(()=>p.remove(),1300*ANIM)},(delay||0)*ANIM)}
 function banner(t,col){$$('.banner').forEach(x=>x.remove());const b=h('div',{class:'banner',style:'--bc:'+(col||'#73b0ad')},t);document.body.append(b);   // une nouvelle annonce remplace la précédente (plus de textes superposés)
   const f=$('#field'),z=$('#field .zmid');if(f&&z){const fr=f.getBoundingClientRect(),zr=z.getBoundingClientRect();b.classList.add('onb');
     b.style.left=fr.left+'px';b.style.right=Math.max(0,innerWidth-fr.right)+'px';b.style.top=Math.round(zr.top+zr.height/2-b.offsetHeight/2)+'px'}
@@ -956,8 +956,8 @@ function animate(es){
     case 'heal':popAt(e.ts,-1,'+'+e.n+' ♥','heal',t);fxHeal(e.ts,-1,t);t+=150;break;
     case 'hc':popAt(e.ts,e.i,'+'+e.n,'heal',t);fxHeal(e.ts,e.i,t);t+=100;break;
     case 'pz':{const se=srcEl(e);if(se&&!(e.ss===e.ts&&e.si===e.i)){proj(se,elAt(e.ts,e.i),'#a6ba69','☠',t,FL*.8);popAt(e.ts,e.i,'☠+'+e.n,'pz',t+FL*.8);fxPoison(e.ts,e.i,t+FL*.8);t+=180}else{popAt(e.ts,e.i,'☠+'+e.n,'pz',t);fxPoison(e.ts,e.i,t);t+=120}break}
-    case 'gold':{if(e.from!=null){proj(elAt(e.from,-1),elAt(e.ts,-1),'#dab77a','🪙',t,FL*1.2);popAt(e.ts,-1,'+'+e.n+' 🪙','gold',t+FL*1.2);popAt(e.from,-1,'−'+e.n+' 🪙','gold',t);t+=300}
-      else{const se=srcEl(e);if(se&&e.si!==-1){proj(se,elAt(e.ts,-1),'#dab77a','🪙',t,FL);popAt(e.ts,-1,'+'+e.n+' 🪙','gold',t+FL);t+=220}else{popAt(e.ts,-1,'+'+e.n+' 🪙','gold',t);t+=150}}
+    case 'gold':{if(e.from!=null){proj(elAt(e.from,-1),elAt(e.ts,-1),'#dab77a',uiIco('ico-or','pj'),t,FL*1.2);popAt(e.ts,-1,'+'+e.n+' 🪙','gold',t+FL*1.2);popAt(e.from,-1,'−'+e.n+' 🪙','gold',t);t+=300}
+      else{const se=srcEl(e);if(se&&e.si!==-1){proj(se,elAt(e.ts,-1),'#dab77a',uiIco('ico-or','pj'),t,FL);popAt(e.ts,-1,'+'+e.n+' 🪙','gold',t+FL);t+=220}else{popAt(e.ts,-1,'+'+e.n+' 🪙','gold',t);t+=150}}
       break}
     case 'orRoll':popAt(e.ts,-1,(e.n>0?'+':'')+e.n+' 🪙','gold',t);t+=180;break;
     case 'fac':{const F=FAC[e.f],n=e.n;famBurst(e.ts,e.f,e.f==='ravages'?(n-1)+' missile'+(n>2?'s':'')+' !':e.f==='farmer'?'+'+(e.or||n)+' Or':e.f==='alien'?'Vol de '+(n-1)+' Or':'×'+n,t);t+=550;break}
@@ -1043,11 +1043,16 @@ function chip(ic,name,col,title){return h('span',{class:'mi sx',title:title||nam
 // nombre signé pour les bonus de stats (+2, -1, +0)
 function sg(n){n=n||0;return(n>0?'+':'')+n}
 // coût payé pour une action (déplacement) : pastille « −1 ◆ » ou « −1 🪙 »
-function costTag(e){return e.c?h('span',{class:'cst'},'−'+e.c+(e.r==='or'?' 🪙':' ◆')):null}
+function costTag(e){return e.c?h('span',{class:'cst'},'−'+e.c+' ',uiIco(e.r==='or'?'ico-or':'ico-demoflux','ti')):null}
+// carte citée dans l'historique : petite vignette de la carte (illustration, ATK et PV au moment de l'action,
+// en vert au-dessus de la valeur d'origine, en rouge en dessous ou blessée) et son nom court ; survol = la carte en grand
 function mini(k,st){const cd=CARDS[k];if(!cd)return h('span',{class:'mi'},'?');st=cd.t==='c'&&Array.isArray(st)&&st.length===3?st:null;
-  return h('span',{class:'mi','data-k':k,'data-hk':k,'data-hs':st?st.join(','):null,style:'--mc:'+RCOL[cd.r]},miniAv(k),fullName(cd),
-    st?h('span',{class:'hsnap',title:'État au moment de l’action : '+st[0]+' ATK, '+st[1]+' PV'+(st[1]<st[2]?' sur '+st[2]:'')},h('b',{class:stc(st[0],cd.a)||null},st[0]),h('i',{class:stc(st[1],cd.h)||null},st[1])):null)}
-function heroChip(s){const V=DUEL.V,P=V.p[s];return h('span',{class:'mi hch'+(s===V.me?' me':' op')},h('u',null,(P.nm||'?').charAt(0).toUpperCase()),s===V.me?'Toi':P.nm)}
+  const a=artOf(k),isC=cd.t==='c',at=st?st[0]:cd.a,hp=st?st[1]:cd.h;
+  const th=h('span',{class:'mth'+(isC?'':' sp'),style:a?'background-image:url("'+a+'")':'background:'+(cd.col||'#423c34')},a?null:h('i',null,cd.sym||'✦'),
+    isC?h('b',{class:'ma '+(st?stc(at,cd.a):'')},at):null,isC?h('b',{class:'mh '+(st?(hp<st[2]?'dn':stc(hp,cd.h)):'')},hp):null);
+  return h('span',{class:'mi mc','data-k':k,'data-hk':k,'data-hs':st?st.join(','):null,style:'--mc:'+RCOL[cd.r],
+    title:st?'Au moment de l’action : '+st[0]+' ATK, '+st[1]+' PV'+(st[1]<st[2]?' sur '+st[2]:''):null},th,h('span',{class:'mn'},cd.n))}
+function heroChip(s){const V=DUEL.V,P=V.p[s];return h('span',{class:'mi hch'+(s===V.me?' me':' op')},avEl(P.av,P.nm,'hc'),s===V.me?'Toi':P.nm)}
 function tgChip(s,i,k,st){return i<0?heroChip(s):mini(k,st)}
 function terrChip(d){const t=TD[d];if(!t)return h('span',{class:'mut'},'terrain');const g=GAMES[t.g];return chip(gi(t.g),t.n,g.c,'Terrain '+g.n+' — '+t.n)}
 function facChip(f){const F=FAC[f];return F?chip(famIco(f),F.n,F.c,'Famille '+F.n):null}
@@ -1057,7 +1062,7 @@ function srcChip(src){
   if(CARDS[src])return mini(src);
   if(FAC[src])return facChip(src);
   if(typeof src==='string'&&src.slice(0,2)==='T:'&&TD[src.slice(2)])return terrChip(src.slice(2));
-  if(src==='venin')return chip('☠','Venin','#a6ba69');
+  if(src==='venin')return chip(uiIco('kw-venin','ti'),'Venin','#a6ba69');
   if(src==='fat')return chip('🥵','Fatigue','#ca7f60');
   if(src==='ev')return chip('🌀','Événement','#dab77a');
   return chip('💥','Effet','#a69d91')}
@@ -1069,32 +1074,32 @@ function by(e){return e.cs&&e.cs!==e.k?[h('span',{class:'by'},'par'),srcChip(e.c
 function histNodes(e){
   const A=h('span',{class:'ar'},'→'),sc=e.src?srcChip(e.src):null;
   switch(e.t){
-  case 'play':return['play',[h('span',{class:'vb'},'▶'),h('span',{class:'vt'},CARDS[e.k]&&CARDS[e.k].t==='s'?'lance':'joue'),mini(e.k),e.c>0?h('span',{class:'cst'},e.c+' ◆'):null,e.tg?[h('span',{class:'vt'},'sur'),tgChip(e.tg.s,e.tg.i,e.tg.k)]:null,e.tg2?[h('span',{class:'vt'},'puis'),tgChip(e.tg2.s,e.tg2.i,e.tg2.k)]:null]];
-  case 'atk':return['atk',[h('span',{class:'vb'},'⚔'),mini(e.k,e.as),h('span',{class:'vt'},'attaque'),e.to==='hero'?heroChip(e.ts):mini(e.to,e.ds),h('span',{class:'dm'},'−'+e.n),e.xb?h('span',{class:'mut'},'(🚧+'+e.xb+')'):null,e.r>0?h('span',{class:'rc',title:'Riposte subie'},'↩ −'+e.r):null]];
+  case 'play':return['play',[h('span',{class:'vb'},'▶'),mini(e.k),e.c>0?h('span',{class:'cst'},e.c+' ',uiIco('ico-demoflux','ti')):null,e.tg?[h('span',{class:'vt'},'sur'),tgChip(e.tg.s,e.tg.i,e.tg.k)]:null,e.tg2?[h('span',{class:'vt'},'puis'),tgChip(e.tg2.s,e.tg2.i,e.tg2.k)]:null]];
+  case 'atk':return['atk',[mini(e.k,e.as),h('span',{class:'vb'},uiIco('kw-frenesie','ti')),e.to==='hero'?heroChip(e.ts):mini(e.to,e.ds),h('span',{class:'dm'},'−'+e.n),e.xb?h('span',{class:'mut'},'(🚧+'+e.xb+')'):null,e.r>0?h('span',{class:'rc',title:'Riposte subie'},'↩ −'+e.r):null]];
   case 'dmg':return['dmg',[sc,sc?A:null,tgChip(e.ts,e.i,e.k,e.st),h('span',{class:'dm'},e.n>=99?'détruit':'−'+e.n),sc?null:by(e)]];
-  case 'heal':return['heal',[sc||(e.cs?srcChip(e.cs):null),h('span',{class:'vb'},'♥'),heroChip(e.ts),h('span',{class:'hl'},'+'+e.n)]];
-  case 'hc':return['heal',[e.cs&&e.cs!==e.k?srcChip(e.cs):null,h('span',{class:'vb'},'♥'),mini(e.k,e.st),h('span',{class:'hl'},'+'+e.n)]];
-  case 'pz':return['pz',[sc||(e.cs?srcChip(e.cs):null),h('span',{class:'vb'},'☠'),tgChip(e.ts,e.i,e.k,e.st),h('span',{class:'pzc'},'+'+e.n)]];
-  case 'gold':return['gold',[e.from!=null?h('span',{class:'mut'},'vol :'):(sc||(e.cs?srcChip(e.cs):null)),h('span',{class:'vb'},'🪙'),heroChip(e.ts),h('span',{class:'gd'},'+'+e.n),e.from!=null&&sc?sc:null]];
+  case 'heal':return['heal',[sc||(e.cs?srcChip(e.cs):null),h('span',{class:'vb'},uiIco('ico-pv','ti')),heroChip(e.ts),h('span',{class:'hl'},'+'+e.n)]];
+  case 'hc':return['heal',[e.cs&&e.cs!==e.k?srcChip(e.cs):null,h('span',{class:'vb'},uiIco('ico-pv','ti')),mini(e.k,e.st),h('span',{class:'hl'},'+'+e.n)]];
+  case 'pz':return['pz',[sc||(e.cs?srcChip(e.cs):null),h('span',{class:'vb'},uiIco('kw-venin','ti')),tgChip(e.ts,e.i,e.k,e.st),h('span',{class:'pzc'},'+'+e.n)]];
+  case 'gold':return['gold',[e.from!=null?h('span',{class:'mut'},'vol :'):(sc||(e.cs?srcChip(e.cs):null)),h('span',{class:'vb'},uiIco('ico-or','ti')),heroChip(e.ts),h('span',{class:'gd'},'+'+e.n),e.from!=null&&sc?sc:null]];
   case 'orRoll':return['gold',[mini(e.k),h('span',{class:'vb'},'🎲'),heroChip(e.ts),'résultat : '+(e.roll>0?'+':'')+e.roll+' Or',e.n!==e.roll?h('span',{class:'mut'},'(variation réelle '+(e.n>0?'+':'')+e.n+')'):null]];
   case 'fac':return['fac',[facChip(e.f),h('b',{style:'color:'+FAC[e.f].c},'×'+e.n)]];
   case 'tfx':return TD[e.d]?['tfx',[terrChip(e.d),e.k?[A,mini(e.k)]:null]]:null;
-  case 'die':return e.kick?null:['die',[h('span',{class:'vb'},e.ban?'⛔':'✝'),mini(e.k),h('span',{class:'vt'},e.ban?'Bannie':'meurt'),by(e)]];
-  case 'sum':return['sum',[by(e),h('span',{class:'vb'},'＋'),mini(e.k),e.rs?h('span',{class:'mut'},'(respawn)'):null]];
-  case 'draw':return['card',[by(e),h('span',{class:'vb'},'🂠'),who(e),'pioche']];
+  case 'die':return e.kick?null:['die',[h('span',{class:'vb'},e.ban?'⛔':uiIco('ico-cimetiere','ti')),mini(e.k),h('span',{class:'vt'},e.ban?'bannie':'meurt'),by(e)]];
+  case 'sum':return['sum',[by(e),h('span',{class:'vb'},e.rs?uiIco('kw-respawn','ti'):'＋'),mini(e.k),e.rs?h('span',{class:'mut'},'Respawn'):null]];
+  case 'draw':return['card',[by(e),h('span',{class:'vb'},uiIco('ico-main','ti')),who(e),'pioche']];
   case 'burn':return['card',[h('span',{class:'vb'},'🔥'),who(e),e.k?mini(e.k):'une carte','brûlée (main pleine)',by(e)]];
   case 'add':return['card',[by(e),h('span',{class:'vb'},e.dup?'🪞':'🂱 +'),who(e),e.dup?(e.k?['copie de',mini(e.k)]:'copie une carte de sa main'):e.k?mini(e.k):'une carte']];
   case 'mull':return['card',[h('span',{class:'vb'},'♻'),heroChip(e.ts),e.n?'remplace '+e.n+' carte'+(e.n>1?'s':'')+' (mulligan)':'garde sa main (mulligan)']];
-  case 'disc':return['card',[h('span',{class:'vb'},'✝'),e.anon?heroChip(e.ts):who(e),mini(e.k),'défaussée (cimetière)',e.anon?null:by(e)]];
+  case 'disc':return['card',[h('span',{class:'vb'},uiIco('ico-cimetiere','ti')),e.anon?heroChip(e.ts):who(e),mini(e.k),'défaussée (cimetière)',e.anon?null:by(e)]];
   case 'buff':return['buff',[by(e),h('span',{class:'vb'},'⬆'),mini(e.k,e.st),h('span',{class:'bf'},e.tmp?sg(e.ba)+' ATK':sg(e.ba)+'/'+sg(e.bh)),e.tmp?'pendant ce tour':null]];
-  case 'tilt':return['buff',[h('span',{class:'vb'},'😡'),mini(e.k,e.st),'est tilt : son effet Tilt se déclenche']];
+  case 'tilt':return['buff',[h('span',{class:'vb'},uiIco('kw-tilt','ti')),mini(e.k,e.st),'Tilt !']];
   case 'kwg':return['buff',[by(e),h('span',{class:'vb'},KWI[e.kw]?kwIco(e.kw):'✧'),mini(e.k,e.st),e.kw==='deso'?'devient Désorienté':'gagne '+(KWI[e.kw]?KWI[e.kw][0]:e.kw)+(e.kw==='insolence'?' jusqu’au prochain tour':e.kw==='hate'?' pour ce tour':'')]];
-  case 'mute':return['ctl',[by(e),h('span',{class:'vb'},'🔇'),mini(e.k,e.st),'réduit au silence']];
-  case 'blk':return['ctl',[by(e),h('span',{class:'vb'},'🔒'),mini(e.k,e.st),'bloquée']];
+  case 'mute':return['ctl',[by(e),h('span',{class:'vb'},'🔇'),mini(e.k,e.st),'Mute']];
+  case 'blk':return['ctl',[by(e),h('span',{class:'vb'},'🔒'),mini(e.k,e.st),'Bloquée']];
   case 'kick':return['ctl',[by(e),h('span',{class:'vb'},'⤴'),h('span',{class:'vt'},'Kick :'),mini(e.k),'retourne dans la main']];
-  case 'egide':return['buff',[h('span',{class:'vb'},'✧'),mini(e.k),'Égide : dégâts annulés']];
+  case 'egide':return['buff',[h('span',{class:'vb'},uiIco('kw-egide','ti')),mini(e.k),'Égide : dégâts annulés']];
   case 'steal':return['card',[by(e),h('span',{class:'vb'},'📸'),e.k?mini(e.k):'copie une carte']];
-  case 'exil':return['move',e.fum?[h('span',{class:'vb'},e.fum===2?'🛂':'💨'),mini(e.k),e.fum===2?'immunité diplomatique (inciblable)':'disparaît dans la fumée (inciblable)']:[h('span',{class:'vb'},'✈️'),mini(e.k),'part à l’étranger',e.n?h('span',{class:'cst'},'−'+e.n+' 🪙'):'(gratuit)']];
+  case 'exil':return['move',e.fum?[h('span',{class:'vb'},e.fum===2?'🛂':'💨'),mini(e.k),e.fum===2?'immunité diplomatique (inciblable)':'disparaît dans la fumée (inciblable)']:[h('span',{class:'vb'},'✈️'),mini(e.k),'part à l’étranger',e.n?h('span',{class:'cst'},'−'+e.n+' ',uiIco('ico-or','ti')):'(gratuit)']];
   case 'move':return['move',[h('span',{class:'vb'},'↔'),mini(e.k),e.k2?['⇄',mini(e.k2)]:'déplacé(e)',costTag(e)]];
   case 'jump':return['move',[mini(e.k),h('span',{class:'vb'},'🌀'),e.evade?'esquive une attaque et saute de la case '+(e.i+1)+' à la case '+(e.to+1):'saute de la case '+(e.i+1)+' à la case '+(e.to+1)]];
   case 'tmove':return['move',[h('span',{class:'vb'},'↔'),terrChip(e.d),e.bound?'suit son propriétaire':'déplacé',costTag(e)]];
@@ -1105,12 +1110,12 @@ function histNodes(e){
   case 'story':return['sys',[by(e),h('span',{class:'vb'},'📖'),STORY[e.n]]];
   case 'chaos':return['sys',[by(e),h('span',{class:'vb'},'🌀'),CHAOSN[e.n]]];
   case 'tcyc':return TD[e.d]&&TD[e.nd]?['tfx',[h('span',{class:'vb'},'🔄'),terrChip(e.d),A,terrChip(e.nd)]]:null;
-  case 'buy':return['buy',[h('span',{class:'vb'},'🏟'),terrChip(e.d),h('span',{class:'cst'},'−'+e.c+' 🪙')]];
-  case 'roll':return['buy',[h('span',{class:'vb'},'🎲'),'Terrains relancés',h('span',{class:'cst'},'−'+e.c+' 🪙'),A,...(e.nd||[]).filter(d=>TD[d]).map(terrChip)]];
+  case 'buy':return['buy',[h('span',{class:'vb'},'🏟'),terrChip(e.d),h('span',{class:'cst'},'−'+e.c+' ',uiIco('ico-or','ti'))]];
+  case 'roll':return['buy',[h('span',{class:'vb'},'🎲'),'Terrains relancés',h('span',{class:'cst'},'−'+e.c+' ',uiIco('ico-or','ti')),A,...(e.nd||[]).filter(d=>TD[d]).map(terrChip)]];
   case 'ev':return['sys',[chip('🌀','Événement','#dab77a'),e.n]];
   case 'fat':return['dmg',[srcChip('fat'),h('span',{class:'dm'},'−'+e.n)]];
   case 'res':return['sys',[h('span',{class:'vb'},'🏳'),'Abandon']];
-  case 'deso':return['atk',[h('span',{class:'vb'},'💫'),mini(e.k),'Désorienté : cible tirée au hasard']];
+  case 'deso':return['atk',[h('span',{class:'vb'},uiIco('kw-deso','ti')),mini(e.k),'cible tirée au hasard']];
   case 'ctl':return['ctl',[by(e),h('span',{class:'vb'},'⇄'),mini(e.k),'change de camp']];
   case 'swap':return['ctl',[by(e),h('span',{class:'vb'},'⇄'),mini(e.k),'et',mini(e.k2),'échangent de camp']];
   case 'tdes':return e.melt?['tfx',[h('span',{class:'vb'},'💧'),terrChip(e.d),'fond : sa Kirua a quitté le plateau',who(e)]]:e.gone?['tfx',[h('span',{class:'vb'},'🌫'),terrChip(e.d),'disparaît : '+(e.d==='eco'?'Coco':'Potatoll')+' a quitté le plateau',who(e)]]:['tfx',[by(e),h('span',{class:'vb'},'💥'),e.d?terrChip(e.d):'terrain','détruit',who(e)]];
@@ -1120,16 +1125,16 @@ function histNodes(e){
   case 'save':return['buff',[h('span',{class:'vb'},'✨'),mini(e.k,e.st),'reste à 1 PV et devient invincible']];
   case 'inv':return['buff',[h('span',{class:'vb'},'✨'),mini(e.k),'invincible : aucun dégât']];
   case 'aff':return['buff',[by(e),h('span',{class:'vb'},'↑'),mini(e.k),...(e.g==='all'?['+1 d’affinité dans tous les jeux']:['affinité',gi(e.g),String(e.n)])]];
-  case 'pay':return['gold',[h('span',{class:'vb'},'🪙'),heroChip(e.ts),'dépense '+e.n+' Or',e.k?mini(e.k):null]];
+  case 'pay':return['gold',[h('span',{class:'vb'},uiIco('ico-or','ti')),heroChip(e.ts),'dépense '+e.n+' Or',e.k?mini(e.k):null]];
   case 'toff':return['tfx',[by(e),h('span',{class:'vb'},'⛔'),terrChip(e.d),'désactivé',who(e)]];
   case 'loot':return['buff',[h('span',{class:'vb'},e.n===6?'💰':e.n===5?'🪞':'🎁'),mini(e.k),e.n===5?'« Oh, j’ai drop un mirror ! » : 2 Or et un Miroir de Kalandra':e.n===6?'drop exceptionnel : 5 Or et 3 cartes':'butin : '+['2 Or','3 Or','2 Or et 1 carte','2 Or et 2 cartes','2 Or et 2 Démoflux'][e.n]]];
   case 'dupc':return['card',[h('span',{class:'vb'},'🪞'),who(e),'choisit une carte de sa main à dupliquer']];
   case 'discc':return['card',[h('span',{class:'vb'},'🎲'),who(e),'choisit une carte de sa main à défausser']];
   case 'rethand':return['move',[by(e),h('span',{class:'vb'},'↩'),mini(e.k),'retourne dans la main',who(e)]];
-  case 'tax':return['gold',[h('span',{class:'vb'},'🪙'),heroChip(e.ts),'paie '+e.n+' Or pour attaquer',mini(e.k)]];
-  case 'xa':return['buff',[by(e),h('span',{class:'vb'},'⚔'),mini(e.k),'pourra attaquer une fois de plus']];
-  case 'eth':return['buff',[by(e),h('span',{class:'vb'},'◆'),heroChip(e.ts),'+'+e.n+' Démoflux']];
-  case 'lose':return['sys',[h('span',{class:'vb'},'☠'),heroChip(e.ts),'perd la partie (Surrender to madness)']];
+  case 'tax':return['gold',[h('span',{class:'vb'},uiIco('ico-or','ti')),heroChip(e.ts),'paie '+e.n+' Or pour attaquer',mini(e.k)]];
+  case 'xa':return['buff',[by(e),h('span',{class:'vb'},uiIco('kw-frenesie','ti')),mini(e.k),'+1 attaque']];
+  case 'eth':return['buff',[by(e),h('span',{class:'vb'},uiIco('ico-demoflux','ti')),heroChip(e.ts),'+'+e.n+' Démoflux']];
+  case 'lose':return['sys',[h('span',{class:'vb'},'🏳'),heroChip(e.ts),'perd la partie (Surrender to madness)']];
   case 'laser':return['dmg',[h('span',{class:'vb'},'🔫'),mini(e.k),e.self?'ne peut pas avancer : il prend le laser':'avance : LASER sur la colonne '+(e.i+1)]];
   case 'nmove':return null;
   case 'rpsb':return['sys',[h('span',{class:'vb'},e.v?RPSI[e.v]:'🤫'),mini(e.k),e.v?'signe secret : '+RPSN[e.v]:'choisit en secret pierre, feuille ou ciseaux']];
@@ -1139,11 +1144,11 @@ function histNodes(e){
   case 'art':return['buff',[by(e),h('span',{class:'vb'},'🥚'),heroChip(e.ts),'obtient le',h('b',{style:'color:'+(ARTS[e.k]?ARTS[e.k].col:'#fff')},ARTS[e.k]?ARTS[e.k].n:'?'),ARTS[e.k]?h('span',{class:'mut'},'('+ARTS[e.k].tx+')'):null]];
   case 'artfx':return['card',[h('span',{class:'vb'},'🥕'),heroChip(e.ts),'Dofus Cawotte : pioche 2']];
   case 'hr':return['sys',[by(e),h('span',{class:'vb'},'🎰'),e.n<0?'Highroll raté : pas sur un terrain Dofus ou LoL':'Highroll : '+e.n+' créature'+(e.n>1?'s':'')+' ennemie'+(e.n>1?'s':'')+' détruite'+(e.n>1?'s':'')]];
-  case 'capd':return['dmg',[by(e),h('span',{class:'vb'},'◆'),heroChip(e.ts),'perd '+e.n+' Démoflux maximum']];
-  case 'capu':return['buff',[by(e),h('span',{class:'vb'},'◆'),heroChip(e.ts),'+'+e.n+' Démoflux maximum']];
+  case 'capd':return['dmg',[by(e),h('span',{class:'vb'},uiIco('ico-demoflux','ti')),heroChip(e.ts),'perd '+e.n+' Démoflux maximum']];
+  case 'capu':return['buff',[by(e),h('span',{class:'vb'},uiIco('ico-demoflux','ti')),heroChip(e.ts),'+'+e.n+' Démoflux maximum']];
   case 'tfx2':return TD[e.d]?['tfx',[terrChip(e.d),e.d==='eco'?'des Graines poussent':'un Pleb apparaît']]:null;
   case 'shuf':return['ctl',[by(e),h('span',{class:'vb'},'🔀'),'les créatures de',heroChip(e.ts),'changent de place']];
-  case 'cleave':return['dmg',[mini(e.k),h('span',{class:'vb'},'🪓'),'Cleave : −'+e.n+' à côté de sa cible']];
+  case 'cleave':return['dmg',[mini(e.k),h('span',{class:'vb'},uiIco('kw-cleave','ti')),'−'+e.n+' à côté de sa cible']];
   case 'hp1':return['dmg',[by(e),h('span',{class:'vb'},'💔'),mini(e.k,e.st),'tombe à 1 PV']];
   default:return null}}
 function renderHist(){
@@ -1161,7 +1166,7 @@ function renderHist(){
     if(e.t==='turn'){flush();list.append(h('div',{class:'hturn'+(e.s===me?'':' opp')},'Manche '+e.n+' · '+V.p[e.s].nm));continue}
     if(D.filt==='opp'&&e.s===me)continue;
     if(!grp||grp.a!==e.a){flush();grp={a:e.a,s:e.s,n:[],anon:e.anon}}
-    const r=histNodes(e);if(r){if(!grp.n.length&&!grp.anon)grp.n.push(h('div',{class:'hwho'},e.s===me?'Toi':V.p[e.s].nm));grp.n.push(h('div',{class:'hr k-'+r[0]+(grp.n.length>1?' sub':' main')},r[1]))}}
+    const r=histNodes(e);if(r){if(!grp.n.length&&!grp.anon)grp.n.push(h('div',{class:'hwho'},avEl(V.p[e.s].av,V.p[e.s].nm,'hw'),e.s===me?'Toi':V.p[e.s].nm));grp.n.push(h('div',{class:'hr k-'+r[0]+(grp.n.length>1?' sub':' main')},r[1]))}}
   flush();el.append(list);if(atBottom||!D._hs)el.scrollTop=el.scrollHeight;D._hs=1;D._hLen=D.hist.length;D._hFilt=D.filt}
 
 // ---------- fin de duel ----------

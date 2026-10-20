@@ -5,7 +5,7 @@ const CF={q:'',t:[],r:[],cost:[],fac:[],aff:[],kw:[],own:false,sort:'cost'},DF={
 const TABS=[['play','Jouer','play'],['shop','Boutique','shop'],['coll','Collection','coll'],['decks','Decks','decks'],['friends','Amis','friends'],['acct','Compte','acct'],['code','Code','code']];
 const TABART={play:'png/nav-play.png',shop:'png/nav-shop.png',coll:'png/nav-collection.png',decks:'png/nav-decks.png',friends:'png/nav-friends.png',acct:'png/nav-account.png',code:'png/nav-code.png'};
 const THUE={play:['#d9a24e','#24170a'],shop:['#2f8fe0','#fff'],coll:['#2f8fe0','#fff'],decks:['#2f8fe0','#fff'],friends:['#d6409a','#fff'],acct:['#8a72e0','#fff'],code:['#3fae7a','#fff']};
-function refreshTop(){const g=$('#gemn');if(g)g.textContent=S.gems;const n=$('#pname');if(n)n.textContent=S.name||'';
+function refreshTop(){const g=$('#gemn');if(g)g.textContent=S.gems;const n=$('#pname');if(n){n.replaceChildren(avEl(S.av,S.name,'tav'),h('span',null,S.name||''));n.title=(S.name||'')+' · ton compte'}
   const c=$('#accb');if(c){c.textContent=ACC?(ACC_ST==='err'?'⚠️':ACC_ST==='sync'?'⏳':'☁️'):'';c.title=ACC?'Compte '+ACC.id+' · '+accStTxt():'';c.hidden=!ACC}}
 function ph(icon,title,right){const art=icon==='💎'?'png/diamond.png':icon==='arena'?'png/arena.png':null;
   return h('h3',null,h('span',{class:'pi'},art?h('img',{class:'panel-art',src:art,alt:''}):ICONS[icon]?ico(icon):icon),title,right?h('span',{class:'phr',style:'margin-left:auto;font-size:13px;font-weight:700'},right):null)}
@@ -82,7 +82,7 @@ function vPlay(v){
       h('div',{class:'hb-guide'},h('span',{class:'sm mut'},'Tout savoir :'),[['terr','🏟 Terrains'],['fam','🧬 Familles'],['kw','📖 Mots-clés'],['rules','📜 Règles']].map(([k,l])=>h('button',{class:'btn sm g-'+k,onclick:()=>gotoGuide(k)},l)))));
   duelQueueRender()}
 function rulesNodes(){
-  const li=(t,d)=>h('div',{style:'margin:10px 0;line-height:1.45'},h('b',{class:'gold'},t+' '),d);
+  const li=(t,d)=>h('div',{style:'margin:10px 0;line-height:1.45'},h('b',{class:'gold'},icoText(t+' ')),icoText(d));
   return[
     li('But :','réduis les PV du héros adverse à 0.'),
     li('Decks :',ECON.deck+' cartes, 2 exemplaires maximum par carte (1 seul pour les légendaires). Chaque personnage existe en 3 versions : commune, rare et légendaire.'),
@@ -312,11 +312,12 @@ function cFam(v){
       facTiers(f,0),h('div',{class:'members'},mem.map(b=>baseEl(b))),
       sp.length?h('div',{class:'sm',style:'margin-top:8px'},h('b',null,'Sorts de famille : '),sp.map(k=>memEl(k))):null))});
   v.append(grid)}
+const TERMICO={'Démoflux':'ico-demoflux','Or':'ico-or','Cimetière':'ico-cimetiere'};   // termes du guide qui ont une icône illustrée
 function cKw(v){
   v.append(h('div',{class:'panel hl'},ph('📖','Mots-clés'),h('div',{class:'kwrow'},
     Object.keys(KWI).map(k=>[h('b',null,h('span',{class:'kwi'},kwIco(k)),KWI[k][0]),h('span',null,defOf(KWI[k][0])||'')]).flat())),
     h('div',{class:'panel'},ph('📜','Autres termes'),h('div',{class:'kwrow'},
-      ['Cri d’arrivée','Agonie','Reset','missile','effet du Bazar','Mute','Bloque','Banni','Kick','Artefact','Cimetière','Défausser','Affinité','à l’étranger','Démoflux','Or','Terrain','terrain de jeu','terrain neutre','Invincible'].map(w=>[h('b',null,w==='Bloque'?'Bloquée':w==='Banni'?'Bannie':w==='missile'?'Missile':w==='à l’étranger'?'À l’étranger':w==='effet du Bazar'?'Effet du Bazar':w[0].toUpperCase()+w.slice(1)),h('span',null,defOf(w)||'')]).flat())))}
+      ['Cri d’arrivée','Agonie','Reset','missile','effet du Bazar','Mute','Bloque','Banni','Kick','Artefact','Cimetière','Défausser','Affinité','à l’étranger','Démoflux','Or','Terrain','terrain de jeu','terrain neutre','Invincible'].map(w=>[h('b',null,TERMICO[w]?uiIco(TERMICO[w],'kwim'):null,w==='Bloque'?'Bloquée':w==='Banni'?'Bannie':w==='missile'?'Missile':w==='à l’étranger'?'À l’étranger':w==='effet du Bazar'?'Effet du Bazar':w[0].toUpperCase()+w.slice(1)),h('span',null,defOf(w)||'')]).flat())))}
 function cRules(v){v.append(h('div',{class:'panel hl'},ph('guide','Comment jouer'),...rulesNodes()))}
 
 // ---------- DECKS ----------
@@ -486,7 +487,7 @@ function vFriends(v){
   const list=h('div');
   v.append(h('div',{class:'cols'},
     h('div',null,
-      h('div',{class:'panel hl'},ph('friends','Mon profil'),h('div',{class:'row'},h('label',{class:'inico pen'},nameI,ico('pen'))),
+      h('div',{class:'panel hl'},ph('friends','Mon profil'),h('div',{class:'row myprof'},h('span',{title:'Changer d’avatar (Compte)',onclick:()=>go('acct')},avEl(S.av,S.name)),h('label',{class:'inico pen',style:'flex:1'},nameI,ico('pen'))),
         h('div',{class:'row',style:'margin-top:12px'},h('div',{style:'flex:1;min-width:150px'},h('div',{class:'sm mut'},'Mon code ami'),h('b',{style:'font-size:22px;letter-spacing:.1em',class:'gold codebig'},S.code)),
           h('button',{class:'btn sm pri',onclick:()=>copy(S.code,'Code copié')},ico('copy'),' Copier le code'),h('button',{class:'btn sm pri',onclick:()=>copy(link,'Lien d’invitation copié')},ico('link'),' Copier le lien')),
         h('div',{style:'margin-top:10px'},statusEl)),
@@ -501,9 +502,11 @@ const CHATS={},UNREAD={};let CHATW=null,CHATL=0;
 function chatKey(){return'etat_arcanique_chat_'+((S&&S.code)||'')}
 function chatLoad(){if(CHATL===chatKey())return;CHATL=chatKey();for(const k in CHATS)delete CHATS[k];try{Object.assign(CHATS,JSON.parse(localStorage.getItem(chatKey())||'{}'))}catch(e){}}
 function chatSave(){try{const o={};for(const k in CHATS)o[k]=CHATS[k].slice(-80);localStorage.setItem(chatKey(),JSON.stringify(o))}catch(e){}}
+// avatar d'un ami : mis à jour dès qu'un de ses messages l'indique (présence, chat, défi)
+function friendAv(f,av){if(typeof av!=='string'||(av&&!avOk(av))||av===(f.av||''))return;f.av=av;if(S.friends.indexOf(f)>=0)saveS()}
 function onFriendMsg(m){chatLoad();const code=String(m.code||'').toUpperCase();if(!validCode(code))return;const t=String(m.m||'').slice(0,300);
   (CHATS[code]=CHATS[code]||[]).push({f:1,m:t,ts:Date.now()});chatSave();
-  const f=S.friends.find(x=>x.code===code)||{code,name:String(m.name||'Un joueur').slice(0,18)};
+  const f=S.friends.find(x=>x.code===code)||{code,name:String(m.name||'Un joueur').slice(0,18)};friendAv(f,m.av);
   if(CHATW===code&&$('#fchat'))drawChat(f);else{UNREAD[code]=(UNREAD[code]||0)+1;toast('💬 '+f.name+' : '+t);if(CUR==='friends'&&!window.DUEL){const l=$('#flist');if(l)drawFriends(l)}}}
 function openChat(f){chatLoad();CHATW=f.code;UNREAD[f.code]=0;drawChat(f);const l=$('#flist');if(l)drawFriends(l)}
 function drawChat(f){let w=$('#fchat');if(!w){w=h('div',{id:'fchat'});document.body.append(w)}
@@ -513,7 +516,7 @@ function drawChat(f){let w=$('#fchat');if(!w){w=h('div',{id:'fchat'});document.b
   const send=()=>{const t=inp.value.trim().slice(0,300);if(!t)return;inp.value='';const x={f:0,m:t,ts:Date.now()};(CHATS[f.code]=CHATS[f.code]||[]).push(x);chatSave();drawChat(f);
     sendMsg(f,t,ok=>{if(!ok){x.ko=1;chatSave();if(CHATW===f.code&&$('#fchat'))drawChat(f);toast(f.name+' est hors ligne : message non envoyé.')}})};
   inp.addEventListener('keydown',e=>{e.stopPropagation();if(e.key==='Enter')send();if(e.key==='Escape'){w.remove();CHATW=null}});
-  w.replaceChildren(h('div',{class:'fch'},h('b',null,'💬 '+f.name),h('span',{class:'sm mut'},PRES[f.code]&&PRES[f.code].on?'en ligne':''),h('button',{class:'x',onclick:()=>{w.remove();CHATW=null}},'✕')),
+  w.replaceChildren(h('div',{class:'fch'},avEl(f.av,f.name,'fav sm'),h('b',null,f.name),h('span',{class:'sm mut'},PRES[f.code]&&PRES[f.code].on?'en ligne':''),h('button',{class:'x',onclick:()=>{w.remove();CHATW=null}},'✕')),
     list,h('div',{class:'row fci'},inp,h('button',{class:'btn sm pri',onclick:send},'Envoyer')));
   list.scrollTop=list.scrollHeight;setTimeout(()=>{try{inp.focus()}catch(e){}},30)}
 const PRES={};
@@ -523,13 +526,13 @@ function drawFriends(list){
   S.friends.forEach(f=>{
     const st=PRES[f.code];
     list.append(h('div',{class:'row frow'},
-      h('span',{class:'fav'},String(f.name||'?').trim().charAt(0).toUpperCase()||'?'),
+      avEl(f.av,f.name,'fav'),
       h('div',{style:'flex:1;min-width:0'},h('b',null,f.name),h('div',{class:'sm mut'},h('span',{class:'dot'+(st&&st.on?' on':'')}),' '+f.code+(st?(st.on?(st.busy?' · en duel':' · en ligne'):' · hors ligne'):''))),
       h('div',{class:'fbtns'},h('button',{class:'btn sm pri',onclick:()=>challengeFriend(f)},'⚔ Défier'),
       h('button',{class:'btn sm chb',title:'Discuter avec '+f.name,onclick:()=>openChat(f)},'💬',UNREAD[f.code]?h('span',{class:'unr'},String(UNREAD[f.code])):null),
       h('button',{class:'btn sm',title:'Échanger une carte avec '+f.name,onclick:()=>startTrade(f)},'⇄ Échanger'),
       h('button',{class:'btn sm',title:'Retirer '+f.name,onclick:()=>ask('Retirer '+f.name+' ?',null,[{t:'Annuler'},{t:'Retirer',c:'danger',f:()=>{S.friends=S.friends.filter(x=>x!==f);saveS();drawFriends(list)}}])},'✕'))))})}
-function pingAll(list){S.friends.forEach(f=>pingFriend(f.code,r=>{PRES[f.code]=r?{on:true,busy:r.busy}:{on:false};if(r&&r.name&&r.name!==f.name&&!f.custom){f.name=r.name;saveS()}if(CUR==='friends'&&document.body.contains(list))drawFriends(list)}))}
+function pingAll(list){S.friends.forEach(f=>pingFriend(f.code,r=>{PRES[f.code]=r?{on:true,busy:r.busy}:{on:false};if(r&&r.name&&r.name!==f.name&&!f.custom){f.name=r.name;saveS()}if(r&&(avOk(r.av)||r.av==='')&&r.av!==(f.av||'')){f.av=r.av;saveS()}if(CUR==='friends'&&document.body.contains(list))drawFriends(list)}))}
 function addFriend(raw,list){
   const input=String(raw||'').trim().toUpperCase(),match=input.match(/(?:^|[^A-Z0-9])(ARCANE-[A-Z0-9]{6})(?:$|[^A-Z0-9])/),code=match?match[1]:input;
   if(!validCode(code)){toast('Code invalide (format ARCANE-XXXXXX).');return}
@@ -553,7 +556,7 @@ function sendDuelTo(f,di){
 function onChallenge(c,m){
   if(!validCode(m.code)){try{c.close()}catch(e){}return}
   CHALLENGE_UI=true;const opt=cleanOpt(m.o),known=S.friends.some(f=>f.code===m.code);
-  const nm=String(m.name||'Un joueur').slice(0,18);
+  const nm=String(m.name||'Un joueur').slice(0,18);const fr=S.friends.find(f=>f.code===m.code);if(fr)friendAv(fr,m.av);
   const close=()=>{CHALLENGE_UI=null};
   c.on('close',()=>{if(CHALLENGE_UI&&!DUEL){close();closeModal();toast('Le défi a été annulé.')}});
   if(m.o&&m.o.arenaQueue)return onArenaQueueChallenge(c,m,nm,close);
@@ -566,7 +569,7 @@ function onChallenge(c,m){
     c.send({t:'acc',name:S.name,av:S.av||'',deck:deckKeys(d.cards),ver:APPV});
     modal(h('div',{style:'text-align:center'},h('h2',null,'Défi accepté'),h('p',{class:'mut'},'Le duel démarre…')),{sticky:true})};
   // on accepte d'abord, puis on choisit son deck
-  const ask1=()=>modal(h('div',null,h('h2',null,'⚔ '+nm+' te défie !'),h('div',{class:'sm mut'},optSummary(opt)),
+  const ask1=()=>modal(h('div',null,h('h2',{class:'chalh'},avEl(m.av,nm,'fav'),'⚔ '+nm+' te défie !'),h('div',{class:'sm mut'},optSummary(opt)),
     h('div',{class:'row',style:'justify-content:flex-end;margin-top:14px'},
       known?null:h('button',{class:'btn sm',onclick:()=>{S.friends.push({code:m.code,name:nm});saveS();toast(nm+' ajouté(e) aux amis.')}},'+ Ami'),
       h('button',{class:'btn danger',onclick:()=>{try{c.send({t:'dec'})}catch(e){}close();closeModal();setTimeout(()=>{try{c.close()}catch(e){}},300)}},'Refuser'),
@@ -586,7 +589,7 @@ function startTrade(f){
 // réception d'une proposition d'échange
 function onTrade(c,m){
   if(!validCode(m.code)){try{c.close()}catch(e){}return}
-  TRADE_UI=true;const nm=String(m.name||'Un joueur').slice(0,18),known=S.friends.some(f=>f.code===m.code);
+  TRADE_UI=true;const nm=String(m.name||'Un joueur').slice(0,18),known=S.friends.some(f=>f.code===m.code);{const fr=S.friends.find(f=>f.code===m.code);if(fr)friendAv(fr,m.av)}
   let answered=false;const end=()=>{TRADE_UI=null;closeModal()};
   c.on('data',x=>{if(x&&x.t==='tcancel'&&!answered){answered=true;end();toast(nm+' a annulé sa proposition d’échange.')}});
   c.on('close',()=>{if(!answered){answered=true;end();toast('La proposition d’échange a été annulée.')}});
