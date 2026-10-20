@@ -5,6 +5,13 @@ Journal des mises à jour, la plus récente en premier. Les annonces détaillée
 <!-- Style des notes : écrire pour les joueurs. Pas de termes techniques (fichiers, serveurs, code, noms de collections) :
      seulement ce qui change en jeu, et comment en profiter. -->
 
+## v3.9.15 — 20/10/2026
+
+### 62 nouvelles illustrations
+- Takk, Lanfear, Korock, Snoux, Miichi, Saja et le Coach ont enfin leurs images, comme le sort Ducks in a muck.
+- Coco, Losk, Maki, George Randall, Sadagod, Laloutre, Simon, Haddmi et Gollwyd Bambou ont une image différente pour chaque version.
+- Les créatures invoquées (Pleb, Weeb, Waifu, Mme Jak, Canard, Graine…) et les terrains La cave de Homz, Serveur Minecraft et Le Grand Bazaar ont aussi la leur.
+
 ## v3.9.14 — 20/10/2026
 
 ### Nouvel écran d’accueil
