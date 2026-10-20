@@ -29,11 +29,10 @@ async function duelQueueReadAll(){
       body:JSON.stringify({structuredQuery:{from:[{collectionId:'duelQueue'}],limit:100}})});
   return rows.filter(x=>x.document).map(x=>duelQueueDocData(x.document))}
 function duelQueuePanel(){
-  return h('div',{class:'panel v-duelq'},ph('⚔','Duel en ligne'),
-    h('p',{class:'mut sm',style:'margin:0 0 12px'},'Le matchmaking te trouve un adversaire humain qui cherche aussi une partie, en réglages standard (30 PV, 80 s par tour), avec les récompenses habituelles. 5 minutes de recherche maximum. Nécessite un compte Firebase connecté.'),
-    h('div',{class:'row'},h('button',{class:'btn pri',id:'duelQueueJoin',onclick:duelQueueStart},'Chercher un adversaire'),
-      h('button',{class:'btn',id:'duelQueueCancel',hidden:true,onclick:duelQueueCancel},'Annuler la recherche')),
-    h('div',{id:'duelQueueStatus',class:'arena-qstatus',hidden:true}))}
+  return homeCard({k:'queue',icon:'compass',title:'Chercher un adversaire',
+    desc:'Le matchmaking te trouve un adversaire humain, en réglages standard (30 PV, 80 s par tour), avec les récompenses habituelles. 5 minutes de recherche au plus. Compte en ligne nécessaire.',
+    extra:h('div',{id:'duelQueueStatus',class:'arena-qstatus',hidden:true}),
+    btn:[h('button',{class:'hc-btn',id:'duelQueueJoin',onclick:duelQueueStart},'Lancer la recherche'),h('button',{class:'btn sm hc-cancel',id:'duelQueueCancel',hidden:true,onclick:duelQueueCancel},'Annuler la recherche')]})}
 function duelQueueRender(){
   const box=$('#duelQueueStatus'),cancel=$('#duelQueueCancel'),join=$('#duelQueueJoin');if(!box)return;
   box.hidden=!DQ.state;box.className='arena-qstatus'+(DQ.state==='expired'||DQ.state==='error'?' expired':'');
@@ -44,7 +43,7 @@ function duelQueueRender(){
     DQ.state==='playing'?'Match trouvé · bon duel !':
     DQ.state==='expired'?'File expirée après 5 minutes. Tu peux relancer la recherche.':
     DQ.state==='error'?DQ.error||'La recherche a échoué. Réessaie.':'';
-  if(join){join.disabled=DQ.active;join.textContent=DQ.active?'Recherche en cours…':DQ.state==='expired'||DQ.state==='error'?'Relancer la recherche':'Chercher un adversaire'}
+  if(join){join.disabled=DQ.active;join.textContent=DQ.active?'Recherche en cours…':DQ.state==='expired'||DQ.state==='error'?'Relancer la recherche':'Lancer la recherche'}
   if(cancel)cancel.hidden=!DQ.active}
 function duelQueueClearTimers(){clearInterval(DQ.poll);clearInterval(DQ.tick);DQ.poll=0;DQ.tick=0}
 function duelQueueWatch(){
