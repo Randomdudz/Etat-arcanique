@@ -1888,3 +1888,14 @@ body{background:linear-gradient(#080d187a,#080d187a),url("../png/site-background
 .castc{animation-duration:2.87s}.slot.flash::after{animation-duration:1.58s}.hc.drawn{animation-duration:.89s}.trail{animation-duration:.77s}.boom{animation-duration:.89s}
 .tcell.tfl{animation-duration:1.5s}.fx.fxp{animation-duration:1.5s}.shT.fresh{animation-duration:1.44s}.card.fam .ci{animation-duration:1.5s}
 .shk{animation-duration:.56s}.hero.shk{animation-duration:.67s}.hitw{animation-duration:.31s}
+/* --- plateau : badges plus petits et sur les bords, pour laisser voir le nom et l'illustration --- */
+.card.bd .kws{top:22cqw;right:1cqw;gap:.8cqw}
+.card.bd .kws i{font-size:7.6cqw;padding:.3cqw 1.6cqw;border-width:.4cqw}
+.card.bd .bdg{top:22cqw;left:1cqw;gap:.8cqw}
+.card.bd .bdg i{font-size:7.6cqw;padding:.4cqw 1.8cqw}
+.card.bd .tb{top:auto;bottom:27cqw;font-size:7cqw;padding:.3cqw 2cqw;gap:1cqw;border-width:.6cqw}
+.card.bd .tb img.gico{width:7.6cqw;height:7.6cqw}
+.card.bd .tb b i{width:2.6cqw;height:2.6cqw}
+/* créature arrivée puis morte avant le prochain affichage (flashLife) */
+.lifec{position:fixed;z-index:64;pointer-events:none;animation:lifein .35s ease-out}
+@keyframes lifein{0%{opacity:0;transform:scale(.85)}100%{opacity:1;transform:none}}

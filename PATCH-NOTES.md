@@ -5,6 +5,17 @@ Journal des mises à jour, la plus récente en premier. Les annonces détaillée
 <!-- Style des notes : écrire pour les joueurs. Pas de termes techniques (fichiers, serveurs, code, noms de collections) :
      seulement ce qui change en jeu, et comment en profiter. -->
 
+## v3.10.2 — 20/10/2026
+
+### Serveur Minecraft
+- Le Pleb qui apparaît en fin de tour s’affiche toujours. S’il était tué tout de suite (par exemple par « Long A à l’AWP » au début du tour adverse), il n’apparaissait pas du tout sur le plateau, seulement dans l’historique. Maintenant on le voit arriver, puis mourir.
+
+### Plateau plus lisible
+- Les badges posés sur les créatures (Venin subi, mots-clés, Bloquée…) sont plus petits et placés sur les bords, sous le nom.
+- Le badge d’affinité avec le terrain (icône CS, WoW… et ses points) est descendu au-dessus de l’ATK et des PV.
+- Le nom et l’illustration des cartes restent visibles.
+- Deux annonces au centre du plateau ne se superposent plus : la nouvelle remplace l’ancienne.
+
 ## v3.10.1 — 20/10/2026
 
 ### Désorienté

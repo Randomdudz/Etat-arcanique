@@ -867,7 +867,7 @@ function popAt(s,i,txt,cls,delay){
     if(/dmg/.test(cls)){const c=i<0?el:el.firstElementChild;if(c){c.classList.remove('shk');void c.offsetWidth;c.classList.add('shk')}}},(delay||0)*ANIM)}
 function popEl(el,txt,cls,delay){setTimeout(()=>{if(!el||!el.isConnected)return;const r=el.getBoundingClientRect();
   const p=h('div',{class:'pop '+cls,style:'left:'+(r.left+r.width/2)+'px;top:'+(r.top+r.height*.3)+'px'},txt);document.body.append(p);setTimeout(()=>p.remove(),1300*ANIM)},(delay||0)*ANIM)}
-function banner(t,col){const b=h('div',{class:'banner',style:'--bc:'+(col||'#73b0ad')},t);document.body.append(b);
+function banner(t,col){$$('.banner').forEach(x=>x.remove());const b=h('div',{class:'banner',style:'--bc:'+(col||'#73b0ad')},t);document.body.append(b);   // une nouvelle annonce remplace la précédente (plus de textes superposés)
   const f=$('#field'),z=$('#field .zmid');if(f&&z){const fr=f.getBoundingClientRect(),zr=z.getBoundingClientRect();b.classList.add('onb');
     b.style.left=fr.left+'px';b.style.right=Math.max(0,innerWidth-fr.right)+'px';b.style.top=Math.round(zr.top+zr.height/2-b.offsetHeight/2)+'px'}
   setTimeout(()=>b.remove(),1600*ANIM)}
@@ -892,6 +892,13 @@ function flashSlot(s,i,col,delay){setTimeout(()=>{const el=elAt(s,i);if(!el)retu
   const V=DUEL&&DUEL.V;if(!V||i<0)return;const st=$(s===V.me?'#tMe':'#tOpp');if(!st)return;let best=null;$$('.tcell',st).forEach(c=>{if(+c.dataset.c<=i)best=c});
   if(best&&!best.classList.contains('none')){best.classList.remove('tfl');void best.offsetWidth;best.classList.add('tfl')}},(delay||0)*ANIM)}
 function castShow(k,delay){setTimeout(()=>{$$('.castc').forEach(x=>x.remove());const c=h('div',{class:'castc'},h('span',{class:'lbl'},'L’adversaire joue'),cardEl(k,{big:true}));document.body.append(c);setTimeout(()=>c.remove(),1650*ANIM)},(delay||0)*ANIM)}
+// créature arrivée puis morte dans le même lot d'événements (ex. le Pleb du Serveur Minecraft tué au début du tour adverse) :
+// le plateau n'est redessiné qu'à la fin du lot, elle n'a donc jamais été affichée. On la montre le temps de sa courte vie.
+function flashLife(s,i,k,t0,t1,ban){
+  setTimeout(()=>{const sl=elAt(s,i);if(!sl)return;const r=sl.getBoundingClientRect();
+    const n=cardEl(k,{bd:true});n.classList.add('lifec');n.style.cssText='left:'+r.left+'px;top:'+r.top+'px;width:'+r.width+'px;height:'+r.height+'px';document.body.append(n);
+    fxSummon(s,i,false,0);
+    setTimeout(()=>{n.classList.remove('lifec');n.classList.add('ghostc');if(!fxOff())fxDeath(r,ban);setTimeout(()=>n.remove(),900*ANIM)},Math.max(450,t1-t0)*ANIM)},t0*ANIM)}
 function ghostDie(s,i,ban,delay){
   const D=DUEL,g=D.rects[s+':'+i];if(!g)return;
   setTimeout(()=>{const n=g.n.cloneNode(true);n.classList.add('ghostc');n.style.cssText='left:'+g.r.left+'px;top:'+g.r.top+'px;width:'+g.r.width+'px;height:'+g.r.height+'px;'+(ban?'filter:hue-rotate(160deg)':'');
@@ -921,13 +928,13 @@ function shatter(s,i,delay){
         {duration:(700+Math.random()*350)*ANIM,easing:'cubic-bezier(.2,.7,.4,1)'});an.onfinish=()=>sh.remove()}},(delay||0)*ANIM)}
 const STORY=['+2/+2','dégâts au héros adverse','pioche','renforts','soin'];
 function animate(es){
-  const D=DUEL,V=D.V,me=V.me;let t=0;const FL=420;D._dk=0;
+  const D=DUEL,V=D.V,me=V.me;let t=0;const FL=420;D._dk=0;const born={};   // born : créatures arrivées pendant ce lot (case → carte, moment)
   for(const e of es){
     switch(e.t){
     case 'turn':{const f=()=>banner(e.s===me?'À TOI DE JOUER':'TOUR ADVERSE',e.s===me?'#e9cd86':'#c45f5b');if(t>0)setTimeout(f,t*ANIM);else f();t+=250;break}   // après la révélation d'Osiris, s'il y en a une
     case 'draw':{if(e.ts===me){const hl=V.p[me].hand.length,nd=es.filter(x=>x.t==='draw'&&x.ts===me).length;D._dk=(D._dk||0);drawFly(me,hl-nd+(D._dk++),t)}else drawFly(e.ts,0,t);t+=160;break}
     case 'play':if(e.ts!==me&&e.s!==me){castShow(e.k,t);t+=650}
-      if(e.i!=null&&CARDS[e.k]&&CARDS[e.k].t==='c')fxSummon(e.ts,e.i,(CARDS[e.k].kw||[]).indexOf('hate')>=0,t);
+      if(e.i!=null&&CARDS[e.k]&&CARDS[e.k].t==='c'){fxSummon(e.ts,e.i,(CARDS[e.k].kw||[]).indexOf('hate')>=0,t);born[e.ts+':'+e.i]={k:e.k,t}}
       if(e.tg&&CARDS[e.k]&&CARDS[e.k].t==='s'&&!es.some(x=>x.t==='dmg'&&x.si===-1&&x.ss===e.ts))proj(elAt(e.ts,-1),elAt(e.tg.s,e.tg.i),CARDS[e.k].col||'#fff',CARDS[e.k].sym,t,FL);break;
     case 'atk':lunge(1-e.ts,e.i,e.ts,e.ti,t);
       if(e.xb)popAt(1-e.ts,e.i,'🚧 +'+e.xb,'txt',t);
@@ -973,8 +980,10 @@ function animate(es){
     case 'xa':popAt(e.ts,e.i,'⚔ +1 attaque','buf',t);break;
     case 'eth':popAt(e.ts,-1,'◆ +'+e.n,'buf',t);break;
     case 'lose':banner('☠ Surrender to madness','#c15c58');t+=400;break;
-    case 'die':ghostDie(e.ts,e.i,e.ban,t);if(!e.kick){const g=D.rects[e.ts+':'+e.i];if(g)fxLater(t,()=>fxDeath(g.r,e.ban))}if(e.ban)popAt(e.ts,e.i,'⛔ Banni','txt',t);else if(e.kick)popAt(e.ts,e.i,'⤴ Kick','txt',t);t+=90;break;
-    case 'sum':if(e.rs)popAt(e.ts,e.i,'↺ Respawn','buf',t);fxSummon(e.ts,e.i,CARDS[e.k]&&(CARDS[e.k].kw||[]).indexOf('hate')>=0,t);break;
+    case 'die':{const bk=e.ts+':'+e.i,bn=born[bk];delete born[bk];
+      if(bn&&bn.k===e.k)flashLife(e.ts,e.i,e.k,bn.t,t,e.ban);
+      else{ghostDie(e.ts,e.i,e.ban,t);if(!e.kick){const g=D.rects[bk];if(g)fxLater(t,()=>fxDeath(g.r,e.ban))}}}if(e.ban)popAt(e.ts,e.i,'⛔ Banni','txt',t);else if(e.kick)popAt(e.ts,e.i,'⤴ Kick','txt',t);t+=90;break;
+    case 'sum':born[e.ts+':'+e.i]={k:e.k,t};if(e.rs)popAt(e.ts,e.i,'↺ Respawn','buf',t);fxSummon(e.ts,e.i,CARDS[e.k]&&(CARDS[e.k].kw||[]).indexOf('hate')>=0,t);break;
     case 'mute':popAt(e.ts,e.i,'🔇 Mute','txt',t);t+=100;break;
     case 'blk':{const se=srcEl(e);if(se)proj(se,elAt(e.ts,e.i),'#75b5d6','🔒',t,FL*.8);popAt(e.ts,e.i,'🔒','txt',t+(se?FL*.8:0));t+=120;break}
     case 'exil':if(e.fum){popAt(e.ts,e.i,e.fum===2?'🛂 Immunité':'💨 Dans la fumée','txt',t);t+=150;break}popAt(e.ts,e.i,'✈️ À l’étranger !','txt',t);if(e.n)famBurst(e.ts,'expats','Voyage : −'+e.n+' Or',t);t+=e.n?500:150;break;
