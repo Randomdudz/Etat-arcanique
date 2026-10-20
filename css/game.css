@@ -2036,3 +2036,12 @@ body{background:linear-gradient(#080d187a,#080d187a),url("../png/site-background
 .card .kws i:has(.kwim:not(:only-child)){font-size:11cqw;font-weight:900;padding:0}
 .card.bd .kws i .kwim{width:14cqw;height:14cqw}
 .card.bd .kws i:has(.kwim:not(:only-child)){font-size:9.5cqw}
+/* --- icônes de familles : sans cercle sombre, plus grandes et lumineuses --- */
+.card .tl i.fm:has(.famim){width:14cqw;height:14cqw;box-shadow:none;background:none}
+.card .tl .fms{gap:2cqw}
+.fm .famim{filter:drop-shadow(0 0 1.4cqw #ffe7a6) drop-shadow(0 0 .5cqw #fff8) drop-shadow(0 .4cqw .7cqw #000d) brightness(1.3) saturate(1.3)}
+.fi .famim,.chip .famim,.mi u .famim,h4 .famim,.tip b .famim,.fbadge .famim{filter:drop-shadow(0 0 4px #ffe7a6aa) drop-shadow(0 1px 2px #000c) brightness(1.25) saturate(1.25)}
+.fdot .fm:has(.famim){box-shadow:none;background:none}
+.fx .fi:has(.famim),.fburst .fi:has(.famim),.fbadge:has(.famim),.gi:has(.famim){background:none!important;box-shadow:none!important;border-color:transparent!important}
+.fx .fi .famim{width:1.45em;height:1.45em}
+.fbadge .famim{width:84%;height:84%}

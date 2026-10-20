@@ -9,6 +9,7 @@ Journal des mises à jour, la plus récente en premier. Les annonces détaillée
 
 ### Mots-clés bien visibles sur les cartes
 - Les icônes des mots-clés (Rempart, Tilt, Hâte, Venin, Cleave…) sont beaucoup plus grandes et lumineuses, sans fond, avec un halo pour ressortir sur l’illustration, juste sous le nom de la carte. Sur le plateau, elles restent un peu plus petites pour laisser voir l’illustration.
+- Les icônes des familles sont plus grandes et lumineuses, sans cercle sombre autour : sur les cartes, dans les pastilles de synergie du duel et partout ailleurs.
 
 ## v3.11.1 — 20/10/2026
 
