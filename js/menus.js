@@ -50,31 +50,31 @@ const HCICON={
   swords:'<g transform="rotate(45 50 50)"><path d="M50 9l5 9v44h-10V18z"/><rect x="35" y="62" width="30" height="6" rx="2"/><rect x="47" y="68" width="6" height="13"/><circle cx="50" cy="85" r="4.5"/></g><g transform="rotate(-45 50 50)"><path d="M50 9l5 9v44h-10V18z"/><rect x="35" y="62" width="30" height="6" rx="2"/><rect x="47" y="68" width="6" height="13"/><circle cx="50" cy="85" r="4.5"/></g>',
   compass:'<path d="M50 22l5 18 18 5-18 5-5 18-5-18-18-5 18-5Z" transform="rotate(45 50 50)" opacity=".7"/><path d="M50 8l8 34 34 8-34 8-8 34-8-34-34-8 34-8Z"/><circle cx="50" cy="50" r="5" fill="#3a2408"/>',
   trophy:'<path d="M34 24h32v14c0 10-7 18-16 18s-16-8-16-18Zm-10 4h9v6h-4c0 6 3 10 7 12l-2 4c-6-3-10-9-10-16Zm52 0h-9v6h4c0 6-3 10-7 12l2 4c6-3 10-9 10-16ZM46 56h8v8h7v6H39v-6h7Z"/>'};
-function hcMedal(icon){const m=document.createElement('div');m.className='hc-medal';
+function hcMedal(icon){const m=document.createElement('div');m.className='hm-medal';
   m.innerHTML='<svg viewBox="0 0 100 100"><defs><linearGradient id="hcg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff1b8"/><stop offset=".45" stop-color="#e2b04c"/><stop offset="1" stop-color="#8a5a16"/></linearGradient><radialGradient id="hcs" cx=".5" cy=".35" r=".7"><stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset="1" stop-color="#000" stop-opacity=".45"/></radialGradient></defs>'+
     '<polygon points="50,1 57,14 71,8 72,23 87,24 81,38 96,45 84,54 92,67 77,70 76,85 62,80 54,94 46,82 33,92 29,77 14,78 20,64 6,56 18,46 9,33 24,31 24,16 38,19" fill="url(#hcg)" stroke="#5a3a10" stroke-width="1.2"/>'+
     '<circle cx="50" cy="50" r="36" fill="#1a1006" stroke="url(#hcg)" stroke-width="5"/><circle cx="50" cy="50" r="30" style="fill:var(--mc)"/><circle cx="50" cy="50" r="30" fill="url(#hcs)"/>'+
     '<g fill="url(#hcg)" stroke="#3a2408" stroke-width=".8">'+HCICON[icon]+'</g></svg>';return m}
 function homeCard(o){
-  return h('div',{class:'hc hc-'+o.k},hcMedal(o.icon),h('i',{class:'hc-k tl'}),h('i',{class:'hc-k tr'}),h('i',{class:'hc-k bl'}),h('i',{class:'hc-k br'}),h('i',{class:'hc-bd'}),
-    h('div',{class:'hc-art'}),
-    h('div',{class:'hc-banw'},h('i',{class:'hc-dl'}),h('div',{class:'hc-ban'},h('span',null,o.title)),h('i',{class:'hc-dr'})),
-    h('p',{class:'hc-desc'},...[].concat(o.desc)),o.extra||null,
+  return h('div',{class:'hm hm-'+o.k},hcMedal(o.icon),h('i',{class:'hm-k tl'}),h('i',{class:'hm-k tr'}),h('i',{class:'hm-k bl'}),h('i',{class:'hm-k br'}),h('i',{class:'hm-bd'}),
+    h('div',{class:'hm-art'}),
+    h('div',{class:'hm-banw'},h('i',{class:'hm-dl'}),h('div',{class:'hm-ban'},h('span',null,o.title)),h('i',{class:'hm-dr'})),
+    h('p',{class:'hm-desc'},...[].concat(o.desc)),o.extra||null,
     ...[].concat(o.btn))}
 function vPlay(v){
   const anyOk=S.decks.some(d=>deckCheck(d).ok),r=S.arena&&S.arena.run;
   v.append(h('div',{class:'home4'},
     homeCard({k:'friends',icon:'friends',title:'Défier un ami',
       desc:'Ajoute un ami avec son code, puis lance-lui un défi en ligne. Vous devez être connectés tous les deux. Tu règles le duel au moment de le défier.',
-      btn:h('button',{class:'hc-btn',onclick:()=>go('friends')},'Ouvrir mes amis')}),
+      btn:h('button',{class:'hm-btn',onclick:()=>go('friends')},'Ouvrir mes amis')}),
     homeCard({k:'play',icon:'swords',title:'Jouer',
       desc:'Affronte l’IA : elle construit son deck avec des cartes de ton niveau, autour d’une famille. Gagne des 💎 pour ouvrir des boosters.',
-      btn:h('button',{class:'hc-btn',disabled:!anyOk,onclick:()=>pickDeckModal('Lancer une partie','Règle le duel si besoin, puis choisis ton deck : ton adversaire ne saura jamais lequel tu as pris.',i=>startAIDuel(i),settingsBlock())},anyOk?'Lancer une partie':'Crée d’abord un deck valide')}),
+      btn:h('button',{class:'hm-btn',disabled:!anyOk,onclick:()=>pickDeckModal('Lancer une partie','Règle le duel si besoin, puis choisis ton deck : ton adversaire ne saura jamais lequel tu as pris.',i=>startAIDuel(i),settingsBlock())},anyOk?'Lancer une partie':'Crée d’abord un deck valide')}),
     duelQueuePanel(),
     homeCard({k:'arena',icon:'trophy',title:'Arène',
       desc:r?(r.swap?(r.swap.stage==='remove'?'Choisis les '+ARENA.redraft+' cartes à remplacer.':'Choisis '+ARENA.redraft+' remplaçantes avant de sélectionner les cartes à remplacer.'):r.picks.length<ARENA.picks?'Ton draft : '+r.picks.length+' / '+ARENA.picks+' cartes choisies.':'Ton deck d’Arène est prêt ('+r.w+' V · '+r.l+' D) : défie l’IA au palier '+Math.min(ARENA.maxW,r.w+1)+' ou cherche un joueur.'):
-        ['Draft de '+ARENA.picks+' cartes, puis affronte l’IA ou cherche un joueur avec le matchmaking. '+ARENA.maxW+' paliers, jusqu’à '+ARENA.rw[ARENA.maxW]+' 💎 à gagner. Entrée : '+ARENA.cost+' ',h('img',{class:'hc-gem',src:'png/diamond.png',alt:'diamants'}),'.'],
-      btn:h('button',{class:'hc-btn',onclick:()=>go('arena')},r?(r.swap||r.picks.length<ARENA.picks?'Continuer le draft':'Ouvrir l’Arène'):'Accéder à l’Arène')})),
+        ['Draft de '+ARENA.picks+' cartes, puis affronte l’IA ou cherche un joueur avec le matchmaking. '+ARENA.maxW+' paliers, jusqu’à '+ARENA.rw[ARENA.maxW]+' 💎 à gagner. Entrée : '+ARENA.cost+' ',h('img',{class:'hm-gem',src:'png/diamond.png',alt:'diamants'}),'.'],
+      btn:h('button',{class:'hm-btn',onclick:()=>go('arena')},r?(r.swap||r.picks.length<ARENA.picks?'Continuer le draft':'Ouvrir l’Arène'):'Accéder à l’Arène')})),
     h('div',{class:'homebar'},
       h('div',{class:'hb-gain'},h('img',{src:'png/diamond.png',alt:''}),h('b',null,'Gains du jour'),h('div',{class:'bar'},h('i',{style:'width:'+Math.min(100,S.daily.earned/ECON.cap*100)+'%'})),
         h('span',{class:'sm'},S.daily.earned+' / '+ECON.cap),h('span',{class:'sm mut'},'Victoire +'+ECON.win+' · Défaite +'+ECON.loss+' · 1re victoire du jour +'+ECON.first),h('b',{class:'sm vstat',title:'Victoires et défaites'},S.stats.w+' V · '+S.stats.l+' D')),

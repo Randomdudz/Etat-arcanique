@@ -32,7 +32,7 @@ function duelQueuePanel(){
   return homeCard({k:'queue',icon:'compass',title:'Chercher un adversaire',
     desc:'Le matchmaking te trouve un adversaire humain, en réglages standard (30 PV, 80 s par tour), avec les récompenses habituelles. 5 minutes de recherche au plus. Compte en ligne nécessaire.',
     extra:h('div',{id:'duelQueueStatus',class:'arena-qstatus',hidden:true}),
-    btn:[h('button',{class:'hc-btn',id:'duelQueueJoin',onclick:duelQueueStart},'Lancer la recherche'),h('button',{class:'btn sm hc-cancel',id:'duelQueueCancel',hidden:true,onclick:duelQueueCancel},'Annuler la recherche')]})}
+    btn:[h('button',{class:'hm-btn',id:'duelQueueJoin',onclick:duelQueueStart},'Lancer la recherche'),h('button',{class:'btn sm hm-cancel',id:'duelQueueCancel',hidden:true,onclick:duelQueueCancel},'Annuler la recherche')]})}
 function duelQueueRender(){
   const box=$('#duelQueueStatus'),cancel=$('#duelQueueCancel'),join=$('#duelQueueJoin');if(!box)return;
   box.hidden=!DQ.state;box.className='arena-qstatus'+(DQ.state==='expired'||DQ.state==='error'?' expired':'');
