@@ -49,6 +49,7 @@ function mountDuel(){
     h('div',{id:'tbar'},h('i')),
     h('div',{class:'dmain'},
       h('div',{class:'field',id:'field',onclick:()=>{const D=DUEL;if(D&&(D.sel||D.info)){D.sel=null;D.info=null;renderDuel()}}},
+        h('div',{class:'dmat',id:'dmat'}),
         h('section',{class:'zone zopp'},h('div',{id:'hOpp'}),h('div',{class:'fxrow',id:'fOpp'}),h('div',{class:'tstrip',id:'tOpp'}),h('div',{class:'board o',id:'bOpp'})),
         h('section',{class:'zone zmid mid'},h('div',{class:'shopz',id:'shop'}),h('div',{class:'evb',id:'evb'}),
           h('button',{class:'endb',id:'endb',onclick:e=>{e.stopPropagation();endTurnClick()}},h('span',{id:'ebt'},'Fin du tour'),h('small',{id:'ebs'}),h('i',{class:'eb',id:'ebb'}))),
@@ -181,6 +182,11 @@ function hintText(){
   if(s.t==='terr')return s.at==null?'Clique où poser le terrain sur ton plateau':'Clique à nouveau pour confirmer';
   return ''}
 
+// tapis du plateau : une seule illustration derrière les deux camps et la barre du milieu
+function placeMat(){const f=$('#field'),m=$('#dmat');if(!f||!m)return;let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;
+  for(const z of f.querySelectorAll(':scope>.zopp,:scope>.zmid,:scope>.zme')){if(!z.offsetWidth)continue;x0=Math.min(x0,z.offsetLeft);y0=Math.min(y0,z.offsetTop);x1=Math.max(x1,z.offsetLeft+z.offsetWidth);y1=Math.max(y1,z.offsetTop+z.offsetHeight)}
+  if(x1<x0)return;const p=16;m.style.cssText='left:'+(x0-p)+'px;top:'+(y0-p)+'px;width:'+(x1-x0+2*p)+'px;height:'+(y1-y0+2*p)+'px'}
+addEventListener('resize',()=>{if(typeof DUEL!=='undefined'&&DUEL)placeMat()});
 // ---------- rendu ----------
 function renderDuel(){
   const D=DUEL;if(!D||!D.V||!$('#hOpp'))return;if(!$('.cpop'))hideTip();const V=D.V,me=V.me,op=1-me;
@@ -200,7 +206,7 @@ function renderDuel(){
   // une créature déplacée glisse de son ancienne case vers la nouvelle
   $$('#duel .slot .card[data-id]').forEach(c=>{const r0=idr[c.dataset.id];if(!r0)return;const r=c.parentElement.getBoundingClientRect(),dx=r0.left-r.left,dy=r0.top-r.top;
     if(Math.abs(dx)+Math.abs(dy)>3)c.animate([{transform:'translate('+dx+'px,'+dy+'px)',zIndex:20},{transform:'none',zIndex:20}],{duration:380*ANIM,easing:'cubic-bezier(.2,.8,.2,1)'})});
-  renderHist();aimDraw();
+  renderHist();aimDraw();placeMat();
   discNode();
   if(D.started)animate(D.newE);else{D.started=true;banner(m?'À TOI DE JOUER':'TOUR ADVERSE',m?'#e9cd86':'#c45f5b')}
   D.newE=[];
@@ -231,7 +237,7 @@ function atkWhy(V,s,i){const c=V.p[s].board[i];if(!c)return null;if(pend(V,s))re
 function faceAttackBlockReason(V,s,i){
   const c=V.p[s].board[i];if(!c)return'Aucune créature à cet emplacement.';
   if(!canAtk(V,s,i)){const why=atkWhy(V,s,i);return why?why[1]:'Cette créature ne peut pas attaquer.'}
-  if(eff(V,s,i).kw.deso)return'Désorientée : sa cible d’attaque est aléatoire, le héros ne peut pas être choisi directement.';
+  if(eff(V,s,i).kw.deso)return null;                                // Désorientée : Ctrl+clic l'envoie quand même, la cible est tirée au hasard
   const legal=atkTargets(V,s,i);if(legal.some(t=>t.s===1-s&&t.i===-1))return null;
   const guards=legal.filter(t=>t.s===1-s&&t.i>=0).map(t=>fullName(V.p[t.s].board[t.i].k));
   return guards.length?'Rempart adverse : tu dois d’abord attaquer '+guards.join(', ')+'.':'Cette attaque ne peut pas cibler le héros.';
@@ -248,11 +254,11 @@ function heroNode(s){
     h('div',{class:'hav'},(P.nm||'?').trim().charAt(0).toUpperCase()),
     h('div',{class:'hid'},
       h('div',{class:'hrow'},h('div',{class:'hn'},P.nm)),
-      h('div',{class:'hpl'},h('span',{class:'hl'},'Points de vie'),h('div',{class:'hbar'},h('i',{style:'width:'+pct+'%'})),h('b',{class:'hpn'},h('i',null,'♥'),' '+P.hp,h('small',null,'/'+P.mhp)))),
+      h('div',{class:'hpl'},h('span',{class:'hl'},'Points de vie'),h('div',{class:'hbar'},h('i',{style:'width:'+pct+'%'})),h('b',{class:'hpn'},uiIco('ico-pv'),' '+P.hp,h('small',null,'/'+P.mhp)))),
     P.pz>0?h('div',{class:'hpz'},'☠ '+P.pz):null,
-    st('mana','Démoflux',[h('i',null,'◆'),' '+P.eth,h('small',null,'/'+P.cap)],h('div',{class:'crys'},cr)),
-    V.o.ter?st('gold','Or',[h('i',null,'🪙'),' '+P.or]):null,
-    st('handc','Cartes en main',[h('i',null,'✋'),' '+P.hand.length]),
+    st('mana','Démoflux',[uiIco('ico-demoflux'),' '+P.eth,h('small',null,'/'+P.cap)],h('div',{class:'crys'},cr)),
+    V.o.ter?st('gold','Or',[uiIco('ico-or'),' '+P.or]):null,
+    st('handc','Cartes en main',[uiIco('ico-main'),' '+P.hand.length]),
     isMe&&V.o.ter&&mm>0?st('mvc'+(ml?'':' out'),ml?'Déplacements · prochain : '+mvCost(V,s)+' ◆ ou '+mvCost(V,s)+' 🪙':'Déplacements épuisés ce tour',[h('i',null,'↔'),' '+ml+'/'+mm]):null);
   el._dz={t:'hero',s};
   el.addEventListener('click',e=>{e.stopPropagation();clickSlot(s,-1)});
@@ -275,7 +281,7 @@ function boardNodes(s,ids){
   const D=DUEL,V=D.V,me=V.me,out=[],B=V.p[s].board,L=fl(V,s);
   for(let i=0;i<CELLS;i++){
     const c=B[i];const sl=h('div',{class:'slot'+(c?'':' empty'),'data-s':s,'data-i':i});sl._dz={t:'slot',s,i};
-    if(c&&s===me&&mine())sl.title=faceAttackBlockReason(V,me,i)||'Ctrl+clic gauche : attaquer le héros adverse';
+    if(c&&s===me&&mine())sl.title=faceAttackBlockReason(V,me,i)||(eff(V,me,i).kw.deso?'Ctrl+clic gauche : attaquer (Désorientée : cible tirée au hasard)':'Ctrl+clic gauche : attaquer le héros adverse');
     if(c&&D.previewHl&&D.previewHl[s+':'+i])sl.classList.add('preview');
     const T=V.o.ter?terrOf(V,s,i):null;if(T&&TD[T.d]){sl.classList.add('ter');sl.style.setProperty('--tc',GAMES[TD[T.d].g].c)}   // case couverte par un terrain
     const sel=D.sel,cellT=sel&&sel.t==='cry'&&CELLT[sel.sp.tg];
@@ -540,8 +546,8 @@ function rpsShow(e,t){
 // cimetière : pile face visible (la dernière carte arrivée dessus), à côté du deck ; clic = tout le cimetière
 function graveNode(s,el){if(!el)return;const V=DUEL.V,P=V.p[s],L=P.grave||[],n=L.length,top=n?L[n-1]:null,k=n?Math.min(3,Math.ceil(n/6)):0;
   el.replaceChildren(...Array.from({length:Math.max(0,k-1)},(_,j)=>h('div',{class:'gvl',style:'--j:'+(k-1-j)})),
-    top?h('div',{class:'gvt'},cardEl(top.k)):h('div',{class:'gve'},'✝'),
-    h('b',{class:'dkn'},'✝ '+n));
+    top?h('div',{class:'gvt'},cardEl(top.k)):h('div',{class:'gve'},uiIco('ico-cimetiere')),
+    h('b',{class:'dkn'},uiIco('ico-cimetiere','sm'),' '+n));
   el.classList.toggle('none',!n);
   el.title=(s===V.me?'Ton cimetière':'Cimetière adverse')+' : '+n+' carte'+(n>1?'s':'')+(n?' (clique pour le voir)':'');
   el.onclick=e=>{e.stopPropagation();pileModal(s,'grave')}}
@@ -867,7 +873,7 @@ function popAt(s,i,txt,cls,delay){
     if(/dmg/.test(cls)){const c=i<0?el:el.firstElementChild;if(c){c.classList.remove('shk');void c.offsetWidth;c.classList.add('shk')}}},(delay||0)*ANIM)}
 function popEl(el,txt,cls,delay){setTimeout(()=>{if(!el||!el.isConnected)return;const r=el.getBoundingClientRect();
   const p=h('div',{class:'pop '+cls,style:'left:'+(r.left+r.width/2)+'px;top:'+(r.top+r.height*.3)+'px'},txt);document.body.append(p);setTimeout(()=>p.remove(),1300*ANIM)},(delay||0)*ANIM)}
-function banner(t,col){const b=h('div',{class:'banner',style:'--bc:'+(col||'#73b0ad')},t);document.body.append(b);
+function banner(t,col){$$('.banner').forEach(x=>x.remove());const b=h('div',{class:'banner',style:'--bc:'+(col||'#73b0ad')},t);document.body.append(b);   // une nouvelle annonce remplace la précédente (plus de textes superposés)
   const f=$('#field'),z=$('#field .zmid');if(f&&z){const fr=f.getBoundingClientRect(),zr=z.getBoundingClientRect();b.classList.add('onb');
     b.style.left=fr.left+'px';b.style.right=Math.max(0,innerWidth-fr.right)+'px';b.style.top=Math.round(zr.top+zr.height/2-b.offsetHeight/2)+'px'}
   setTimeout(()=>b.remove(),1600*ANIM)}
@@ -892,6 +898,13 @@ function flashSlot(s,i,col,delay){setTimeout(()=>{const el=elAt(s,i);if(!el)retu
   const V=DUEL&&DUEL.V;if(!V||i<0)return;const st=$(s===V.me?'#tMe':'#tOpp');if(!st)return;let best=null;$$('.tcell',st).forEach(c=>{if(+c.dataset.c<=i)best=c});
   if(best&&!best.classList.contains('none')){best.classList.remove('tfl');void best.offsetWidth;best.classList.add('tfl')}},(delay||0)*ANIM)}
 function castShow(k,delay){setTimeout(()=>{$$('.castc').forEach(x=>x.remove());const c=h('div',{class:'castc'},h('span',{class:'lbl'},'L’adversaire joue'),cardEl(k,{big:true}));document.body.append(c);setTimeout(()=>c.remove(),1650*ANIM)},(delay||0)*ANIM)}
+// créature arrivée puis morte dans le même lot d'événements (ex. le Pleb du Serveur Minecraft tué au début du tour adverse) :
+// le plateau n'est redessiné qu'à la fin du lot, elle n'a donc jamais été affichée. On la montre le temps de sa courte vie.
+function flashLife(s,i,k,t0,t1,ban){
+  setTimeout(()=>{const sl=elAt(s,i);if(!sl)return;const r=sl.getBoundingClientRect();
+    const n=cardEl(k,{bd:true});n.classList.add('lifec');n.style.cssText='left:'+r.left+'px;top:'+r.top+'px;width:'+r.width+'px;height:'+r.height+'px';document.body.append(n);
+    fxSummon(s,i,false,0);
+    setTimeout(()=>{n.classList.remove('lifec');n.classList.add('ghostc');if(!fxOff())fxDeath(r,ban);setTimeout(()=>n.remove(),900*ANIM)},Math.max(450,t1-t0)*ANIM)},t0*ANIM)}
 function ghostDie(s,i,ban,delay){
   const D=DUEL,g=D.rects[s+':'+i];if(!g)return;
   setTimeout(()=>{const n=g.n.cloneNode(true);n.classList.add('ghostc');n.style.cssText='left:'+g.r.left+'px;top:'+g.r.top+'px;width:'+g.r.width+'px;height:'+g.r.height+'px;'+(ban?'filter:hue-rotate(160deg)':'');
@@ -921,13 +934,13 @@ function shatter(s,i,delay){
         {duration:(700+Math.random()*350)*ANIM,easing:'cubic-bezier(.2,.7,.4,1)'});an.onfinish=()=>sh.remove()}},(delay||0)*ANIM)}
 const STORY=['+2/+2','dégâts au héros adverse','pioche','renforts','soin'];
 function animate(es){
-  const D=DUEL,V=D.V,me=V.me;let t=0;const FL=420;D._dk=0;
+  const D=DUEL,V=D.V,me=V.me;let t=0;const FL=420;D._dk=0;const born={};   // born : créatures arrivées pendant ce lot (case → carte, moment)
   for(const e of es){
     switch(e.t){
     case 'turn':{const f=()=>banner(e.s===me?'À TOI DE JOUER':'TOUR ADVERSE',e.s===me?'#e9cd86':'#c45f5b');if(t>0)setTimeout(f,t*ANIM);else f();t+=250;break}   // après la révélation d'Osiris, s'il y en a une
     case 'draw':{if(e.ts===me){const hl=V.p[me].hand.length,nd=es.filter(x=>x.t==='draw'&&x.ts===me).length;D._dk=(D._dk||0);drawFly(me,hl-nd+(D._dk++),t)}else drawFly(e.ts,0,t);t+=160;break}
     case 'play':if(e.ts!==me&&e.s!==me){castShow(e.k,t);t+=650}
-      if(e.i!=null&&CARDS[e.k]&&CARDS[e.k].t==='c')fxSummon(e.ts,e.i,(CARDS[e.k].kw||[]).indexOf('hate')>=0,t);
+      if(e.i!=null&&CARDS[e.k]&&CARDS[e.k].t==='c'){fxSummon(e.ts,e.i,(CARDS[e.k].kw||[]).indexOf('hate')>=0,t);born[e.ts+':'+e.i]={k:e.k,t}}
       if(e.tg&&CARDS[e.k]&&CARDS[e.k].t==='s'&&!es.some(x=>x.t==='dmg'&&x.si===-1&&x.ss===e.ts))proj(elAt(e.ts,-1),elAt(e.tg.s,e.tg.i),CARDS[e.k].col||'#fff',CARDS[e.k].sym,t,FL);break;
     case 'atk':lunge(1-e.ts,e.i,e.ts,e.ti,t);
       if(e.xb)popAt(1-e.ts,e.i,'🚧 +'+e.xb,'txt',t);
@@ -952,7 +965,7 @@ function animate(es){
     case 'buff':popAt(e.ts,e.i,e.tmp?sg(e.ba)+' ATK ce tour':sg(e.ba)+'/'+sg(e.bh),'buf',t);fxBuff(e.ts,e.i,e.ba<0||e.bh<0,t);t+=110;break;
     case 'tilt':flashSlot(e.ts,e.i,'#ba574e',t+120);fxTilt(e.ts,e.i,t+120);popAt(e.ts,e.i,'😡 Tilt !','txt',t+120);t+=320;break;
     case 'egide':shatter(e.ts,e.i,t+280);popAt(e.ts,e.i,'✧ Égide brisée','txt',t+280);t+=160;break;
-    case 'kwg':popAt(e.ts,e.i,(KWI[e.kw]?KWI[e.kw][1]+' '+KWI[e.kw][0]:e.kw),'buf',t);fxBuff(e.ts,e.i,false,t);t+=100;break;
+    case 'kwg':popAt(e.ts,e.i,(KWI[e.kw]?[kwIco(e.kw),' '+KWI[e.kw][0]]:e.kw),'buf',t);fxBuff(e.ts,e.i,false,t);t+=100;break;
     case 'deso':popAt(1-e.ts,e.i,'💫 au hasard','txt',t);t+=200;break;
     case 'ctl':popAt(e.to,e.ti,'⇄ change de camp','txt',t);t+=250;break;
     case 'swap':popAt(e.ts,e.i,'⇄ échange','txt',t);popAt(1-e.ts,e.ti,'⇄ échange','txt',t);t+=300;break;
@@ -973,8 +986,10 @@ function animate(es){
     case 'xa':popAt(e.ts,e.i,'⚔ +1 attaque','buf',t);break;
     case 'eth':popAt(e.ts,-1,'◆ +'+e.n,'buf',t);break;
     case 'lose':banner('☠ Surrender to madness','#c15c58');t+=400;break;
-    case 'die':ghostDie(e.ts,e.i,e.ban,t);if(!e.kick){const g=D.rects[e.ts+':'+e.i];if(g)fxLater(t,()=>fxDeath(g.r,e.ban))}if(e.ban)popAt(e.ts,e.i,'⛔ Banni','txt',t);else if(e.kick)popAt(e.ts,e.i,'⤴ Kick','txt',t);t+=90;break;
-    case 'sum':if(e.rs)popAt(e.ts,e.i,'↺ Respawn','buf',t);fxSummon(e.ts,e.i,CARDS[e.k]&&(CARDS[e.k].kw||[]).indexOf('hate')>=0,t);break;
+    case 'die':{const bk=e.ts+':'+e.i,bn=born[bk];delete born[bk];
+      if(bn&&bn.k===e.k)flashLife(e.ts,e.i,e.k,bn.t,t,e.ban);
+      else{ghostDie(e.ts,e.i,e.ban,t);if(!e.kick){const g=D.rects[bk];if(g)fxLater(t,()=>fxDeath(g.r,e.ban))}}}if(e.ban)popAt(e.ts,e.i,'⛔ Banni','txt',t);else if(e.kick)popAt(e.ts,e.i,'⤴ Kick','txt',t);t+=90;break;
+    case 'sum':born[e.ts+':'+e.i]={k:e.k,t};if(e.rs)popAt(e.ts,e.i,'↺ Respawn','buf',t);fxSummon(e.ts,e.i,CARDS[e.k]&&(CARDS[e.k].kw||[]).indexOf('hate')>=0,t);break;
     case 'mute':popAt(e.ts,e.i,'🔇 Mute','txt',t);t+=100;break;
     case 'blk':{const se=srcEl(e);if(se)proj(se,elAt(e.ts,e.i),'#75b5d6','🔒',t,FL*.8);popAt(e.ts,e.i,'🔒','txt',t+(se?FL*.8:0));t+=120;break}
     case 'exil':if(e.fum){popAt(e.ts,e.i,e.fum===2?'🛂 Immunité':'💨 Dans la fumée','txt',t);t+=150;break}popAt(e.ts,e.i,'✈️ À l’étranger !','txt',t);if(e.n)famBurst(e.ts,'expats','Voyage : −'+e.n+' Or',t);t+=e.n?500:150;break;
@@ -1073,7 +1088,7 @@ function histNodes(e){
   case 'disc':return['card',[h('span',{class:'vb'},'✝'),e.anon?heroChip(e.ts):who(e),mini(e.k),'défaussée (cimetière)',e.anon?null:by(e)]];
   case 'buff':return['buff',[by(e),h('span',{class:'vb'},'⬆'),mini(e.k,e.st),h('span',{class:'bf'},e.tmp?sg(e.ba)+' ATK':sg(e.ba)+'/'+sg(e.bh)),e.tmp?'pendant ce tour':null]];
   case 'tilt':return['buff',[h('span',{class:'vb'},'😡'),mini(e.k,e.st),'est tilt : son effet Tilt se déclenche']];
-  case 'kwg':return['buff',[by(e),h('span',{class:'vb'},KWI[e.kw]?KWI[e.kw][1]:'✧'),mini(e.k,e.st),e.kw==='deso'?'devient Désorienté':'gagne '+(KWI[e.kw]?KWI[e.kw][0]:e.kw)+(e.kw==='insolence'?' jusqu’au prochain tour':e.kw==='hate'?' pour ce tour':'')]];
+  case 'kwg':return['buff',[by(e),h('span',{class:'vb'},KWI[e.kw]?kwIco(e.kw):'✧'),mini(e.k,e.st),e.kw==='deso'?'devient Désorienté':'gagne '+(KWI[e.kw]?KWI[e.kw][0]:e.kw)+(e.kw==='insolence'?' jusqu’au prochain tour':e.kw==='hate'?' pour ce tour':'')]];
   case 'mute':return['ctl',[by(e),h('span',{class:'vb'},'🔇'),mini(e.k,e.st),'réduit au silence']];
   case 'blk':return['ctl',[by(e),h('span',{class:'vb'},'🔒'),mini(e.k,e.st),'bloquée']];
   case 'kick':return['ctl',[by(e),h('span',{class:'vb'},'⤴'),h('span',{class:'vt'},'Kick :'),mini(e.k),'retourne dans la main']];

@@ -237,7 +237,7 @@ function mkFilters(F,opt,onChange){
       row('Coût',[1,2,3,4,5,6,7].map(c=>h('span',{class:'chip cchip'+on('cost',c),onclick:()=>tog('cost',c)},c===7?'7+':String(c))),'Un des coûts cochés'),
       row('Famille',FACK.map(f=>h('span',{class:'chip fchip'+on('fac',f),style:'--fc:'+FAC[f].c,'data-tipf':f,onclick:()=>tog('fac',f)},FAC[f].ic,h('em',null,FAC[f].n))),'Toutes les familles cochées (ex. Toxic + Expats = les cartes qui ont les deux)'),
       row('Affinité',AFG.map(g=>h('span',{class:'chip achip'+on('aff',g),style:'--fc:'+GAMES[g].c,title:'Créatures qui ont une affinité avec '+GAMES[g].n,onclick:()=>tog('aff',g)},gi(g),h('em',null,GAMES[g].n))),'Toutes les affinités cochées'),
-      row('Mots-clés',KWF.map(([x,l])=>h('span',{class:'chip kchip'+on('kw',x),onclick:()=>tog('kw',x),title:x==='draw'?'Cartes qui font piocher':defOf(l)||''},(KWI[x]?KWI[x][1]+' ':x==='draw'?'🂠 ':'')+l)),'Tous les mots-clés cochés'),
+      row('Mots-clés',KWF.map(([x,l])=>h('span',{class:'chip kchip'+on('kw',x),onclick:()=>tog('kw',x),title:x==='draw'?'Cartes qui font piocher':defOf(l)||''},(KWI[x]?[kwIco(x),' '+l]:(x==='draw'?'🂠 ':'')+l))),'Tous les mots-clés cochés'),
       row('Trier par',SORTS.map(([v,l])=>h('span',{class:'chip'+((F.sort||'cost')===v?' on':''),onclick:()=>{F.sort=v;draw();onChange()}},l))),
       ...(extra.length?[row('',extra)]:[]))};
   draw();return box}
@@ -313,7 +313,7 @@ function cFam(v){
   v.append(grid)}
 function cKw(v){
   v.append(h('div',{class:'panel hl'},ph('📖','Mots-clés'),h('div',{class:'kwrow'},
-    Object.keys(KWI).map(k=>[h('b',null,h('span',{class:'kwi'},KWI[k][1]),KWI[k][0]),h('span',null,defOf(KWI[k][0])||'')]).flat())),
+    Object.keys(KWI).map(k=>[h('b',null,h('span',{class:'kwi'},kwIco(k)),KWI[k][0]),h('span',null,defOf(KWI[k][0])||'')]).flat())),
     h('div',{class:'panel'},ph('📜','Autres termes'),h('div',{class:'kwrow'},
       ['Cri d’arrivée','Agonie','Reset','missile','effet du Bazar','Mute','Bloque','Banni','Kick','Artefact','Cimetière','Défausser','Affinité','à l’étranger','Démoflux','Or','Terrain','terrain de jeu','terrain neutre','Invincible'].map(w=>[h('b',null,w==='Bloque'?'Bloquée':w==='Banni'?'Bannie':w==='missile'?'Missile':w==='à l’étranger'?'À l’étranger':w==='effet du Bazar'?'Effet du Bazar':w[0].toUpperCase()+w.slice(1)),h('span',null,defOf(w)||'')]).flat())))}
 function cRules(v){v.append(h('div',{class:'panel hl'},ph('guide','Comment jouer'),...rulesNodes()))}
@@ -419,7 +419,7 @@ function completeModal(di){
       h('p',{class:'mut sm'},'L’IA ajoute des cartes de ta collection jusqu’à '+ECON.deck+', sans toucher à celles déjà dans ton deck. Coche ce autour de quoi tu veux qu’elle construise ; si tu ne coches rien, elle suit les familles et le jeu que ton deck contient déjà. Elle garde une courbe de coût et une part de sorts équilibrées.'),
       h('div',{class:'cpsec'},h('b',null,'Familles'),h('div',{class:'row'},FACK.map(f=>chip('fac',f,'fchip',[FAC[f].ic,h('em',null,FAC[f].n)],{style:'--fc:'+FAC[f].c,'data-tipf':f})))),
       h('div',{class:'cpsec'},h('b',null,'Affinités'),h('div',{class:'row'},AFG.map(g=>chip('aff',g,'achip',[gi(g),h('em',null,GAMES[g].n)],{style:'--fc:'+GAMES[g].c,title:'Créatures très affinées '+GAMES[g].n+' et sorts '+GAMES[g].n})))),
-      h('div',{class:'cpsec'},h('b',null,'Mots-clés'),h('div',{class:'row'},KWF.filter(([x])=>POOL.some(k=>kwHas(CARDS[k],x))).map(([x,l])=>chip('kw',x,'kchip',(KWI[x]?KWI[x][1]+' ':x==='draw'?'🂠 ':'')+l,{title:x==='draw'?'Cartes qui font piocher':defOf(l)||''})))),
+      h('div',{class:'cpsec'},h('b',null,'Mots-clés'),h('div',{class:'row'},KWF.filter(([x])=>POOL.some(k=>kwHas(CARDS[k],x))).map(([x,l])=>chip('kw',x,'kchip',(KWI[x]?[kwIco(x),' '+l]:(x==='draw'?'🂠 ':'')+l),{title:x==='draw'?'Cartes qui font piocher':defOf(l)||''})))),
       h('div',{class:'sm cpinfo'},miss>0?'Ton deck : '+d.cards.length+' / '+ECON.deck+' → '+miss+' carte'+(miss>1?'s':'')+' à ajouter'+(nsel?'.':', en suivant ce qu’il contient déjà.'):'Ton deck est déjà complet ('+ECON.deck+' cartes).'),
       h('div',{class:'row',style:'margin-top:14px;justify-content:flex-end'},
         nsel?h('button',{class:'btn sm',onclick:()=>{CPF={fac:[],aff:[],kw:[]};draw()}},'Tout décocher'):null,

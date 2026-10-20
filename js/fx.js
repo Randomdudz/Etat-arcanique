@@ -1,7 +1,7 @@
 // ---------- effets visuels du duel ----------
 // Un calque <canvas> transparent au-dessus du plateau : étincelles, braises, fumée, éclats de carte…
 // Rien ne change dans la partie : ce ne sont que des décors joués en même temps que les animations existantes.
-const FX={cv:null,cx:null,ps:[],raf:0,last:0,dpr:1};
+const FX={cv:null,cx:null,ps:[],raf:0,last:0,dpr:1},FXT=.9;                      // FXT : vitesse des particules (0,9 = 10 % plus lentes)
 function fxOff(){try{return !!(typeof S!=='undefined'&&S&&S.lowfx)||matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){return false}}
 function fxCanvas(){
   if(FX.cv&&FX.cv.isConnected)return FX.cx;
@@ -19,7 +19,7 @@ function fxEmit(x,y,o){
       g:o.grav||0,d:o.drag==null?1.5:o.drag,sh:o.sh||'dot',add:o.add!==false,r:Math.random()*6.3,vr:o.spin?fxR(-o.spin,o.spin):0,a0:o.a0||0,sw:o.sweep||0})}
   if(!FX.raf){FX.last=performance.now();FX.raf=requestAnimationFrame(fxLoop)}}
 function fxLoop(now){
-  const cx=FX.cx,dt=Math.min(50,now-FX.last)/1000;FX.last=now;cx.clearRect(0,0,innerWidth,innerHeight);
+  const cx=FX.cx,dt=Math.min(50,now-FX.last)/1000*FXT;FX.last=now;cx.clearRect(0,0,innerWidth,innerHeight);
   const ps=FX.ps;let k=0;
   for(let j=0;j<ps.length;j++){const p=ps[j];p.l-=dt*1000;if(p.l<=0)continue;ps[k++]=p;
     const f=Math.max(0,1-p.d*dt);p.vx*=f;p.vy=p.vy*f+p.g*dt;p.x+=p.vx*dt;p.y+=p.vy*dt;p.r+=p.vr*dt;
@@ -50,7 +50,7 @@ function fxHitAt(s,i,col,pw,delay){fxLater(delay,()=>{const r=fxRect(elAt(s,i));
   if(pw>=5||i<0&&pw>=3)fxShake(Math.min(10,pw))})}
 // le plateau tremble (gros coups, héros touché)
 function fxShake(pw){if(fxOff())return;const f=$('#field');if(!f)return;const a=2+pw*.8;
-  f.animate([{transform:'translate(0,0)'},{transform:`translate(${-a}px,${a*.5}px)`},{transform:`translate(${a}px,${-a*.4}px)`},{transform:`translate(${-a*.6}px,${-a*.3}px)`},{transform:`translate(${a*.3}px,${a*.2}px)`},{transform:'translate(0,0)'}],{duration:320,easing:'ease-out'})}
+  f.animate([{transform:'translate(0,0)'},{transform:`translate(${-a}px,${a*.5}px)`},{transform:`translate(${a}px,${-a*.4}px)`},{transform:`translate(${-a*.6}px,${-a*.3}px)`},{transform:`translate(${a*.3}px,${a*.2}px)`},{transform:'translate(0,0)'}],{duration:320/FXT,easing:'ease-out'})}
 // mort : la carte vole en éclats, avec de la fumée et des braises
 function fxDeath(r,ban){if(!r)return;const x=r.left+r.width/2,y=r.top+r.height/2,cs=ban?['#7fd3ff','#b48cff','#e6f4ff']:['#c99a4a','#e8c47a','#2c4a86','#7a5426','#d9d2c0'];
   fxEmit(x,y,{n:26,col:cs,sh:'shard',w:r.width*.8,hgt:r.height*.8,spd:[60,260],ang:[-Math.PI*.95,-Math.PI*.05],life:[700,1200],size:[4,9],grav:620,drag:.8,spin:9,add:false});
