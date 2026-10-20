@@ -1883,3 +1883,8 @@ body{background:linear-gradient(#080d187a,#080d187a),url("../png/site-background
 .fxcv{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:69}
 .hitw{animation:hitw .28s ease-out}
 @keyframes hitw{0%{filter:brightness(2.6) saturate(.3)}100%{filter:none}}
+/* --- vitesse des animations : 10 % plus lentes (×1,78 au lieu de ×1,6) --- */
+.pop{animation-duration:2.28s}.ghostc{animation-duration:1.43s}.enter .ci{animation-duration:.81s}.banner{animation-duration:2.67s}.fburst{animation-duration:3.01s}
+.castc{animation-duration:2.87s}.slot.flash::after{animation-duration:1.58s}.hc.drawn{animation-duration:.89s}.trail{animation-duration:.77s}.boom{animation-duration:.89s}
+.tcell.tfl{animation-duration:1.5s}.fx.fxp{animation-duration:1.5s}.shT.fresh{animation-duration:1.44s}.card.fam .ci{animation-duration:1.5s}
+.shk{animation-duration:.56s}.hero.shk{animation-duration:.67s}.hitw{animation-duration:.31s}

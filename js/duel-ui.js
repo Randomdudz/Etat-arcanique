@@ -231,7 +231,7 @@ function atkWhy(V,s,i){const c=V.p[s].board[i];if(!c)return null;if(pend(V,s))re
 function faceAttackBlockReason(V,s,i){
   const c=V.p[s].board[i];if(!c)return'Aucune créature à cet emplacement.';
   if(!canAtk(V,s,i)){const why=atkWhy(V,s,i);return why?why[1]:'Cette créature ne peut pas attaquer.'}
-  if(eff(V,s,i).kw.deso)return'Désorientée : sa cible d’attaque est aléatoire, le héros ne peut pas être choisi directement.';
+  if(eff(V,s,i).kw.deso)return null;                                // Désorientée : Ctrl+clic l'envoie quand même, la cible est tirée au hasard
   const legal=atkTargets(V,s,i);if(legal.some(t=>t.s===1-s&&t.i===-1))return null;
   const guards=legal.filter(t=>t.s===1-s&&t.i>=0).map(t=>fullName(V.p[t.s].board[t.i].k));
   return guards.length?'Rempart adverse : tu dois d’abord attaquer '+guards.join(', ')+'.':'Cette attaque ne peut pas cibler le héros.';
@@ -275,7 +275,7 @@ function boardNodes(s,ids){
   const D=DUEL,V=D.V,me=V.me,out=[],B=V.p[s].board,L=fl(V,s);
   for(let i=0;i<CELLS;i++){
     const c=B[i];const sl=h('div',{class:'slot'+(c?'':' empty'),'data-s':s,'data-i':i});sl._dz={t:'slot',s,i};
-    if(c&&s===me&&mine())sl.title=faceAttackBlockReason(V,me,i)||'Ctrl+clic gauche : attaquer le héros adverse';
+    if(c&&s===me&&mine())sl.title=faceAttackBlockReason(V,me,i)||(eff(V,me,i).kw.deso?'Ctrl+clic gauche : attaquer (Désorientée : cible tirée au hasard)':'Ctrl+clic gauche : attaquer le héros adverse');
     if(c&&D.previewHl&&D.previewHl[s+':'+i])sl.classList.add('preview');
     const T=V.o.ter?terrOf(V,s,i):null;if(T&&TD[T.d]){sl.classList.add('ter');sl.style.setProperty('--tc',GAMES[TD[T.d].g].c)}   // case couverte par un terrain
     const sel=D.sel,cellT=sel&&sel.t==='cry'&&CELLT[sel.sp.tg];

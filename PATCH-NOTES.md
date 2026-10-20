@@ -5,6 +5,14 @@ Journal des mises à jour, la plus récente en premier. Les annonces détaillée
 <!-- Style des notes : écrire pour les joueurs. Pas de termes techniques (fichiers, serveurs, code, noms de collections) :
      seulement ce qui change en jeu, et comment en profiter. -->
 
+## v3.10.1 — 20/10/2026
+
+### Désorienté
+- **Ctrl+clic** sur une créature Désorientée la fait attaquer directement. Sa cible reste tirée au hasard parmi les ennemis, héros compris.
+
+### Animations
+- Toutes les animations et tous les effets du duel sont 10 % plus lents, pour mieux voir ce qui se passe.
+
 ## v3.10.0 — 20/10/2026
 
 ### Combats plus spectaculaires
