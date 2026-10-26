@@ -55,7 +55,7 @@ function hcMedal(icon){const m=document.createElement('div');m.className='hm-med
     '<polygon points="50,1 57,14 71,8 72,23 87,24 81,38 96,45 84,54 92,67 77,70 76,85 62,80 54,94 46,82 33,92 29,77 14,78 20,64 6,56 18,46 9,33 24,31 24,16 38,19" fill="url(#hcg)" stroke="#5a3a10" stroke-width="1.2"/>'+
     '<circle cx="50" cy="50" r="36" fill="#1a1006" stroke="url(#hcg)" stroke-width="5"/><circle cx="50" cy="50" r="30" style="fill:var(--mc)"/><circle cx="50" cy="50" r="30" fill="url(#hcs)"/>'+
     '<g fill="url(#hcg)" stroke="#3a2408" stroke-width=".8">'+HCICON[icon]+'</g></svg>';return m}
-const HMMED={friends:'amis',play:'jouer',queue:'adversaire',arena:'arene'};   // médaillons illustrés de l'accueil (png/ui)
+const HMMED={friends:'amis',play:'jouer',queue:'adversaire',arena:'arene',exped:'expedition'};   // médaillons illustrés de l'accueil (png/ui)
 // le bouton principal prend la place du titre, dans le bandeau ; les autres (Annuler la recherche…) restent sous le texte
 function homeCard(o){const btns=[].concat(o.btn).filter(Boolean),main=btns[0];if(main){main.classList.remove('hm-btn');main.classList.add('hm-banbtn')}
   return h('div',{class:'hm hm-'+o.k},HMMED[o.k]?h('div',{class:'hm-medal'},uiIco('hm-medal-'+HMMED[o.k],'hmmed')):hcMedal(o.icon),h('i',{class:'hm-k tl'}),h('i',{class:'hm-k tr'}),h('i',{class:'hm-k bl'}),h('i',{class:'hm-k br'}),h('i',{class:'hm-bd'}),
