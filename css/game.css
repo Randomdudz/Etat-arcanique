@@ -2055,3 +2055,11 @@ body{background:linear-gradient(#080d187a,#080d187a),url("../png/site-background
 .hm-queue .hm-ban .hm-banbtn{font-size:clamp(12px,5.8cqw,19px)}
 .hm-cancel{margin-top:auto}
 .hm{min-height:440px}
+/* choix d'un événement du Bazar (Organisateur, maître de cérémonie) */
+#pickov .mc.mev{width:200px;cursor:pointer}
+#pickov .mev .evt{display:flex;flex-direction:column;align-items:center;gap:8px;min-height:190px;padding:18px 14px;border-radius:12px;text-align:center;
+  background:radial-gradient(circle at 50% 30%,#3a2350,#150c22 75%);border:2px solid #c9a35a;box-shadow:0 0 18px #9a5d8666,inset 0 0 20px #0008}
+#pickov .mev .evi{font-size:38px;filter:drop-shadow(0 0 8px #c76d90)}
+#pickov .mev .evt b{font-family:var(--disp);font-size:18px;color:#f3e7cc}
+#pickov .mev .evt p{margin:0;font-size:13.5px;color:#e8dfcc;line-height:1.4}
+#pickov .mev:hover .evt{border-color:#f0d68f;box-shadow:0 0 26px #e9cd8688,inset 0 0 20px #0008}

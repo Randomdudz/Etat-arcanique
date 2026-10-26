@@ -45,7 +45,7 @@ function evalG(G,me,W){
   v+=facePressure(G,me,W)-facePressure(G,1-me,W)*W.eb; // les Remparts protègent le héros et bloquent les attaques accessibles
   for(const h of A.hand){const cd=CARDS[h.k];v+=W.hand+.12*cd.c;
     if(cd.t==='c'){let m=0;for(let i=0;i<CELLS;i++)if(!A.board[i]){const b=slotBonus(G,me,i,h.k);if(b>m)m=b}v+=.4*m}}
-  v+=(A.pq||[]).reduce((t,q)=>t+(q.m==='disc'?-1:1),0)*(W.hand+.6);                  // choix en attente : une carte de plus (Coco, Miroir) ou de moins (Coup de folie)                                                  // choix en attente (Coco, Miroir) : une carte de plus
+  v+=(A.pq||[]).reduce((t,q)=>t+(q.m==='disc'?-1:q.m==='ev'?0:1),0)*(W.hand+.6);                  // choix en attente : une carte de plus (Coco, Miroir) ou de moins (Coup de folie)                                                  // choix en attente (Coco, Miroir) : une carte de plus
   v-=B.hand.length*.55;v+=A.or*W.gold-B.or*W.gold*.6;
   v+=((A.arts||[]).length-(B.arts||[]).length)*4.5;                                   // artefacts (Dofus) : permanents
   const tv=P=>P.terrs.reduce((n,T)=>n+(TD[T.d].teot?3:0),0);v+=tv(A)-tv(B)*.8;         // terrains qui invoquent (Éco village, Serveur Minecraft)
@@ -96,11 +96,13 @@ function aiDisc(G,s,g){const P=G.p[s];let bi=0,bv=1e9;
 function aiKeep(G,s,g){const P=G.p[s];let bi=0,bv=-1e9;
   g.forEach((c,i)=>{const cd=CARDS[c.k];if(!cd)return;let v=cd.c*.6+cd.r*.8+(cd.t==='c'?(cd.a+cd.h)*.35:1);if(cd.c>P.cap+1)v-=(cd.c-P.cap-1)*1.5;if(v>bv){bv=v;bi=i}});
   return bi}
+// Organisateur (maître de cérémonie) : l'événement qui laisse la meilleure position
+function aiEv(G,s,q,W){let bi=0,bv=-1e9;q.c.forEach((o,i)=>{const H=cloneG(G);H.lg=0;H.p[s].pq=H.p[s].pq.slice(1);runEv(H,s,o.n,q.src);reap(H);const v=evalG(H,s,W||WGT.bal);if(v>bv){bv=v;bi=i}});return bi}
 function aiPick(G,s,W){
   W=W||WGT.bal;
   if(G.phase==='rps')return{t:'rps',v:RPSK[ri(G,3)]};                                    // pierre-feuille-ciseaux : au hasard, il n'y a rien à lire
   const PQ=G.p[s].pq;if(PQ&&PQ.length){const q=PQ[0];if(q.m==='tg'){const c=G.p[s].board.find(b=>b&&b.id===q.id),L=c&&cryList(G,s,c,CARDS[c.k]),b=L&&cryBest(G,s,L);return{t:'pick',i:Math.max(0,b?q.t.findIndex(t=>t.s===b.s&&t.i===b.i):0)}}
-    return{t:'pick',i:q.m==='disc'?aiDisc(G,s,q.c):aiKeep(G,s,q.c)}}
+    return{t:'pick',i:q.m==='disc'?aiDisc(G,s,q.c):q.m==='ev'?aiEv(G,s,q,W):aiKeep(G,s,q.c)}}
   // létal direct ?
   const en=G.p[1-s],ats=atkTargets(G,s);
   if(ats.some(t=>t.i<0)){let sum=0,first=-1;
