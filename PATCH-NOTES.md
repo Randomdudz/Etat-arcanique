@@ -5,6 +5,42 @@ Journal des mises à jour, la plus récente en premier. Les annonces détaillée
 <!-- Style des notes : écrire pour les joueurs. Pas de termes techniques (fichiers, serveurs, code, noms de collections) :
      seulement ce qui change en jeu, et comment en profiter. -->
 
+## v3.12.0 — 26/10/2026
+
+### 29 nouvelles cartes
+Plus de choix à 1, 7 et 8 de coût, plus de sorts chers, et un coup de pouce aux Vestiges, aux Expats et aux affinités Dofus et CS.
+
+**5 nouveaux personnages (3 versions chacun)**
+- **Organisateur** (Vestiges) : *GO du dimanche* (3 ◆, 2/3) lance un événement du Bazar au hasard en arrivant. *Maître de cérémonie* (4 ◆, 3/4) te laisse choisir l’événement parmi trois. *Trouve toujours un truc* (5 ◆, 4/5, légendaire) en lance un à son arrivée puis au début de chacun de tes tours.
+- **Nomade** (Expats) : *Collectionneur de tampons* (2 ◆, 2/2) te donne 1 Or à chaque départ à l’étranger. *Chargé de souvenirs* (3 ◆, 2/3) te fait piocher à chaque retour de voyage. *Citoyen du monde* (5 ◆, 4/5, légendaire) rend tes voyages gratuits, et tes voyageurs reviennent avec +1/+1.
+- **Éleveur** (Farmers, Vestiges) : *Nourrit les dragodindes* (2 ◆, 1/3) gagne 1 Or à chaque fin de tour. *Couveuse à Dofus* (5 ◆, 3/4) t’offre un Dofus légendaire. *Maître des Dofus* (7 ◆, 5/6, Rempart, légendaire) t’en offre deux.
+- **Sentinelle** (Toxiques, Expats) : *Entry fragger* (1 ◆, 2/1, Hâte), *Flash et spray* (3 ◆, 3/2, Cleave 1), *Clutch minute* (6 ◆, 5/5, Siphon et Cleave 2, légendaire).
+- **Streamer** (Expats, Vestiges) : *3 viewers* (1 ◆, 1/2, Respawn). *Raid entrant* (4 ◆, 2/4, Insolence) invoque un Pleb à chaque fin de tour. *Top 1 Twitch* (8 ◆, 5/7, VIP, légendaire) remplit tes cases libres de Plebs puis donne +1/+1 à tes autres créatures.
+
+**Coach et Saja complétés**
+- **Le Coach, Échauffement** (1 ◆, 1/2) : une autre de tes créatures gagne +1 ATK en arrivant.
+- **Le Coach, Temps mort tactique** (4 ◆, 3/3) : tes autres créatures à 3 ◆ ou moins gagnent +1/+1.
+- **Saja, Main droite** (2 ◆, 2/3) : à chaque fin de ton tour, la créature à sa droite gagne +1/+1.
+
+**11 nouveaux sorts**
+- **BRB** (1 ◆) : une de tes créatures passe AFK.
+- **Eco round** (1 ◆) : gagne 2 Or, et 1 Démoflux si tu as une créature à 2 d’affinité CS.
+- **Arrosage automatique** (2 ◆) : une de tes créatures gagne Croissance.
+- **Vol retour** (2 ◆, Expats) : une de tes créatures à l’étranger revient tout de suite avec +2/+2.
+- **Souvenirs d’Andorre** (2 ◆, Expats) : 2 Or par créature à l’étranger (6 Or max).
+- **Lag spike** (3 ◆) : toutes les créatures ennemies sont Désorientées pendant leur prochain tour.
+- **Mute général** (4 ◆, légendaire) : toutes les créatures des deux camps sont Mute.
+- **Archives du serveur** (4 ◆, Vestiges) : récupère 2 cartes au hasard de ton cimetière. Coûte 1 de moins par Vestige que tu contrôles (2 minimum).
+- **Drop légendaire** (5 ◆) : obtiens un Dofus légendaire, et pioche 1 carte si tu as une créature à 2 d’affinité Dofus.
+- **Wipe de raid** (6 ◆, légendaire) : détruit toutes les créatures à 3 ATK ou moins, des deux côtés.
+- **Reboot du serveur** (7 ◆, légendaire) : toutes les créatures retournent dans la main de leur propriétaire (les jetons disparaissent).
+
+Quand un Organisateur te propose trois événements, une fenêtre te les montre : clique sur celui que tu veux. L’événement touche les deux camps.
+
+### Coûts ajustés
+- Moins chères : **Gollwyd Bambou, Grand Reformatage** 10 → 8 ◆ · **Flame** 3 → 2 ◆ · **Flash** 2 → 1 ◆.
+- Plus chères (+1 ◆) : **Lisdoon, Gomuscu** (3) · **Elkatrix, Doux comme un agneau** (3) · **Minuit, Raciste originel** (4) · **Mikalev, Homme à tout faire** (4) · **Rasta, Viens dehors** (4) · **Kirua, La panthère** (5) · **Snoux, Le face c’est la place** (5) · **Osiris, Expert bluffeur** (6) · **Minuit, Chef de raid** (6) · **Takk, Pourquoi il est mort ?** (6) · **Haddmi, Sniper d’élite** (7) · **Simon, Rusheur de ligue** (7) · **Clip** (4).
+
 ## v3.11.3 — 20/10/2026
 
 ### Accueil

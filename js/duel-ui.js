@@ -222,7 +222,7 @@ function actsNode(){const el=$('#acts');if(!el)return;const D=DUEL,V=D.V,me=V.me
       disabled:P.hand.length>=V.o.hand||!P.dn,onclick:e=>{e.stopPropagation();doAct({t:'test'})}},'🧪',h('span',null,'Test'));
     bt.push(b)}
   if(mine())P.board.forEach((c,i)=>{if(c&&canExil(V,me,i)){const b=h('button',{class:'actb',title:'Disparaître à l’étranger : '+fullName(c.k)+' devient inciblable jusqu’à ton prochain tour ('+exCost(L.expats)+' Or)',
-      onclick:e=>{e.stopPropagation();doAct({t:'exil',i})}},miniAv(c.k),h('span',null,icoText('✈️ '+exCost(L.expats)+'🪙')));
+      onclick:e=>{e.stopPropagation();doAct({t:'exil',i})}},miniAv(c.k),h('span',null,icoText('✈️ '+trCost(V,me)+'🪙')));
     b.addEventListener('pointerenter',()=>{const sl=elAt(me,i);if(sl)sl.classList.add('acth')});b.addEventListener('pointerleave',()=>$$('.slot.acth').forEach(x=>x.classList.remove('acth')));bt.push(b)}});
   el.replaceChildren(...(bt.length?[h('b',{class:'al'},'Actions'),...bt]:[]));el.classList.toggle('none',!bt.length)}
 function discNode(){
@@ -493,16 +493,16 @@ function mullNode(){
 function pickNode(){
   const D=DUEL,V=D.V,old=$('#pickov'),me=V?V.me:0,q=V&&!V.over&&!V.phase&&V.p[me].pq&&V.p[me].pq[0],g=q&&q.c;
   if(!g){if(old)old.remove();D.pickSent=0;return}
-  const dup=q.m==='dup',dis=q.m==='disc',tgm=q.m==='tg',test=q.m==='test',sig=q.m+':'+g.map(c=>c.id).join(',');if(old&&old.dataset.sig===sig)return;D.pickSent=0;
-  const cards=g.map((c,i)=>{const el=h('div',{class:'mc',oncontextmenu:e=>{e.preventDefault();showCard(c.k)}},c.k?cardEl(c.k,{big:true}):h('div',{class:'mhero'},h('b',null,c.s===me?'Ton héros':'Héros adverse'),h('span',null,'❤ '+V.p[c.s].hp)),h('div',{class:'mx'},test?'＋ Ajouter':tgm?'🎯 '+(c.s===me?'Allié':'Ennemi'):dis?'✝ Défausser':dup?'🪞 Dupliquer':'✔ Garder'));
+  const dup=q.m==='dup',dis=q.m==='disc',tgm=q.m==='tg',test=q.m==='test',evm=q.m==='ev',sig=q.m+':'+g.map(c=>c.id).join(',');if(old&&old.dataset.sig===sig)return;D.pickSent=0;
+  const cards=g.map((c,i)=>{const el=evm?h('div',{class:'mc mev'},h('div',{class:'evt'},h('span',{class:'evi'},'🌀'),h('b',null,EVENTS[c.n].n),h('p',null,EVENTS[c.n].tx)),h('div',{class:'mx'},'✔ Choisir')):h('div',{class:'mc',oncontextmenu:e=>{e.preventDefault();showCard(c.k)}},c.k?cardEl(c.k,{big:true}):h('div',{class:'mhero'},h('b',null,c.s===me?'Ton héros':'Héros adverse'),h('span',null,'❤ '+V.p[c.s].hp)),h('div',{class:'mx'},test?'＋ Ajouter':tgm?'🎯 '+(c.s===me?'Allié':'Ennemi'):dis?'✝ Défausser':dup?'🪞 Dupliquer':'✔ Garder'));
     el.onclick=()=>{if(D.pickSent)return;D.pickSent=1;const r=doAct({t:'pick',i});if(r&&r.ok===false)D.pickSent=0;
       setTimeout(()=>{if(DUEL===D&&D.pickSent){D.pickSent=0;pickNode()}},3000)};return el});
   const full=V.p[me].hand.length>=V.o.hand;
   const ov=h('div',{id:'pickov','data-sig':sig},h('div',{class:'mbox'},
-    h('h2',null,test?'Code test : choisis une carte':tgm?'Cri d’arrivée : '+fullName(CARDS[q.k]):dis?'Coup de folie':dup?'Miroir de Kalandra':'Coco, esprit tourmenté'),
-    h('p',{class:'mut'},test?'Choisis une carte de ton deck : elle va dans ta main. Tu as 10 Démoflux. Clic droit : voir une carte en détail.':tgm?'Choisis sa cible. '+(CARDS[q.k].tx||''):dis?'Choisis la carte de ta main à défausser : elle va au cimetière. Clic droit : voir une carte en détail.':dup?'Choisis une carte de ta main : une copie s’ajoute à ta main. Clic droit : voir une carte en détail.':'Garde une des '+g.length+' cartes piochées : '+(g.length>2?'les autres vont':'l’autre va')+' au cimetière. Clic droit : voir une carte en détail.'),
+    h('h2',null,evm?(q.src&&CARDS[q.src]?fullName(CARDS[q.src]):'Organisateur'):test?'Code test : choisis une carte':tgm?'Cri d’arrivée : '+fullName(CARDS[q.k]):dis?'Coup de folie':dup?'Miroir de Kalandra':'Coco, esprit tourmenté'),
+    h('p',{class:'mut'},evm?'Choisis l’événement du Bazar qui se produit maintenant. Il touche les deux camps.':test?'Choisis une carte de ton deck : elle va dans ta main. Tu as 10 Démoflux. Clic droit : voir une carte en détail.':tgm?'Choisis sa cible. '+(CARDS[q.k].tx||''):dis?'Choisis la carte de ta main à défausser : elle va au cimetière. Clic droit : voir une carte en détail.':dup?'Choisis une carte de ta main : une copie s’ajoute à ta main. Clic droit : voir une carte en détail.':'Garde une des '+g.length+' cartes piochées : '+(g.length>2?'les autres vont':'l’autre va')+' au cimetière. Clic droit : voir une carte en détail.'),
     h('div',{class:'mrow'+(g.length>5?' many':'')},cards),
-    full&&!dis&&!tgm&&!test?h('p',{class:'sm mfirst'},dup?'⚠ Ta main est pleine : la copie sera brûlée.':'⚠ Ta main est pleine : la carte gardée sera brûlée.'):null));
+    full&&!dis&&!tgm&&!test&&!evm?h('p',{class:'sm mfirst'},dup?'⚠ Ta main est pleine : la copie sera brûlée.':'⚠ Ta main est pleine : la carte gardée sera brûlée.'):null));
   if(old)old.replaceWith(ov);else $('#duel').append(ov)}
 // Osiris (expert bluffeur) : avant son tour, l'adversaire d'Osiris choisit pierre, feuille ou ciseaux (15 s, sinon au hasard)
 function rpsBtns(on,pick){return h('div',{class:'rpsrow'},RPSK.map(v=>h('button',{class:'rpsbtn',type:'button',disabled:!on,onclick:()=>pick(v)},h('b',null,RPSI[v]),h('span',null,RPSN[v]))))}
@@ -1112,7 +1112,8 @@ function histNodes(e){
   case 'tcyc':return TD[e.d]&&TD[e.nd]?['tfx',[h('span',{class:'vb'},'🔄'),terrChip(e.d),A,terrChip(e.nd)]]:null;
   case 'buy':return['buy',[h('span',{class:'vb'},'🏟'),terrChip(e.d),h('span',{class:'cst'},'−'+e.c+' ',uiIco('ico-or','ti'))]];
   case 'roll':return['buy',[h('span',{class:'vb'},'🎲'),'Terrains relancés',h('span',{class:'cst'},'−'+e.c+' ',uiIco('ico-or','ti')),A,...(e.nd||[]).filter(d=>TD[d]).map(terrChip)]];
-  case 'ev':return['sys',[chip('🌀','Événement','#dab77a'),e.n]];
+  case 'ev':return['sys',[e.cs&&CARDS[e.cs]?srcChip(e.cs):null,chip('🌀','Événement','#dab77a'),e.n]];
+  case 'evc':return['sys',[by(e),h('span',{class:'vb'},'🌀'),who(e)||heroChip(e.ts),'choisit un événement du Bazar parmi 3']];
   case 'fat':return['dmg',[srcChip('fat'),h('span',{class:'dm'},'−'+e.n)]];
   case 'res':return['sys',[h('span',{class:'vb'},'🏳'),'Abandon']];
   case 'deso':return['atk',[h('span',{class:'vb'},uiIco('kw-deso','ti')),mini(e.k),'cible tirée au hasard']];

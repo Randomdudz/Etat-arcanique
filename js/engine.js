@@ -175,7 +175,7 @@ function targets(G,s,spec,tgf,exc,includeProtected){
 // filtres de cible : blessée, coût 2 ou moins (c2), coût N ou moins (cm5 = 5 ou moins), d'une famille (f:toxic), sans famille,
 // coût au plus égal au nombre de tes créatures d'une famille (cf:alien = Enlèvement, cf:xeno = Videur)
 function tgfOk(G,s,c,tgf){if(!tgf)return true;const cd=CARDS[c.k];
-  if(tgf==='hurt')return c.dm>0;if(tgf==='c2')return cd.c<=2;if(tgf==='nofam')return!cd.fac.length;
+  if(tgf==='hurt')return c.dm>0;if(tgf==='c2')return cd.c<=2;if(tgf==='nofam')return!cd.fac.length;if(tgf==='abroad')return!!c.ex&&!c.fum;   // abroad : en voyage (Vol retour)
   if(/^cm\d+$/.test(tgf))return cd.c<=+tgf.slice(2);
   if(tgf.slice(0,2)==='f:')return hasFC(c,tgf.slice(2));
   if(tgf.slice(0,3)==='cf:')return cd.c<=(fl(G,s)[tgf.slice(3)]||0);
@@ -232,7 +232,20 @@ function canBuy(G,s,n){if(G.over||G.cur!==s||!G.o.ter||pend(G,s))return false;co
 const ROLLC=2;
 function canRoll(G,s){return!G.over&&G.cur===s&&!!G.o.ter&&!pend(G,s)&&G.p[s].or>=ROLLC&&(G.tdeck.length+G.tdis.length+G.shop.length)>0}
 function canExil(G,s,i){if(G.over||G.cur!==s||pend(G,s))return false;const P=G.p[s],c=P.board[i];if(!c||c.ex||!hasFC(c,'expats'))return false;
-  const n=fl(G,s).expats||0;return n>=1&&P.or>=exCost(n)}
+  const n=fl(G,s).expats||0;return n>=1&&P.or>=trCost(G,s)}
+// prix d'un voyage Expats : gratuit tant qu'un Nomade (citoyen du monde) est en jeu
+function trCost(G,s){return G.p[s].board.some(b=>b&&!b.mut&&CARDS[b.k].freeTr)?0:exCost(fl(G,s).expats||0)}
+// une de tes créatures part à l'étranger (vrai voyage, pas la fumée) : Nomade (collectionneur de tampons) gagne 1 Or
+function goneAbroad(G,s){G.p[s].board.forEach((b,i)=>{if(b&&!b.mut&&CARDS[b.k].abrOr)gold(G,s,1,b.k,{ss:s,si:i})})}
+// retour de voyage : effets « à son retour » (Takk, Loractys), puis Nomade (chargé de souvenirs : pioche ; citoyen du monde : +1/+1)
+function backHooks(G,s,list){const P=G.p[s];
+  for(const c of list){const i=slotOf(G,s,c);if(i<0||G.over)continue;const cd=CARDS[c.k];
+    if(!c.mut&&cd.onBack)runFx(G,cd.onBack,{s,src:c.k,self:c,tg:null,pc:0,sl:i,ss:s,si:i});
+    P.board.forEach((b,j)=>{if(!b||b.mut||G.over)return;const bd=CARDS[b.k];
+      if(bd.backDraw)draw(G,s,1);
+      if(bd.backBuff){const k=slotOf(G,s,c);if(k>=0){c.a++;c.h++;lg(G,{t:'buff',ts:s,i:k,k:c.k,ba:1,bh:1,cs:b.k})}}})}}
+// événement du Bazar lancé par une carte (Organisateur), du point de vue de celui qui la joue
+function runEv(G,s,n,src){const ev=EVENTS[n];if(!ev)return;lg(G,{t:'ev',n:ev.n,cs:src});runFx(G,ev.fx,{s,src:'ev',tg:null,pc:0})}
 
 // ---------- dégâts, soins, pioche ----------
 function heroHit(G,s,n,src,q,x){if(n<=0)return 0;G.p[s].hp-=n;if(!q)lg(G,{t:'dmg',ts:s,i:-1,src,n,ss:x?x.ss:null,si:x?x.si:null});return n}
@@ -463,7 +476,7 @@ const OPS={
   combo(G,op,x){const i=selfI(G,x);if(i<0)return;const n=Math.min(x.pc||0,op.max||99);if(n<=0)return;
     const c=G.p[x.s].board[i];c.a+=op.a*n;c.h+=op.h*n;lg(G,{t:'buff',ts:x.s,i,k:c.k,ba:op.a*n,bh:op.h*n})},
   wipe(G,op,x){for(const s of[0,1])G.p[s].board.forEach(c=>{if(c&&!(x.self&&c.id===x.self.id))c.dm+=99999})},   // détruit toutes les autres créatures (leurs Agonies se déclenchent)
-  exil(G,op,x){const me=selfI(G,x);if(me<0)return;const i=op.tg==='right'?me+1:(op.tg==='left'?me-1:me),B=G.p[x.s].board;if(B[i]&&!B[i].ex){B[i].ex=1;lg(G,{t:'exil',ts:x.s,i,k:B[i].k,n:0})}},
+  exil(G,op,x){const me=selfI(G,x);if(me<0)return;const i=op.tg==='right'?me+1:(op.tg==='left'?me-1:me),B=G.p[x.s].board;if(B[i]&&!B[i].ex){B[i].ex=1;lg(G,{t:'exil',ts:x.s,i,k:B[i].k,n:0});goneAbroad(G,x.s)}},
   // ----- effets ajoutés avec les nouvelles cartes -----
   taunt(G,op,x){const i=selfI(G,x);if(i<0)return;const c=G.p[x.s].board[i];if(c.tr)return;c.tr=1;lg(G,{t:'kwg',ts:x.s,i,k:c.k,kw:'rempart'})},
   healT(G,op,x){G.p[x.s].board.forEach((c,i)=>{if(c&&tgOf(G,x.s,i)===op.g)healC(G,x.s,i,op.n)})},                  // tes créatures sur un terrain du jeu op.g
@@ -505,7 +518,7 @@ const OPS={
     P.or-=n*per;lg(G,{t:'pay',ts:x.s,n:n*per,k:x.src});draw(G,x.s,n)},
   goldDmg(G,op,x){if(!vt(G,x.tg))return;const P=G.p[x.s],n=Math.min(P.or,op.max||99);if(n<=0)return;               // Pay to win : Or -> dégâts
     P.or-=n;lg(G,{t:'pay',ts:x.s,n,k:x.src});hit(G,x.tg.s,x.tg.i,n,x.src,x)},
-  exilT(G,op,x){const c=tgC(G,x);if(!c||c.ex)return;c.ex=1;lg(G,{t:'exil',ts:x.tg.s,i:x.tg.i,k:c.k,n:0})},             // Vol low-cost : part à l'étranger gratuitement
+  exilT(G,op,x){const c=tgC(G,x);if(!c||c.ex)return;c.ex=1;lg(G,{t:'exil',ts:x.tg.s,i:x.tg.i,k:c.k,n:0});goneAbroad(G,x.tg.s)},             // Vol low-cost : part à l'étranger gratuitement
   dmgEx(G,op,x){if(!vt(G,x.tg))return;let n=op.n||0;G.p[x.s].board.forEach(c=>{if(c&&c.ex&&!c.fum)n+=op.per||0});hit(G,x.tg.s,x.tg.i,n,x.src,x)},   // Coup de valise
   rndFam(G,op,x){OPS.rnd(G,{n:1,times:(op.n||0)+(fl(G,x.s)[op.f]||0)},x)},                                          // Soirée ravagée : missiles
   stealOr(G,op,x){const E=G.p[1-x.s];if(goldStealBlocked(G,1-x.s))return;const n=Math.min(E.or,op.n==='N-1'?Math.max(0,(op.f?(fl(G,x.s)[op.f]||0):0)-1):(op.n||0)+(op.f?(fl(G,x.s)[op.f]||0):0));if(n<=0)return; // vole de l'Or
@@ -581,6 +594,21 @@ const OPS={
   seedGrow(G,op,x){const i=selfI(G,x);if(i<0)return;const c=G.p[x.s].board[i];if(c.k!=='graine')return;c.a+=1;c.h+=1;lg(G,{t:'buff',ts:x.s,i,k:c.k,ba:1,bh:1})},
   dofus(G,op,x){const P=G.p[x.s];if(P.arts.length>=ARTMAX)return;const L=ARTK.filter(k=>!hasArt(P,k));if(!L.length)return;               // Gobi : un Dofus légendaire
     const k=pick(G,L);P.arts=P.arts.concat([{k,id:++G.uid}]);lg(G,{t:'art',ts:x.s,k});keepAlive(G,x.s)},
+  evRnd(G,op,x){runEv(G,x.s,ri(G,EVENTS.length),x.src)},                                                         // Organisateur : un événement du Bazar au hasard
+  evPick(G,op,x){const L=EVENTS.map((_,j)=>j),c=[];for(let j=0;j<(op.n||3)&&L.length;j++){const n=L.splice(ri(G,L.length),1)[0];c.push({id:n,n})}   // Organisateur (maître de cérémonie) : choisir parmi 3
+    const P=G.p[x.s];if(!P.pq)P.pq=[];P.pq.push({m:'ev',c,src:x.src});lg(G,{t:'evc',ts:x.s,cs:x.src})},
+  kwT(G,op,x){const c=tgC(G,x);if(!c)return;if(op.kw==='egide')c.eg=1;else{c.gk=Object.assign({},c.gk);c.gk[op.kw]=1}if(op.kw==='afk')c.aw=0;   // BRB, Arrosage automatique : un mot-clé donné
+    lg(G,{t:'kwg',ts:x.tg.s,i:x.tg.i,k:c.k,kw:op.kw})},
+  backT(G,op,x){const c=tgC(G,x);if(!c||!c.ex||c.fum)return;const s=x.tg.s;c.ex=0;lg(G,{t:'back',ts:s,i:x.tg.i,k:c.k,fum:0});   // Vol retour : revient tout de suite, +2/+2
+    c.a+=op.a;c.h+=op.h;lg(G,{t:'buff',ts:s,i:x.tg.i,k:c.k,ba:op.a,bh:op.h});backHooks(G,s,[c])},
+  orAbroad(G,op,x){const n=G.p[x.s].board.filter(b=>b&&b.ex&&!b.fum).length;gold(G,x.s,Math.min(op.max||99,n*op.n),x.src,x)},   // Souvenirs d'Andorre
+  muteAll(G,op,x){for(const s of[0,1])G.p[s].board.forEach((c,i)=>{if(c&&!c.mut){auraOff(G,s,i);c.pm=1;c.mut=1;lg(G,{t:'mute',ts:s,i,k:c.k})}})},   // Mute général
+  reboot(G,op,x){for(const s of[x.s,1-x.s])for(let i=0;i<CELLS;i++){const c=G.p[s].board[i];if(!c)continue;const os=c.o!=null?c.o:s;   // Reboot du serveur : tout retourne en main, sans Agonie ; les jetons disparaissent
+      removeC(G,s,i,2);if(CARDS[c.k].tok)continue;lg(G,{t:'kick',ts:os,k:c.k});const P=G.p[os],card={k:c.k,id:++G.uid};
+      if(P.hand.length<G.o.hand)P.hand.push(card);else{toGrave(P,card);lg(G,{t:'burn',ts:os,k:c.k})}}},
+  buffCost(G,op,x){const me=selfI(G,x);G.p[x.s].board.forEach((c,i)=>{if(c&&i!==me&&CARDS[c.k].c<=op.max){c.a+=op.a;c.h+=op.h;lg(G,{t:'buff',ts:x.s,i,k:c.k,ba:op.a,bh:op.h})}})},   // Le Coach (temps mort tactique)
+  buffSide(G,op,x){const me=selfI(G,x);if(me<0)return;const j=me+(op.side||1),c=G.p[x.s].board[j];if(!c)return;c.a+=op.a;c.h+=op.h;lg(G,{t:'buff',ts:x.s,i:j,k:c.k,ba:op.a,bh:op.h})},   // Saja (main droite)
+  killWeak(G,op,x){for(const s of[0,1]){const L=fl(G,s);G.p[s].board.forEach((c,i)=>{if(c&&eff(G,s,i,L).a<=op.max)c.dm+=99999})}},   // Wipe de raid : les créatures à 3 ATK ou moins
   pick3(G,op,x){const P=G.p[x.s],g=[];                                                                           // Coco (esprit tourmenté) : pioche 3, garde 1 au choix
     for(let j=0;j<op.n;j++){if(!refill(G,x.s)){P.fat++;lg(G,{t:'fat',ts:x.s,n:P.fat});heroHit(G,x.s,P.fat,'fat');if(G.over)return;continue}g.push(P.deck.pop())}
     if(!g.length)return;if(g.length===1){keepPick(G,x.s,g,0);return}
@@ -604,6 +632,7 @@ function pickDo(G,s,q,i){if(q.m==='tg'){const c=G.p[s].board.find(b=>b&&b.id===q
   if(q.m==='test'){const P=G.p[s],c=q.c[i],j=P.deck.findIndex(d=>d.id===c.id);if(j<0||P.hand.length>=G.o.hand)return;
     const card=P.deck.splice(j,1)[0];P.hand.push(card);lg(G,{t:'add',ts:s,k:card.k,pv:s,test:1});return}
   if(q.m==='disc'){const P=G.p[s],o=q.c[i],j=P.hand.findIndex(h=>h.id===o.id);if(j<0)return;const c=P.hand.splice(j,1)[0];toGrave(P,c);lg(G,{t:'disc',ts:s,k:c.k});return}
+  if(q.m==='ev'){const o=q.c[i];if(o&&!G.over){runEv(G,s,o.n,q.src);reap(G)}return}
   if(q.m==='dup'){const P=G.p[s],o=q.c[i];if(P.hand.length>=G.o.hand){lg(G,{t:'burn',ts:s,k:o.k});return}P.hand.push(mkCard(G,o.k));lg(G,{t:'add',ts:s,k:o.k,pv:s,dup:1});return}
   keepPick(G,s,q.c,i)}
 // Coco (esprit tourmenté) : la carte gardée va en main (brûlée si la main est pleine), les autres au cimetière
@@ -676,7 +705,7 @@ function startTurn(G,s){
   P.or+=o.inc;P.mvn=0;
   const back=[];
   P.board.forEach((c,i)=>{if(c){c.af=0;c.sick=0;c.inv=0;c.xat=c.xa||0;c.xa=0;if(c.ex){c.ex=0;lg(G,{t:'back',ts:s,i,k:c.k,fum:c.fum||0});if(!c.fum)back.push(c)}c.fum=0}});
-  for(const c of back){const i=slotOf(G,s,c),cd=CARDS[c.k];if(i>=0&&!c.mut&&cd.onBack&&!G.over)runFx(G,cd.onBack,{s,src:c.k,self:c,tg:null,pc:0,sl:i,ss:s,si:i})}   // Takk : à son retour de voyage
+  backHooks(G,s,back);   // Takk, Loractys, Nomade : au retour de voyage
   for(let i=0;i<CELLS;i++){const c=P.board[i];if(c&&c.pz>0){const d=dmgC(G,s,i,c.pz,'venin');if(d>0&&c.pzBy)venHeal(G,1-s,c.pzBy,d);c.pz--}}
   if(P.pz>0){const d=heroHit(G,s,P.pz,'venin');if(d>0&&P.pzBy)venHeal(G,1-s,P.pzBy,d);P.pz--}
   reap(G);if(G.over)return;
@@ -725,7 +754,7 @@ function act(G,s,a){
   if(G.phase==='rps')return a.t==='rps'?rpsAct(G,s,a):er('Pierre, feuille, ciseaux : il faut d’abord choisir.');
   if(G.cur!==s&&!(a.t==='pick'&&G.p[s].pq&&G.p[s].pq.length))return er('Ce n’est pas ton tour.');   // un choix en attente (cible d'un Cri) se fait aussi hors de son tour
   const P=G.p[s];G.aid++;
-  if(P.pq&&P.pq.length&&a.t!=='pick'&&a.t!=='end')return er(P.pq[0].m==='tg'?'Choisis d’abord la cible du Cri d’arrivée.':P.pq[0].m==='disc'?'Choisis d’abord la carte à défausser (Coup de folie).':P.pq[0].m==='dup'?'Choisis d’abord la carte à dupliquer (Miroir de Kalandra).':P.pq[0].m==='test'?'Choisis d’abord une carte de ton deck (code test).':'Choisis d’abord la carte à garder (Coco, esprit tourmenté).');
+  if(P.pq&&P.pq.length&&a.t!=='pick'&&a.t!=='end')return er(P.pq[0].m==='tg'?'Choisis d’abord la cible du Cri d’arrivée.':P.pq[0].m==='disc'?'Choisis d’abord la carte à défausser (Coup de folie).':P.pq[0].m==='dup'?'Choisis d’abord la carte à dupliquer (Miroir de Kalandra).':P.pq[0].m==='test'?'Choisis d’abord une carte de ton deck (code test).':P.pq[0].m==='ev'?'Choisis d’abord l’événement du Bazar (Organisateur).':'Choisis d’abord la carte à garder (Coco, esprit tourmenté).');
   switch(a.t){
   case 'play':{
     const h=P.hand[a.i];if(!h)return er('Carte introuvable.');const cd=CARDS[h.k],cost=costOf(G,s,h);
@@ -762,8 +791,8 @@ function act(G,s,a){
     if(t.i>=0){const D=G.p[t.s].board[t.i];if(D&&!D.mut&&CARDS[D.k].tax){const n=CARDS[D.k].tax;P.or-=n;lg(G,{t:'tax',ts:s,k:D.k,n})}}   // Maki : chaque attaque contre lui coûte 2 Or
     attack(G,s,a.f,t);break}
   case 'exil':{
-    if(!canExil(G,s,a.i))return er('Voyage impossible.');const n=fl(G,s).expats,cost=exCost(n),c=P.board[a.i];
-    P.or-=cost;c.ex=1;lg(G,{t:'exil',ts:s,i:a.i,k:c.k,n:cost});break}
+    if(!canExil(G,s,a.i))return er('Voyage impossible.');const cost=trCost(G,s),c=P.board[a.i];
+    P.or-=cost;c.ex=1;lg(G,{t:'exil',ts:s,i:a.i,k:c.k,n:cost});goneAbroad(G,s);break}
   case 'move':{                                                       // déplacer une créature (ou échanger deux créatures) : coûte du Démoflux
     const c=isCell(a.f)&&P.board[a.f];if(!c)return er('Aucune créature ici.');
     if(!isCell(a.to)||a.to===a.f)return er('Case invalide.');

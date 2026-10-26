@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>État Arcanique — Mode Expédition (proposition)</title>
+<style>
+:root{--bg:#0e1013;--panel:#15181d;--line:#242a33;--txt:#e7e9ee;--mut:#9aa1ae;--accent:#c9b079;--red:#ff6b7a;--grn:#6fdc8c;--blu:#6fb4ff;--vio:#b58cff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);font:15px/1.6 "Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.wrap{max-width:1080px;margin:0 auto;padding:48px 28px 80px}
+h1{font:700 40px/1.1 Georgia,"Times New Roman",serif;letter-spacing:.14em;text-align:center;margin:0;color:#f3f4f7}
+h1 .gold{color:var(--accent)}
+.sub{text-align:center;color:var(--mut);font-size:18px;margin:8px 0 4px}
+.note{text-align:center;color:#ff5d6c;font-size:12px;letter-spacing:.16em;text-transform:uppercase;margin:14px 0 30px}
+h2{font:700 21px/1.2 Georgia,serif;color:var(--accent);border-bottom:1px solid var(--line);padding-bottom:8px;margin:44px 0 16px;letter-spacing:.04em}
+h3{font:700 16px/1.3 Georgia,serif;color:#f3f4f7;margin:22px 0 8px}
+p{margin:8px 0;color:#d3d7de}
+b{color:#f3f4f7}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 20px 14px;color:#c9ced6;font-size:14.5px}
+.box li{margin:6px 0}
+.pitch{font-size:17px;text-align:center;color:#e9ebf0;background:linear-gradient(180deg,#1b1f27,#13161b);border:1px solid #3a3322;border-radius:14px;padding:18px 24px;margin:0 auto 10px;max-width:860px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.tile{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.tile .t{font:700 15px/1.2 Georgia,serif;color:#f3f4f7;display:flex;gap:8px;align-items:center}
+.tile .t .e{font-size:20px}
+.tile .d{color:#c3c8d0;font-size:13.5px;margin-top:6px}
+.tile .k{color:var(--accent);font-size:12px;letter-spacing:.06em;text-transform:uppercase;margin-top:6px}
+table{width:100%;border-collapse:separate;border-spacing:0;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--panel);margin-top:8px}
+th{background:#2b3a56;color:#fff;text-align:left;font-size:12.5px;letter-spacing:.05em;padding:10px 12px}
+td{padding:8px 12px;border-top:1px solid var(--line);font-size:13.5px;vertical-align:top;color:#d3d7de}
+td.n{color:var(--accent);font-weight:700;white-space:nowrap}
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.vs .tile .t{font-size:16px}
+.map{background:radial-gradient(ellipse at 50% 0%,#1d2330,#101318 70%);border:1px solid var(--line);border-radius:14px;padding:18px 12px;overflow-x:auto}
+.map .row{display:flex;justify-content:center;gap:34px;margin:8px 0}
+.map .nd{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font-size:20px;background:#0b0d10;border:2px solid #3a4351}
+.map .nd.el{border-color:var(--red)}.map .nd.ev{border-color:var(--vio)}.map .nd.tv{border-color:var(--grn)}.map .nd.sh{border-color:var(--accent)}.map .nd.bs{width:64px;height:64px;font-size:30px;border-color:#f3c76b;box-shadow:0 0 18px #f3c76b55}
+.map .lab{text-align:center;color:var(--mut);font-size:12px;margin-top:8px}
+.legend{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;color:#c3c8d0;font-size:13px;margin-top:10px}
+.pill{display:inline-block;font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;border-radius:999px;padding:2px 9px;border:1px solid}
+.p1{color:var(--grn);border-color:#6fdc8c55}.p2{color:var(--blu);border-color:#6fb4ff55}.p3{color:var(--vio);border-color:#b58cff55}
+.q{background:#1a1610;border:1px solid #4a3d22;border-radius:12px;padding:10px 20px 12px}
+.q li{margin:6px 0}
+.foot{color:#9aa1ae;font-size:12.5px;margin-top:26px}
+@media (max-width:760px){.wrap{padding:28px 16px 60px}h1{font-size:30px}.vs{grid-template-columns:1fr}.map .row{gap:14px}}
+</style></head><body><div class="wrap">
+<h1>MODE <span class="gold">EXPÉDITION</span></h1>
+<div class="sub">Un roguelite solo pour L’État Arcanique</div>
+<div class="note">Proposition • Rien n’est implémenté • À valider avant développement</div>
+
+<div class="pitch">Tu pars avec <b>un patron</b>, <b>15 cartes</b> et <b>40 PV</b>. Tu traverses les quatre jeux du serveur sur une carte à embranchements. Tu construis ton deck combat après combat et tu ramasses des <b>reliques</b> qui tordent les règles. Tes PV ne remontent pas tout seuls. Trois boss t’attendent, puis le Raid final. Une course dure environ 45 minutes, se sauvegarde après chaque étape, et n’est jamais deux fois la même.</div>
+
+<h2>Pourquoi ce n’est pas l’Arène</h2>
+<div class="vs">
+  <div class="tile"><div class="t">⚔ Arène (existe)</div><div class="d">
+    • Entrée payante (100 💎)<br>• Draft de 30 cartes d’un coup, puis on joue<br>• IA au meilleur niveau dès le palier 1, ou joueurs humains<br>• PV remis à 30 à chaque partie<br>• Objectif : 9 victoires avant 3 défaites</div></div>
+  <div class="tile"><div class="t">🧭 Expédition (proposé)</div><div class="d">
+    • Gratuit, 100 % solo, aucune carte de ta collection requise<br>• Deck de départ de 15 cartes qui grandit (ou maigrit) à chaque étape<br>• Difficulté qui monte : IA simple au début, experte à la fin, puis des niveaux de <b>Tilt</b> pour les vétérans<br>• <b>PV persistants</b> entre les combats : chaque point compte<br>• Choix de chemin, reliques, événements, boss à règles uniques</div></div>
+</div>
+
+<h2>Le déroulement d’une course</h2>
+<h3>1. Choisir son patron</h3>
+<p>Chaque patron donne un <b>deck de départ de 15 cartes</b> autour de sa famille, et un <b>pouvoir</b> permanent pour toute la course. Au début, 4 patrons sont disponibles. Les 4 autres se débloquent en jouant.</p>
+<div class="grid">
+  <div class="tile"><div class="t"><span class="e">🪙</span>Le Fermier</div><div class="d">Famille Farmers. <b>Pouvoir :</b> commence chaque combat avec 2 Or. +25 % d’Or d’expédition.</div><div class="k">Disponible d’entrée</div></div>
+  <div class="tile"><div class="t"><span class="e">☠</span>Le Rageux</div><div class="d">Famille Toxiques. <b>Pouvoir :</b> à chaque fois qu’une créature ennemie meurt, le héros adverse perd 1 PV.</div><div class="k">Disponible d’entrée</div></div>
+  <div class="tile"><div class="t"><span class="e">🚀</span>Le Zergueur</div><div class="d">Famille Ravages. <b>Pouvoir :</b> la première créature jouée à chaque tour gagne Hâte.</div><div class="k">Disponible d’entrée</div></div>
+  <div class="tile"><div class="t"><span class="e">🛡</span>Le Vétéran</div><div class="d">Famille Vestiges. <b>Pouvoir :</b> 45 PV au lieu de 40. Les Tavernes soignent 5 PV de plus.</div><div class="k">Disponible d’entrée</div></div>
+  <div class="tile"><div class="t"><span class="e">✈</span>L’Expat</div><div class="d">Famille Expats. <b>Pouvoir :</b> le premier voyage de chaque combat est gratuit, et la créature revient avec +1/+1.</div><div class="k">Battre le boss de l’acte 1</div></div>
+  <div class="tile"><div class="t"><span class="e">🌸</span>Le Weeb</div><div class="d">Famille Weebos. <b>Pouvoir :</b> tes créatures arrivent avec +1 PV.</div><div class="k">Battre le boss de l’acte 2</div></div>
+  <div class="tile"><div class="t"><span class="e">🛸</span>L’Envahisseur</div><div class="d">Famille Aliens. <b>Pouvoir :</b> commence chaque combat avec 1 Démoflux de plus.</div><div class="k">Finir une Expédition</div></div>
+  <div class="tile"><div class="t"><span class="e">👽</span>Le Xéno</div><div class="d">Famille Xénos. <b>Pouvoir :</b> tes créatures ont +1 ATK tant que tu as 3 créatures ou plus.</div><div class="k">Finir au Tilt 3</div></div>
+</div>
+
+<h3>2. Traverser la carte</h3>
+<p>Trois actes de 7 étages, puis le Raid final. À chaque étage, tu choisis ta prochaine case parmi 2 ou 3 chemins. Tu vois les chemins à l’avance : tu peux viser une Taverne si tu es blessé, ou une Élite si tu te sens fort.</p>
+<div class="map">
+  <div class="row"><div class="nd bs">👑</div></div><div class="lab">Boss de l’acte</div>
+  <div class="row"><div class="nd tv">🍺</div><div class="nd tv">🍺</div></div>
+  <div class="row"><div class="nd el">💀</div><div class="nd">⚔</div><div class="nd sh">🛒</div></div>
+  <div class="row"><div class="nd ev">🌀</div><div class="nd">⚔</div><div class="nd el">💀</div></div>
+  <div class="row"><div class="nd sh">🛒</div><div class="nd tv">🍺</div><div class="nd ev">🌀</div></div>
+  <div class="row"><div class="nd">⚔</div><div class="nd ev">🌀</div><div class="nd">⚔</div></div>
+  <div class="row"><div class="nd">⚔</div><div class="nd">⚔</div><div class="nd">⚔</div></div>
+  <div class="lab">Départ de l’acte (exemple de carte générée)</div>
+  <div class="legend"><span>⚔ Combat</span><span>💀 Élite (dur, donne une relique)</span><span>🌀 Événement du Bazar</span><span>🍺 Taverne</span><span>🛒 Marchand</span><span>🎁 Coffre (rare)</span><span>👑 Boss</span></div>
+</div>
+
+<h3>3. Les cases</h3>
+<table>
+<tr><th>Case</th><th>Ce qui se passe</th><th>Récompense</th></tr>
+<tr><td class="n">⚔ Combat</td><td>Duel contre un deck ennemi du thème de l’acte. Le héros ennemi a moins de PV qu’en duel normal (20 à 30 selon l’acte) : un combat dure 4 à 7 minutes.</td><td>Choisis 1 carte parmi 3, ou passe (un deck fin est une vraie stratégie). + Or d’expédition.</td></tr>
+<tr><td class="n">💀 Élite</td><td>Un personnage connu, avec un deck plus fort et une règle spéciale (par ex. « ses créatures ont Rempart au premier tour »).</td><td>1 relique au choix parmi 2, 1 carte rare ou mieux, plus d’Or.</td></tr>
+<tr><td class="n">🌀 Événement</td><td>Une petite histoire du serveur avec un choix. Exemples : « Soirée pizza » (récupère 10 PV, ou ajoute <i>Pizza</i> à ton deck), « Le modo est AFK » (prends une relique maudite puissante), « Panne de Discord » (retire 2 cartes de ton deck, ou perds 6 PV pour en dupliquer une).</td><td>Variable : risque contre récompense.</td></tr>
+<tr><td class="n">🍺 Taverne</td><td>Au choix : <b>te reposer</b> (soigne 30 % de tes PV max), ou passer à la <b>forgemagie</b> (améliore une carte).</td><td>PV, ou carte améliorée ★.</td></tr>
+<tr><td class="n">🛒 Marchand</td><td>Dépense ton Or d’expédition : 5 cartes, 2 reliques, 1 retrait de carte payant.</td><td>Ce que tu achètes.</td></tr>
+<tr><td class="n">👑 Boss</td><td>Un légendaire du jeu avec un deck taillé sur mesure et une règle de boss unique, parfois en 2 phases.</td><td>1 relique de boss parmi 3 (très puissantes) + soin complet.</td></tr>
+</table>
+
+<h3>4. La forgemagie (cartes améliorées ★)</h3>
+<p>Chaque carte peut être améliorée une fois pendant la course. Elle prend un liseré doré et une étoile.</p>
+<div class="box"><ul>
+<li><b>Créature</b> : +1/+1, ou −1 de coût si elle coûte 4 ou plus.</li>
+<li><b>Sort</b> : effet renforcé d’un cran (+1 dégât, +1 cible, +1 Or…) ou −1 de coût.</li>
+<li>Les meilleures cartes de départ deviennent vite des moteurs : c’est là que le deck prend sa personnalité.</li>
+</ul></div>
+
+<h2>Les reliques</h2>
+<p>Environ 40 reliques au lancement. Elles restent actives toute la course et cassent les règles habituelles : en solo, les combos absurdes sont permis, c’est le but. Quelques exemples :</p>
+<div class="grid">
+  <div class="tile"><div class="t"><span class="e">🎧</span>Casque RGB</div><div class="d">Ta première créature de chaque combat gagne Hâte.</div><div class="k">Commune</div></div>
+  <div class="tile"><div class="t"><span class="e">🍕</span>Pizza froide</div><div class="d">Après chaque combat gagné, récupère 4 PV.</div><div class="k">Commune</div></div>
+  <div class="tile"><div class="t"><span class="e">💾</span>Clé USB</div><div class="d">Commence chaque combat avec 1 Démoflux de plus.</div><div class="k">Commune</div></div>
+  <div class="tile"><div class="t"><span class="e">🖱</span>Tapis de souris XXL</div><div class="d">Ta main peut contenir 1 carte de plus.</div><div class="k">Commune</div></div>
+  <div class="tile"><div class="t"><span class="e">🧳</span>Valise diplomatique</div><div class="d">Les voyages coûtent 1 Or de moins.</div><div class="k">Rare</div></div>
+  <div class="tile"><div class="t"><span class="e">📶</span>Ping 5 ms</div><div class="d">Tu joues toujours en premier.</div><div class="k">Rare</div></div>
+  <div class="tile"><div class="t"><span class="e">🥚</span>Œuf fêlé</div><div class="d">Commence chaque combat avec un Dofus légendaire au hasard.</div><div class="k">Rare</div></div>
+  <div class="tile"><div class="t"><span class="e">🕶</span>VPN</div><div class="d">L’IA ne voit plus ta main pendant ses calculs.</div><div class="k">Rare</div></div>
+  <div class="tile"><div class="t"><span class="e">🔨</span>Marteau de modo</div><div class="d">Le premier sort adverse de chaque combat est annulé.</div><div class="k">Boss</div></div>
+  <div class="tile"><div class="t"><span class="e">💎</span>Abonnement Nitro</div><div class="d">Tes cartes coûtent 1 de moins pendant tes 2 premiers tours.</div><div class="k">Boss</div></div>
+  <div class="tile"><div class="t"><span class="e">📼</span>Replay</div><div class="d">Une fois par combat, quand ta créature meurt, elle revient en main.</div><div class="k">Boss</div></div>
+  <div class="tile"><div class="t"><span class="e">🩸</span>Clavier maudit</div><div class="d"><b>Maudite.</b> Tes créatures ont +1 ATK, mais ton héros perd 1 PV à chacun de tes tours.</div><div class="k">Événement</div></div>
+</div>
+
+<h2>Les actes et les boss</h2>
+<table>
+<tr><th>Acte</th><th>Ennemis</th><th>IA</th><th>Boss</th></tr>
+<tr><td class="n">1. Le Bazar<br><small>terrains Dofus</small></td><td>Decks de communes et quelques rares, héros à 20 PV. Élites à 25 PV.</td><td>Simple (joue le meilleur coup immédiat).</td><td><b>L’Organisateur</b> : un événement du Bazar se produit au début de chacun de ses tours. Chaos garanti.</td></tr>
+<tr><td class="n">2. La Faille<br><small>terrains LoL</small></td><td>Decks rares, héros à 25 PV. Élites avec une règle spéciale.</td><td>Intermédiaire (simule la fin de son tour et ta riposte).</td><td><b>Saja, Fascisme incarné</b> : son aura gauche/droite s’applique à toutes les cases du plateau. Bien placer ses créatures devient vital.</td></tr>
+<tr><td class="n">3. Dust<br><small>terrains CS</small></td><td>Decks avec légendaires, héros à 30 PV.</td><td>Experte (celle de l’Arène : 2 allers-retours, joue à cartes ouvertes).</td><td><b>Kirua, Crasheur de serveur</b> : tous les 3 tours, il éteint une case de ton côté jusqu’à la fin du combat.</td></tr>
+<tr><td class="n">Raid final<br><small>terrains WoW</small></td><td>—</td><td>Experte.</td><td><b>Minuit, Chef de raid</b> : 40 PV, en 2 phases. À 20 PV, elle invoque son raid et ses créatures gagnent +1/+1. Tu y arrives avec tes PV restants : pas de soin avant.</td></tr>
+</table>
+<p>Les élites et les boss changent d’une course à l’autre (2 à 3 candidats par acte), pour ne pas toujours affronter les mêmes.</p>
+
+<h2>Une difficulté qui monte</h2>
+<h3>Pendant la course</h3>
+<div class="box"><ul>
+<li><b>Les ennemis s’améliorent d’acte en acte</b> : rareté des decks, PV du héros ennemi, puis niveau de l’IA (simple, calculatrice, experte).</li>
+<li><b>Les PV ne remontent pas tout seuls</b> : chaque combat mal joué se paie plus tard. Les Tavernes et la relique de boss sont les seules vraies pauses.</li>
+<li><b>Objectifs d’équilibrage</b> (au Tilt 0, joueur moyen) : ~85 % de victoires par combat à l’acte 1, ~70 % à l’acte 2, ~60 % à l’acte 3. Une course sur trois environ va au bout.</li>
+<li><b>Réglage par simulation</b> : comme pour les cartes, l’IA peut jouer des milliers de courses entières toute seule. On règle les PV ennemis, l’Or et les soins jusqu’à atteindre ces chiffres.</li>
+</ul></div>
+<h3>D’une course à l’autre : les niveaux de Tilt</h3>
+<p>Finir une Expédition débloque le Tilt suivant. Les effets s’additionnent : au Tilt 10, tout s’applique.</p>
+<table>
+<tr><th>Tilt</th><th>Effet ajouté</th></tr>
+<tr><td class="n">1</td><td>Les élites ont 5 PV de plus.</td></tr>
+<tr><td class="n">2</td><td>−25 % d’Or d’expédition.</td></tr>
+<tr><td class="n">3</td><td>Les ennemis commencent chaque combat avec 1 Démoflux.</td></tr>
+<tr><td class="n">4</td><td>Les Tavernes soignent 20 % au lieu de 30 %.</td></tr>
+<tr><td class="n">5</td><td>Les boss des actes 1 et 2 ont aussi une 2e phase.</td></tr>
+<tr><td class="n">6</td><td>Tu commences avec une relique maudite au hasard.</td></tr>
+<tr><td class="n">7</td><td>Les combats normaux de l’acte 3 ont aussi une règle d’élite.</td></tr>
+<tr><td class="n">8</td><td>−5 PV max.</td></tr>
+<tr><td class="n">9</td><td>Les récompenses de combat proposent 2 cartes au lieu de 3.</td></tr>
+<tr><td class="n">10</td><td>Le Raid final enchaîne deux boss.</td></tr>
+</table>
+
+<h2>Ce qui donne envie de relancer</h2>
+<div class="grid">
+  <div class="tile"><div class="t"><span class="e">🎲</span>Jamais la même course</div><div class="d">Carte, ennemis, boss, cartes proposées, reliques et événements sont tirés au hasard. On découvre des combos qu’on ne verrait jamais en duel.</div></div>
+  <div class="tile"><div class="t"><span class="e">⏸</span>Sessions courtes</div><div class="d">Sauvegarde après chaque case. On peut jouer un combat le midi et finir l’acte le soir.</div></div>
+  <div class="tile"><div class="t"><span class="e">📅</span>Défi du jour</div><div class="d">Même patron, même carte, mêmes récompenses pour tout le monde. Classement du jour par étage atteint, PV restants et temps.</div></div>
+  <div class="tile"><div class="t"><span class="e">📖</span>Codex</div><div class="d">Reliques, boss et événements découverts se rangent dans un carnet. Le compléter devient un objectif en soi.</div></div>
+  <div class="tile"><div class="t"><span class="e">🪦</span>Écran de fin</div><div class="d">Récapitulatif de la course : deck final, reliques, carte qui a le plus frappé, et qui t’a tué (« Éliminé par Kirua à l’étage 17 »).</div></div>
+  <div class="tile"><div class="t"><span class="e">🏅</span>Récompenses durables</div><div class="d">XP d’expédition qui débloque patrons, reliques et cosmétiques exclusifs (avatars, dos de carte). Quelques 💎, sans concurrencer l’Arène.</div></div>
+</div>
+<h3>Récompenses en diamants (proposition)</h3>
+<table>
+<tr><th>Étape</th><th>💎</th></tr>
+<tr><td class="n">Boss de l’acte 1</td><td>10</td></tr>
+<tr><td class="n">Boss de l’acte 2</td><td>20</td></tr>
+<tr><td class="n">Boss de l’acte 3</td><td>30</td></tr>
+<tr><td class="n">Raid final</td><td>60 + 10 par niveau de Tilt</td></tr>
+<tr><td class="n">Défi du jour réussi</td><td>+25 (une fois par jour)</td></tr>
+</table>
+<p>Une course gagnée au Tilt 0 rapporte 120 💎, un peu plus qu’une Arène moyenne mais en 45 minutes et sans risque d’entrée. On peut aussi limiter les gains à 3 courses par jour.</p>
+
+<h2>Plan de développement</h2>
+<table>
+<tr><th>Étape</th><th>Contenu</th></tr>
+<tr><td><span class="pill p1">Phase 1</span></td><td>Carte à embranchements, PV persistants, combats, élites, Tavernes, récompenses de cartes, 4 patrons, 15 reliques, 3 boss + Raid final, sauvegarde, écran de fin. Les combats réutilisent le duel actuel (moteur, IA, interface) avec quelques réglages : PV de départ, deck de 15+ cartes, effets de reliques au début du combat et des tours.</td></tr>
+<tr><td><span class="pill p2">Phase 2</span></td><td>Marchand, ~20 événements du Bazar, forgemagie, reliques maudites, Tilt 1 à 5, 4 patrons à débloquer, codex.</td></tr>
+<tr><td><span class="pill p3">Phase 3</span></td><td>Tilt 6 à 10, Défi du jour et son classement (comme celui de l’Arène), cosmétiques exclusifs, 25 reliques de plus.</td></tr>
+</table>
+
+<h2>À décider avant de commencer</h2>
+<div class="q"><ul>
+<li><b>Le nom</b> : « Expédition », « Le Grand Raid », « Run du serveur »… ?</li>
+<li><b>Les cartes proposées</b> : toutes les cartes du jeu (recommandé, tout le monde à égalité), ou seulement celles de ta collection ?</li>
+<li><b>Les diamants</b> : barème ci-dessus, avec ou sans limite de 3 courses par jour ?</li>
+<li><b>Les boss</b> : garder Organisateur / Saja / Kirua / Minuit, ou d’autres persos préférés du serveur ?</li>
+<li><b>Les patrons</b> : un par famille comme proposé, ou des persos du serveur (ex. « Lisdoon le patriarche » comme patron Farmers) ?</li>
+</ul></div>
+
+<div class="foot">Document de proposition, version 3.12.0. Rien de ce mode n’est encore dans le jeu.</div>
+</div></body></html>
