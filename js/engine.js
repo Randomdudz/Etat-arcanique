@@ -312,7 +312,8 @@ function refill(G,s){const P=G.p[s];if(P.deck.length)return true;if(!P.grave.len
   P.deck=shuf(G,P.grave.map(c=>({k:c.k,id:++G.uid})));P.grave=[];P.rsh++;lg(G,{t:'reshuf',ts:s,n:P.deck.length});return true}
 function draw(G,s,n){const P=G.p[s];
   for(let j=0;j<n;j++){
-    if(!refill(G,s)){P.fat++;lg(G,{t:'fat',ts:s,n:P.fat});heroHit(G,s,P.fat,'fat');continue}
+    if(!refill(G,s)){if(G.o.exped){give(G,s,'pleb',1);continue}   // Expédition : pas de Fatigue, un Pleb rejoint la main quand tout est déjà joué
+      P.fat++;lg(G,{t:'fat',ts:s,n:P.fat});heroHit(G,s,P.fat,'fat');continue}
     const c=P.deck.pop();
     if(P.hand.length>=G.o.hand){toGrave(P,c);lg(G,{t:'burn',ts:s,k:c.k})}else{P.hand.push(c);lg(G,{t:'draw',ts:s,n:1})}}}
 function give(G,s,k,n){const P=G.p[s];for(let j=0;j<n;j++){
@@ -375,20 +376,34 @@ function rxStart(G){for(let s=0;s<2;s++){const P=G.p[s],R=P.rx;if(!R)continue;
   if(R.cap)P.cap+=R.cap;if(R.or)P.or+=R.or;
   for(let j=0;j<(R.draw||0);j++){const c=P.deck.pop();if(c)P.hand.push(c)}
   for(let j=0;j<(R.dofus||0);j++)OPS.dofus(G,{},{s});
-  P.cdis=R.ncost||0;P.xc=R.counter||0;P.xr=R.replay||0}}
-function rxPlay(G,s,c){const P=G.p[s],R=P.rx,i=slotOf(G,s,c);if(i<0)return;
+  if(R.coin)P.hand.push(mkCard(G,'piece'));                                                        // Pièce truquée
+  for(let j=0;j<(R.plebStart||0);j++)summon(G,s,'pleb',{noCry:1});                                // Sac de Plebs
+  const E=G.p[1-s];for(let j=0;j<(R.junkFoe||0);j++)if(E.hand.length<G.o.hand)E.hand.push(mkCard(G,'xcurse1'));   // Micro ouvert : des Pings fantômes chez l'adversaire
+  for(let j=0;j<(R.discFoe||0)&&E.hand.length;j++){const c=E.hand.splice(ri(G,E.hand.length),1)[0];toGrave(E,c);lg(G,{t:'disc',ts:1-s,k:c.k,cs:rxSrc(P,'discFoe')})}   // Clavier mécanique
+  P.cdis=R.ncost||0;P.xc=R.counter||0;P.xr=R.replay||0;P.xes=R.echoSpell||0}}
+function rxPlay(G,s,c){const P=G.p[s],R=P.rx||{},i=slotOf(G,s,c),Q=G.p[1-s];if(i<0)return;
   const kw=(k,src)=>{c.gk=Object.assign({},c.gk);c.gk[k]=1;lg(G,{t:'kwg',ts:s,i,k:c.k,kw:k,cs:rxSrc(P,src)})};
   if(R.hasteFirst&&!P.xh){P.xh=1;kw('hate','hasteFirst')}
   else if(R.hasteTurn&&P.xht!==G.turn){P.xht=G.turn;kw('hate','hasteTurn')}
   else if(R.hasteAll)kw('hate','hasteAll');
   if(R.egFirst&&!P.xe){P.xe=1;c.eg=1;lg(G,{t:'kwg',ts:s,i,k:c.k,kw:'egide',cs:rxSrc(P,'egFirst')})}
-  if(R.hpPlus){c.h+=R.hpPlus;lg(G,{t:'buff',ts:s,i,k:c.k,ba:0,bh:R.hpPlus,cs:rxSrc(P,'hpPlus')})}}
-function rxDeath(G,s,c,E){const Q=G.p[1-s];
+  if(R.hpPlus){c.h+=R.hpPlus;lg(G,{t:'buff',ts:s,i,k:c.k,ba:0,bh:R.hpPlus,cs:rxSrc(P,'hpPlus')})}
+  if(R.tauntFirst&&!P.xtf){P.xtf=1;kw('rempart','tauntFirst')}                                        // Gros tank : sa 1re créature a Rempart
+  if(R.plebPlay&&!CARDS[c.k].tok){const p=summon(G,s,'pleb',{near:i,noCry:1});if(p)lg(G,{t:'rx',ts:s,src:rxSrc(P,'plebPlay'),tx:'un fan débarque'})}   // Fan club
+  if(Q.rx&&Q.rx.copyFoe&&!Q.xcp&&!CARDS[c.k].tok){Q.xcp=1;const cp=summon(G,1-s,c.k,{noCry:1});if(cp)lg(G,{t:'rx',ts:1-s,src:rxSrc(Q,'copyFoe'),k:c.k,tx:'copie'})}}   // Copieur : ta 1re créature est copiée chez lui
+function rxDeath(G,s,c,E){const Q=G.p[1-s],Pw=G.p[s];
+  if(Pw.rx&&Pw.rx.boom&&!G.over)heroHit(G,1-s,Pw.rx.boom,rxSrc(Pw,'boom'));                           // Kamikaze : ses créatures explosent en mourant
   if(Q.rx&&Q.rx.ping&&!G.over)heroHit(G,s,Q.rx.ping,rxSrc(Q,'ping'));                               // Sel de rage, le Rageux : une créature ennemie meurt
   const os=c.o!=null?c.o:s,O=G.p[os];
   if(O.rx&&O.xr>0&&!CARDS[c.k].tok&&!c.sm&&!(E&&E.kw.respawn&&!c.rs)&&O.hand.length<G.o.hand){      // Replay : la créature revient dans la main (une fois par combat)
     const gi=O.grave.findIndex(q=>q.id===c.id);if(gi>=0){O.grave.splice(gi,1);O.xr--;O.hand.push({k:c.k,id:++G.uid});lg(G,{t:'rx',ts:os,src:rxSrc(O,'replay'),k:c.k,tx:'revient dans la main'})}}}
 function rxTurn(G,s){const P=G.p[s],R=P.rx,E=G.p[1-s];
+  if(R.afk1&&!P.xafk){P.xafk=1;lg(G,{t:'rx',ts:s,src:rxSrc(P,'afk1'),tx:'est AFK et passe son tour'});return true}   // AFK : passe son premier tour
+  if(R.junkTurn&&E.hand.length<G.o.hand){E.hand.push(mkCard(G,'xcurse1'));lg(G,{t:'rx',ts:s,src:rxSrc(P,'junkTurn'),tx:'te spamme un Ping fantôme'})}   // Spammeur
+  if(R.steal&&E.or>0&&!goldStealBlocked(G,1-s)){const n=Math.min(E.or,R.steal);E.or-=n;P.or+=n;lg(G,{t:'gold',ts:s,n,from:1-s,src:rxSrc(P,'steal'),ss:1-s,si:-1})}   // Voleur
+  if(R.venomFoe){E.pz=(E.pz||0)+R.venomFoe;E.pzBy=null;lg(G,{t:'rx',ts:s,src:rxSrc(P,'venomFoe'),tx:'te flamme : +'+R.venomFoe+' Venin à ton héros'})}   // Flammeur
+  if(R.burn){const L=[];E.board.forEach((c,i)=>{if(c&&!c.ex)L.push(i)});if(L.length){const i=pick(G,L);lg(G,{t:'rx',ts:s,src:rxSrc(P,'burn'),tx:'met le feu'});hit(G,1-s,i,R.burn,rxSrc(P,'burn'));reap(G);if(G.over)return}}   // Pyromane
+  if(R.botEvery){P.xbt=(P.xbt||0)+1;if(P.xbt%R.botEvery===0){const b=summon(G,s,'bot',{noCry:1});if(b)lg(G,{t:'rx',ts:s,src:rxSrc(P,'botEvery'),tx:'invoque un Bot de modération'})}}   // Bot Discord
   if(R.selfDmg){heroHit(G,s,R.selfDmg,rxSrc(P,'selfDmg'));reap(G);if(G.over)return}
   if(R.orTurn&&(P.xo||0)<R.orTurn){P.xo=(P.xo||0)+1;gold(G,s,1,rxSrc(P,'orTurn'))}
   if(R.drawTurn){lg(G,{t:'rx',ts:s,src:rxSrc(P,'drawTurn'),tx:'pioche '+R.drawTurn+' carte'+(R.drawTurn>1?'s':'')+' de plus'});draw(G,s,R.drawTurn);if(G.over)return}
@@ -401,7 +416,9 @@ function rxTurn(G,s){const P=G.p[s],R=P.rx,E=G.p[1-s];
     reap(G);if(G.over)return}
   if(R.crash){P.xk=(P.xk||0)+1;if(P.xk%R.crash===0){let bi=-1,bv=-1;E.board.forEach((c,i)=>{if(c&&!CARDS[c.k].tok){const v=CARDS[c.k].c*10+eff(G,1-s,i).a;if(v>bv){bv=v;bi=i}}});
     if(bi>=0){const c=E.board[bi];lg(G,{t:'rx',ts:s,src:rxSrc(P,'crash'),tx:'crashe le serveur'});OPS.kick(G,{},{s,tg:{s:1-s,i:bi,id:c.id}});reap(G)}}}}
-function rxPhase(G){let hit2=false;for(let s=0;s<2;s++){const P=G.p[s],R=P.rx;if(!R||!R.phase||P.xph||P.hp<=0||P.hp>R.phase.at||G.over)continue;
+function rxPhase(G){let hit2=false;
+  for(let s=0;s<2;s++){const P=G.p[s],R=P.rx;if(R&&R.rq&&!P.xrq&&P.hp>0&&P.hp<=R.rq.at&&!G.over){P.xrq=1;hit2=true;lg(G,{t:'rx',ts:s,src:rxSrc(P,'rq'),tx:'rage-quit !'});heroHit(G,1-s,R.rq.n,rxSrc(P,'rq'))}}   // Bouton Rage-quit
+  for(let s=0;s<2;s++){const P=G.p[s],R=P.rx;if(!R||!R.phase||P.xph||P.hp<=0||P.hp>R.phase.at||G.over)continue;
   P.xph=1;hit2=true;const F=R.phase,src=rxSrc(P,'phase');lg(G,{t:'rx',ts:s,src,tx:F.tx||'passe en 2e phase'});
   if(F.wipe)G.p[1-s].board.forEach(c=>{if(c)c.dm+=99999});
   for(let j=0;j<(F.sum||0);j++){const k=pick(G,F.pool||['pleb']);const c=summon(G,s,k,{noCry:1});if(!c)break}
@@ -437,7 +454,7 @@ function reap(G){
       if(!cd.rsFull){const E2=eff(G,s,i);n.dm=Math.max(0,E2.h-1)}
       lg(G,{t:'sum',ts:s,i,k:c.k,rs:1});if(!(E.TE&&E.TE.rsq))autoCry(G,s,n)}   // Esprit guérisseur : sans redéclencher ses effets
   }lockSweep(G)}finally{G.rp=0}
-  if(((G.p[0].rx&&G.p[0].rx.phase)||(G.p[1].rx&&G.p[1].rx.phase))&&rxPhase(G)){reap(G);return}   // Expédition : 2e phase d'un boss
+  if(((G.p[0].rx&&(G.p[0].rx.phase||G.p[0].rx.rq))||(G.p[1].rx&&(G.p[1].rx.phase||G.p[1].rx.rq)))&&rxPhase(G)){reap(G);return}   // Expédition : 2e phase d'un boss, Rage-quit
   checkOver(G);flushTilt(G)}
 
 // ---------- effets ----------
@@ -768,7 +785,7 @@ function startTurn(G,s){
   const L=fl(G,s);
   if((L.farmer||0)>=2){const n=Math.min(4,L.farmer-1);lg(G,{t:'fac',f:'farmer',ts:s,n:L.farmer,or:n});gold(G,s,n,'farmer',{ss:s,si:-2})}   // Farmers : N−1 Or, 4 au maximum
   if((L.alien||0)>=2){const E=G.p[1-s],n=Math.min(L.alien-1,E.or);lg(G,{t:'fac',f:'alien',ts:s,n:L.alien});if(n>0&&!goldStealBlocked(G,1-s)){E.or-=n;P.or+=n;lg(G,{t:'gold',ts:s,n,from:1-s,src:'alien',ss:1-s,si:-1})}}   // Extraterritoriaux : volent N−1 Or
-  if(P.rx){rxTurn(G,s);if(G.over)return}
+  if(P.rx){const skip=rxTurn(G,s);if(G.over)return;if(skip){endTurn(G,s);return}}
   boardHooks(G,s,'sot')}
 function endTurn(G,s){
   const P=G.p[s];if(P.cdis>0)P.cdis--;
@@ -820,7 +837,7 @@ function act(G,s,a){
         if(sp.tg2){if(!inList(tg2List(G,s,a.sl),a.tg2))return er('Choisis la créature à échanger.');tg2=a.tg2.s===s&&a.tg2.i===a.sl?'self':resolveTg(G,a.tg2)}}}
       P.hand.splice(a.i,1);P.eth-=cost;
       const c=mkC(G,h.k);c.o=s;if(c.h<=0&&cd.cry)c.pd=1;P.board[a.sl]=c;                      // 0 PV de base (Chanssus) : vit jusqu'à son Cri d'arrivée
-      if(P.rx)rxPlay(G,s,c);
+      if(P.rx||G.p[1-s].rx)rxPlay(G,s,c);
       const pc=G.played;G.played++;
       lg(G,{t:'play',k:h.k,i:a.sl,c:cost,ts:s});
       arrive(G,s,a.sl);
@@ -836,6 +853,8 @@ function act(G,s,a){
       lg(G,{t:'play',k:h.k,c:cost,ts:s,tg:tgl(tg),tg2:tgl(tg2)});
       const Q=G.p[1-s];if(Q.xc>0){Q.xc--;lg(G,{t:'rx',ts:1-s,src:Q.rx&&Q.rx.src&&Q.rx.src.counter,k:h.k,tx:'annule le sort'});toGrave(P,h);break}   // Expédition : sort annulé
       runFx(G,cd.fx,{s,src:h.k,self:null,tg,tg2,pc,ss:s,si:-1});
+      if(P.xes>0&&!cd.tok&&!G.over){P.xes--;lg(G,{t:'rx',ts:s,src:rxSrc(P,'echoSpell'),k:h.k,tx:'rejoue le sort'});reap(G);if(!G.over)runFx(G,cd.fx,{s,src:h.k,self:null,tg,tg2,pc,ss:s,si:-1})}   // Manette sans fil
+      if(Q.rx&&Q.rx.spellTax&&!cd.tok&&!G.over){heroHit(G,s,Q.rx.spellTax,rxSrc(Q,'spellTax'))}         // Insulteur : chaque sort te coûte 1 PV
       toGrave(P,h)}
     break}
   case 'atk':{
@@ -982,7 +1001,8 @@ function attack(G,s,i,t){
 function view(G,me,from){
   from=from||0;const hh=G.hist;G.hist=[];const V=cloneG(G);G.hist=hh;
   V.rs=0;V.me=me;V.hs=from;V.tdn=G.tdeck.length;V.tdeck=[];V.tdis=[];
-  V.p.forEach((P,s)=>{P.dn=P.deck.length;P.deck=[];if(s!==me){P.hand=P.hand.map(()=>({k:'?',id:0,p:0}));P.pq=(P.pq||[]).map(q=>({m:q.m,c:q.c.map(()=>({k:'?',id:0}))}));P.board=P.board.slice()}});
+  const peek=!!(G.p[me]&&G.p[me].rx&&G.p[me].rx.peek);                                             // Expédition : Webcam piratée
+  V.p.forEach((P,s)=>{P.dn=P.deck.length;P.deck=[];if(s!==me){if(!peek)P.hand=P.hand.map(()=>({k:'?',id:0,p:0}));P.pq=(P.pq||[]).map(q=>({m:q.m,c:q.c.map(()=>({k:'?',id:0}))}));P.board=P.board.slice()}});
   if(G.rps)V.rps=G.rps.map(r=>r.s===me?Object.assign({},r):Object.assign({},r,{v:'?'}));   // le signe d'Osiris reste secret pour l'adversaire
   V.hist=hh.slice(from).map(e=>{if(e.pv!=null&&e.pv!==me){const q=Object.assign({},e);if(e.t==='rpsb')delete q.v;else delete q.k;return q}return e});
   return V}

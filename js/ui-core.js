@@ -211,7 +211,7 @@ function cardEl(k,o){
       cr&&cr.mut?h('div',{class:'mutb kw','data-t':'Mute','data-d':defOf('Mute')},h('span',null,'🔇'),h('b',null,'MUTE')):null,
       o.bd?h('div',{class:'vfx'},h('i',{class:'v-tlt'}),h('i',{class:'v-pzn'}),h('i',{class:'v-blk'})):null,
       o.rdy?h('div',{class:'atkb ok',title:'Peut attaquer'},'⚔'):o.why?h('div',{class:'atkb no',title:o.why[1]},o.why[0]):null,
-      cd.up?h('div',{class:'upb kw','data-t':'Carte améliorée','data-d':cd.up==='u'?'Forgemagie d’Expédition : +1/+1.':'Forgemagie d’Expédition : coûte 1 de moins.'},'★'):null,
+      cd.up?h('div',{class:'upb kw','data-t':'Carte améliorée (forgemagie d’Expédition)','data-d':typeof xUpDesc==='function'?xUpDesc(cd.up):''},'★'.repeat(Math.max(1,(cd.up.c||0)+(cd.up.e||0)+(cd.up.u||0)))):null,
       cr?h('div',{class:'exo',title:cr.fum===2?'Immunité diplomatique : inciblable':cr.fum?'Dans la fumée : inciblable':'À l’étranger : inciblable'},cr.fum===2?'🛂':cr.fum?'💨':'✈️'):null),
     // ornements de rareté : filet intérieur (bronze, argent ou or), coins ciselés (rare, légendaire) et cimier (légendaire)
     h('div',{class:'orn'},cd.r>=2?[h('i'),h('i'),h('i'),h('i')]:null,cd.r===3?h('b'):null),

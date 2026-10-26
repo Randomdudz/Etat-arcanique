@@ -259,7 +259,8 @@ function heroNode(s){
     P.pz>0?h('div',{class:'hpz'},'☠ '+P.pz):null,
     st('mana','Démoflux',[uiIco('ico-demoflux'),' '+P.eth,h('small',null,'/'+P.cap)],h('div',{class:'crys'},cr)),
     V.o.ter?st('gold','Or',[uiIco('ico-or'),' '+P.or]):null,
-    st('handc','Cartes en main',[uiIco('ico-main'),' '+P.hand.length]),
+    (()=>{const pk=!isMe&&P.hand.some(c=>c&&c.k&&c.k!=='?'),el2=st('handc'+(pk?' peek':''),pk?'Main adverse visible (Webcam piratée) : clique pour la voir':'Cartes en main',[uiIco('ico-main'),' '+P.hand.length]);   // Expédition : Webcam piratée
+      if(pk)el2.addEventListener('click',e=>{e.stopPropagation();modal(h('div',null,h('h2',null,'📷 Main de '+P.nm),h('div',{class:'xp-deck'},P.hand.map(c=>h('div',{class:'xp-dc',onclick:()=>showCard(c.k)},cardEl(c.k,{}))))))});return el2})(),
     isMe&&V.o.ter&&mm>0?st('mvc'+(ml?'':' out'),ml?'Déplacements · prochain : '+mvCost(V,s)+' ◆ ou '+mvCost(V,s)+' 🪙':'Déplacements épuisés ce tour',[h('i',null,'↔'),' '+ml+'/'+mm]):null);
   el._dz={t:'hero',s};
   el.addEventListener('click',e=>{e.stopPropagation();clickSlot(s,-1)});
