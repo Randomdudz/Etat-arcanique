@@ -209,7 +209,7 @@ function renderDuel(){
     if(Math.abs(dx)+Math.abs(dy)>3)c.animate([{transform:'translate('+dx+'px,'+dy+'px)',zIndex:20},{transform:'none',zIndex:20}],{duration:380*ANIM,easing:'cubic-bezier(.2,.8,.2,1)'})});
   renderHist();aimDraw();placeMat();
   discNode();
-  if(D.started)animate(D.newE);else{D.started=true;banner(m?'À TOI DE JOUER':'TOUR ADVERSE',m?'#e9cd86':'#c45f5b')}
+  if(D.started)animate(D.newE);else{D.started=true;if(V.phase!=='mull')banner(m?'À TOI DE JOUER':'TOUR ADVERSE',m?'#e9cd86':'#c45f5b')}   // pendant le mulligan, l'annonce viendra avec le premier tour
   D.newE=[];
   if(V.over&&!D.overShown){D.overShown=true;if(V.o.arena&&!D.arenaRes)D.arenaRes=arenaAfterDuel(V,D);if(V.o.exped&&typeof expAfterDuel==='function')expAfterDuel(V,D);setTimeout(showResult,1600*ANIM)}}   // Arène, Expédition : le résultat compte dès la fin de la partie
 
@@ -257,9 +257,10 @@ function heroNode(s){
       h('div',{class:'hrow'},h('div',{class:'hn'},P.nm)),
       h('div',{class:'hpl'},h('span',{class:'hl'},'Points de vie'),h('div',{class:'hbar'},h('i',{style:'width:'+pct+'%'})),h('b',{class:'hpn'},uiIco('ico-pv'),' '+P.hp,h('small',null,'/'+P.mhp)))),
     P.pz>0?h('div',{class:'hpz'},'☠ '+P.pz):null,
-    st('mana','Démoflux',[uiIco('ico-demoflux'),' '+P.eth,h('small',null,'/'+P.cap)],h('div',{class:'crys'},cr)),
+    st('mana','Démoflux',[uiIco('ico-demoflux'),' '+P.eth,h('small',null,'/'+Math.max(0,P.cap))],h('div',{class:'crys'},cr)),
     V.o.ter?st('gold','Or',[uiIco('ico-or'),' '+P.or]):null,
-    st('handc','Cartes en main',[uiIco('ico-main'),' '+P.hand.length]),
+    (()=>{const pk=!isMe&&P.hand.some(c=>c&&c.k&&c.k!=='?'),el2=st('handc'+(pk?' peek':''),pk?'Main adverse visible (Webcam piratée) : clique pour la voir':'Cartes en main',[uiIco('ico-main'),' '+P.hand.length]);   // Expédition : Webcam piratée
+      if(pk)el2.addEventListener('click',e=>{e.stopPropagation();modal(h('div',null,h('h2',null,'📷 Main de '+P.nm),h('div',{class:'xp-deck'},P.hand.map(c=>h('div',{class:'xp-dc',onclick:()=>showCard(c.k)},cardEl(c.k,{}))))))});return el2})(),
     isMe&&V.o.ter&&mm>0?st('mvc'+(ml?'':' out'),ml?'Déplacements · prochain : '+mvCost(V,s)+' ◆ ou '+mvCost(V,s)+' 🪙':'Déplacements épuisés ce tour',[h('i',null,'↔'),' '+ml+'/'+mm]):null);
   el._dz={t:'hero',s};
   el.addEventListener('click',e=>{e.stopPropagation();clickSlot(s,-1)});

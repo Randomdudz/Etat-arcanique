@@ -15,7 +15,7 @@ function arenaLeaderboardRender(){
   const el=$('#arenaLeaderboard');if(!el)return;
   const title='Classement · '+arenaWeekLabel(ARENA_LB.week),refresh=h('button',{class:'btn sm',onclick:()=>arenaLeaderboardLoad(true)},'Actualiser');
   const rows=ARENA_LB.rows;
-  el.replaceChildren(h('div',{class:'albh'},h('h3',null,title),refresh),
+  el.replaceChildren(ph('🏆',title,refresh),
     ARENA_LB.loading?h('p',{class:'sm mut'},'Chargement du classement…'):
     ARENA_LB.error?h('div',{class:'sm'},h('p',{class:'lb-error'},'Classement indisponible : '+ARENA_LB.error),h('button',{class:'btn sm',onclick:()=>arenaLeaderboardLoad(true)},'Réessayer')):
     !rows||!rows.length?h('p',{class:'sm mut'},'Aucune course enregistrée cette semaine. Connecte-toi à un compte en ligne pour apparaître dans le classement.'):
@@ -358,7 +358,7 @@ function vArena(v){
     h('br'),'Mêmes chances pour tout le monde : commune '+ARENA.odds[1]+' %, rare '+ARENA.odds[2]+' %, légendaire '+ARENA.odds[3]+' % par choix (le 1er choix est toujours un choix de légendaires), sans tenir compte de ta collection. Les choix sont fixés dès l’entrée : recharger la page ne les change pas. Le second joueur garde la Pièce et l’Or de compensation, mais pas les '+COMP.hp+' PV bonus. Une partie quittée avant la fin compte comme une défaite.');
   const head=h('div',{class:'panel hl v-arena'},ph('play','Arène',r?r.w+' V · '+r.l+' D':(A.best?'Record : '+A.best+' V':'')),rules);
   if(!r){
-    apn(head,h('div',{class:'row',style:'margin-top:14px;gap:12px'},
+    apn(head,h('div',{class:'row cta',style:'margin-top:14px;gap:12px'},
       h('button',{class:'btn gold big',id:'arenaGo',disabled:S.gems<ARENA.cost,onclick:()=>{const e=arenaEnter();if(e){toast(e);return}refreshTop();go('arena')}},'Entrer dans l’Arène ('+ARENA.cost+' 💎)')),
       S.gems<ARENA.cost?h('p',{class:'sm',style:'color:#f2a7a2;margin:8px 0 0'},'Il te manque '+(ARENA.cost-S.gems)+' 💎.'):null,
       A.last?h('p',{class:'sm mut',style:'margin:10px 0 0'},'Dernière course : '+A.last.w+' V – '+A.last.l+' D, +'+A.last.g+' 💎.'+(A.runs>1?' Courses jouées : '+A.runs+'.':'')):null);

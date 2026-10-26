@@ -5,6 +5,61 @@ Journal des mises à jour, la plus récente en premier. Les annonces détaillée
 <!-- Style des notes : écrire pour les joueurs. Pas de termes techniques (fichiers, serveurs, code, noms de collections) :
      seulement ce qui change en jeu, et comment en profiter. -->
 
+## v3.14.1 — 26/10/2026
+
+### Interface : tout est centré et aligné
+- **Barre du haut** : les 7 icônes de navigation ont la même taille visible (l’icône Compte n’est plus plus petite que les autres). Sur une fenêtre de 1100 à 1280 px de large, le compteur de 💎 n’est plus coupé.
+- **Accueil** : la grande carte Expédition suit l’ordre des 4 autres. Son médaillon, son bandeau et son bouton sont centrés, avec l’illustration et le texte en dessous. Les ombres des cartes suivent leur cadre au lieu de dessiner un rectangle sombre.
+- **Panneaux** : le losange décoratif sous chaque titre est centré sur le panneau, dans l’axe de l’ornement du cadre.
+- **Expédition** :
+  - les 8 patrons sont présentés en 2 rangées de 4 ;
+  - le bouton de départ tient sur une ligne et il est centré ;
+  - la Taverne, le Marchand, les coffres, les événements et les récompenses sont centrés dans leur panneau.
+- **Arène** : le classement a le même en-tête que les autres panneaux. Les 10 paliers de récompense sont en 2 rangées de 5 et le bouton d’entrée est centré.
+- **Compte et Code** : même largeur pour ces pages à une colonne ; les avatars sont présentés en 2 rangées de 6.
+
+### Corrections
+- L’annonce « Tour adverse » ne s’affiche plus par-dessus la fenêtre du mulligan.
+- En Expédition, les bonus de l’adversaire s’affichent après le mulligan au lieu d’être cachés derrière.
+- Le Démoflux d’un adversaire « Débutant » n’affiche plus « 0/−1 » avant son premier tour.
+
+## v3.14.0 — 26/10/2026
+
+### Expédition : un deck à toi, une carte lisible, des adversaires qui ont du caractère
+Une Expédition en cours est remise à zéro par cette mise à jour : le départ a changé.
+
+- **Ton deck de départ, c’est toi qui le fais** : choisis 5 cartes parmi 12. On te propose surtout des cartes de la famille de ton patron, avec 2 rares. Il grandit ensuite après chaque combat.
+- **Plus de Fatigue en Expédition** : quand ton deck et ton cimetière sont vides, tu pioches un Pleb 1/1.
+- **La forgemagie va plus loin** :
+  - une carte peut être améliorée jusqu’à 3 fois ;
+  - à chaque fois, tu choisis : +1/+1 (créatures), −1 coût (2 fois au plus) ou **effet renforcé** (2 fois au plus) ;
+  - l’effet renforcé augmente les chiffres de l’effet : Ping inflige 3 dégâts au lieu de 2, un cri qui pioche 1 en pioche 2, etc. ;
+  - la fenêtre de forgemagie montre la carte avant et chaque version après ;
+  - le Marchand propose aussi la forgemagie (75 Or) ;
+  - les élites et les boss peuvent offrir une carte déjà améliorée ;
+  - les étoiles ★ sur une carte comptent ses améliorations, le détail s’affiche au survol.
+- **Une carte bien plus claire** :
+  - le chemin parcouru est en or plein ;
+  - les cases où tu peux aller brillent et leurs chemins sont animés ;
+  - les cases encore accessibles plus tard restent reliées en or fin ;
+  - les cases que tu ne peux plus atteindre sont grisées, avec leurs chemins à peine visibles ;
+  - les chemins ne se croisent plus et ne passent plus derrière les icônes.
+- **Chaque adversaire a ses bonus, et tu les vois** :
+  - leurs icônes sont sur les cases de la carte, le détail au survol de n’importe quelle case (boss compris) ;
+  - ils sont listés avant le combat, rappelés au début du duel et visibles en haut à droite pendant tout le combat.
+- **15 bonus d’adversaires**, plus drôles que des statistiques :
+  - Spammeur (il glisse des Pings fantômes dans ta main), Kamikaze, Voleur d’Or, Pyromane, Fan club, Copieur (il copie ta première créature), Flammeur, Insulteur (tes sorts te coûtent 1 PV), Papa riche, Smurf, Gros tank, Prudent ;
+  - et quelques cadeaux à l’acte 1 : AFK, Pigeon, Connexion lente.
+- **10 nouvelles reliques** (40 en tout) : Micro ouvert, Pièce truquée, Kebab de 4 h du mat’, Sac de Plebs, Bot Discord, Webcam piratée (tu vois la main de l’adversaire), Clavier mécanique, Bouton Rage-quit, Manette sans fil (ton premier sort est joué deux fois) et DDoS.
+- **Plus difficile** :
+  - les adversaires de l’acte 1 sont des Débutants (1 Démoflux max de moins), ceux de l’acte 3 et du Raid final des Vétérans (1 de plus) ;
+  - 1 à 2 bonus par adversaire à l’acte 2, 2 à l’acte 3 ;
+  - les élites et les boss gagnent un bonus en plus de leur règle à l’acte 2, un ou deux à l’acte 3 ;
+  - plus de PV pour les combats de l’acte 2, les élites des actes 2 et 3 et tous les boss.
+
+### Correction
+- Choisir une carte de ton deck (forgemagie, retrait, événements) ne rogne plus les cartes.
+
 ## v3.13.1 — 26/10/2026
 
 ### Illustrations

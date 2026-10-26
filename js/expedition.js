@@ -1,12 +1,12 @@
 // ============ EXPÉDITION : roguelite solo (patrons, carte à embranchements, reliques, boss, Tilt) ============
-// Une course : un patron, 15 cartes, des PV qui ne remontent pas tout seuls. 3 actes de 7 étages puis le Raid final.
+// Une course : un patron, 5 cartes choisies au départ, des PV qui ne remontent pas tout seuls. 3 actes de 7 étages puis le Raid final.
 // Les combats utilisent le duel normal (moteur, IA, interface) ; les effets de course passent par P.rx (engine.js).
 // Tout le hasard d'une course vient d'une graine : recharger la page ne change ni la carte, ni les offres, ni les combats.
 
-const EXP={hp:40,floors:7,deck0:15,acts:['Le Bazar','La Faille','Dust','Le Raid final'],tg:['dofus','lol','cs','wow'],
-  ehp:{normal:[16,24,30],elite:[20,28,34],boss:[24,32,38]},lvl:{normal:[0,1,3],elite:[0,2,3],boss:[1,3,3]},ai:{normal:[0,1,2],elite:[0,1,2],boss:[0,2,2]},
+const EXP={hp:40,floors:7,deck0:5,acts:['Le Bazar','La Faille','Dust','Le Raid final'],tg:['dofus','lol','cs','wow'],
+  ehp:{normal:[16,26,30],elite:[20,30,36],boss:[26,36,42]},lvl:{normal:[0,1,3],elite:[0,2,3],boss:[1,3,3]},ai:{normal:[0,1,2],elite:[0,1,2],boss:[0,2,2]},
   gems:[10,20,30],gemRaid:60,gemTilt:10,gemDaily:25,rmCost:60,rmStep:25,xpLv:[0,120,300,550,900,1350,1900,2600]};
-const XPVER=1;
+const XPVER=2;
 
 // ---------- patrons ----------
 const XPAT={
@@ -49,6 +49,16 @@ const XREL={
   replay:{n:'Replay',ic:'📼',r:'b',lv:4,tx:'Une fois par combat, ta première créature qui meurt revient dans ta main.',rx:{replay:1}},
   couronne:{n:'Couronne du serveur',ic:'👑',r:'b',tx:'Tes créatures ont +1 ATK.',rx:{atk:1}},
   serveur:{n:'Serveur dédié',ic:'🖥',r:'b',lv:5,tx:'+10 PV maximum, et récupère tous tes PV.',mhp:10,full:1},
+  micro:{n:'Micro ouvert',ic:'🎙',r:'c',tx:'L’adversaire commence chaque combat avec 2 Pings fantômes (cartes inutiles) dans sa main.',rx:{junkFoe:2}},
+  piecet:{n:'Pièce truquée',ic:'🪙',r:'c',tx:'Ta main de départ contient toujours une Pièce (+1 Démoflux pour un tour).',rx:{coin:1}},
+  kebab:{n:'Kebab de 4 h du mat’',ic:'🥙',r:'c',tx:'Après chaque combat gagné, +1 PV maximum.',mhpWin:1},
+  plebs:{n:'Sac de Plebs',ic:'👥',r:'c',tx:'Au début de chaque combat, 2 Plebs 1/1 arrivent sur ton plateau.',rx:{plebStart:2}},
+  bot:{n:'Bot Discord',ic:'🤖',r:'r',tx:'Tous les 3 tours, un Bot de modération 2/5 (Rempart) rejoint ton plateau.',rx:{botEvery:3}},
+  webcam:{n:'Webcam piratée',ic:'📷',r:'r',lv:2,tx:'Tu vois la main de l’adversaire (clique sur son compteur de cartes).',rx:{peek:1}},
+  clavierm:{n:'Clavier mécanique',ic:'🎹',r:'r',tx:'Au début de chaque combat, l’adversaire défausse 1 carte au hasard (il ne supporte pas le bruit).',rx:{discFoe:1}},
+  ragebtn:{n:'Bouton Rage-quit',ic:'💢',r:'r',tx:'La première fois que tu tombes à 10 PV ou moins pendant un combat, le héros adverse perd 6 PV.',rx:{rq:{at:10,n:6}}},
+  manette:{n:'Manette sans fil',ic:'🎮',r:'b',tx:'Une fois par combat, ton premier sort est joué deux fois.',rx:{echoSpell:1}},
+  ddos:{n:'DDoS',ic:'🌩',r:'b',lv:3,tx:'L’adversaire passe son premier tour à chaque combat.'},
   clavier:{n:'Clavier maudit',ic:'🩸',r:'m',tx:'Maudite. Tes créatures ont +1 ATK, mais ton héros perd 1 PV au début de chacun de tes tours.',rx:{atk:1,selfDmg:1}},
   pret:{n:'Prêt sur gages',ic:'💸',r:'m',tx:'Maudite. +150 Or tout de suite, mais tout coûte 30 % de plus chez le Marchand.',goldNow:150,shop:.3},
   box:{n:'Box internet capricieuse',ic:'📡',r:'m',tx:'Maudite. +1 Démoflux maximum en début de combat, mais l’adversaire joue toujours en premier.',rx:{cap:1},first:1},
@@ -89,6 +99,25 @@ const XBOSS=[
   [{b:'minuit',k:'minuit3',hp:40,tx:'Chef de raid : à 20 PV, elle appelle son raid (2 créatures) et ses créatures gagnent +1/+1.',rx:{phase:{at:20,sum:2,buff:1,raid:1,tx:'appelle son raid !'}}},
    {b:'bambou',k:'bambou3',hp:35,tx:'Grand Reformatage : à 15 PV, toutes tes créatures sont détruites.',rx:{phase:{at:15,wipe:1,tx:'lance le Grand Reformatage !'}}}]];
 
+// bonus des adversaires : chaque combat en a (1 à 2 selon l'acte), visibles sur la carte, avant le combat et en duel
+const XMODS={
+  spam:{n:'Spammeur',ic:'📢',tx:'Au début de chacun de ses tours, il glisse un Ping fantôme (carte inutile) dans ta main.',rx:{junkTurn:1}},
+  afk:{n:'AFK',ic:'💤',tx:'Il passe son premier tour.',rx:{afk1:1},easy:1},
+  kamikaze:{n:'Kamikaze',ic:'💣',tx:'Quand une de ses créatures meurt, ton héros perd 1 PV.',rx:{boom:1}},
+  voleur:{n:'Voleur',ic:'🦝',tx:'Il te vole 1 Or au début de chacun de ses tours.',rx:{steal:1}},
+  pyro:{n:'Pyromane',ic:'🔥',tx:'Au début de chacun de ses tours, 1 dégât à une de tes créatures au hasard.',rx:{burn:1}},
+  fans:{n:'Fan club',ic:'📣',tx:'Chaque créature qu’il joue arrive avec un Pleb.',rx:{plebPlay:1}},
+  tank:{n:'Gros tank',ic:'🛡',tx:'Sa première créature arrive avec Rempart.',rx:{tauntFirst:1}},
+  prudent:{n:'Prudent',ic:'🫧',tx:'Sa première créature arrive avec Égide.',rx:{egFirst:1}},
+  riche:{n:'Papa riche',ic:'💰',tx:'Il commence avec 4 Or.',rx:{or:4}},
+  smurf:{n:'Smurf',ic:'🧢',tx:'Son héros a 6 PV de plus.',hp:6},
+  copieur:{n:'Copieur',ic:'🪞',tx:'Ta première créature du combat est copiée de son côté.',rx:{copyFoe:1}},
+  flammeur:{n:'Flammeur',ic:'🤬',tx:'Au début de chacun de ses tours, ton héros subit 1 Venin.',rx:{venomFoe:1}},
+  insulteur:{n:'Insulteur',ic:'🗯',tx:'Chaque sort que tu joues te coûte 1 PV.',rx:{spellTax:1}},
+  pigeon:{n:'Pigeon',ic:'🐦',tx:'Il est naïf : tu commences avec 3 Or de plus.',me:{or:3},easy:1},
+  lent:{n:'Connexion lente',ic:'🐌',tx:'Tu joues toujours en premier contre lui.',first0:1,easy:1}};
+const XMODK=Object.keys(XMODS);
+
 // ---------- niveaux de Tilt ----------
 const XTILT=['Les élites ont 5 PV de plus.','−25 % d’Or d’expédition.','Les ennemis commencent chaque combat avec 1 Démoflux maximum de plus.',
   'Les Tavernes soignent 20 % au lieu de 30 %.','Les boss des actes 1 et 2 ont une 2e phase.','Tu commences avec une relique maudite au hasard.',
@@ -101,14 +130,41 @@ function xPick(run,a){return a.length?a[xInt(run,a.length)]:null}
 function xShuf(run,a){for(let i=a.length-1;i>0;i--){const j=xInt(run,i+1);const t=a[i];a[i]=a[j];a[j]=t}return a}
 function xHash(s){let x=2166136261;for(let i=0;i<s.length;i++){x^=s.charCodeAt(i);x=Math.imul(x,16777619)>>>0}return x}
 
-// ---------- cartes améliorées (forgemagie) : clé_u = +1/+1, clé_c = −1 coût ----------
-function xBase(k){return String(k).replace(/_[uc]$/,'')}
-function xUpOf(k){const m=/_([uc])$/.exec(String(k));return m?m[1]:null}
-function xEnsure(k){if(CARDS[k])return k;const b=xBase(k),u=xUpOf(k),cd=CARDS[b];if(!cd||!u)return null;
+// ---------- cartes améliorées (forgemagie) ----------
+// clé « base_xCEU » : coût −C, effet renforcé +E, stats +U/+U. Une carte s'améliore jusqu'à 3 fois, dans l'ordre qu'on veut.
+const XUPMAX=3,XUPC=2,XUPE=2;
+function xBase(k){return String(k).replace(/_(x\d{3}|[uc])$/,'')}
+function xUps(k){const s=String(k);let m=/_x(\d)(\d)(\d)$/.exec(s);if(m)return{c:+m[1],e:+m[2],u:+m[3]};m=/_([uc])$/.exec(s);return m?{c:m[1]==='c'?1:0,e:0,u:m[1]==='u'?1:0}:{c:0,e:0,u:0}}
+function xUpN(k){const u=xUps(k);return u.c+u.e+u.u}
+function xUpKey(b,u){return u.c+u.e+u.u?b+'_x'+u.c+u.e+u.u:b}
+// effet renforcé : paramètres qu'on peut augmenter sans changer le sens de la carte ; le texte suit (nombres remplacés à leur place)
+const XFXUP={draw:['n'],dmg:['n'],dmgFace:['n'],dmgAll:['n'],dmgFac:['n'],pz:['n'],pzAll:['n'],pzEvery:['n'],heal:['n'],healA:['n'],heal2:['n'],or:['n'],eth:['n'],disc:['n'],summon:['n'],
+  buff:['a','h'],backT:['a','h'],buffCost:['a','h'],tempFam:['a'],orAbroad:['n'],dmgEx:['n'],rndFam:['n'],stealOr:['n'],drawFam:['max'],evPick:['n'],rnd:['n'],dmgHand:['max']};
+function xFxPlan(cd){const lists=cd.t==='s'?['fx']:['cry','last','eot','sot'],tx=cd.tx||'',nums=[],plan=[],skip=new Set();let m;
+  const st=/(^|[^+\d])(\d+)\/(\d+)/g;while((m=st.exec(tx))){const a=m.index+m[1].length;skip.add(a);skip.add(a+m[2].length+1)}   // « Pleb 1/1 » : des stats, pas un effet
+  const re=/\d+/g;while((m=re.exec(tx))){if(skip.has(m.index)||/Cleave\s*$/.test(tx.slice(0,m.index)))continue;nums.push({i:m.index,v:+m[0],len:m[0].length,used:0})}
+  // chaque liste d'effets ne cherche ses nombres que dans sa partie du texte (« Cri d’arrivée : », « Agonie : »…)
+  const seg={fx:[0,tx.length]},keys={cry:/Cri d’arrivée/,last:/Agonie/,eot:/Fin de ton tour/,sot:/Début de (ton tour|chacun de tes tours)/},at=[];
+  for(const L in keys){const mm=keys[L].exec(tx);if(mm)at.push([L,mm.index])}at.sort((a,b)=>a[1]-b[1]);at.forEach(([L,i],n)=>{seg[L]=[i,n+1<at.length?at[n+1][1]:tx.length]});
+  for(const L of lists){if(!seg[L])continue;const [a,b]=seg[L];(cd[L]||[]).forEach((op,oi)=>{const ps=XFXUP[op.t];if(!ps)return;for(const pn of ps){const v=op[pn];if(typeof v!=='number'||v<=0||v>=6)continue;
+    const nu=nums.find(x=>!x.used&&x.v===v&&x.i>=a&&x.i<b);if(!nu)continue;nu.used=1;plan.push({L,oi,p:pn,v,pos:nu.i,len:nu.len})}})}
+  return plan}
+function xFxOk(b){const cd=CARDS[b];return!!cd&&!cd.tok&&xFxPlan(cd).length>0}
+const XPLUR=/\b(\d+) (carte|dégât|missile|Pleb|Weeb|Waifu|créature|ennemi)(?=[\s.,;:)!]|$)/g;
+function xEnsure(k){if(CARDS[k])return k;const b=xBase(k),cd=CARDS[b];if(!cd)return null;const u=xUps(k);if(!u.c&&!u.e&&!u.u)return null;
   const n=Object.assign({},cd,{k,up:u,upOf:b,art:(typeof ART!=='undefined'&&ART[b])?b:cd.art});
-  if(u==='u'){n.a=cd.a+1;n.h=cd.h+1}else n.c=Math.max(0,cd.c-1);CARDS[k]=n;return k}
-function xUpOpts(k){if(xUpOf(k)||!CARDS[k]||CARDS[k].tok)return[];const cd=CARDS[k],o=[];if(cd.t==='c')o.push('u');if(cd.c>=(cd.t==='c'?3:1))o.push('c');return o}
-function xUpTx(k,u){const cd=CARDS[k];return u==='u'?'+1/+1 ('+cd.a+'/'+cd.h+' → '+(cd.a+1)+'/'+(cd.h+1)+')':'−1 coût ('+cd.c+' → '+(cd.c-1)+')'}
+  if(u.u&&cd.t==='c'){n.a=cd.a+u.u;n.h=cd.h+u.u}
+  if(u.c)n.c=Math.max(0,cd.c-u.c);
+  if(u.e){const plan=xFxPlan(cd);let tx=cd.tx||'';new Set(plan.map(x=>x.L)).forEach(L=>{n[L]=cd[L].map(o=>Object.assign({},o))});
+    plan.slice().sort((a,b2)=>b2.pos-a.pos).forEach(x=>{const nv=x.v+u.e;n[x.L][x.oi][x.p]=nv;tx=tx.slice(0,x.pos)+nv+tx.slice(x.pos+x.len)});
+    n.tx=tx.replace(XPLUR,(w,d,nm)=>+d>1?d+' '+nm+'s':w)}
+  CARDS[k]=n;return k}
+function xUpOpts(k){const b=xBase(k),cd=CARDS[b];if(!cd||cd.tok)return[];const u=xUps(k);if(u.c+u.e+u.u>=XUPMAX)return[];const o=[];
+  if(cd.t==='c')o.push('u');if(u.c<XUPC&&cd.c-u.c>=1)o.push('c');if(u.e<XUPE&&xFxOk(b))o.push('e');return o}
+function xUpApply(k,opt){const b=xBase(k),u=xUps(k);u[opt]=(u[opt]||0)+1;return xEnsure(xUpKey(b,u))}
+function xUpTx(k,opt){const cur=CARDS[xEnsure(k)||k];if(opt==='u')return '+1/+1 ('+cur.a+'/'+cur.h+' → '+(cur.a+1)+'/'+(cur.h+1)+')';if(opt==='c')return '−1 coût ('+cur.c+' → '+Math.max(0,cur.c-1)+')';
+  return 'Effet renforcé : « '+CARDS[xUpApply(k,'e')].tx+' »'}
+function xUpDesc(u){if(!u)return'';const p=[];if(u.u)p.push('+'+u.u+'/+'+u.u);if(u.c)p.push('−'+u.c+' coût');if(u.e)p.push('effet +'+u.e);return p.join(' · ')}
 function xIsFam(k,f){const cd=CARDS[k];return cd.t==='c'?(cd.fac||[]).indexOf(f)>=0:cd.fam===f}
 
 // ---------- état sauvegardé ----------
@@ -133,40 +189,50 @@ function xShopMul(run){return Math.max(.3,1+xSum(run,'shop'))}
 function xRx(run){const rx={src:{}};const add=(fx,src)=>{if(!fx)return;for(const k in fx){const v=fx[k];if(typeof v==='number')rx[k]=(rx[k]||0)+v;else rx[k]=v;if(!rx.src[k])rx.src[k]=src}};
   add(XPAT[run.pat].rx,'x:pat:'+run.pat);for(const id of run.relics)add(XREL[id].rx,'x:'+id);return rx}
 
-// ---------- nouvelle course ----------
-function xStarter(run){const P=XPAT[run.pat],coll={};POOL.forEach(k=>{if(CARDS[k].r===1)coll[k]={n:2}});
-  const d=autoDeck(coll,P.fam,EXP.deck0-1,(run.seed%9973)+1);
-  const R2=POOL.filter(k=>CARDS[k].r===2&&xIsFam(k,P.fam)&&CARDS[k].c<=5);d.push(xPick(run,R2)||xPick(run,POOL.filter(k=>CARDS[k].r===2)));return d}
+// ---------- nouvelle course : tu choisis tes 5 cartes de départ parmi 12 ----------
+function xStartOffer(run){const f=XPAT[run.pat].fam,okS=k=>!(CARDS[k].fam&&CARDS[k].fam!==f)&&!CARDS[k].gam,out=[];
+  const take=(L,n)=>{xShuf(run,L.filter(k=>out.indexOf(k)<0)).slice(0,n).forEach(k=>out.push(k))};
+  take(POOL.filter(k=>CARDS[k].r===1&&xIsFam(k,f)),6);take(POOL.filter(k=>CARDS[k].r===1&&!xIsFam(k,f)&&okS(k)),4);take(POOL.filter(k=>CARDS[k].r===2&&xIsFam(k,f)&&CARDS[k].c<=5),2);
+  while(out.length<12){const k=xPick(run,POOL.filter(x=>CARDS[x].r===1&&okS(x)&&out.indexOf(x)<0));if(!k)break;out.push(k)}
+  return out}
 function xNewRun(o){
   const seed=o.seed>>>0||((Math.random()*4294967296)>>>0),run={v:XPVER,seed,rs:seed,daily:o.daily?o.date:'',tilt:o.daily?0:(o.tilt|0),pat:o.pat,
     act:0,map:null,row:-1,col:-1,node:null,relics:[],gold:0,deck:[],rmCost:EXP.rmCost,stats:{fights:0,elites:0,bosses:0,floors:0,dmg:0,cards:0},
-    bossOf:[],final:0,t0:Date.now(),over:null};
+    bossOf:[],final:0,path:[],t0:Date.now(),over:null};
   run.mhp=EXP.hp+(XPAT[run.pat].hp||0)-(run.tilt>=8?5:0);run.hp=run.mhp;
-  run.deck=xStarter(run);
   run.bossOf=[0,1,2].map(a=>xInt(run,XBOSS[a].length));
   if(run.tilt>=6)xGainRelic(run,xPick(run,XRELK.filter(id=>XREL[id].r==='m')));
-  xNewAct(run);return run}
+  xNewAct(run);run.node={t:'start',st:'start',offer:xStartOffer(run),sel:[]};return run}
+function xStartDone(run){const nd=run.node;if(!nd||nd.st!=='start'||nd.sel.length!==EXP.deck0)return false;run.deck=nd.sel.map(i=>nd.offer[i]);run.node=null;return true}
 function xGainRelic(run,id){const R=XREL[id];if(!R||xHas(run,id))return;run.relics.push(id);XS().meta.codex.r[id]=1;
   if(R.mhp){run.mhp+=R.mhp;run.hp+=R.mhp}if(R.full)run.hp=run.mhp;if(R.goldNow)run.gold+=R.goldNow}
-function xForgeRandom(run){const L=run.deck.map((k,i)=>[k,i]).filter(x=>xUpOpts(x[0]).length);if(!L.length)return null;const [k,i]=xPick(run,L),o=xUpOpts(k);const u=o[0];run.deck[i]=xEnsure(k+'_'+u);return run.deck[i]}
+function xForgeRandom(run){const L=run.deck.map((k,i)=>[k,i]).filter(x=>xUpOpts(x[0]).length);if(!L.length)return null;const [k,i]=xPick(run,L),o=xUpOpts(k);run.deck[i]=xUpApply(k,xPick(run,o));return run.deck[i]}
 
-// ---------- carte d'un acte : 7 étages, 3 ou 4 cases par étage, chemins vers les cases voisines ----------
+// ---------- carte d'un acte : 7 étages, 3 ou 4 cases par étage, chemins vers les cases voisines (sans croisement) ----------
 function xNewAct(run){
   const rows=[];
   for(let r=0;r<EXP.floors;r++){const n=r===0||r===EXP.floors-1?3:3+xInt(run,2),cols=xShuf(run,[0,1,2,3]).slice(0,n).sort((a,b)=>a-b);
     rows.push(cols.map(c=>({c,t:'fight',to:[]})))}
   // types : 1er étage = combats, dernier = Tavernes, au milieu au hasard (élites dès l'étage 3, un coffre garanti à l'étage 4)
   for(let r=1;r<EXP.floors-1;r++)rows[r].forEach(nd=>{const x=xRnd(run);
-    nd.t=x<.42?'fight':x<.64?'event':x<.76&&r>=2?'elite':x<.86&&r>=2?'shop':x<.95&&r>=2?'rest':x<.97?'chest':'fight'});
+    nd.t=x<.40?'fight':x<.60?'event':x<.74&&r>=2?'elite':x<.84&&r>=2?'shop':x<.94&&r>=2?'rest':x<.97?'chest':'fight'});
   rows[EXP.floors-1].forEach(nd=>nd.t='rest');
   rows[3][xInt(run,rows[3].length)].t='chest';
-  for(let r=0;r<EXP.floors-1;r++){const A=rows[r],B=rows[r+1];
-    A.forEach(nd=>{B.forEach((m,j)=>{if(Math.abs(m.c-nd.c)<=1&&xRnd(run)<.75)nd.to.push(j)});
-      if(!nd.to.length){let bj=0;B.forEach((m,j)=>{if(Math.abs(m.c-nd.c)<Math.abs(B[bj].c-nd.c))bj=j});nd.to.push(bj)}});
-    B.forEach((m,j)=>{if(!A.some(nd=>nd.to.indexOf(j)>=0)){let bi=0;A.forEach((nd,i)=>{if(Math.abs(nd.c-m.c)<Math.abs(A[bi].c-m.c))bi=i});A[bi].to.push(j)}});
+  const cross=(E,a,b)=>E.some(([x,y])=>(x-a)*(y-b)<0);   // deux chemins entre les mêmes étages se croisent si leur ordre s'inverse
+  for(let r=0;r<EXP.floors-1;r++){const A=rows[r],B=rows[r+1],E=[];
+    const add=(i,j)=>{if(A[i].to.indexOf(j)<0){A[i].to.push(j);E.push([A[i].c,B[j].c])}};
+    A.forEach((nd,i)=>{let bj=0;B.forEach((m,j)=>{if(Math.abs(m.c-nd.c)<Math.abs(B[bj].c-nd.c))bj=j});if(!cross(E,nd.c,B[bj].c))add(i,bj)});
+    A.forEach((nd,i)=>B.forEach((m,j)=>{if(Math.abs(m.c-nd.c)<=1&&xRnd(run)<.45&&!cross(E,nd.c,m.c))add(i,j)}));
+    A.forEach((nd,i)=>{if(!nd.to.length){let bj=-1;B.forEach((m,j)=>{if(!cross(E,nd.c,m.c)&&(bj<0||Math.abs(m.c-nd.c)<Math.abs(B[bj].c-nd.c)))bj=j});add(i,bj<0?0:bj)}});
+    B.forEach((m,j)=>{if(!A.some(nd=>nd.to.indexOf(j)>=0)){let bi=-1;A.forEach((nd,i)=>{if(!cross(E,nd.c,m.c)&&(bi<0||Math.abs(nd.c-m.c)<Math.abs(A[bi].c-m.c)))bi=i});add(bi<0?0:bi,j)}});
     A.forEach(nd=>nd.to.sort((a,b)=>a-b))}
-  run.map=rows;run.row=-1;run.col=-1;run.node=null;
+  run.map=rows;run.row=-1;run.col=-1;run.node=null;run.path=[];
+  rows.forEach(row=>row.forEach(nd=>{if(nd.t==='fight'||nd.t==='elite')nd.F=xMakeFight(run,nd.t==='elite'?'elite':'normal')}));
+  run.bossF=xMakeFight(run,'boss');
   if(xSum(run,'forge')&&run.act>0)xForgeRandom(run)}
+// cases encore accessibles (toutes les suites possibles depuis la position actuelle)
+function xReach(run){const R=new Set(),rows=run.map;if(!rows)return R;let front=run.row<0?rows[0].map((_,j)=>j):rows[run.row][run.col].to.slice(),r=run.row+1;
+  while(r<rows.length&&front.length){const nx=new Set();front.forEach(j=>{R.add(r+':'+j);if(r<rows.length-1)rows[r][j].to.forEach(t=>nx.add(t))});front=[...nx];r++}return R}
 // cases accessibles depuis la position actuelle
 function xGiftOffer(run){const out=[];for(let j=0;j<3;j++){const L=POOL.filter(k=>CARDS[k].r>=2&&out.indexOf(k)<0&&!(CARDS[k].fam&&CARDS[k].fam!==XPAT[run.pat].fam));out.push(xPick(run,L))}return out}
 function xNext(run){if(run.act>=3)return run.over?[]:['boss'];if(run.row<0)return run.map[0].map((_,j)=>j);if(run.row>=EXP.floors-1)return['boss'];return run.map[run.row][run.col].to.slice()}
@@ -188,6 +254,14 @@ function xMakeFight(run,kind){
     F.hp=EXP.ehp.elite[a]+(run.tilt>=1?5:0);F.L=EXP.lvl.elite[a];F.ai=EXP.ai.elite[a];F.arch=xFamOf(E.b)}
   else{F.nm=xPick(run,XNAMES[a]);F.hp=EXP.ehp.normal[a];F.L=EXP.lvl.normal[a];F.ai=EXP.ai.normal[a];F.arch=xPick(run,ARCHK);F.rx={};
     if(run.tilt>=7&&a===2){const E=xPick(run,XELITE[2]);F.rule=E.tx;Object.assign(F.rx,E.rx)}}
+  // bonus marrants : 1 à l'acte 1 (parfois un bonus pour toi), 1 ou 2 à l'acte 2, 2 à l'acte 3 ; les élites et les boss en ont 1 (ou 2) en plus de leur règle à partir de l'acte 2
+  const nMod=kind==='normal'?(a===0?1:a===1?1+(xRnd(run)<.5?1:0):2):(a>=1?1:0)+(a>=2&&xRnd(run)<.5?1:0)+(run.tilt>=5?1:0);
+  F.mods=[];for(let j=0;j<nMod;j++){const L=XMODK.filter(m=>F.mods.indexOf(m)<0&&!(XMODS[m].easy&&(a>0||kind!=='normal')));const m=xPick(run,L);if(m)F.mods.push(m)}
+  const src={};for(const k in F.rx)src[k]=F.bk||(F.rule?'x:foe':'x:tilt');
+  F.me={};F.mods.forEach(m=>{const M=XMODS[m];if(M.hp)F.hp+=M.hp;if(M.first0)F.first0=1;for(const k in M.me||{})F.me[k]=(F.me[k]||0)+M.me[k];
+    for(const k in M.rx||{}){const v=M.rx[k];F.rx[k]=typeof v==='number'?(F.rx[k]||0)+v:v;if(!src[k])src[k]='x:mod:'+m}});
+  if(kind==='normal'&&a===0){F.noob=1;F.rx.cap=(F.rx.cap||0)-1}   // acte 1 : les adversaires « débutants » jouent avec 1 Démoflux max de moins (affiché dans leurs bonus)
+  if(a>=2){F.vet=1;F.rx.cap=(F.rx.cap||0)+1}   // acte 3 et Raid final : les « vétérans » en ont 1 de plus
   if(run.tilt>=3)F.rx.cap=(F.rx.cap||0)+1;
   if(xSum(run,'ecap'))F.rx.cap=(F.rx.cap||0)+xSum(run,'ecap');
   if(F.rx.phase&&F.rx.phase.raid)F.rx.phase.pool=POOL.filter(k=>CARDS[k].t==='c'&&CARDS[k].r<=2&&CARDS[k].c<=4&&(CARDS[k].sc||{}).wow===2);
@@ -195,13 +269,20 @@ function xMakeFight(run,kind){
   const coll=xLvlColl(F.L,run);let d=autoDeck(coll,F.arch,ECON.deck,(seed%9973)+1);
   if(F.b){const inj=[];[1,2,3].forEach(r=>{const k=F.b+r;if(CARDS[k])for(let j=0;j<(r===3?1:2);j++)inj.push(k)});d=d.filter(k=>CARDS[k].base!==F.b).slice(0,ECON.deck-inj.length).concat(inj)}
   F.deck=d;F.av=typeof AVATARS!=='undefined'?xPick(run,AVATARS.map(x=>x[0])):'';
-  const src=F.bk||(F.rule?'x:foe':'x:tilt');F.rx.src={};for(const k in F.rx)if(k!=='src')F.rx.src[k]=src;   // historique : la carte du boss ou de l'élite, sinon le Tilt
+  for(const k in F.rx)if(k!=='src'&&!src[k])src[k]=k==='cap'?'x:tilt':(F.bk||'x:tilt');F.rx.src=src;   // historique : la carte du boss ou de l'élite, le bonus, ou le Tilt
   return F}
-function xFightCfg(run,F){
-  const deck=run.deck.map(k=>xEnsure(k)).filter(Boolean),o=Object.assign({},OPTDEF,{rw:0,exped:1,tim:0,evt:0,tg:EXP.tg[Math.min(F.act,3)]});
-  const first=xHas(run,'box')?1:xHas(run,'ping5')?0:null;
+function xFightCfg(run,F){   // pas de Fatigue : avec un petit deck, le cimetière est remélangé sans dégâts
+  const deck=run.deck.map(k=>xEnsure(k)).filter(Boolean),o=Object.assign({},OPTDEF,{rw:0,exped:1,tim:0,evt:0,fat:0,tg:EXP.tg[Math.min(F.act,3)]});
+  const first=xHas(run,'box')?1:(xHas(run,'ping5')||F.first0)?0:null;
+  const rxMe=xRx(run);for(const k in F.me||{}){rxMe[k]=(rxMe[k]||0)+F.me[k];rxMe.src[k]=rxMe.src[k]||'x:mod:pigeon'}
+  const rxFoe=Object.assign({},F.rx,{src:Object.assign({},F.rx.src)});if(xHas(run,'ddos')){rxFoe.afk1=1;rxFoe.src.afk1='x:ddos'}   // DDoS : il passe son premier tour
   return{names:[(typeof S!=='undefined'&&S&&S.name)||'Toi',F.nm],avs:[(typeof S!=='undefined'&&S&&S.av)||'',F.av],decks:[deck,F.deck.slice()],seed:F.seed,o,mull:true,first,
-    hp:[run.hp,F.hp],mhp:[run.mhp,F.hp],rx:[xRx(run),F.rx]}}
+    hp:[run.hp,F.hp],mhp:[run.mhp,F.hp],rx:[rxMe,rxFoe]}}
+// bonus et règles d'un adversaire, pour la carte, l'écran du combat et le duel
+function xFoeRules(F){const L=[];if(F.rule)L.push({ic:F.kind==='boss'?'👑':'💀',n:F.kind==='boss'?'Règle du boss':F.kind==='elite'?'Règle de l’élite':'Règle (Tilt)',tx:F.rule});
+  if(F.noob)L.push({ic:'🐣',n:'Débutant',tx:'Joue avec 1 Démoflux max de moins que toi pendant tout le combat.',good:1});
+  if(F.vet)L.push({ic:'🎖',n:'Vétéran',tx:'Joue avec 1 Démoflux max de plus que toi pendant tout le combat.'});
+  (F.mods||[]).forEach(m=>L.push({ic:XMODS[m].ic,n:XMODS[m].n,tx:XMODS[m].tx,m,good:XMODS[m].easy?1:0}));return L}
 function xAiSeat(run,F){const W=WGT[(ARCH[F.arch]||ARCH.ravages).w],lv=XAI[F.ai];
   const strong=lv==='strong'?(xHas(run,'vpn')?Object.assign({},MCTS_STRONG,{hide:1}):true):lv||0;return{kind:'ai',W,strong}}
 
@@ -211,6 +292,7 @@ function xRollCards(run,kind){const n=Math.max(1,3+xSum(run,'pick')-(run.tilt>=9
     let L=POOL.filter(k=>CARDS[k].r===r&&out.indexOf(k)<0&&!(CARDS[k].fam&&CARDS[k].fam!==fam));
     if(xRnd(run)<.4){const Fm=L.filter(k=>xIsFam(k,fam));if(Fm.length)L=Fm}
     const k=xPick(run,L);if(k)out.push(k)}
+  if(kind!=='normal'&&out.length&&xRnd(run)<.5){const i=xInt(run,out.length),o=xUpOpts(out[i]);if(o.length)out[i]=xUpApply(out[i],xPick(run,o))}   // une carte déjà forgée
   return out}
 function xRollRelics(run,n,rar){const out=[];for(let j=0;j<n;j++){const r=rar||(xRnd(run)<.6?'c':'r');let L=xRelPool(run,r).filter(id=>out.indexOf(id)<0);
   if(!L.length)L=xRelPool(run,r==='c'?'r':'c').filter(id=>out.indexOf(id)<0);const id=xPick(run,L);if(id)out.push(id)}return out}
@@ -218,9 +300,9 @@ function xGoldFor(run,kind){const a=Math.min(run.act,2),b=kind==='boss'?70+xInt(
 
 // ---------- entrer dans une case ----------
 function xEnter(run,j){
-  if(j==='boss'){run.node={t:'boss',st:'fight',F:xMakeFight(run,'boss')};XS().meta.codex.b[run.node.F.b]=Math.max(XS().meta.codex.b[run.node.F.b]||0,1);return}
-  const nd=run.map[run.row+1][j];run.row++;run.col=j;run.stats.floors++;
-  if(nd.t==='fight'||nd.t==='elite')run.node={t:nd.t,st:'fight',F:xMakeFight(run,nd.t==='elite'?'elite':'normal')};
+  if(j==='boss'){const F=run.bossF||xMakeFight(run,'boss');run.bossF=null;run.node={t:'boss',st:'fight',F};XS().meta.codex.b[F.b]=Math.max(XS().meta.codex.b[F.b]||0,1);return}
+  const nd=run.map[run.row+1][j];run.row++;run.col=j;run.stats.floors++;(run.path=run.path||[]).push([run.row,j]);
+  if(nd.t==='fight'||nd.t==='elite')run.node={t:nd.t,st:'fight',F:nd.F||xMakeFight(run,nd.t==='elite'?'elite':'normal')};
   else if(nd.t==='event'){const L=XEV.filter(e=>!e.req||e.req(run)),pool=L.filter(e=>(run.seenEv||[]).indexOf(e.id)<0),e=xPick(run,pool.length?pool:L);
     run.seenEv=(run.seenEv||[]).concat([e.id]);XS().meta.codex.e[e.id]=1;run.node={t:'event',st:'event',ev:e.id}}
   else if(nd.t==='shop')run.node={t:'shop',st:'shop',shop:xMakeShop(run)};
@@ -230,7 +312,7 @@ function xMakeShop(run){const m=xShopMul(run),pr=b=>Math.round(b*(0.9+xRnd(run)*
   [1,1,2,2,3].forEach(r=>{let L=POOL.filter(k=>CARDS[k].r===r&&cards.every(c=>c.k!==k)&&!(CARDS[k].fam&&CARDS[k].fam!==fam));if(xRnd(run)<.4){const Fm=L.filter(k=>xIsFam(k,fam));if(Fm.length)L=Fm}
     const k=xPick(run,L);if(k)cards.push({k,p:pr([0,35,60,110][r])})});
   const rel=xRollRelics(run,2).map(id=>({id,p:pr(XREL[id].r==='r'?140:90)}));
-  return{cards,rel,rm:Math.round(run.rmCost*m)}}
+  return{cards,rel,rm:Math.round(run.rmCost*m),fg:Math.round(75*m)}}
 function xRestHeal(run){let f=(run.tilt>=4?.2:.3)+xSum(run,'rest');let v=Math.round(run.mhp*f)+(XPAT[run.pat].restFlat||0);for(const id of run.relics)if(XREL[id].restMul)v=Math.round(v*XREL[id].restMul);return Math.max(1,v)}
 
 // ---------- fin d'un combat ----------
@@ -238,6 +320,7 @@ function xRestHeal(run){let f=(run.tilt>=4?.2:.3)+xSum(run,'rest');let v=Math.ro
 function xFightDone(run,w,hp,dealt){const nd=run.node;if(!nd||nd.st!=='fight')return null;const F=nd.F;run.stats.fights++;
   if(!w){run.hp=0;return xEndRun(run,0,F.nm)}
   run.stats.dmg+=Math.max(0,run.hp-hp);run.hp=Math.max(1,Math.min(run.mhp,hp));
+  const mw=xSum(run,'mhpWin');if(mw){run.mhp+=mw;run.hp+=mw}                                             // Kebab de 4 h du mat'
   const heal=xSum(run,'healWin');if(heal)run.hp=Math.min(run.mhp,run.hp+heal);
   const kind=F.kind,gold=xGoldFor(run,kind);run.gold+=gold;
   const rw={gold,heal,cards:xRollCards(run,kind),rel:[],gems:0,took:null};
@@ -252,9 +335,9 @@ function xFightDone(run,w,hp,dealt){const nd=run.node;if(!nd||nd.st!=='fight')re
 // la récompense est prise : case suivante (ou acte suivant après un boss)
 function xLeaveNode(run){const nd=run.node;if(!nd)return;
   if(nd.t==='boss'){
-    if(run.act>=3){if(nd.rw&&nd.rw.next){run.final=1;run.node={t:'boss',st:'fight',F:xMakeFight(run,'boss')};XS().meta.codex.b[run.node.F.b]=Math.max(XS().meta.codex.b[run.node.F.b]||0,1);return}return}
+    if(run.act>=3){if(nd.rw&&nd.rw.next){run.final=1;run.bossF=null;run.node={t:'boss',st:'fight',F:xMakeFight(run,'boss')};XS().meta.codex.b[run.node.F.b]=Math.max(XS().meta.codex.b[run.node.F.b]||0,1);return}return}
     if(nd.rw&&nd.rw.full)run.hp=run.mhp;
-    run.act++;if(run.act<3)xNewAct(run);else{run.map=null;run.node=null;if(xSum(run,'forge'))xForgeRandom(run)}return}
+    run.act++;if(run.act<3)xNewAct(run);else{run.map=null;run.node=null;run.bossF=xMakeFight(run,'boss');if(xSum(run,'forge'))xForgeRandom(run)}return}
   run.node=null}
 function xScore(run,won){return run.stats.floors*100+run.stats.bosses*250+(won?1000+run.hp*5:0)+run.tilt*150}
 function xEndRun(run,won,by){const M=XS().meta;if(run.over)return run.node;
@@ -333,7 +416,7 @@ function xPickApply(run,idx,u){const nd=run.node,p=nd.pick;if(!p)return null;
   else{const k=run.deck[idx];if(k==null)return null;
     if(p.m==='rm'){run.deck.splice(idx,1);p.res.push(fullName(xEnsure(k))+' retirée')}
     else if(p.m==='dup'){run.deck.push(k);p.res.push(fullName(xEnsure(k))+' dupliquée')}
-    else if(p.m==='up'){const o=xUpOpts(k);if(!o.length)return null;const v=o.indexOf(u)>=0?u:o[0];run.deck[idx]=xEnsure(k+'_'+v);p.res.push(fullName(k)+' ★ '+xUpTx(k,v))}
+    else if(p.m==='up'){const o=xUpOpts(k);if(!o.length)return null;const v=o.indexOf(u)>=0?u:o[0];const t=xUpTx(k,v);run.deck[idx]=xUpApply(k,v);p.res.push(fullName(xBase(k))+' '+'★'.repeat(xUpN(run.deck[idx]))+' : '+t)}
     p.done++}
   if(p.done>=p.n){if(nd.t==='shop'){nd.st='shop';nd.pick=null}else if(nd.t==='rest'){nd.st='done';nd.res=p.res.join(' · ')}else{nd.st='done';nd.res=p.res.join(' · ')}}
   return nd}
@@ -341,6 +424,7 @@ function xPickApply(run,idx,u){const nd=run.node,p=nd.pick;if(!p)return null;
 function xSrcInfo(src){const id=String(src||'').slice(2);
   if(id.slice(0,4)==='pat:'){const P=XPAT[id.slice(4)];return P?{ic:P.ic,n:P.n,c:'#d8b56c'}:null}
   if(XREL[id])return{ic:XREL[id].ic,n:XREL[id].n,c:XREL[id].r==='m'?'#c0506a':XREL[id].r==='b'?'#e0b04a':'#8fb27a'};
+  if(id.slice(0,4)==='mod:'){const M=XMODS[id.slice(4)];return M?{ic:M.ic,n:M.n,c:'#c45f5b'}:null}
   if(id==='foe')return{ic:'💀',n:'Règle de l’adversaire',c:'#c45f5b'};if(id==='tilt')return{ic:'🔥',n:'Tilt',c:'#c45f5b'};return null}
 
 // =====================================================================================
@@ -355,7 +439,7 @@ function xSave(){saveS();refreshTop()}
 function xRelIco(id,small){const R=XREL[id];return h('span',{class:'xrel kw r-'+R.r+(small?' sm':''),'data-t':R.n,'data-d':R.tx},xIco('xp-rel-'+id,R.ic))}
 function xPatIco(p,cls){return xIco('xp-pat-'+p,XPAT[p].ic,cls)}
 function xHpBar(hp,mhp){return h('div',{class:'xp-hp',title:hp+' / '+mhp+' PV'},h('i',{style:'width:'+Math.max(0,Math.min(100,hp/mhp*100))+'%'}),h('b',null,uiIco('ico-pv','ti'),' '+hp+' / '+mhp))}
-function xCardName(k){return fullName(xEnsure(k)||k)+(xUpOf(k)?' ★':'')}
+function xCardName(k){return fullName(xEnsure(k)||k)+(xUpN(k)?' '+'★'.repeat(xUpN(k)):'')}
 function xDailyKey(){return today()}
 function xDailyPat(d){return XPATK[xHash('xp'+d)%XPATK.length]}
 
@@ -365,7 +449,7 @@ function vExped(v){const X=XS();if(X.run)X.run.deck.forEach(xEnsure);if(!X.run){
 function xHub(v){const M=XS().meta,lv=xLevel(M.xp),nx=EXP.xpLv[lv]||null,pv=EXP.xpLv[lv-1]||0;
   if(!XUI.pat||!xPatOk(XUI.pat))XUI.pat=XPATK.find(xPatOk);XUI.tilt=Math.min(XUI.tilt,M.tilt);
   const head=h('div',{class:'panel hl xp-head'},ph('🧭','Expédition','Niveau '+lv),
-    h('p',{class:'mut sm',style:'line-height:1.55;margin:4px 0 10px'},'Un roguelite solo : tu pars avec un patron, ',h('b',null,EXP.deck0+' cartes'),' et ',h('b',null,EXP.hp+' PV'),'. Traverse les 3 actes du serveur sur une carte à embranchements, construis ton deck combat après combat et ramasse des reliques qui tordent les règles. Tes PV ne remontent pas tout seuls. Trois boss t’attendent, puis le Raid final. Toutes les cartes du jeu peuvent apparaître, quelle que soit ta collection. La course se sauvegarde après chaque étape.'),
+    h('p',{class:'mut sm',style:'line-height:1.55;margin:4px 0 10px'},'Un roguelite solo : tu pars avec un patron, ',h('b',null,EXP.deck0+' cartes que tu choisis'),' et ',h('b',null,EXP.hp+' PV'),'. Traverse les 3 actes du serveur sur une carte à embranchements, construis ton deck combat après combat et ramasse des reliques qui tordent les règles. Tes PV ne remontent pas tout seuls, mais il n’y a pas de Fatigue : deck vide, tu pioches un Pleb. Trois boss t’attendent, puis le Raid final. Toutes les cartes du jeu peuvent apparaître, quelle que soit ta collection. La course se sauvegarde après chaque étape.'),
     h('div',{class:'xp-lv'},h('b',null,'Niveau '+lv),h('div',{class:'bar'},h('i',{style:'width:'+(nx?Math.min(100,(M.xp-pv)/(nx-pv)*100):100)+'%'})),h('span',{class:'sm mut'},nx?M.xp+' / '+nx+' XP · le niveau suivant ajoute de nouvelles reliques':M.xp+' XP · niveau maximum'),
       h('span',{class:'sm'},M.wins+' victoire'+(M.wins>1?'s':'')+' · '+M.runs+' course'+(M.runs>1?'s':'')+(M.best?' · record '+M.best+' pts':''))));
   const pats=h('div',{class:'xp-pats'},XPATK.map(p=>{const P=XPAT[p],ok=xPatOk(p);
@@ -375,7 +459,7 @@ function xHub(v){const M=XS().meta,lv=xLevel(M.xp),nx=EXP.xpLv[lv]||null,pv=EXP.
     M.tilt<10?h('span',{class:'sm mut'},'Termine une Expédition pour débloquer le Tilt '+(M.tilt+1)+'.'):null);
   const tlx=XUI.tilt?h('ul',{class:'xp-tiltl sm'},XTILT.slice(0,XUI.tilt).map((t,i)=>h('li',null,h('b',null,'Tilt '+(i+1)+' : '),t))):null;
   const start=h('div',{class:'panel'},ph('play','Nouvelle course'),pats,tl,tlx,
-    h('div',{class:'row',style:'margin-top:14px'},h('button',{class:'btn gold big',onclick:()=>{XS().run=xNewRun({pat:XUI.pat,tilt:XUI.tilt});xSave();go('exped')}},'🧭 Partir en expédition avec '+XPAT[XUI.pat].n+(XUI.tilt?' · Tilt '+XUI.tilt:''))));
+    h('div',{class:'row cta',style:'margin-top:14px'},h('button',{class:'btn gold big',onclick:()=>{XS().run=xNewRun({pat:XUI.pat,tilt:XUI.tilt});xSave();go('exped')}},'🧭 Partir avec '+XPAT[XUI.pat].n+(XUI.tilt?' · Tilt '+XUI.tilt:''))));
   const d=xDailyKey(),D=M.daily.d===d?M.daily:{done:0,best:0,won:0},dp=xDailyPat(d);
   const daily=h('div',{class:'panel xp-daily'},ph('📅','Défi du jour',d.split('-').reverse().join('/')),
     h('p',{class:'sm mut'},'Même patron, même carte, mêmes récompenses pour tout le monde aujourd’hui. Toutes les reliques sont disponibles, sans Tilt. Une seule tentative par jour : '+(EXP.gemDaily)+' 💎 si tu termines.'),
@@ -407,46 +491,61 @@ function xTopBar(run){const P=XPAT[run.pat];
       run.over?null:h('button',{class:'btn sm',onclick:()=>ask('Abandonner l’expédition ?','La course s’arrête ici. Tu gardes l’XP et les 💎 déjà gagnés.',[{t:'Continuer'},{t:'Abandonner',c:'danger',f:()=>{xEndRun(run,0,'abandon');xSave();go('exped')}}])},'Abandonner')))}
 function xDeckSort(a,b){const A=CARDS[xEnsure(a)],B=CARDS[xEnsure(b)];return A.c-B.c||B.r-A.r||fullName(A).localeCompare(fullName(B))}
 function xDeckList(deck,onPick,filt){const idx=deck.map((k,i)=>i).filter(i=>!filt||filt(deck[i])).sort((x,y)=>xDeckSort(deck[x],deck[y]));
-  return h('div',{class:'xp-deck'},idx.map(i=>{const k=xEnsure(deck[i]);return h('div',{class:'xp-dc'+(onPick?' pk':''),onclick:()=>onPick?onPick(i):showCard(k),oncontextmenu:e=>{e.preventDefault();showCard(k)}},cardEl(k,{}),xUpOf(k)?h('i',{class:'xp-star'},'★'):null)}))}
-function xDeckModal(run){modal(h('div',{class:'xp-dm'},h('h2',null,'🃏 Ton deck ('+run.deck.length+' cartes)'),h('p',{class:'sm mut'},'Clique sur une carte pour sa fiche. ★ = carte améliorée par la forgemagie.'),xDeckList(run.deck)))}
+  return h('div',{class:'xp-deck'},idx.map(i=>{const k=xEnsure(deck[i]);return h('div',{class:'xp-dc'+(onPick?' opt':''),onclick:()=>onPick?onPick(i):showCard(k),oncontextmenu:e=>{e.preventDefault();showCard(k)}},cardEl(k,{}),xUpN(k)?h('i',{class:'xp-star'},'★'.repeat(xUpN(k))):null)}))}
+function xDeckModal(run){modal(h('div',{class:'xp-dm'},h('h2',null,'🃏 Ton deck ('+run.deck.length+' cartes)'),h('p',{class:'sm mut'},'Clique sur une carte pour sa fiche. Chaque ★ = une amélioration de forgemagie (3 au maximum par carte).'),xDeckList(run.deck)))}
 function xRunView(v,run){const nd=run.node;v.append(xTopBar(run));const main=h('div',{class:'xp-main'});v.append(main);
   if(!nd){main.append(run.act>=3?xFinalEl(run):xMapEl(run));return}
-  const f={fight:xFightEl,reward:xRewardEl,event:xEventEl,pick:xPickEl,done:xDoneEl,shop:xShopEl,rest:xRestEl,chest:xChestEl,over:xOverEl}[nd.st];
+  const f={start:xStartEl,fight:xFightEl,reward:xRewardEl,event:xEventEl,pick:xPickEl,done:xDoneEl,shop:xShopEl,rest:xRestEl,chest:xChestEl,over:xOverEl}[nd.st];
   main.append(f?f(run,nd):h('p',null,'…'))}
 
+// départ : choisis 5 cartes parmi 12
+function xStartEl(run,nd){const sel=nd.sel,P=XPAT[run.pat];
+  return h('div',{class:'panel hl xp-start'},ph('🃏','Ton deck de départ',sel.length+' / '+EXP.deck0),
+    h('p',{class:'sm mut'},'Choisis exactement '+EXP.deck0+' cartes : c’est tout ton deck pour commencer. Il grandira après chaque combat. Ton patron, '+P.n+', a mis de côté des cartes de sa famille. Clic droit : fiche détaillée.'),
+    h('div',{class:'apick xp-pick'},nd.offer.map((k,i)=>{const on=sel.indexOf(i)>=0;return h('div',{class:'apc'+(on?' on':''),onclick:()=>{const j=sel.indexOf(i);if(j>=0)sel.splice(j,1);else if(sel.length<EXP.deck0)sel.push(i);else{toast('Tu as déjà '+EXP.deck0+' cartes : retire-en une d’abord.');return}xSave();go('exped')},oncontextmenu:e=>{e.preventDefault();showCard(k)}},
+      cardEl(k,{big:true}),h('span',{class:'apx'+(on?' xp-on':'')},on?'✔ Choisie':'Choisir'))})),
+    h('div',{class:'row',style:'margin-top:16px'},h('button',{class:'btn gold big',disabled:sel.length!==EXP.deck0,onclick:()=>{if(xStartDone(run)){xSave();go('exped')}}},sel.length===EXP.deck0?'🧭 C’est parti !':'Encore '+(EXP.deck0-sel.length)+' carte'+(EXP.deck0-sel.length>1?'s':'')+' à choisir')))}
 // carte de l'acte, de gauche à droite : le départ à gauche, le boss à droite ; seules les cases reliées à ta position sont cliquables
+function xNodeTip(run,nd){const T=XNODE[nd.t];if(!nd.F)return[T[1],{event:'Une petite histoire du serveur, avec un choix à faire.',shop:'Cartes, reliques, retrait de carte et forgemagie contre de l’Or.',rest:'Repos (soin) ou forgemagie (améliorer une carte).',chest:'Une relique et un peu d’Or.'}[nd.t]||''];
+  const F=nd.F,R=xFoeRules(F);return[T[1]+' · '+F.nm,F.hp+' PV · '+XAIN[F.ai]+' · deck '+(ARCH[F.arch]?ARCH[F.arch].n:'')+(R.length?' — '+R.map(r=>r.ic+' '+r.n+' : '+r.tx).join(' — '):'')]}
 function xMapEl(run){const rows=run.map,nx=xNext(run),ROWS=EXP.floors,cw=118,rh=82,pad=46,Wd=pad*2+ROWS*cw+110,Hd=pad*2+4*rh;
-  const X=r=>pad+r*cw+cw/2,Y=c=>pad+c*rh+rh/2,bx=pad+ROWS*cw+55,byy=Hd/2;
+  const X=r=>pad+r*cw+cw/2,Y=c=>pad+c*rh+rh/2,bx=pad+ROWS*cw+55,byy=Hd/2,reach=xReach(run),onPath=new Set((run.path||[]).map(p=>p[0]+':'+p[1]));
   const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 '+Wd+' '+Hd);svg.setAttribute('class','xp-svg');
-  let ln='';rows.forEach((row,r)=>row.forEach((nd,j)=>{const on=run.row===r&&run.col===j,cl=(on?'on':'')+(run.row>r?' past':'');
-    if(r<ROWS-1)nd.to.forEach(t=>{const m=rows[r+1][t];ln+='<line x1="'+X(r)+'" y1="'+Y(nd.c)+'" x2="'+X(r+1)+'" y2="'+Y(m.c)+'" class="'+cl+'"/>'});
-    else ln+='<line x1="'+X(r)+'" y1="'+Y(nd.c)+'" x2="'+bx+'" y2="'+byy+'" class="'+cl+'"/>'}));
-  svg.innerHTML=ln;
+  const st=(r,j)=>run.row===r&&run.col===j?'cur':onPath.has(r+':'+j)?'done':reach.has(r+':'+j)?'reach':'dead';
+  let ln='',lnTop='';
+  rows.forEach((row,r)=>row.forEach((nd,j)=>{const a=st(r,j);
+    const draw=(x2,y2,b)=>{const cl=(a==='done'||a==='cur')&&(b==='done'||b==='cur')?'path':a==='cur'&&b==='reach'?'next':(a==='reach'||a==='cur'&&run.row<0)&&b==='reach'?'reach':'dead';
+      const L='<line x1="'+X(r)+'" y1="'+Y(nd.c)+'" x2="'+x2+'" y2="'+y2+'" class="'+cl+'"/>';if(cl==='dead')ln+=L;else lnTop+=L};
+    if(r<ROWS-1)nd.to.forEach(t=>draw(X(r+1),Y(rows[r+1][t].c),st(r+1,t)));else draw(bx,byy,a==='dead'?'dead':'reach')}));
+  if(run.row<0)rows[0].forEach((nd,j)=>{lnTop+='<line x1="'+(pad*.4)+'" y1="'+Y(nd.c)+'" x2="'+X(0)+'" y2="'+Y(nd.c)+'" class="next"/>'});
+  svg.innerHTML=ln+lnTop;
   const wrap=h('div',{class:'xp-map',style:'aspect-ratio:'+Wd+'/'+Hd},svg),pos=(x,y)=>'left:'+(x/Wd*100)+'%;top:'+(y/Hd*100)+'%';
-  rows.forEach((row,r)=>row.forEach((nd,j)=>{const can=run.row===r-1&&nx.indexOf(j)>=0,cur=run.row===r&&run.col===j,past=r<run.row||(r===run.row&&!cur);const T=XNODE[nd.t];
-    wrap.append(h('button',{class:'xp-nd t-'+nd.t+(can?' can':'')+(cur?' cur':'')+(past?' past':''),style:pos(X(r),Y(nd.c)),disabled:!can,title:T[1],onclick:()=>{xEnter(run,j);xSave();go('exped')}},xIco('xp-node-'+nd.t,T[0]),h('span',null,T[1])))}));
-  const B=XBOSS[run.act][run.bossOf[run.act]],bc=nx[0]==='boss';
-  wrap.append(h('button',{class:'xp-nd boss'+(bc?' can':''),style:pos(bx,byy),disabled:!bc,title:'Boss : '+fullName(B.k),onclick:()=>{xEnter(run,'boss');xSave();go('exped')}},h('span',{class:'xp-bav'},miniAv(B.k)),h('span',null,'Boss')));
+  rows.forEach((row,r)=>row.forEach((nd,j)=>{const can=run.row===r-1&&nx.indexOf(j)>=0,a=st(r,j),T=XNODE[nd.t],tip=xNodeTip(run,nd),R=nd.F?xFoeRules(nd.F):[];
+    wrap.append(h('button',{class:'xp-nd kw t-'+nd.t+' s-'+a+(can?' can':''),style:pos(X(r),Y(nd.c)),'aria-disabled':can?null:'true','data-t':tip[0],'data-d':tip[1],
+      onclick:()=>{if(!can)return;xEnter(run,j);xSave();go('exped')}},xIco('xp-node-'+nd.t,T[0]),h('span',null,T[1]),R.length?h('i',{class:'xp-ndm'},R.map(x=>x.ic).join('')):null))}));
+  const BF=run.bossF,B=XBOSS[run.act][run.bossOf[run.act]],bc=nx[0]==='boss',BR=BF?xFoeRules(BF):[];
+  wrap.append(h('button',{class:'xp-nd kw boss'+(bc?' can':''),style:pos(bx,byy),'aria-disabled':bc?null:'true','data-t':'Boss · '+fullName(B.k),'data-d':BR.map(r=>r.ic+' '+r.n+' : '+r.tx).join(' — '),onclick:()=>{if(!bc)return;xEnter(run,'boss');xSave();go('exped')}},h('span',{class:'xp-bav'},miniAv(B.k)),h('span',null,'Boss')));
   for(let r=0;r<ROWS;r++)wrap.append(h('span',{class:'xp-fln',style:pos(X(r),pad*.42)},'Étage '+(r+1)));
   return h('div',null,h('div',{class:'panel'},ph('🧭','Acte '+(run.act+1)+' · '+EXP.acts[run.act],run.row<0?'Choisis ton point de départ (à gauche)':run.row>=ROWS-1?'Le boss t’attend':'Choisis ta prochaine étape'),wrap,
-      h('div',{class:'xp-leg sm'},Object.keys(XNODE).filter(k=>k!=='boss').map(k=>h('span',null,xIco('xp-node-'+k,XNODE[k][0]),' '+XNODE[k][1])))),
-    h('div',{class:'cols xp-mapcols'},h('div',{class:'panel xp-bossp'},ph('👑','Boss de l’acte : '+fullName(B.k)),h('div',{class:'xp-fl'},h('div',{class:'xp-bossc'},cardEl(B.k,{})),h('div',null,h('p',{class:'xp-rule'},h('b',null,'Règle : '),B.tx),h('p',{class:'sm mut'},'Héros à '+EXP.ehp.boss[run.act]+' PV, '+XAIN[EXP.ai.boss[run.act]]+'. Récompense : une relique de boss parmi 3, une carte légendaire'+(run.act<2?', puis tous tes PV au début de l’acte suivant.':'.'))))),
+      h('div',{class:'xp-leg sm'},Object.keys(XNODE).filter(k=>k!=='boss').map(k=>h('span',null,xIco('xp-node-'+k,XNODE[k][0]),' '+XNODE[k][1])),h('span',{class:'mut'},'· survole une case pour voir l’adversaire et ses bonus · les cases grisées ne sont plus accessibles'))),
+    h('div',{class:'cols xp-mapcols'},h('div',{class:'panel xp-bossp'},ph('👑','Boss de l’acte : '+fullName(B.k)),h('div',{class:'xp-fl'},h('div',{class:'xp-bossc'},cardEl(B.k,{})),h('div',null,xRulesEl(BR),h('p',{class:'sm mut'},'Héros à '+(BF?BF.hp:EXP.ehp.boss[run.act])+' PV, '+XAIN[EXP.ai.boss[run.act]]+'. Récompense : une relique de boss parmi 3, une carte légendaire'+(run.act<2?', puis tous tes PV au début de l’acte suivant.':'.'))))),
       h('div',{class:'panel sm mut'},ph('📜','Rappel'),h('ul',{class:'xp-fi'},h('li',null,'Tes PV ne remontent qu’aux Tavernes, avec certaines reliques ou événements, et après les boss des actes 1 et 2.'),
-        h('li',null,'Les élites 💀 sont dures, mais donnent une relique.'),h('li',null,'Le Marchand 🛒 vend des cartes, des reliques, et retire une carte de ton deck.'),h('li',null,'Clique sur « Mon deck » pour voir tes cartes à tout moment.')))))}
-function xFinalEl(run){const B=XBOSS[3][run.final];
+        h('li',null,'Chaque adversaire a ses bonus : leurs icônes sont sur la case, le détail au survol.'),h('li',null,'Pas de Fatigue : quand ton deck et ton cimetière sont vides, tu pioches un Pleb 1/1 à la place.'),h('li',null,'Le Marchand 🛒 vend des cartes et des reliques, retire une carte et fait de la forgemagie.'),h('li',null,'Clique sur « Mon deck » pour voir tes cartes à tout moment.')))))}
+function xRulesEl(R){return R.length?h('div',{class:'xp-rules'},R.map(r=>h('div',{class:'xp-ru'+(r.good?' good':'')},h('span',{class:'xp-rui'},r.ic),h('div',null,h('b',null,r.n),h('span',null,r.tx))))):h('p',{class:'sm mut'},'Aucun bonus particulier.')}
+function xFinalEl(run){const B=XBOSS[3][run.final],BF=run.bossF;
   return h('div',{class:'panel hl xp-final'},ph('👑','Le Raid final',run.tilt>=10?'Boss '+(run.final+1)+' / 2':''),h('div',{class:'xp-fl'},cardEl(B.k,{big:true}),
-    h('div',null,h('h2',null,fullName(B.k)),h('p',null,B.tx),h('p',{class:'sm mut'},'Tu arrives avec tes PV restants : pas de Taverne avant ce combat. '+(B.hp||40)+' PV, IA experte, terrains de WoW.'),
+    h('div',null,h('h2',null,fullName(B.k)),BF?xRulesEl(xFoeRules(BF)):h('p',null,B.tx),h('p',{class:'sm mut'},'Tu arrives avec tes PV restants : pas de Taverne avant ce combat. '+(B.hp||40)+' PV, IA experte, terrains de WoW.'),
       h('button',{class:'btn gold big',onclick:()=>{xEnter(run,'boss');xSave();go('exped')}},'Entrer dans le raid'))))}
 function xFightEl(run,nd){const F=nd.F,T=F.kind==='boss'?['👑','Boss']:F.kind==='elite'?['💀','Élite']:['⚔','Combat'];
   return h('div',{class:'panel hl xp-fight'},ph(T[0],T[1]+' · '+F.nm,F.hp+' PV'),
     h('div',{class:'xp-fl'},F.bk?h('div',{class:'xp-foe'},cardEl(F.bk,{big:true})):h('div',{class:'xp-foe gen'},avEl(F.av,F.nm,'xpav'),h('b',null,F.nm)),
-      h('div',null,F.rule?h('p',{class:'xp-rule'},h('b',null,'Règle : '),F.rule):null,
+      h('div',null,h('h3',{class:'xp-h3'},'Ses bonus'),xRulesEl(xFoeRules(F)),
         h('ul',{class:'sm xp-fi'},h('li',null,'Héros adverse : ',h('b',null,F.hp+' PV'),' · toi : ',h('b',null,run.hp+' / '+run.mhp+' PV')),h('li',null,XAIN[F.ai]+' · deck ',ARCH[F.arch]?ARCH[F.arch].n:''),
           h('li',null,'Terrains : '+GAMES[EXP.tg[Math.min(3,F.act)]].n+' et Bazar'),run.relics.length?h('li',null,'Tes reliques s’appliquent pendant le combat.'):null),
         h('button',{class:'btn gold big',onclick:()=>xStartFight(run)},'⚔ Combattre'))))}
 function xStartFight(run){const nd=run.node;if(!nd||nd.st!=='fight')return;const F=nd.F;
   const G=newGame(xFightCfg(run,F)),Hh=HostGame(G,[{kind:'me'},xAiSeat(run,F)],v=>applyView(v));
-  newDuelState({mode:'exped',host:Hh,ctl:{act:a=>Hh.act(0,a),resign:()=>Hh.resign(0),close:()=>Hh.close()}});mountDuel();Hh.start()}
+  newDuelState({mode:'exped',host:Hh,ctl:{act:a=>Hh.act(0,a),resign:()=>Hh.resign(0),close:()=>Hh.close()}});mountDuel();Hh.start();xDuelIntro()}
 // fin d'un duel d'Expédition : le résultat compte une seule fois
 function expAfterDuel(V,D){if(!V.o.exped||D.xpDone)return D.xpRes||null;D.xpDone=true;const run=XS().run;if(!run||!run.node||run.node.st!=='fight')return null;
   const me=V.me,w=V.over.w===me?1:0,hp=V.p[me].hp;xFightDone(run,w,hp);saveS();D.xpRes={w,over:!!run.over,run};return D.xpRes}
@@ -470,13 +569,20 @@ function xPickEl(run,nd){const p=nd.pick,left=p.n-p.done;
   const title={rm:'Retire '+left+' carte'+(left>1?'s':'')+' de ton deck',dup:'Choisis la carte à dupliquer',up:'Choisis la carte à améliorer',gift:'Choisis ta carte'}[p.m];
   const box=h('div',{class:'panel hl xp-pk'},ph('🃏',title,p.res.length?p.res.join(' · '):''));
   if(p.m==='gift')box.append(h('div',{class:'apick xp-pick'},p.offer.map((k,i)=>h('div',{class:'apc',onclick:()=>{xPickApply(run,i);xSave();go('exped')},oncontextmenu:e=>{e.preventDefault();showCard(k)}},cardEl(k,{big:true,tilt:1}),h('span',{class:'apx'},'✔ Prendre')))));
-  else box.append(h('p',{class:'sm mut'},p.m==='up'?'Une créature peut gagner +1/+1, ou −1 de coût si elle coûte 3 ou plus. Un sort peut coûter 1 de moins. Une carte ne s’améliore qu’une fois.':'Clique sur une carte · clic droit : fiche détaillée.'),
-    xDeckList(run.deck,i=>{if(p.m==='up'){const k=run.deck[i],o=xUpOpts(k);if(o.length<2){xPickApply(run,i,o[0]);xSave();go('exped');return}
-      ask('Forgemagie : '+fullName(k),'Comment améliorer cette carte ?',o.map(u=>({t:xUpTx(k,u),c:'pri',f:()=>{xPickApply(run,i,u);xSave();go('exped')}})).concat([{t:'Annuler'}]));return}
+  else box.append(h('p',{class:'sm mut'},p.m==='up'?'Chaque amélioration au choix : +1/+1 (créatures), −1 coût, ou effet renforcé (sur certaines cartes : plus de dégâts, de pioche, de Venin, d’invocations…). Jusqu’à 3 améliorations par carte, cumulables.':'Clique sur une carte · clic droit : fiche détaillée.'),
+    xDeckList(run.deck,i=>{if(p.m==='up'){const k=run.deck[i];xForgeAsk(k,u=>{xPickApply(run,i,u);xSave();go('exped')});return}
       xPickApply(run,i);xSave();go('exped')},p.m==='up'?k=>xUpOpts(k).length>0:p.m==='rm'&&nd.t==='shop'?null:null));
-  if(nd.t==='shop'&&!p.done)box.append(h('button',{class:'btn sm',style:'margin-top:10px',onclick:()=>{const sh=nd.shop;run.gold+=sh.rm;sh.rmUsed=0;run.rmCost-=EXP.rmStep;nd.st='shop';nd.pick=null;xSave();go('exped')}},'Annuler (remboursé)'));
+  if(nd.t==='shop'&&!p.done)box.append(h('button',{class:'btn sm',style:'margin-top:10px',onclick:()=>{const sh=nd.shop;if(p.m==='up'){run.gold+=p.paid||0;sh.fgUsed=0}else{run.gold+=sh.rm;sh.rmUsed=0;run.rmCost-=EXP.rmStep}nd.st='shop';nd.pick=null;xSave();go('exped')}},'Annuler (remboursé)'));
   if(nd.t==='rest'&&!p.done)box.append(h('button',{class:'btn sm',style:'margin-top:10px',onclick:()=>{nd.st='rest';nd.pick=null;xSave();go('exped')}},'Annuler'));
   return box}
+// fenêtre de forgemagie : les options possibles, avec la carte avant et après
+function xForgeAsk(k,done){const o=xUpOpts(k);if(!o.length){toast('Cette carte est déjà améliorée au maximum.');return}const cur=xEnsure(k)||k;
+  const lab={u:'💪 +1/+1',c:'💎 −1 coût',e:'✨ Effet renforcé'};
+  modal(h('div',{class:'xp-forge'},h('h2',null,'⚒ Forgemagie : '+fullName(xBase(k))),h('p',{class:'sm mut'},'Améliorations déjà faites : '+(xUpN(k)?xUpDesc(xUps(k)):'aucune')+' · encore '+(XUPMAX-xUpN(k))+' possible'+(XUPMAX-xUpN(k)>1?'s':'')+'.'),
+    h('div',{class:'xp-fgr'},h('div',{class:'xp-fgc now'},h('b',null,'Avant'),cardEl(cur,{big:true}),h('div',{class:'fgd'},'La carte telle qu’elle est aujourd’hui.')),
+      o.map(u=>{const nk=xUpApply(k,u),C0=CARDS[cur],C1=CARDS[nk];
+        const d=u==='u'?C0.a+'/'+C0.h+' → '+C1.a+'/'+C1.h:u==='c'?'Coût '+C0.c+' → '+C1.c:'Les chiffres de l’effet augmentent (voir le texte).';
+        return h('div',{class:'xp-fgc opt',onclick:()=>{closeModal();done(u)}},h('b',null,lab[u]),cardEl(nk,{big:true}),h('div',{class:'fgd'},d),h('button',{class:'btn pri sm'},'Choisir'))}))))}
 function xDoneEl(run,nd){const e=nd.t==='event'?XEVK[nd.ev]:null;
   return h('div',{class:'panel hl xp-ev'},ph(e?'🌀':'🍺',e?e.n:'Taverne'),h('p',{class:'xp-evt'},nd.res||'C’est fait.'),
     h('button',{class:'btn gold',onclick:()=>{xLeaveNode(run);xSave();go('exped')}},'Continuer'))}
@@ -485,12 +591,13 @@ function xShopEl(run,nd){const sh=nd.shop;
   return h('div',{class:'panel hl xp-shop'},ph('🛒','Marchand',run.gold+' Or'),
     h('h3',{class:'xp-h3'},'Cartes'),h('div',{class:'apick xp-pick'},sh.cards.map(c=>h('div',{class:'apc'+(c.sold?' off':''),onclick:()=>{if(!c.sold)buy(c.p,()=>{c.sold=1;run.deck.push(c.k)})},oncontextmenu:e=>{e.preventDefault();showCard(c.k)}},cardEl(c.k,{big:true}),h('span',{class:'apx xp-price'+(run.gold<c.p&&!c.sold?' no':'')},c.sold?'Vendu':c.p+' Or')))),
     h('h3',{class:'xp-h3'},'Reliques'),h('div',{class:'xp-relc'},sh.rel.map(r=>h('button',{class:'xp-relt r-'+XREL[r.id].r+(r.sold?' on':''),disabled:!!r.sold||run.gold<r.p,onclick:()=>buy(r.p,()=>{r.sold=1;xGainRelic(run,r.id)})},xIco('xp-rel-'+r.id,XREL[r.id].ic,'big'),h('b',null,XREL[r.id].n),h('span',{class:'sm'},XREL[r.id].tx),h('span',{class:'xp-price'},r.sold?'Vendu':r.p+' Or')))),
-    h('h3',{class:'xp-h3'},'Services'),h('div',{class:'row'},h('button',{class:'btn',disabled:!!sh.rmUsed||run.gold<sh.rm||run.deck.length<=5,onclick:()=>{run.gold-=sh.rm;sh.rmUsed=1;run.rmCost+=EXP.rmStep;nd.st='pick';nd.pick={m:'rm',n:1,done:0,res:[]};xSave();go('exped')}},'🗑 Retirer une carte ('+sh.rm+' Or)'+(sh.rmUsed?' · fait':''))),
+    h('h3',{class:'xp-h3'},'Services'),h('div',{class:'row'},h('button',{class:'btn',disabled:!!sh.rmUsed||run.gold<sh.rm||run.deck.length<=5,onclick:()=>{run.gold-=sh.rm;sh.rmUsed=1;run.rmCost+=EXP.rmStep;nd.st='pick';nd.pick={m:'rm',n:1,done:0,res:[]};xSave();go('exped')}},'🗑 Retirer une carte ('+sh.rm+' Or)'+(sh.rmUsed?' · fait':'')),
+      h('button',{class:'btn',disabled:!!sh.fgUsed||run.gold<(sh.fg||75)||!run.deck.some(k=>xUpOpts(k).length),onclick:()=>{run.gold-=(sh.fg||75);sh.fgUsed=1;nd.st='pick';nd.pick={m:'up',n:1,done:0,res:[],paid:sh.fg||75};xSave();go('exped')}},'⚒ Forgemagie ('+(sh.fg||75)+' Or)'+(sh.fgUsed?' · fait':''))),
     h('div',{class:'row',style:'margin-top:14px'},h('button',{class:'btn gold',onclick:()=>{xLeaveNode(run);xSave();go('exped')}},'Quitter la boutique')))}
 function xRestEl(run,nd){const v=Math.min(xRestHeal(run),run.mhp-run.hp),can=run.deck.some(k=>xUpOpts(k).length);
   return h('div',{class:'panel hl xp-rest'},ph('🍺','Taverne'),h('p',{class:'sm mut'},'Un feu, une bière, un canapé. Une seule chose avant de repartir :'),
     h('div',{class:'xp-restc'},h('button',{class:'xp-relt',onclick:()=>{run.hp=Math.min(run.mhp,run.hp+xRestHeal(run));nd.st='done';nd.res='Tu te reposes : +'+v+' PV.';xSave();go('exped')}},xIco('xp-rest-heal','🛏','big'),h('b',null,'Se reposer'),h('span',{class:'sm'},'Récupère '+v+' PV ('+run.hp+' → '+(run.hp+v)+').')),
-      h('button',{class:'xp-relt',disabled:!can,onclick:()=>{nd.st='pick';nd.pick={m:'up',n:1,done:0,res:[]};xSave();go('exped')}},xIco('xp-rest-forge','⚒','big'),h('b',null,'Forgemagie'),h('span',{class:'sm'},can?'Améliore une carte de ton deck (★).':'Toutes tes cartes sont déjà améliorées.'))))}
+      h('button',{class:'xp-relt',disabled:!can,onclick:()=>{nd.st='pick';nd.pick={m:'up',n:1,done:0,res:[]};xSave();go('exped')}},xIco('xp-rest-forge','⚒','big'),h('b',null,'Forgemagie'),h('span',{class:'sm'},can?'Améliore une carte : +1/+1, −1 coût ou effet renforcé (jusqu’à 3 fois par carte).':'Toutes tes cartes sont déjà améliorées au maximum.'))))}
 function xChestEl(run,nd){const id=nd.rel;
   return h('div',{class:'panel hl xp-ev'},ph('🎁','Coffre'),h('div',{class:'xp-relc'},id?h('div',{class:'xp-relt r-'+XREL[id].r},xIco('xp-rel-'+id,XREL[id].ic,'big'),h('b',null,XREL[id].n),h('span',{class:'sm'},XREL[id].tx)):null,
       h('div',{class:'xp-relt'},xIco('xp-gold','🪙','big'),h('b',null,'+'+nd.gold+' Or'))),
@@ -507,12 +614,16 @@ function xOverEl(run){const o=run.over,M=XS().meta;
 // ---------- duel : reliques et règle de l'adversaire visibles pendant le combat ----------
 function xDuelStrip(V){if(!V||!V.o.exped)return null;const run=XS().run;if(!run)return null;const F=run.node&&run.node.F;
   return h('div',{class:'xp-strip'},h('span',{class:'xp-sl'},'🧭 '+(run.act>=3?'Raid final':'Acte '+(run.act+1))),h('span',{class:'xrel kw','data-t':XPAT[run.pat].n,'data-d':XPAT[run.pat].tx},xPatIco(run.pat)),run.relics.map(id=>xRelIco(id,true)),
-    F&&F.rule?h('span',{class:'xrel kw foe','data-t':'Règle de '+F.nm,'data-d':F.rule},'💀'):null)}
+    F?h('span',{class:'xp-sl foe'},'vs'):null,F?xFoeRules(F).map(r=>h('span',{class:'xrel kw foe','data-t':r.n,'data-d':r.tx},r.ic)):null)}
+function xDuelIntro(){const run=XS().run,F=run&&run.node&&run.node.F;if(!F)return;const R=xFoeRules(F);
+  const el=h('div',{class:'xp-intro',onclick:()=>el.remove()},h('h3',null,F.nm+' · '+F.hp+' PV'),R.length?R.map(r=>h('div',{class:'xp-ru'+(r.good?' good':'')},h('span',{class:'xp-rui'},r.ic),h('div',null,h('b',null,r.n),h('span',null,r.tx)))):h('p',null,'Aucun bonus particulier.'),h('small',null,'Clique pour fermer · les bonus restent visibles en haut à droite'));
+  let n=0;const show=()=>{const d=$('#duel');if(!d)return;const mo=$('#mullov');if(mo&&getComputedStyle(mo).display!=='none'&&n++<200){setTimeout(show,300);return}   // après le mulligan, pas derrière sa fenêtre
+    d.append(el);setTimeout(()=>el.remove(),9000)};show()}
 // ---------- carte de l'accueil ----------
 function expHomeCard(){const X=XS(),run=X.run,M=X.meta,d=xDailyKey(),dd=M.daily.d===d&&M.daily.done;
   return homeCard({k:'exped',icon:'compass',title:'Expédition',
     desc:run?(run.over?['Ta dernière course est terminée : ',h('b',null,run.over.won?'victoire !':'défaite.'),' Consulte le bilan pour repartir.']:
       ['Course en cours avec ',h('b',null,XPAT[run.pat].n),' : ',h('b',null,run.act>=3?'Raid final':'acte '+(run.act+1)+', étage '+Math.max(0,run.row+1)),' · ',run.hp+' / '+run.mhp+' PV · '+run.relics.length+' relique'+(run.relics.length>1?'s':'')+'.']):
-      ['Nouveau mode solo : un patron, ',h('b',null,'15 cartes'),' et ',h('b',null,'40 PV'),' pour traverser 3 actes et le Raid final. Construis ton deck en route, ramasse des reliques, affronte des boss. ',
+      ['Mode solo : un patron, ',h('b',null,'5 cartes de ton choix'),' et ',h('b',null,'40 PV'),' pour traverser 3 actes et le Raid final. Construis ton deck en route, ramasse des reliques, affronte des boss. ',
         h('b',null,'Niveau '+xLevel(M.xp)),M.tilt?' · Tilt '+M.tilt+' débloqué':'',dd?' · défi du jour fait':' · défi du jour disponible','.'],
     btn:h('button',{class:'hm-btn',onclick:()=>go('exped')},run?(run.over?'Voir le bilan':'Reprendre l’expédition'):'Partir en expédition')})}

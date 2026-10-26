@@ -1386,7 +1386,7 @@ body{background:#060c17}
 /* titres : médaillon doré, petites capitales, filet avec losange */
 #app .panel h3,#modal .panel h3{font-family:var(--disp);font-weight:700;font-size:22px;letter-spacing:.05em;font-variant:small-caps;color:#f3e7cc;border:0;padding-bottom:0;margin-bottom:14px;text-shadow:0 2px 6px #000a}
 #app .panel h3:has(.pi){position:relative;padding-bottom:14px;gap:16px}
-#app .panel h3:has(.pi)::after{content:'';position:absolute;left:64px;right:0;bottom:0;height:12px;
+#app .panel h3:has(.pi)::after{content:'';position:absolute;left:0;right:0;bottom:0;height:12px;
   background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='12' viewBox='0 0 22 12'%3E %3Cpath d='M11 1 L16 6 L11 11 L6 6 Z' fill='%23e9cd86' stroke='%232a1d0a' stroke-width='.6'/%3E%3Cpath d='M11 3.6 L13.4 6 L11 8.4 L8.6 6 Z' fill='%23fff2c8' opacity='.8'/%3E %3Ccircle cx='2.5' cy='6' r='1.2' fill='%23e9cd86'/%3E%3Ccircle cx='19.5' cy='6' r='1.2' fill='%23e9cd86'/%3E%3C/svg%3E") center/22px 12px no-repeat,linear-gradient(90deg,transparent,#c9a35a 10%,#c9a35a 46%,transparent 46.6%,transparent 53.4%,#c9a35a 54%,#c9a35a 90%,transparent) center/100% 1px no-repeat}
 #app .panel h3 .pi{position:relative;width:48px;height:48px;border-radius:50%;font-size:23px;color:#ecd08a;background:radial-gradient(circle at 50% 30%,#22426e,#0b1a30 70%);
   border:2px solid #d8b56c;box-shadow:0 0 0 3px #07101d,0 0 0 4px #c9a35a66,0 4px 12px #000b,inset 0 0 12px #000a;text-shadow:none}
@@ -2113,8 +2113,8 @@ body{background:linear-gradient(#080d187a,#080d187a),url("../png/site-background
 .xp-svg line{stroke:#8a7650;stroke-width:3;stroke-dasharray:6 7;opacity:.55}
 .xp-svg line.past{opacity:.25}
 .xp-svg line.on{stroke:#f1d27a;opacity:1;stroke-dasharray:none;stroke-width:4}
-.xp-nd{position:absolute;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:1px;width:64px;padding:6px 2px 4px;border-radius:14px;border:2px solid #5d503c;background:#221b12;color:#e8dfcc;font:600 10.5px/1.1 var(--ui,inherit);cursor:default}
-.xp-nd span{white-space:nowrap}
+.xp-nd{position:absolute;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:1px;width:74px;padding:6px 2px 4px;border-radius:14px;border:2px solid #5d503c;background:#221b12;color:#e8dfcc;font:600 10.5px/1.1 var(--ui,inherit);cursor:default}
+.xp-nd span{white-space:nowrap;font-size:10px;letter-spacing:-.01em}
 .xp-nd.t-elite{border-color:#a8433d}.xp-nd.t-event{border-color:#8a5fc8}.xp-nd.t-rest{border-color:#5f9a5a}.xp-nd.t-shop{border-color:#c9a35a}.xp-nd.t-chest{border-color:#d8b56c}
 .xp-nd:disabled{opacity:.45}
 .xp-nd.past{opacity:.25}
@@ -2161,7 +2161,7 @@ body{background:linear-gradient(#080d187a,#080d187a),url("../png/site-background
 .xp-deck{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:10px;max-height:62vh;overflow:auto;padding:4px}
 .xp-dc{position:relative;cursor:pointer;transition:transform .12s}
 .xp-dc:hover{transform:translateY(-3px)}
-.xp-dc.pk:hover{filter:drop-shadow(0 0 10px #e9c46aaa)}
+.xp-dc.opt:hover{filter:drop-shadow(0 0 10px #e9c46aaa)}
 .xp-star{position:absolute;right:4px;top:-6px;color:#ffd75a;font-size:18px;text-shadow:0 0 6px #000,0 0 10px #ffb400}
 .xp-dm{min-width:min(900px,86vw)}
 /* carte améliorée (forgemagie d'Expédition) */
@@ -2193,3 +2193,70 @@ body{background:linear-gradient(#080d187a,#080d187a),url("../png/site-background
 .xp-nd .xpim{width:34px;height:34px}
 .xp-relt .xpim.big{width:64px;height:64px}
 .xp-ovi .xpim.huge,.xp-relt .xpim.huge{width:170px;height:170px}
+/* Expédition v3.14 : départ, carte lisible, bonus des adversaires, forgemagie */
+#app .xp-pick .apx.xp-on{opacity:1;background:linear-gradient(180deg,#9be08f,#4f9a46);color:#0d2408}
+#app .xp-start .apc:not(.on){filter:saturate(.85)}
+#app .xp-start .apc.on{transform:translateY(-6px)}
+.xp-svg line{stroke-linecap:round}
+.xp-svg line.dead{stroke:#6f6249;stroke-width:2;stroke-dasharray:3 9;opacity:.22}
+.xp-svg line.reach{stroke:#c9a35a;stroke-width:3;stroke-dasharray:none;opacity:.55}
+.xp-svg line.next{stroke:#ffe08a;stroke-width:5;stroke-dasharray:10 8;opacity:1;animation:xpDash 1s linear infinite;filter:drop-shadow(0 0 4px #ffd36a)}
+.xp-svg line.path{stroke:#f1d27a;stroke-width:6;stroke-dasharray:none;opacity:1}
+@keyframes xpDash{to{stroke-dashoffset:-18}}
+.xp-nd{background:#221b12;opacity:1!important;z-index:2}
+.xp-nd[aria-disabled]{cursor:default}
+.xp-nd.s-dead{filter:grayscale(1) brightness(.42);transform:translate(-50%,-50%) scale(.82)}
+.xp-nd.s-done{background:#2d2414;border-color:#f1d27a;filter:brightness(.8)}
+.xp-nd.s-cur{background:#3d2f17;border-color:#ffe08a;box-shadow:0 0 0 3px #ffe08a,0 0 18px #ffe08a99;filter:none}
+.xp-nd.s-reach:not(.can){filter:brightness(.78)}
+.xp-nd.can{background:#3a2c14;border-color:#ffe08a}
+.xp-ndm{position:absolute;top:-10px;right:-12px;font-style:normal;font-size:12px;background:#2a1311;border:1px solid #c45f5b;border-radius:999px;padding:0 4px;line-height:16px;white-space:nowrap}
+.xp-nd.s-dead .xp-ndm{display:none}
+.xp-rules{display:flex;flex-direction:column;gap:6px;margin:4px 0 10px}
+.xp-ru{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:10px;background:#2a1311;border:1px solid #a8433d88}
+.xp-ru b{display:block;color:#f6c8bf}.xp-ru span{color:#f0ddd8;font-size:13.5px}
+.xp-ru.good{background:#12261a;border-color:#5f9a5a99}.xp-ru.good b{color:#bfe8b4}.xp-ru.good span{color:#dcefd6}
+.xp-rui{font-size:22px;line-height:1;flex:none;width:28px;text-align:center}
+.xp-strip .xp-sl.foe{color:#f2a7a2;margin-left:4px}
+.xp-intro{position:absolute;left:50%;top:84px;transform:translateX(-50%);z-index:60;width:min(520px,90vw);padding:14px 16px;border-radius:14px;background:#140b0bf2;border:2px solid #c45f5b;box-shadow:0 12px 30px #000c;cursor:pointer;animation:xpIn .35s ease-out}
+.xp-intro h3{margin:0 0 8px;color:#ffd1c8;font-size:17px}.xp-intro .xp-ru{margin-top:6px}.xp-intro small{display:block;margin-top:8px;color:#b9a29d}
+@keyframes xpIn{from{opacity:0;transform:translate(-50%,-10px)}to{opacity:1;transform:translate(-50%,0)}}
+#modal .mbox:has(.xp-forge){max-width:min(940px,96vw)}
+.xp-fgr{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:12px}
+.xp-fgc{display:flex;flex-direction:column;align-items:center;gap:8px;width:196px;padding:10px 12px 12px;border-radius:12px;border:2px solid #534a40;background:#0b1626;transition:transform .15s,border-color .15s}
+.xp-fgc>b{display:block;width:100%;text-align:center;font-size:14px;line-height:1.25;padding:3px 0;border-radius:6px;background:#00000040;color:#f3e2b0;position:relative;z-index:2}
+.xp-fgc.now{opacity:.85}
+.xp-fgc.opt{cursor:pointer;border-color:#c9a35a}.xp-fgc.opt:hover{border-color:#ffe08a;transform:translateY(-3px)}
+.xp-fgc .card{width:170px}
+.xp-fgc .fgd{font-size:12.5px;color:#cfd6e2;text-align:center;min-height:2.6em;line-height:1.3}
+.hst.handc.peek{cursor:pointer;outline:2px solid #6fb4ff;border-radius:8px}
+.card .upb{letter-spacing:-.15em}
+/* v3.14.1 : harmonisation des placements (icônes de navigation, accueil, panneaux, boutons principaux) */
+#nav .ni:has(.nav-art){width:36px;height:36px}
+#nav .nav-art{width:36px;height:36px}
+@media(max-width:1320px){#nav .ni:has(.nav-art),#nav .nav-art{width:31px;height:31px}}
+.hm.hm-exped{grid-template-columns:minmax(260px,42%) 1fr;grid-template-rows:auto 1fr;grid-template-areas:"ban ban" "art desc";row-gap:16px;column-gap:34px;align-items:center}
+.hm,.hm.hm-exped{box-shadow:none;filter:drop-shadow(0 12px 18px #000b)}   /* l'ombre suit le cadre au lieu d'un rectangle */
+.hm-exped .hm-banw{grid-area:ban;justify-self:center;width:min(560px,72%);max-width:none;margin:0 0 2px}
+.hm-exped .hm-desc{grid-area:desc;margin:0;justify-self:center;align-self:center}
+.hm-exped .hm-art{grid-area:art;min-height:220px}
+@media (max-width:760px){.hm.hm-exped{grid-template-columns:1fr;grid-template-rows:none;grid-template-areas:"ban" "art" "desc"}.hm-exped .hm-banw{width:100%}}
+#app .panel.narrow{max-width:860px;margin-left:auto;margin-right:auto}
+#app .row.cta{justify-content:center}
+#app .row.cta .btn.big{min-width:min(420px,100%);font-size:20px}
+.xp-pats{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media (max-width:900px){.xp-pats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+#app .arw{grid-template-columns:repeat(5,1fr)}
+#app .panel.narrow .avgrid{grid-template-columns:repeat(6,minmax(0,1fr))}
+@media (max-width:700px){#app .panel.narrow .avgrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+/* barre du haut : tout tient sans débordement entre 1100 et 1280 px de large (le compteur de 💎 n'est plus coupé) */
+@media (max-width:1279px){#top .logo b{font-size:18px;letter-spacing:.03em}#top .logo .emb{width:36px;height:36px}#appver{display:none}}
+/* Expédition : le contenu des cases est centré dans son panneau, comme le reste du jeu */
+#app .xp-pick{justify-content:center}
+.xp-relc,.xp-restc,.xp-rwl{justify-content:center}
+.xp-h3{text-align:center}
+.xp-rest>p,.xp-shop>p,.xp-ev>p.xp-evt{text-align:center}
+.xp-ev>.btn{display:block;margin-left:auto;margin-right:auto}
+.xp-ev .xp-fl{justify-content:center;align-items:center}
+.xp-ev .xp-fl>div:last-child{max-width:640px}
+#app .panel h3.xp-h3{justify-content:center;text-align:center}
