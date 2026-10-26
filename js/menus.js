@@ -12,11 +12,11 @@ function ph(icon,title,right){const art=icon==='💎'?'png/diamond.png':icon==='
 function go(t){
   CUR=t;hideTip();hideHoverCard();clearInterval(FR_T);if(t!=='decks')DECKI=null;
   const nav=$('#nav');nav.innerHTML='';
-  const nt=t==='arena'?'play':t;
+  const nt=t==='arena'||t==='exped'?'play':t;
   TABS.forEach(x=>nav.append(h('button',{class:x[0]===nt?'on':'',style:'--h:'+THUE[x[0]][0]+';--ht:'+THUE[x[0]][1],onclick:()=>go(x[0])},
     h('span',{class:'ni'},TABART[x[0]]?h('img',{class:'nav-art',src:TABART[x[0]],alt:''}):ico(x[2])),h('span',{class:'nl'},x[1]))));
   const v=$('#view');v.innerHTML='';v.scrollTop=0;v.dataset.t=t;
-  ({play:vPlay,arena:vArena,shop:vShop,coll:vColl,decks:vDecks,friends:vFriends,acct:vAcct,code:vCode})[t](v);refreshTop()}
+  ({play:vPlay,arena:vArena,exped:vExped,shop:vShop,coll:vColl,decks:vDecks,friends:vFriends,acct:vAcct,code:vCode})[t](v);refreshTop()}
 function gotoGuide(sec){CT=sec;go('coll')}
 
 // ---------- JOUER ----------
@@ -76,7 +76,8 @@ function vPlay(v){
     homeCard({k:'arena',icon:'trophy',title:'Arène',
       desc:r?(r.swap?(r.swap.stage==='remove'?'Choisis les '+ARENA.redraft+' cartes à remplacer.':'Choisis '+ARENA.redraft+' remplaçantes avant de sélectionner les cartes à remplacer.'):r.picks.length<ARENA.picks?'Ton draft : '+r.picks.length+' / '+ARENA.picks+' cartes choisies.':'Ton deck d’Arène est prêt ('+r.w+' V · '+r.l+' D) : défie l’IA au palier '+Math.min(ARENA.maxW,r.w+1)+' ou cherche un joueur.'):
         ['Draft de '+ARENA.picks+' cartes, puis affronte l’IA ou cherche un joueur avec le matchmaking. '+ARENA.maxW+' paliers, jusqu’à '+ARENA.rw[ARENA.maxW]+' 💎 à gagner. Entrée : '+ARENA.cost+' ',h('img',{class:'hm-gem',src:'png/diamond.png',alt:'diamants'}),'.'],
-      btn:h('button',{class:'hm-btn',onclick:()=>go('arena')},r?(r.swap||r.picks.length<ARENA.picks?'Continuer le draft':'Ouvrir l’Arène'):'Accéder à l’Arène')})),
+      btn:h('button',{class:'hm-btn',onclick:()=>go('arena')},r?(r.swap||r.picks.length<ARENA.picks?'Continuer le draft':'Ouvrir l’Arène'):'Accéder à l’Arène')}),
+    expHomeCard()),
     h('div',{class:'homebar'},
       h('div',{class:'hb-gain'},h('img',{src:'png/diamond.png',alt:''}),h('b',null,'Gains du jour'),h('div',{class:'bar'},h('i',{style:'width:'+Math.min(100,S.daily.earned/ECON.cap*100)+'%'})),
         h('span',{class:'sm'},S.daily.earned+' / '+ECON.cap),h('span',{class:'sm mut'},'Victoire +'+ECON.win+' · Défaite +'+ECON.loss+' · 1re victoire du jour +'+ECON.first),h('b',{class:'sm vstat',title:'Victoires et défaites'},S.stats.w+' V · '+S.stats.l+' D')),

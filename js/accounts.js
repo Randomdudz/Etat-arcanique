@@ -22,7 +22,7 @@ function genCode(){const A='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let s='';for(let i
 function freshState(){
   const coll={};STARTER.forEach(k=>coll[k]={n:2,p:0});
   const st={v:3,name:'',code:genCode(),friends:[],gems:ECON.start,coll,sel:0,
-    decks:[],daily:{d:today(),earned:0,first:false},stats:{w:0,l:0},opt:Object.assign({},OPTDEF),seen:{},arena:arenaFix(null)};
+    decks:[],daily:{d:today(),earned:0,first:false},stats:{w:0,l:0},opt:Object.assign({},OPTDEF),seen:{},arena:arenaFix(null),exped:typeof expFix==='function'?expFix(null):null};
   st.decks[0]={name:'Ravagés',cards:autoDeck(coll,'ravages')};      // 3 decks de départ ; on peut en créer jusqu'à ECON.decks
   st.decks[1]={name:'Farmers',cards:autoDeck(coll,'farmer')};
   st.decks[2]={name:'Toxic',cards:autoDeck(coll,'toxic')};
@@ -39,7 +39,7 @@ function fixS(st){
   st.gems=Math.max(0,Math.floor(+st.gems||0));st.name=String(st.name||'').slice(0,16);if(!st.code)st.code=genCode();st.sel=st.sel|0;
   st.decks=st.decks.map((d,i)=>({name:(d&&d.name)||('Deck '+(i+1)),cards:((d&&d.cards)||[]).map(e=>String(e).replace('*','')).filter(k=>CARDS[k]&&POOL.indexOf(k)>=0)}));
   for(const k of Object.keys(st.coll)){const e=st.coll[k];if(!CARDS[k]||!e||typeof e!=='object')delete st.coll[k];else{e.n=Math.max(0,e.n|0)+Math.max(0,e.p|0);e.p=0}}
-  delete st.opt.pw;delete st.opt.rel;delete st.opt.arena;st.arena=arenaFix(st.arena);
+  delete st.opt.pw;delete st.opt.rel;delete st.opt.arena;st.arena=arenaFix(st.arena);if(typeof expFix==='function')st.exped=expFix(st.exped);
   if(!st.daily||st.daily.d!==today())st.daily={d:today(),earned:0,first:false};
   grantStarter(st);
   return st}
