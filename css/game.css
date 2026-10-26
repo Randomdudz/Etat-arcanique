@@ -410,7 +410,7 @@ input::placeholder{color:#8d8378}
 .effect-preview .previewtargets{color:#f8f1e9}
 .info .play{flex:none;align-self:center}
 .hand{display:flex;align-items:flex-start;justify-content:center;gap:8px;overflow:visible;padding:12px 4px 0;height:calc(var(--sw)*1.25 + 14px);margin-top:auto;position:relative;z-index:5}
-.hc{flex:0 0 auto;width:var(--hw);aspect-ratio:5/7.6;cursor:grab;transition:transform .15s;position:relative}
+.hc{flex:0 0 auto;width:var(--hw);aspect-ratio:5/7.6;cursor:grab;transition:transform .15s;position:relative;isolation:isolate}   /* chaque carte de la main est un bloc : ses éléments (cadre, badges) ne débordent plus sur la suivante quand elles se chevauchent */
 .hc:hover{transform:translateY(calc(min(0px,var(--sw)*1.25 - var(--hw)*1.52) - 10px)) scale(1.05);z-index:4}
 .hc .card{height:100%;width:100%}
 .hc.sel{transform:translateY(calc(min(0px,var(--sw)*1.25 - var(--hw)*1.52) - 14px))}

@@ -5,6 +5,11 @@ Journal des mises à jour, la plus récente en premier. Les annonces détaillée
 <!-- Style des notes : écrire pour les joueurs. Pas de termes techniques (fichiers, serveurs, code, noms de collections) :
      seulement ce qui change en jeu, et comment en profiter. -->
 
+## v3.12.1 — 26/10/2026
+
+### Correctif
+- Main pleine : les fins traits blancs qui barraient les cartes quand elles se chevauchent ont disparu. Chaque carte recouvre maintenant proprement celle d’à côté, et la carte survolée passe toujours au premier plan.
+
 ## v3.12.0 — 26/10/2026
 
 ### 29 nouvelles cartes
