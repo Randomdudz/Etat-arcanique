@@ -346,7 +346,7 @@ function xSrcInfo(src){const id=String(src||'').slice(2);
 // =====================================================================================
 // ---------- interface ----------
 // images du mode (png/ui/xp-*.webp) : à renseigner quand les illustrations sont ajoutées ; sinon un emoji les remplace
-const XPIMG={};
+const XPIMG={'xp-defeat':1,'xp-ev-afk':1,'xp-ev-andorre':1,'xp-ev-banwave':1,'xp-ev-forge':1,'xp-ev-give':1,'xp-ev-kiwi':1,'xp-ev-lan':1,'xp-ev-lootbox':1,'xp-ev-louche':1,'xp-ev-mine':1,'xp-ev-nitro':1,'xp-ev-panne':1,'xp-ev-pizza':1,'xp-ev-smurf':1,'xp-ev-trolls':1,'xp-ev-vieux':1,'xp-gold':1,'xp-node-boss':1,'xp-node-chest':1,'xp-node-elite':1,'xp-node-event':1,'xp-node-fight':1,'xp-node-rest':1,'xp-node-shop':1,'xp-pat-alien':1,'xp-pat-expats':1,'xp-pat-farmer':1,'xp-pat-ravages':1,'xp-pat-toxic':1,'xp-pat-vestige':1,'xp-pat-weebos':1,'xp-pat-xeno':1,'xp-rel-box':1,'xp-rel-canette':1,'xp-rel-carton':1,'xp-rel-casque':1,'xp-rel-chaussons':1,'xp-rel-couronne':1,'xp-rel-dragodinde':1,'xp-rel-ego':1,'xp-rel-enclume':1,'xp-rel-fidelite':1,'xp-rel-lunettes':1,'xp-rel-marteau':1,'xp-rel-masque':1,'xp-rel-mug':1,'xp-rel-nitro':1,'xp-rel-oeuf':1,'xp-rel-ping5':1,'xp-rel-pizza':1,'xp-rel-pret':1,'xp-rel-replay':1,'xp-rel-sel':1,'xp-rel-serveur':1,'xp-rel-ticket':1,'xp-rel-tirelire':1,'xp-rel-usb':1,'xp-rel-valise':1,'xp-rel-vpn':1,'xp-rel-whey':1,'xp-rest-forge':1,'xp-rest-heal':1,'xp-victory':1};
 function xIco(name,em,cls){return XPIMG[name]?uiIco(name,'xpim'+(cls?' '+cls:'')):h('span',{class:'xpem'+(cls?' '+cls:'')},em)}
 const XNODE={fight:['⚔','Combat'],elite:['💀','Élite'],event:['🌀','Événement'],shop:['🛒','Marchand'],rest:['🍺','Taverne'],chest:['🎁','Coffre'],boss:['👑','Boss']};
 const XAIN=['IA simple','IA calculatrice','IA experte'];
@@ -393,7 +393,7 @@ function xCodex(){const cx=XS().meta.codex;
   modal(h('div',{class:'xp-codex'},h('h2',null,'📖 Codex de l’Expédition'),
     h('h3',null,'Reliques'),h('div',{class:'xp-cxg'},XRELK.map(id=>cx.r[id]?h('div',{class:'xp-cxi'},xRelIco(id),h('b',null,XREL[id].n),h('span',{class:'sm mut'},XREL[id].tx)):h('div',{class:'xp-cxi unk'},h('span',{class:'xrel'},'?'),h('b',null,'???'),h('span',{class:'sm mut'},XREL[id].lv>1?'Apparaît à partir du niveau '+XREL[id].lv+'.':'Pas encore trouvée.')))),
     h('h3',null,'Boss'),h('div',{class:'xp-cxg'},XBOSS.flat().map(B=>{const st=cx.b[B.b]||0;return h('div',{class:'xp-cxi'+(st?'':' unk')},st?h('span',{class:'xp-cxa'},miniAv(B.k)):h('span',{class:'xrel'},'?'),h('b',null,st?fullName(B.k):'???'),h('span',{class:'sm mut'},st?(st===2?'✔ Vaincu · ':'Rencontré · ')+B.tx:'Pas encore rencontré.'))})),
-    h('h3',null,'Événements'),h('div',{class:'xp-cxg'},XEV.map(e=>cx.e[e.id]?h('div',{class:'xp-cxi'},h('span',{class:'xrel'},e.ic),h('b',null,e.n),h('span',{class:'sm mut'},e.tx)):h('div',{class:'xp-cxi unk'},h('span',{class:'xrel'},'?'),h('b',null,'???'),h('span',{class:'sm mut'},'Pas encore vécu.'))))))}
+    h('h3',null,'Événements'),h('div',{class:'xp-cxg'},XEV.map(e=>cx.e[e.id]?h('div',{class:'xp-cxi'},XPIMG['xp-ev-'+e.id]?h('img',{class:'xp-cxe',src:uiSrc('xp-ev-'+e.id),alt:''}):h('span',{class:'xrel'},e.ic),h('b',null,e.n),h('span',{class:'sm mut'},e.tx)):h('div',{class:'xp-cxi unk'},h('span',{class:'xrel'},'?'),h('b',null,'???'),h('span',{class:'sm mut'},'Pas encore vécu.'))))))}
 
 // ---------- course en cours ----------
 function xTopBar(run){const P=XPAT[run.pat];
@@ -464,7 +464,7 @@ function xRewardEl(run,nd){const rw=nd.rw;
 // tout est choisi après un combat normal ou d'élite : retour direct à la carte (après un boss, on garde l'écran pour le bouton de changement d'acte)
 function xRwNext(run){const nd=run.node,rw=nd&&nd.rw;if(!rw||nd.t==='boss')return;if((rw.took!=null||!rw.cards.length)&&(!rw.rel.length||rw.relTook!=null))xLeaveNode(run)}
 function xEventEl(run,nd){const e=XEVK[nd.ev];
-  return h('div',{class:'panel hl xp-ev'},ph('🌀','Événement · '+e.n),h('div',{class:'xp-fl'},h('div',{class:'xp-evi'},xIco('xp-ev-'+e.id,e.ic,'huge')),
+  return h('div',{class:'panel hl xp-ev'},ph('🌀','Événement · '+e.n),h('div',{class:'xp-fl'},h('div',{class:'xp-evi'},XPIMG['xp-ev-'+e.id]?h('img',{class:'xp-evimg',src:uiSrc('xp-ev-'+e.id),alt:''}):xIco('xp-ev-'+e.id,e.ic,'huge')),
     h('div',null,h('p',{class:'xp-evt'},e.tx),h('div',{class:'xp-evc'},e.c.map((c,i)=>{const ok=!c.ok||c.ok(run);return h('button',{class:'btn'+(ok?' pri':''),disabled:!ok,onclick:()=>{xEvChoose(run,i);xSave();go('exped')}},c.t)})))))}
 function xPickEl(run,nd){const p=nd.pick,left=p.n-p.done;
   const title={rm:'Retire '+left+' carte'+(left>1?'s':'')+' de ton deck',dup:'Choisis la carte à dupliquer',up:'Choisis la carte à améliorer',gift:'Choisis ta carte'}[p.m];

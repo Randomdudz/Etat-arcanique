@@ -5,6 +5,16 @@ Journal des mises à jour, la plus récente en premier. Les annonces détaillée
 <!-- Style des notes : écrire pour les joueurs. Pas de termes techniques (fichiers, serveurs, code, noms de collections) :
      seulement ce qui change en jeu, et comment en profiter. -->
 
+## v3.13.1 — 26/10/2026
+
+### Illustrations
+- Les 29 cartes ajoutées en v3.12.0 ont leurs illustrations : Organisateur, Nomade, Éleveur, Sentinelle, Streamer, le Coach (Échauffement, Temps mort tactique), Saja (Main droite) et les 11 nouveaux sorts.
+- Le mode Expédition est illustré :
+  - une nouvelle grande carte sur l’accueil, avec son cadre, son médaillon et son image ;
+  - les icônes des cases de la carte et les portraits des 8 patrons ;
+  - 28 reliques, les 16 événements du Bazar ;
+  - la Taverne, le coffre, la victoire et la défaite.
+
 ## v3.13.0 — 26/10/2026
 
 ### Nouveau mode : l’Expédition

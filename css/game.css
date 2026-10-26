@@ -2175,10 +2175,21 @@ body{background:linear-gradient(#080d187a,#080d187a),url("../png/site-background
 /* accueil : grande carte Expédition sur toute la largeur */
 .hm.hm-exped{--c1:#123a2c;--c2:#071a14;--b1:#2a8a5c;--b2:#145034;--mc:#1d7a4e;--gl:#40d09055;grid-column:1/-1;min-height:0;display:grid;grid-template-columns:minmax(260px,40%) 1fr;grid-template-areas:"art ban" "art desc" "art more";column-gap:30px;align-items:center;
   background:radial-gradient(120% 80% at 70% 0%,#2a6a4a55,transparent 60%),linear-gradient(180deg,#123a2c,#071a14);border:2px solid #d9b46a;border-radius:12px;box-shadow:inset 0 0 0 4px #04140e,inset 0 0 0 5px #c99a4a99,0 14px 34px #000b,0 0 26px var(--gl);padding:56px 30px 28px}
-.hm-exped .hm-art{grid-area:art;height:100%;min-height:230px;background:radial-gradient(circle at 50% 45%,#2c5a44,#0b2018 70%);display:grid;place-items:center}
-.hm-exped .hm-art::before{content:'🧭';font-size:96px;filter:drop-shadow(0 6px 12px #000c);position:relative;z-index:1}
+.hm-exped .hm-art{grid-area:art;height:100%;min-height:230px;background:#0b2018 url("../png/home-expedition.webp") 50% 45%/cover no-repeat}
 .hm-exped .hm-banw{grid-area:ban;margin:0 0 0 -10px;max-width:520px;justify-self:center;width:100%}
 .hm-exped .hm-desc{grid-area:desc;font-size:15px;max-width:640px;justify-self:center}
 .hm-exped .hm-medal{left:50%}
 @media (max-width:760px){.hm.hm-exped{grid-template-columns:1fr;grid-template-areas:"art" "ban" "desc" "more"}.hm-exped .hm-art{min-height:160px;margin-bottom:-10px}
   .xp-cols,.xp-mapcols{grid-template-columns:1fr}.xp-btns{margin-left:0}.xp-hp{width:160px}}
+/* Expédition : illustrations (png/ui/xp-*) */
+.hm.hm-exped{background:url("../png/ui/hm-panel-vert.webp") center/100% 100% no-repeat;border:0;box-shadow:0 14px 34px #000b,0 0 26px var(--gl);padding:60px 54px 40px}
+.xp-evimg{width:320px;max-width:100%;border-radius:12px;border:2px solid #c9a35a;box-shadow:0 8px 20px #000a}
+.xp-evi:has(.xp-evimg){width:auto}
+.xp-cxe{grid-row:1/3;width:64px;height:42px;object-fit:cover;border-radius:6px;border:1px solid #7a6a4f}
+.xp-pati:has(.xpim){background:none;border:0}
+.xp-pati .xpim.big{width:62px;height:62px}
+.xrel:has(.xpim){background:radial-gradient(circle,#2a2418,#100c08)}
+.xrel .xpim{width:100%;height:100%;padding:2px}
+.xp-nd .xpim{width:34px;height:34px}
+.xp-relt .xpim.big{width:64px;height:64px}
+.xp-ovi .xpim.huge,.xp-relt .xpim.huge{width:170px;height:170px}
