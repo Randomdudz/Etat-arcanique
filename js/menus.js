@@ -3,7 +3,7 @@ var CUR='play';let DECKI=null,FR_T=0,CT='cards';
 // filtres : q (recherche), t/r/cost = un choix parmi ceux cochés (OU), fac/aff/kw = tous ceux cochés (ET), own = possédées, sort = tri
 const CF={q:'',t:[],r:[],cost:[],fac:[],aff:[],kw:[],own:false,sort:'cost'},DF={q:'',t:[],r:[],cost:[],fac:[],aff:[],kw:[],own:true,sort:'cost'};
 const TABS=[['play','Jouer','play'],['shop','Boutique','shop'],['coll','Collection','coll'],['decks','Decks','decks'],['friends','Amis','friends'],['acct','Compte','acct'],['code','Code','code']];
-const TABART={play:'png/nav-play.png',shop:'png/nav-shop.png',coll:'png/nav-collection.png',decks:'png/nav-decks.png',friends:'png/nav-friends.png',acct:'png/nav-account.png',code:'png/nav-code.png'};
+const TABART={play:'png/ui/nav-play.webp',shop:'png/ui/nav-shop.webp',coll:'png/ui/nav-collection.webp',decks:'png/ui/nav-decks.webp',friends:'png/ui/nav-friends.webp',acct:'png/ui/nav-account.webp',code:'png/ui/nav-code.webp'};   // recadrées sur leur contenu : même taille visible
 const THUE={play:['#d9a24e','#24170a'],shop:['#2f8fe0','#fff'],coll:['#2f8fe0','#fff'],decks:['#2f8fe0','#fff'],friends:['#d6409a','#fff'],acct:['#8a72e0','#fff'],code:['#3fae7a','#fff']};
 function refreshTop(){const g=$('#gemn');if(g)g.textContent=S.gems;const n=$('#pname');if(n){n.replaceChildren(avEl(S.av,S.name,'tav'),h('span',null,S.name||''));n.title=(S.name||'')+' · ton compte'}
   const c=$('#accb');if(c){c.textContent=ACC?(ACC_ST==='err'?'⚠️':ACC_ST==='sync'?'⏳':'☁️'):'';c.title=ACC?'Compte '+ACC.id+' · '+accStTxt():'';c.hidden=!ACC}}
@@ -658,7 +658,7 @@ function vCode(v){
   const go_=()=>{const r=redeemCode(i.value);i.value='';
     out.innerHTML='';out.append(r.ok?h('div',{style:'color:#a4db99;font-weight:800'},r.all?(r.n?'✔ Code valide : toute la collection est débloquée ('+r.n+' cartes ajoutées) !':'✔ Code valide : tu possèdes déjà toute la collection.'):'✔ Code valide : +'+r.n+' 💎 ajoutés !'):h('div',{style:'color:#bc8c94;font-weight:700'},'Code invalide.'));refreshTop()};
   i.addEventListener('keydown',e=>{if(e.key==='Enter')go_()});
-  v.append(h('div',{class:'panel hl',style:'max-width:620px'},ph('code','Code'),h('p',{class:'mut sm',style:'margin:0 0 10px'},'Entre un code pour recevoir des 💎 ou débloquer toute la collection (réservé aux tests).'),
+  v.append(h('div',{class:'panel hl narrow'},ph('code','Code'),h('p',{class:'mut sm',style:'margin:0 0 10px'},'Entre un code pour recevoir des 💎 ou débloquer toute la collection (réservé aux tests).'),
     h('div',{class:'row'},i,h('button',{class:'btn pri',onclick:go_},'Valider')),out))}
 
 // ---------- COMPTE : sauvegarde en ligne et transfert de la progression ----------
@@ -672,14 +672,14 @@ function askImport(st,src){ask('Remplacer ta progression ?','La progression de '
   [{t:'Annuler'},{t:'Remplacer',c:'pri',f:()=>{importSave(st);toast('✔ Progression importée.');refreshTop();go('acct')}}])}
 // choix de l'avatar : visible en duel par les deux joueurs
 function avatarPanel(){
-  const pan=h('div',{class:'panel',style:'max-width:700px'},ph('acct','Avatar'),h('p',{class:'mut sm',style:'margin:0 0 10px'},'Ton portrait en duel. Ton adversaire le voit aussi.'));
+  const pan=h('div',{class:'panel narrow'},ph('acct','Avatar'),h('p',{class:'mut sm',style:'margin:0 0 10px'},'Ton portrait en duel. Ton adversaire le voit aussi.'));
   const grid=h('div',{class:'avgrid'}),pick=k=>{S.av=k;saveS();draw()};
   const draw=()=>grid.replaceChildren(
     h('button',{class:'avc'+(avOk(S.av)?'':' on'),title:'Initiale de ton pseudo',onclick:()=>pick('')},h('span',{class:'avl'},(S.name||'?').trim().charAt(0).toUpperCase()),h('small',null,'Initiale')),
     ...AVATARS.map(([k,n])=>h('button',{class:'avc'+(S.av===k?' on':''),title:n,onclick:()=>pick(k)},h('img',{src:uiSrc('av-'+k),alt:'',draggable:'false'}),h('small',null,n))));
   draw();pan.append(grid);return pan}
 function vAcct(v){
-  const pan=h('div',{class:'panel hl',style:'max-width:700px;--h:'+THUE.acct[0]},ph('acct',cloudOn()?'Compte en ligne':'Compte'));
+  const pan=h('div',{class:'panel hl narrow',style:'--h:'+THUE.acct[0]},ph('acct',cloudOn()?'Compte en ligne':'Compte'));
   if(!cloudOn()){const k=locSession(),a=k&&locAll()[k];
     pan.append(h('p',{style:'margin:0 0 6px'},'Connecté avec le compte local ',h('b',null,a?a.id:'?'),'.'),
       h('p',{class:'mut sm'},'Ce compte et sa progression restent sur cet ordinateur. Les comptes en ligne (pour retrouver ta collection partout) s’activent dès que le fichier ',h('b',null,'cloud-config.js'),' à côté du jeu est rempli. En attendant, le transfert ci-dessous emporte ta progression sur un autre ordinateur.'),
@@ -714,7 +714,7 @@ function vAcct(v){
   const file=h('input',{type:'file',accept:'.json,application/json,text/plain',style:'display:none'});
   file.addEventListener('change',()=>{const f=file.files&&file.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const st=readSave(r.result);file.value='';if(!st){toast('Fichier de sauvegarde invalide.');return}askImport(st,'ce fichier')};r.readAsText(f)});
   let bak=null;try{bak=localStorage.getItem(BAK_KEY)}catch(e){}
-  const tr=h('div',{class:'panel',style:'max-width:700px'},ph('decks','Transférer sans compte'),
+  const tr=h('div',{class:'panel narrow'},ph('decks','Transférer sans compte'),
     h('p',{class:'mut sm',style:'margin:0 0 10px'},'Sur l’ancien ordinateur, copie ton code de sauvegarde (ou télécharge le fichier). Sur le nouveau, colle le code (ou ouvre le fichier) ici.'),
     h('div',{class:'row'},h('button',{class:'btn pri',onclick:()=>{code.value=saveCode();code.select();try{navigator.clipboard.writeText(code.value).then(()=>toast('✔ Code copié.'),()=>toast('Code prêt : copie-le (Ctrl+C).'))}catch(e){toast('Code prêt : copie-le (Ctrl+C).')}}},'📋 Copier mon code de sauvegarde'),
       h('button',{class:'btn',onclick:()=>dlFile('etat-arcanique-sauvegarde-'+today()+'.json',JSON.stringify(S))},'⬇ Télécharger le fichier')),code,

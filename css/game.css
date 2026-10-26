@@ -1386,7 +1386,7 @@ body{background:#060c17}
 /* titres : médaillon doré, petites capitales, filet avec losange */
 #app .panel h3,#modal .panel h3{font-family:var(--disp);font-weight:700;font-size:22px;letter-spacing:.05em;font-variant:small-caps;color:#f3e7cc;border:0;padding-bottom:0;margin-bottom:14px;text-shadow:0 2px 6px #000a}
 #app .panel h3:has(.pi){position:relative;padding-bottom:14px;gap:16px}
-#app .panel h3:has(.pi)::after{content:'';position:absolute;left:64px;right:0;bottom:0;height:12px;
+#app .panel h3:has(.pi)::after{content:'';position:absolute;left:0;right:0;bottom:0;height:12px;
   background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='12' viewBox='0 0 22 12'%3E %3Cpath d='M11 1 L16 6 L11 11 L6 6 Z' fill='%23e9cd86' stroke='%232a1d0a' stroke-width='.6'/%3E%3Cpath d='M11 3.6 L13.4 6 L11 8.4 L8.6 6 Z' fill='%23fff2c8' opacity='.8'/%3E %3Ccircle cx='2.5' cy='6' r='1.2' fill='%23e9cd86'/%3E%3Ccircle cx='19.5' cy='6' r='1.2' fill='%23e9cd86'/%3E%3C/svg%3E") center/22px 12px no-repeat,linear-gradient(90deg,transparent,#c9a35a 10%,#c9a35a 46%,transparent 46.6%,transparent 53.4%,#c9a35a 54%,#c9a35a 90%,transparent) center/100% 1px no-repeat}
 #app .panel h3 .pi{position:relative;width:48px;height:48px;border-radius:50%;font-size:23px;color:#ecd08a;background:radial-gradient(circle at 50% 30%,#22426e,#0b1a30 70%);
   border:2px solid #d8b56c;box-shadow:0 0 0 3px #07101d,0 0 0 4px #c9a35a66,0 4px 12px #000b,inset 0 0 12px #000a;text-shadow:none}
@@ -2231,3 +2231,32 @@ body{background:linear-gradient(#080d187a,#080d187a),url("../png/site-background
 .xp-fgc .fgd{font-size:12.5px;color:#cfd6e2;text-align:center;min-height:2.6em;line-height:1.3}
 .hst.handc.peek{cursor:pointer;outline:2px solid #6fb4ff;border-radius:8px}
 .card .upb{letter-spacing:-.15em}
+/* v3.14.1 : harmonisation des placements (icônes de navigation, accueil, panneaux, boutons principaux) */
+#nav .ni:has(.nav-art){width:36px;height:36px}
+#nav .nav-art{width:36px;height:36px}
+@media(max-width:1320px){#nav .ni:has(.nav-art),#nav .nav-art{width:31px;height:31px}}
+.hm.hm-exped{grid-template-columns:minmax(260px,42%) 1fr;grid-template-rows:auto 1fr;grid-template-areas:"ban ban" "art desc";row-gap:16px;column-gap:34px;align-items:center}
+.hm,.hm.hm-exped{box-shadow:none;filter:drop-shadow(0 12px 18px #000b)}   /* l'ombre suit le cadre au lieu d'un rectangle */
+.hm-exped .hm-banw{grid-area:ban;justify-self:center;width:min(560px,72%);max-width:none;margin:0 0 2px}
+.hm-exped .hm-desc{grid-area:desc;margin:0;justify-self:center;align-self:center}
+.hm-exped .hm-art{grid-area:art;min-height:220px}
+@media (max-width:760px){.hm.hm-exped{grid-template-columns:1fr;grid-template-rows:none;grid-template-areas:"ban" "art" "desc"}.hm-exped .hm-banw{width:100%}}
+#app .panel.narrow{max-width:860px;margin-left:auto;margin-right:auto}
+#app .row.cta{justify-content:center}
+#app .row.cta .btn.big{min-width:min(420px,100%);font-size:20px}
+.xp-pats{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media (max-width:900px){.xp-pats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+#app .arw{grid-template-columns:repeat(5,1fr)}
+#app .panel.narrow .avgrid{grid-template-columns:repeat(6,minmax(0,1fr))}
+@media (max-width:700px){#app .panel.narrow .avgrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+/* barre du haut : tout tient sans débordement entre 1100 et 1280 px de large (le compteur de 💎 n'est plus coupé) */
+@media (max-width:1279px){#top .logo b{font-size:18px;letter-spacing:.03em}#top .logo .emb{width:36px;height:36px}#appver{display:none}}
+/* Expédition : le contenu des cases est centré dans son panneau, comme le reste du jeu */
+#app .xp-pick{justify-content:center}
+.xp-relc,.xp-restc,.xp-rwl{justify-content:center}
+.xp-h3{text-align:center}
+.xp-rest>p,.xp-shop>p,.xp-ev>p.xp-evt{text-align:center}
+.xp-ev>.btn{display:block;margin-left:auto;margin-right:auto}
+.xp-ev .xp-fl{justify-content:center;align-items:center}
+.xp-ev .xp-fl>div:last-child{max-width:640px}
+#app .panel h3.xp-h3{justify-content:center;text-align:center}

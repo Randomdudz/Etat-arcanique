@@ -459,7 +459,7 @@ function xHub(v){const M=XS().meta,lv=xLevel(M.xp),nx=EXP.xpLv[lv]||null,pv=EXP.
     M.tilt<10?h('span',{class:'sm mut'},'Termine une Expédition pour débloquer le Tilt '+(M.tilt+1)+'.'):null);
   const tlx=XUI.tilt?h('ul',{class:'xp-tiltl sm'},XTILT.slice(0,XUI.tilt).map((t,i)=>h('li',null,h('b',null,'Tilt '+(i+1)+' : '),t))):null;
   const start=h('div',{class:'panel'},ph('play','Nouvelle course'),pats,tl,tlx,
-    h('div',{class:'row',style:'margin-top:14px'},h('button',{class:'btn gold big',onclick:()=>{XS().run=xNewRun({pat:XUI.pat,tilt:XUI.tilt});xSave();go('exped')}},'🧭 Partir en expédition avec '+XPAT[XUI.pat].n+(XUI.tilt?' · Tilt '+XUI.tilt:''))));
+    h('div',{class:'row cta',style:'margin-top:14px'},h('button',{class:'btn gold big',onclick:()=>{XS().run=xNewRun({pat:XUI.pat,tilt:XUI.tilt});xSave();go('exped')}},'🧭 Partir avec '+XPAT[XUI.pat].n+(XUI.tilt?' · Tilt '+XUI.tilt:''))));
   const d=xDailyKey(),D=M.daily.d===d?M.daily:{done:0,best:0,won:0},dp=xDailyPat(d);
   const daily=h('div',{class:'panel xp-daily'},ph('📅','Défi du jour',d.split('-').reverse().join('/')),
     h('p',{class:'sm mut'},'Même patron, même carte, mêmes récompenses pour tout le monde aujourd’hui. Toutes les reliques sont disponibles, sans Tilt. Une seule tentative par jour : '+(EXP.gemDaily)+' 💎 si tu termines.'),
@@ -617,7 +617,8 @@ function xDuelStrip(V){if(!V||!V.o.exped)return null;const run=XS().run;if(!run)
     F?h('span',{class:'xp-sl foe'},'vs'):null,F?xFoeRules(F).map(r=>h('span',{class:'xrel kw foe','data-t':r.n,'data-d':r.tx},r.ic)):null)}
 function xDuelIntro(){const run=XS().run,F=run&&run.node&&run.node.F;if(!F)return;const R=xFoeRules(F);
   const el=h('div',{class:'xp-intro',onclick:()=>el.remove()},h('h3',null,F.nm+' · '+F.hp+' PV'),R.length?R.map(r=>h('div',{class:'xp-ru'+(r.good?' good':'')},h('span',{class:'xp-rui'},r.ic),h('div',null,h('b',null,r.n),h('span',null,r.tx)))):h('p',null,'Aucun bonus particulier.'),h('small',null,'Clique pour fermer · les bonus restent visibles en haut à droite'));
-  const d=$('#duel');if(d){d.append(el);setTimeout(()=>el.remove(),9000)}}
+  let n=0;const show=()=>{const d=$('#duel');if(!d)return;const mo=$('#mullov');if(mo&&getComputedStyle(mo).display!=='none'&&n++<200){setTimeout(show,300);return}   // après le mulligan, pas derrière sa fenêtre
+    d.append(el);setTimeout(()=>el.remove(),9000)};show()}
 // ---------- carte de l'accueil ----------
 function expHomeCard(){const X=XS(),run=X.run,M=X.meta,d=xDailyKey(),dd=M.daily.d===d&&M.daily.done;
   return homeCard({k:'exped',icon:'compass',title:'Expédition',
