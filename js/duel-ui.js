@@ -59,6 +59,7 @@ function mountDuel(){
         h('div',{class:'pile2 opp'},h('div',{class:'deck opp',id:'dkOpp'}),h('div',{class:'grave opp',id:'gvOpp'}),h('div',{class:'arts opp',id:'aOpp'})),
         h('div',{class:'pile2 me'},h('div',{class:'arts me',id:'aMe'}),h('div',{class:'acts',id:'acts'}),h('div',{class:'grave me',id:'gvMe'}),h('div',{class:'deck me',id:'dkMe'}))),
       h('aside',{id:'hist'},h('div',{id:'hlist'}),duelChat())));
+  if(DUEL.mode==='exped'&&typeof xDuelStrip==='function'){const st=xDuelStrip({o:{exped:1}});if(st)$('.dtr',el).prepend(st)}   // Expédition : reliques et règle de l'adversaire dans la barre du haut
   const aim=h('div',{id:'aim'});aim.innerHTML='<svg width="100%" height="100%"><path class="ab"/><path class="al"/><polygon class="ah"/></svg>';el.append(aim);
   DUEL.onMove=e=>{const D=DUEL;if(!D)return;D.mx=e.clientX;D.my=e.clientY;if(!D.aimRaf)D.aimRaf=requestAnimationFrame(()=>{if(DUEL){DUEL.aimRaf=0;aimDraw()}})};
   window.addEventListener('pointermove',DUEL.onMove,{passive:true});
@@ -89,7 +90,7 @@ function leaveDuel(){
 function duelMenu(){
   const D=DUEL;if(!D||!D.V)return;
   if(D.V.over){leaveDuel();return}
-  ask('Quitter le duel ?','Si tu abandonnes, tu perds le duel.',[{t:'Continuer'},{t:S.lowfx?'✨ Effets visuels complets':'🍃 Effets visuels réduits',f:()=>{S.lowfx=!S.lowfx;saveS()}},{t:'Abandonner',c:'danger',f:()=>{D.ctl.resign();if(D.mode==='guest'){setTimeout(()=>{if(DUEL===D&&!(D.V&&D.V.over))leaveDuel()},1500)}}}])}
+  ask('Quitter le duel ?',D.V.o.exped?'Si tu abandonnes, tu perds le combat et ton expédition s’arrête.':'Si tu abandonnes, tu perds le duel.',[{t:'Continuer'},{t:S.lowfx?'✨ Effets visuels complets':'🍃 Effets visuels réduits',f:()=>{S.lowfx=!S.lowfx;saveS()}},{t:'Abandonner',c:'danger',f:()=>{D.ctl.resign();if(D.mode==='guest'){setTimeout(()=>{if(DUEL===D&&!(D.V&&D.V.over))leaveDuel()},1500)}}}])}
 
 function mine(){const V=DUEL.V;return V.cur===V.me&&!V.over&&!V.phase}
 function updTimer(){
@@ -210,7 +211,7 @@ function renderDuel(){
   discNode();
   if(D.started)animate(D.newE);else{D.started=true;banner(m?'À TOI DE JOUER':'TOUR ADVERSE',m?'#e9cd86':'#c45f5b')}
   D.newE=[];
-  if(V.over&&!D.overShown){D.overShown=true;if(V.o.arena&&!D.arenaRes)D.arenaRes=arenaAfterDuel(V,D);setTimeout(showResult,1600*ANIM)}}   // Arène : le résultat compte dès la fin de la partie
+  if(V.over&&!D.overShown){D.overShown=true;if(V.o.arena&&!D.arenaRes)D.arenaRes=arenaAfterDuel(V,D);if(V.o.exped&&typeof expAfterDuel==='function')expAfterDuel(V,D);setTimeout(showResult,1600*ANIM)}}   // Arène, Expédition : le résultat compte dès la fin de la partie
 
 // zone d'artefacts d'un joueur (Dofus légendaires de Gobi ; les futures cartes Artefact s'y poseront)
 function artsNode(s,el){if(!el)return;const V=DUEL.V,P=V.p[s],A=P.arts||[];
@@ -965,6 +966,7 @@ function animate(es){
     case 'buff':popAt(e.ts,e.i,e.tmp?sg(e.ba)+' ATK ce tour':sg(e.ba)+'/'+sg(e.bh),'buf',t);fxBuff(e.ts,e.i,e.ba<0||e.bh<0,t);t+=110;break;
     case 'tilt':flashSlot(e.ts,e.i,'#ba574e',t+120);fxTilt(e.ts,e.i,t+120);popAt(e.ts,e.i,'😡 Tilt !','txt',t+120);t+=320;break;
     case 'egide':shatter(e.ts,e.i,t+280);popAt(e.ts,e.i,'✧ Égide brisée','txt',t+280);t+=160;break;
+    case 'rx':{const x=typeof xSrcInfo==='function'&&e.src?xSrcInfo(e.src):null,nm=x?x.n:e.src&&CARDS[e.src]?CARDS[e.src].n:'';popAt(e.ts,-1,(x?x.ic+' ':'💀 ')+(nm?nm+' : ':'')+(e.tx||''),'txt',t);t+=420;break}
     case 'kwg':popAt(e.ts,e.i,(KWI[e.kw]?[kwIco(e.kw),' '+KWI[e.kw][0]]:e.kw),'buf',t);fxBuff(e.ts,e.i,false,t);t+=100;break;
     case 'deso':popAt(1-e.ts,e.i,'💫 au hasard','txt',t);t+=200;break;
     case 'ctl':popAt(e.to,e.ti,'⇄ change de camp','txt',t);t+=250;break;
@@ -1065,6 +1067,7 @@ function srcChip(src){
   if(src==='venin')return chip(uiIco('kw-venin','ti'),'Venin','#a6ba69');
   if(src==='fat')return chip('🥵','Fatigue','#ca7f60');
   if(src==='ev')return chip('🌀','Événement','#dab77a');
+  if(typeof src==='string'&&src.slice(0,2)==='x:'&&typeof xSrcInfo==='function'){const x=xSrcInfo(src);if(x)return chip(x.ic,x.n,x.c)}   // Expédition : relique, patron, règle de l'adversaire
   return chip('💥','Effet','#a69d91')}
 // « par … » : la cause de l'événement quand elle est connue (et différente de la créature concernée)
 // héros concerné quand ce n'est pas celui qui joue (pioche ou défausse de l'adversaire...)
@@ -1097,6 +1100,7 @@ function histNodes(e){
   case 'mute':return['ctl',[by(e),h('span',{class:'vb'},'🔇'),mini(e.k,e.st),'Mute']];
   case 'blk':return['ctl',[by(e),h('span',{class:'vb'},'🔒'),mini(e.k,e.st),'Bloquée']];
   case 'kick':return['ctl',[by(e),h('span',{class:'vb'},'⤴'),h('span',{class:'vt'},'Kick :'),mini(e.k),'retourne dans la main']];
+  case 'rx':return['sys',[e.src?srcChip(e.src):null,who(e)||heroChip(e.ts),e.tx||'',e.k?mini(e.k):null]];   // Expédition : effet d'une relique ou d'une règle d'adversaire
   case 'egide':return['buff',[h('span',{class:'vb'},uiIco('kw-egide','ti')),mini(e.k),'Égide : dégâts annulés']];
   case 'steal':return['card',[by(e),h('span',{class:'vb'},'📸'),e.k?mini(e.k):'copie une carte']];
   case 'exil':return['move',e.fum?[h('span',{class:'vb'},e.fum===2?'🛂':'💨'),mini(e.k),e.fum===2?'immunité diplomatique (inciblable)':'disparaît dans la fumée (inciblable)']:[h('span',{class:'vb'},'✈️'),mini(e.k),'part à l’étranger',e.n?h('span',{class:'cst'},'−'+e.n+' ',uiIco('ico-or','ti')):'(gratuit)']];
@@ -1175,18 +1179,21 @@ function showResult(){
   const D=DUEL;if(!D||!D.V)return;const V=D.V,me=V.me,w=V.over.w,win=w===me,draw=w<0;
   let rw=null;if(V.o.rw&&!D.rewarded){D.rewarded=true;rw=rewardDuel(win)}
   const ar=V.o.arena?(D.arenaRes||(D.arenaRes=arenaAfterDuel(V,D))):null;
+  const xr=V.o.exped&&typeof expAfterDuel==='function'?expAfterDuel(V,D):null;
   if(V.o.duelQueue&&!D.dqDone){D.dqDone=true;duelQueueFinished()}
   const box=h('div',{style:'text-align:center'},
     h('h2',{style:'font-size:34px;color:'+(win?'#dcc38d':draw?'#fff':'#c07772')},draw?'Égalité':win?'Victoire !':'Défaite'),
     h('p',{class:'mut'},V.over.res?(win?'Ton adversaire a abandonné.':'Tu as abandonné.'):V.over.lose?(win?'Son Dreos (Surrender to madness) est mort : il perd la partie.':'Ton Dreos (Surrender to madness) est mort : tu perds la partie.'):win?'L’État Arcanique est à toi.':'Ton adversaire a eu le dernier mot.'),
     rw?h('div',{class:'panel'},h('div',{style:'font-size:24px;font-weight:800'},'+'+rw.gain+' 💎'),
       h('div',{class:'mut sm'},(win?'Victoire : '+rw.base:'Participation : '+rw.base)+(rw.bonus?' · 1re victoire du jour : +'+rw.bonus:'')+(rw.capped?' · plafond quotidien atteint ('+ECON.cap+')':''))):
-      (V.o.rw||V.o.arena?null:h('p',{class:'mut sm'},'Duel amical : pas de récompense.')),
+      (V.o.rw||V.o.arena||V.o.exped?null:h('p',{class:'mut sm'},'Duel amical : pas de récompense.')),
+    xr?h('div',{class:'panel arres'},h('div',{style:'font-size:20px;font-weight:800'},'🧭 Expédition'),h('div',{class:'mut sm',style:'margin-top:6px'},xr.over?(xr.run.over.won?'Le Raid final est tombé : expédition réussie !':'Ton expédition s’arrête ici.'):'Il te reste '+xr.run.hp+' / '+xr.run.mhp+' PV. Ta récompense t’attend.')):null,
     ar?h('div',{class:'panel arres'},h('div',{style:'font-size:20px;font-weight:800'},'⚔ Arène : '+ar.w+' V – '+ar.l+' D'),arenaPips(ar.w,ar.l),
       ar.over?h('div',{style:'margin-top:8px;font-size:18px;font-weight:800;color:#f1c96a'},'Course terminée : +'+ar.g+' 💎'):h('div',{class:'mut sm',style:'margin-top:6px'},ar.redraft?'Choisis 5 remplaçantes, puis les cartes qu’elles remplaceront.':'La course continue : tu peux rejouer avec ton deck actuel.')):null,
     h('div',{class:'row',style:'justify-content:center;margin-top:12px'},
       D.mode==='ai'?h('button',{class:'btn pri',style:'--h:#73b0ad;--ht:#241e17',onclick:()=>{const di=D.deck;leaveDuel();startAIDuel(di)}},'Rejouer'):null,
       V.o.arena?h('button',{class:'btn pri',onclick:()=>{leaveDuel();go('arena')}},'Retour à l’Arène'):null,
+      V.o.exped?h('button',{class:'btn pri',onclick:()=>{leaveDuel();go('exped')}},xr&&xr.over?'Voir le bilan de l’expédition':'Continuer l’expédition'):null,
       V.o.duelQueue&&!V.o.arena?h('button',{class:'btn pri',onclick:()=>{leaveDuel();duelQueueStart()}},'Chercher un autre adversaire'):null,
       h('button',{class:'btn',onclick:leaveDuel},'Retour au menu')));
   modal(box,{sticky:true});if(typeof refreshTop==='function')refreshTop()}

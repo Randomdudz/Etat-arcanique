@@ -5,6 +5,38 @@ Journal des mises à jour, la plus récente en premier. Les annonces détaillée
 <!-- Style des notes : écrire pour les joueurs. Pas de termes techniques (fichiers, serveurs, code, noms de collections) :
      seulement ce qui change en jeu, et comment en profiter. -->
 
+## v3.13.0 — 26/10/2026
+
+### Nouveau mode : l’Expédition
+Un roguelite solo, gratuit, accessible depuis la nouvelle grande carte verte de l’accueil. Toutes les cartes du jeu peuvent apparaître, quelle que soit ta collection.
+
+- **Le départ** : choisis un patron, puis pars avec un deck de 15 cartes autour de sa famille et 40 PV.
+  - 4 patrons sont disponibles d’entrée : le Fermier, le Rageux, le Zergueur et le Vétéran.
+  - 4 autres se débloquent en jouant : l’Expat, le Weeb, l’Envahisseur et le Xéno.
+  - Chaque patron a un pouvoir pour toute la course.
+- **La carte** : 3 actes de 7 étages, sur une carte à embranchements, puis le Raid final.
+  - À chaque étage, choisis ta prochaine case parmi celles reliées à la tienne : combat, élite, événement, Marchand, Taverne ou coffre.
+  - Chaque acte a ses terrains : Dofus, puis LoL, puis CS, et WoW pour le Raid final.
+- **Tes PV ne remontent pas tout seuls.** Tu te soignes aux Tavernes, grâce à certaines reliques ou certains événements, et après les boss des actes 1 et 2.
+- **Les récompenses** : après chaque victoire, tu gagnes de l’Or et tu ajoutes une carte parmi 3 à ton deck, ou tu passes. Les élites donnent aussi une relique, les boss une relique de boss.
+- **30 reliques** qui changent les règles en combat : Casque RGB, Marteau de modo, Abonnement Nitro, Replay, Couronne du serveur… dont 5 reliques maudites, puissantes mais avec un défaut. De nouvelles reliques apparaissent quand ton niveau d’Expédition monte.
+- **La forgemagie**, à la Taverne ou lors de certains événements : améliore une carte pour toute la course. Elle gagne +1/+1 ou coûte 1 de moins, et une ★ dorée la signale.
+- **16 événements du Bazar** avec des choix risqués : Soirée pizza, Marchand louche, Lootbox, Tournoi de LAN, Kiwi le chat…
+- **Des élites et des boss avec leurs propres règles** :
+  - acte 1 : l’Organisateur (un événement du Bazar à chacun de ses tours) ou le Coach ;
+  - acte 2 : Saja (Balance) ou Haddmi (tir d’élite) ;
+  - acte 3 : Kirua (crash du serveur) ou Simon ;
+  - Raid final : Minuit, Chef de raid, qui appelle son raid à 20 PV.
+- **Une difficulté qui monte** : les ennemis ont de meilleurs decks et une IA plus forte d’acte en acte. Chaque Expédition terminée débloque le niveau de **Tilt** suivant, jusqu’au Tilt 10, chacun avec un handicap de plus.
+- **Le défi du jour** : même patron, même carte et mêmes récompenses pour tout le monde. Une tentative par jour, 25 💎 si tu le termines.
+- **À gagner** :
+  - 10, 20 puis 30 💎 pour les boss des actes, et 60 💎 pour le Raid final, +10 par niveau de Tilt ;
+  - de l’XP d’Expédition ;
+  - un codex des reliques, boss et événements découverts ;
+  - l’historique de tes dernières courses.
+- **La course se sauvegarde après chaque étape.** Si tu quittes pendant un combat, il recommence à l’identique.
+- En combat, tes reliques et la règle de ton adversaire sont visibles dans la barre du haut, et leurs effets apparaissent dans l’historique.
+
 ## v3.12.1 — 26/10/2026
 
 ### Correctif

@@ -25,13 +25,17 @@ function newGame(cfg){
   for(let s=0;s<2;s++){
     const P={nm:(cfg.names&&cfg.names[s])||('Joueur '+(s+1)),av:String((cfg.avs&&cfg.avs[s])||'').slice(0,16),hp:o.hp,mhp:o.hp,pz:0,deck:[],hand:[],board:Array(CELLS).fill(null),
       grave:[],terrs:[],cells:Array(CELLS).fill(0),cap:0,eth:0,or:0,fat:0,rsh:0,arts:[],pq:[]};
+    if(cfg.hp&&cfg.hp[s]!=null){P.hp=cfg.hp[s];P.mhp=cfg.mhp&&cfg.mhp[s]!=null?cfg.mhp[s]:Math.max(o.hp,P.hp)}   // Expédition : PV de départ et maximum propres à chaque camp
+    if(cfg.rx&&cfg.rx[s])P.rx=cfg.rx[s];                                                                        // Expédition : reliques, pouvoir du patron, règles d'élite ou de boss
     P.deck=cfg.decks[s].map(e=>mkCard(G,String(e).replace('*','')));
     shuf(G,P.deck);G.p.push(P)}
-  if(o.ter){G.tdeck=shuf(G,TDEF.filter(t=>!t.uniq).map(t=>({d:t.d})));G.shop=[];for(let j=0;j<2;j++){const t=drawTerr(G);if(t)G.shop.push(t)}}
+  if(o.ter){G.tdeck=shuf(G,TDEF.filter(t=>!t.uniq&&(!o.tg||TD[t.d].g===o.tg||TD[t.d].g==='bazar')).map(t=>({d:t.d})));   // o.tg (Expédition) : terrains du jeu de l'acte, plus ceux du Bazar
+  G.shop=[];for(let j=0;j<2;j++){const t=drawTerr(G);if(t)G.shop.push(t)}}
   G.nev=ri(G,EVENTS.length);
   for(let s=0;s<2;s++){const n=s===G.first?3:4;const P=G.p[s];for(let j=0;j<n;j++){const c=P.deck.pop();if(c)P.hand.push(c)}}
+  if(G.p[0].rx||G.p[1].rx)rxStart(G);
   const sec=G.p[1-G.first];
-  if(o.comp){sec.or+=COMP.or;if(!o.arena){sec.hp+=COMP.hp;sec.mhp+=COMP.hp}}   // compensation du second joueur (en Arène : pas de PV bonus)
+  if(o.comp){sec.or+=COMP.or;if(!o.arena&&!o.exped){sec.hp+=COMP.hp;sec.mhp+=COMP.hp}}   // compensation du second joueur (en Arène : pas de PV bonus)
   // mulligan : chaque joueur choisit d'abord les cartes de sa main de départ à remplacer (la Pièce arrive après)
   if(cfg.mull){G.phase='mull';G.mull=[0,0];G.cur=G.first;return G}
   sec.hand.push(mkCard(G,'piece'));
@@ -144,6 +148,7 @@ function eff(G,s,i,L){
   if(!c.mut&&cd.withB&&P.board.some(b=>b&&b!==c&&CARDS[b.k].base===cd.withB.b)){a+=cd.withB.a;h+=cd.withB.h}   // Maki : +1/+2 avec un Osiris
   if(!c.mut&&cd.allFamActive){const fams=new Set();P.board.forEach(b=>{if(b&&CARDS[b.k].fac)CARDS[b.k].fac.forEach(f=>fams.add(f))});a+=fams.size;h+=fams.size}
   const au=auraOf(G,s,i,c);a+=au.a;h+=au.h;
+  const R=P.rx;if(R){if(R.atk)a+=R.atk;if(R.atk3&&P.board.filter(Boolean).length>=3)a+=R.atk3}   // Expédition : +ATK de camp (relique, patron, élite)
   return{a:a<0?0:a,h,hp:h-c.dm,kw:kwOf(G,s,c,L,TE,T),T,TE,cu}}
 // valeur approximative d'un effet de terrain (IA)
 function tval(TE){if(!TE)return 0;let v=(TE.a||0)*1.1+(TE.h||0)*.9;
@@ -199,7 +204,8 @@ function canAtk(G,s,i){
   if(G.over||G.cur!==s||pend(G,s))return false;const c=G.p[s].board[i];if(!c||c.blk>0)return false;
   // une créature à 0 ATK peut attaquer (elle n'inflige pas de dégâts)
   const E=eff(G,s,i);if(E.TE&&E.TE.noAtk)return false;if(c.sick&&!E.kw.hate)return false;return c.af<(E.kw.frenesie?2:1)+(c.xat||0)}
-function costOf(G,s,h){const cd=CARDS[h.k];if(!cd.cred||!G)return cd.c;return Math.max(cd.cred.min||0,cd.c-(fl(G,s)[cd.cred.f]||0))}   // Binge-watching : moins cher par Weebos
+function costOf(G,s,h){const cd=CARDS[h.k];let c=cd.c;if(cd.cred&&G)c=Math.max(cd.cred.min||0,c-(fl(G,s)[cd.cred.f]||0));   // Binge-watching : moins cher par Weebos
+  const P=G&&G.p&&G.p[s];if(P&&P.cdis>0)c=Math.max(0,c-1);return c}                                                   // Expédition : cartes −1 pendant tes premiers tours
 // les sorts qui visent un ennemi peuvent aussi viser une de tes créatures (jamais imposé : on choisit toujours sa cible)
 const SPX={ec:'c',e:'ea'};
 function cryTg(cd){if(cd.t==='s')return cd.tg?{tg:(!cd.noAlly&&SPX[cd.tg])||cd.tg,tgf:cd.tgf,sg2:cd.tg2}:null;
@@ -234,12 +240,14 @@ function canRoll(G,s){return!G.over&&G.cur===s&&!!G.o.ter&&!pend(G,s)&&G.p[s].or
 function canExil(G,s,i){if(G.over||G.cur!==s||pend(G,s))return false;const P=G.p[s],c=P.board[i];if(!c||c.ex||!hasFC(c,'expats'))return false;
   const n=fl(G,s).expats||0;return n>=1&&P.or>=trCost(G,s)}
 // prix d'un voyage Expats : gratuit tant qu'un Nomade (citoyen du monde) est en jeu
-function trCost(G,s){return G.p[s].board.some(b=>b&&!b.mut&&CARDS[b.k].freeTr)?0:exCost(fl(G,s).expats||0)}
+function trCost(G,s){const P=G.p[s],R=P.rx;if(P.board.some(b=>b&&!b.mut&&CARDS[b.k].freeTr))return 0;
+  if(R&&R.tr1&&!P.xt)return 0;return Math.max(0,exCost(fl(G,s).expats||0)-((R&&R.trDisc)||0))}   // Expédition : 1er voyage gratuit (l'Expat), Valise diplomatique
 // une de tes créatures part à l'étranger (vrai voyage, pas la fumée) : Nomade (collectionneur de tampons) gagne 1 Or
 function goneAbroad(G,s){G.p[s].board.forEach((b,i)=>{if(b&&!b.mut&&CARDS[b.k].abrOr)gold(G,s,1,b.k,{ss:s,si:i})})}
 // retour de voyage : effets « à son retour » (Takk, Loractys), puis Nomade (chargé de souvenirs : pioche ; citoyen du monde : +1/+1)
 function backHooks(G,s,list){const P=G.p[s];
   for(const c of list){const i=slotOf(G,s,c);if(i<0||G.over)continue;const cd=CARDS[c.k];
+    if(c.xb){c.xb=0;c.a++;c.h++;lg(G,{t:'buff',ts:s,i,k:c.k,ba:1,bh:1,cs:P.rx&&P.rx.src&&P.rx.src.tr1})}   // l'Expat : revient avec +1/+1
     if(!c.mut&&cd.onBack)runFx(G,cd.onBack,{s,src:c.k,self:c,tg:null,pc:0,sl:i,ss:s,si:i});
     P.board.forEach((b,j)=>{if(!b||b.mut||G.over)return;const bd=CARDS[b.k];
       if(bd.backDraw)draw(G,s,1);
@@ -359,6 +367,48 @@ function syncMute(G){
 function moveCtl(G,fs,fi,ts,ti){const c=G.p[fs].board[fi];if(!c||G.p[ts].board[ti])return null;auraOff(G,fs,fi);G.p[fs].board[fi]=null;
   c.sick=1;c.af=0;c.ex=0;c.xa=0;c.xat=0;G.p[ts].board[ti]=c;lg(G,{t:'ctl',ts:fs,i:fi,to:ts,ti,k:c.k});moveBoundTerrains(G,[{id:c.id,from:fs,to:ts}]);return c}
 
+// ---------- Expédition : reliques, pouvoirs de patron, règles d'élite et de boss ----------
+// P.rx (lecture seule, partagé par les copies de l'IA) : effets du camp ; P.rx.src[effet] = source affichée (« x:id »).
+// Compteurs propres à la partie, copiés avec le joueur : xh (1re créature), xe (1re Égide), xc (sorts à annuler), xr (Replay), xt (1er voyage), xo (Or des premiers tours), xk (tours du boss), xph (2e phase), cdis (tours à coût réduit).
+function rxSrc(P,k){return P.rx&&P.rx.src?P.rx.src[k]:null}
+function rxStart(G){for(let s=0;s<2;s++){const P=G.p[s],R=P.rx;if(!R)continue;
+  if(R.cap)P.cap+=R.cap;if(R.or)P.or+=R.or;
+  for(let j=0;j<(R.draw||0);j++){const c=P.deck.pop();if(c)P.hand.push(c)}
+  for(let j=0;j<(R.dofus||0);j++)OPS.dofus(G,{},{s});
+  P.cdis=R.ncost||0;P.xc=R.counter||0;P.xr=R.replay||0}}
+function rxPlay(G,s,c){const P=G.p[s],R=P.rx,i=slotOf(G,s,c);if(i<0)return;
+  const kw=(k,src)=>{c.gk=Object.assign({},c.gk);c.gk[k]=1;lg(G,{t:'kwg',ts:s,i,k:c.k,kw:k,cs:rxSrc(P,src)})};
+  if(R.hasteFirst&&!P.xh){P.xh=1;kw('hate','hasteFirst')}
+  else if(R.hasteTurn&&P.xht!==G.turn){P.xht=G.turn;kw('hate','hasteTurn')}
+  else if(R.hasteAll)kw('hate','hasteAll');
+  if(R.egFirst&&!P.xe){P.xe=1;c.eg=1;lg(G,{t:'kwg',ts:s,i,k:c.k,kw:'egide',cs:rxSrc(P,'egFirst')})}
+  if(R.hpPlus){c.h+=R.hpPlus;lg(G,{t:'buff',ts:s,i,k:c.k,ba:0,bh:R.hpPlus,cs:rxSrc(P,'hpPlus')})}}
+function rxDeath(G,s,c,E){const Q=G.p[1-s];
+  if(Q.rx&&Q.rx.ping&&!G.over)heroHit(G,s,Q.rx.ping,rxSrc(Q,'ping'));                               // Sel de rage, le Rageux : une créature ennemie meurt
+  const os=c.o!=null?c.o:s,O=G.p[os];
+  if(O.rx&&O.xr>0&&!CARDS[c.k].tok&&!c.sm&&!(E&&E.kw.respawn&&!c.rs)&&O.hand.length<G.o.hand){      // Replay : la créature revient dans la main (une fois par combat)
+    const gi=O.grave.findIndex(q=>q.id===c.id);if(gi>=0){O.grave.splice(gi,1);O.xr--;O.hand.push({k:c.k,id:++G.uid});lg(G,{t:'rx',ts:os,src:rxSrc(O,'replay'),k:c.k,tx:'revient dans la main'})}}}
+function rxTurn(G,s){const P=G.p[s],R=P.rx,E=G.p[1-s];
+  if(R.selfDmg){heroHit(G,s,R.selfDmg,rxSrc(P,'selfDmg'));reap(G);if(G.over)return}
+  if(R.orTurn&&(P.xo||0)<R.orTurn){P.xo=(P.xo||0)+1;gold(G,s,1,rxSrc(P,'orTurn'))}
+  if(R.drawTurn){lg(G,{t:'rx',ts:s,src:rxSrc(P,'drawTurn'),tx:'pioche '+R.drawTurn+' carte'+(R.drawTurn>1?'s':'')+' de plus'});draw(G,s,R.drawTurn);if(G.over)return}
+  if(R.evTurn){runEv(G,s,ri(G,EVENTS.length),R.evTurn);reap(G);if(G.over)return}
+  if(R.snipe){let bi=-1,bv=-1;const L=fl(G,1-s);E.board.forEach((c,i)=>{if(!c)return;const e=eff(G,1-s,i,L),v=e.a*10+e.hp;if(v>bv){bv=v;bi=i}});
+    if(bi>=0){lg(G,{t:'rx',ts:s,src:rxSrc(P,'snipe'),tx:'tir d’élite'});hit(G,1-s,bi,R.snipe,rxSrc(P,'snipe'));reap(G);if(G.over)return}}
+  if(R.balance){const src=rxSrc(P,'balance');let l=-1,r=-1;for(let i=0;i<CELLS;i++)if(E.board[i]){l=i;break}for(let i=CELLS-1;i>=0;i--)if(P.board[i]){r=i;break}
+    if(l>=0){const c=E.board[l];c.a=Math.max(0,c.a-1);c.h-=1;lg(G,{t:'buff',ts:1-s,i:l,k:c.k,ba:-1,bh:-1,cs:src})}
+    if(r>=0){const c=P.board[r];c.a++;c.h++;lg(G,{t:'buff',ts:s,i:r,k:c.k,ba:1,bh:1,cs:src})}
+    reap(G);if(G.over)return}
+  if(R.crash){P.xk=(P.xk||0)+1;if(P.xk%R.crash===0){let bi=-1,bv=-1;E.board.forEach((c,i)=>{if(c&&!CARDS[c.k].tok){const v=CARDS[c.k].c*10+eff(G,1-s,i).a;if(v>bv){bv=v;bi=i}}});
+    if(bi>=0){const c=E.board[bi];lg(G,{t:'rx',ts:s,src:rxSrc(P,'crash'),tx:'crashe le serveur'});OPS.kick(G,{},{s,tg:{s:1-s,i:bi,id:c.id}});reap(G)}}}}
+function rxPhase(G){let hit2=false;for(let s=0;s<2;s++){const P=G.p[s],R=P.rx;if(!R||!R.phase||P.xph||P.hp<=0||P.hp>R.phase.at||G.over)continue;
+  P.xph=1;hit2=true;const F=R.phase,src=rxSrc(P,'phase');lg(G,{t:'rx',ts:s,src,tx:F.tx||'passe en 2e phase'});
+  if(F.wipe)G.p[1-s].board.forEach(c=>{if(c)c.dm+=99999});
+  for(let j=0;j<(F.sum||0);j++){const k=pick(G,F.pool||['pleb']);const c=summon(G,s,k,{noCry:1});if(!c)break}
+  if(F.buff)P.board.forEach((c,i)=>{if(c){c.a+=F.buff;c.h+=F.buff;lg(G,{t:'buff',ts:s,i,k:c.k,ba:F.buff,bh:F.buff,cs:src})}});
+  if(F.heal)heal(G,s,F.heal,src)}
+  return hit2}
+
 // ---------- morts ----------
 function checkOver(G){
   if(G.over)return;const a=G.p[0].hp<=0,b=G.p[1].hp<=0;
@@ -373,6 +423,7 @@ function reap(G){
     if(E.h>0&&c.inv){c.dm=Math.max(0,E.h-1);continue}       // invincible : ne meurt pas ce tour-ci
     // Respawn (mot-clé ou donné par Lasorius, mets une pierre) : la créature revient une fois avec 1 PV (voir plus bas)
     const OP=G.p[c.o!=null?c.o:s];removeC(G,s,i,false);if(!c.sm)toGrave(OP,c);syncMute(G);lockSweep(G);   // au cimetière de son propriétaire
+    if(G.p[0].rx||G.p[1].rx)rxDeath(G,s,c,E);
     const oppT=G.cur!==s;
     P.board.forEach((b,j)=>{if(!b||b.mut)return;const bd=CARDS[b.k];
       if(bd.allyDieAff&&affC(c,bd.allyDieAff.g)>0){const y=bd.allyDieAff;b.a+=y.a;b.h+=y.h;lg(G,{t:'buff',ts:s,i:j,k:b.k,ba:y.a,bh:y.h})}   // Elkatrix (unleashed) : une créature avec une affinité LoL est morte
@@ -386,6 +437,7 @@ function reap(G){
       if(!cd.rsFull){const E2=eff(G,s,i);n.dm=Math.max(0,E2.h-1)}
       lg(G,{t:'sum',ts:s,i,k:c.k,rs:1});if(!(E.TE&&E.TE.rsq))autoCry(G,s,n)}   // Esprit guérisseur : sans redéclencher ses effets
   }lockSweep(G)}finally{G.rp=0}
+  if(((G.p[0].rx&&G.p[0].rx.phase)||(G.p[1].rx&&G.p[1].rx.phase))&&rxPhase(G)){reap(G);return}   // Expédition : 2e phase d'un boss
   checkOver(G);flushTilt(G)}
 
 // ---------- effets ----------
@@ -716,9 +768,10 @@ function startTurn(G,s){
   const L=fl(G,s);
   if((L.farmer||0)>=2){const n=Math.min(4,L.farmer-1);lg(G,{t:'fac',f:'farmer',ts:s,n:L.farmer,or:n});gold(G,s,n,'farmer',{ss:s,si:-2})}   // Farmers : N−1 Or, 4 au maximum
   if((L.alien||0)>=2){const E=G.p[1-s],n=Math.min(L.alien-1,E.or);lg(G,{t:'fac',f:'alien',ts:s,n:L.alien});if(n>0&&!goldStealBlocked(G,1-s)){E.or-=n;P.or+=n;lg(G,{t:'gold',ts:s,n,from:1-s,src:'alien',ss:1-s,si:-1})}}   // Extraterritoriaux : volent N−1 Or
+  if(P.rx){rxTurn(G,s);if(G.over)return}
   boardHooks(G,s,'sot')}
 function endTurn(G,s){
-  const P=G.p[s];
+  const P=G.p[s];if(P.cdis>0)P.cdis--;
   boardHooks(G,s,'eot');if(G.over)return;
   terrHooks(G,s);if(G.over)return;
   if(hasArt(P,'cawotte')){lg(G,{t:'artfx',ts:s,k:'cawotte'});draw(G,s,2);if(G.over)return}   // Dofus Cawotte
@@ -767,6 +820,7 @@ function act(G,s,a){
         if(sp.tg2){if(!inList(tg2List(G,s,a.sl),a.tg2))return er('Choisis la créature à échanger.');tg2=a.tg2.s===s&&a.tg2.i===a.sl?'self':resolveTg(G,a.tg2)}}}
       P.hand.splice(a.i,1);P.eth-=cost;
       const c=mkC(G,h.k);c.o=s;if(c.h<=0&&cd.cry)c.pd=1;P.board[a.sl]=c;                      // 0 PV de base (Chanssus) : vit jusqu'à son Cri d'arrivée
+      if(P.rx)rxPlay(G,s,c);
       const pc=G.played;G.played++;
       lg(G,{t:'play',k:h.k,i:a.sl,c:cost,ts:s});
       arrive(G,s,a.sl);
@@ -780,6 +834,7 @@ function act(G,s,a){
       const pc=G.played;G.played++;
       const tgl=t=>t?{s:t.s,i:t.i,k:(t.i>=0&&G.p[t.s].board[t.i])?G.p[t.s].board[t.i].k:null}:null;
       lg(G,{t:'play',k:h.k,c:cost,ts:s,tg:tgl(tg),tg2:tgl(tg2)});
+      const Q=G.p[1-s];if(Q.xc>0){Q.xc--;lg(G,{t:'rx',ts:1-s,src:Q.rx&&Q.rx.src&&Q.rx.src.counter,k:h.k,tx:'annule le sort'});toGrave(P,h);break}   // Expédition : sort annulé
       runFx(G,cd.fx,{s,src:h.k,self:null,tg,tg2,pc,ss:s,si:-1});
       toGrave(P,h)}
     break}
@@ -792,6 +847,7 @@ function act(G,s,a){
     attack(G,s,a.f,t);break}
   case 'exil':{
     if(!canExil(G,s,a.i))return er('Voyage impossible.');const cost=trCost(G,s),c=P.board[a.i];
+    if(P.rx&&P.rx.tr1&&!P.xt&&cost===0&&!P.board.some(b=>b&&!b.mut&&CARDS[b.k].freeTr)){P.xt=1;c.xb=1}
     P.or-=cost;c.ex=1;lg(G,{t:'exil',ts:s,i:a.i,k:c.k,n:cost});goneAbroad(G,s);break}
   case 'move':{                                                       // déplacer une créature (ou échanger deux créatures) : coûte du Démoflux
     const c=isCell(a.f)&&P.board[a.f];if(!c)return er('Aucune créature ici.');
